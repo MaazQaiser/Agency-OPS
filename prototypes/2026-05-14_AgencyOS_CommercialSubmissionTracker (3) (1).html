@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial Submission Tracker — Insurance Town Agency</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --navy-mid: #152535;
+    --navy-light: #1E3348;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8A6E2A;
+    --white: #F8F6F0;
+    --text-main: #F0ECE0;
+    --text-muted: #9A9080;
+    --text-dim: #6A6055;
+    --green: #2ECC71;
+    --green-bg: rgba(46,204,113,0.12);
+    --yellow: #F1C40F;
+    --yellow-bg: rgba(241,196,15,0.12);
+    --red: #E74C3C;
+    --red-bg: rgba(231,76,60,0.12);
+    --gray: #6C7A89;
+    --gray-bg: rgba(108,122,137,0.12);
+    --border: rgba(201,168,76,0.15);
+    --border-mid: rgba(201,168,76,0.25);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--text-main); font-family: 'Georgia', serif; font-size: 14px; min-height: 100vh; }
+
+  /* CONFIDENTIALITY BANNER */
+  .conf-banner {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--gold-dim);
+    border-left: 4px solid var(--gold);
+    padding: 8px 20px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* TOP NAV */
+  .top-bar {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--border-mid);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-right: 32px;
+    white-space: nowrap;
+  }
+  .brand span { color: var(--text-muted); font-weight: normal; }
+  .nav-tabs { display: flex; gap: 2px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    padding: 0 14px;
+    height: 52px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: 'Courier New', monospace;
+  }
+  .tab-btn:hover { color: var(--text-main); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .version-pill {
+    background: var(--navy-light);
+    border: 1px solid var(--border);
+    color: var(--gold-dim);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+  }
+
+  /* TAB PANELS */
+  .tab-panel { display: none; padding: 24px; }
+  .tab-panel.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 18px;
+    color: var(--text-main);
+    font-style: italic;
+  }
+  .section-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+  }
+  .kpi-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-size: 28px;
+    color: var(--text-main);
+    font-weight: bold;
+    line-height: 1;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .kpi-card.gold { border-color: var(--gold-dim); }
+  .kpi-card.gold .kpi-value { color: var(--gold); }
+  .kpi-card.green { border-color: rgba(46,204,113,0.3); }
+  .kpi-card.green .kpi-value { color: var(--green); }
+  .kpi-card.red { border-color: rgba(231,76,60,0.3); }
+  .kpi-card.red .kpi-value { color: var(--red); }
+  .kpi-card.yellow { border-color: rgba(241,196,15,0.3); }
+  .kpi-card.yellow .kpi-value { color: var(--yellow); }
+
+  /* STATUS BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(46,204,113,0.3); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(241,196,15,0.3); }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(231,76,60,0.3); }
+  .badge-gray { background: var(--gray-bg); color: var(--gray); border: 1px solid rgba(108,122,137,0.3); }
+  .badge-gold { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+
+  /* DATA TABLE */
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  thead th {
+    background: var(--navy-mid);
+    color: var(--text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: 'Courier New', monospace;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-mid);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: rgba(201,168,76,0.04); }
+  tbody td {
+    padding: 10px 12px;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  .row-green { background: rgba(46,204,113,0.04); }
+  .row-yellow { background: rgba(241,196,15,0.05); }
+  .row-red { background: rgba(231,76,60,0.06); }
+  .row-gray { background: rgba(108,122,137,0.04); opacity: 0.7; }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    height: 6px;
+    background: var(--navy-light);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* AGING INDICATOR */
+  .aging-bar { display: flex; gap: 2px; align-items: center; }
+  .aging-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--navy-light);
+  }
+  .aging-dot.filled-green { background: var(--green); }
+  .aging-dot.filled-yellow { background: var(--yellow); }
+  .aging-dot.filled-red { background: var(--red); }
+
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .filter-row select,
+  .filter-row input {
+    background: var(--navy-mid);
+    border: 1px solid var(--border-mid);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    outline: none;
+    cursor: pointer;
+  }
+  .filter-row select:focus,
+  .filter-row input:focus {
+    border-color: var(--gold-dim);
+  }
+  .filter-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* CHART CONTAINERS */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 700px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .chart-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 14px;
+  }
+  .chart-container { position: relative; height: 200px; }
+
+  /* VA LEADERBOARD */
+  .va-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .va-row:last-child { border-bottom: none; }
+  .va-rank {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--gold-dim);
+    width: 24px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+  }
+  .va-name { flex: 1; font-size: 13px; }
+  .va-stat { font-size: 12px; color: var(--text-muted); font-family: 'Courier New', monospace; }
+
+  /* ALERT BOXES */
+  .alert-box {
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .alert-red { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.25); }
+  .alert-yellow { background: rgba(241,196,15,0.07); border: 1px solid rgba(241,196,15,0.2); }
+  .alert-gold { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .dot-red { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-gold { background: var(--gold); }
+  .alert-text { font-size: 12px; line-height: 1.5; }
+  .alert-title { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; font-family: 'Courier New', monospace; }
+
+  /* MARKET MIN WARNING */
+  .mkt-warn {
+    background: rgba(231,76,60,0.06);
+    border: 1px solid rgba(231,76,60,0.2);
+    color: var(--red);
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  /* FORMULA REFERENCE CARD */
+  .formula-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .formula-title {
+    font-size: 11px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .formula-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+  .formula-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+    align-items: flex-start;
+  }
+  .formula-col-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    min-width: 90px;
+    padding-top: 2px;
+  }
+  .formula-code {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--gold-light);
+    background: rgba(201,168,76,0.06);
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex: 1;
+    word-break: break-all;
+    line-height: 1.6;
+  }
+
+  /* SCRIPT BLOCK */
+  .script-block {
+    background: var(--navy);
+    border: 1px solid var(--border-mid);
+    border-left: 3px solid var(--gold-dim);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--text-main);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .script-block .kw { color: var(--gold-light); }
+  .script-block .cm { color: var(--text-dim); font-style: italic; }
+  .script-block .str { color: var(--green); }
+  .script-block .fn { color: #7EC8E3; }
+
+  /* DAILY ACCOUNTABILITY */
+  .accountability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .acc-card {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+  .acc-name {
+    font-size: 12px;
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .acc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+  }
+  .acc-row:last-child { border-bottom: none; }
+  .acc-metric { color: var(--text-muted); }
+  .acc-val { font-family: 'Courier New', monospace; }
+
+  /* SUBMISSION AGING REPORT */
+  .aging-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    font-size: 12px;
+  }
+  .aging-row.header {
+    background: var(--navy-mid);
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-bottom: 1px solid var(--border-mid);
+  }
+  .aging-bucket {
+    background: var(--navy-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .top-bar { padding: 0 12px; }
+    .tab-panel { padding: 14px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .brand { font-size: 11px; margin-right: 16px; }
+    .tab-btn { padding: 0 9px; font-size: 10px; }
+    table { min-width: 700px; }
+  }
+</style>
+<link rel="stylesheet" href="global-nav.css">
+<script src="global-nav.js" defer></script>
+</head>
+<body class="has-global-nav" data-active-module="commercial">
+
+<nav class="global-top-nav" aria-label="Agency OS product navigation">
+  <div class="global-nav-inner">
+    <div class="global-nav-left">
+      <a href="dashboard.html" class="global-nav-brand">Agency OS</a>
+      <div class="global-nav-links">
+        <a href="dashboard.html" class="global-nav-link" data-module="dashboard">Dashboard</a>
+        <a href="2026-05-29_AgencyOS_ProducerScorecard_Prototype (1).html" class="global-nav-link" data-module="producer">Producer Scorecard</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html" class="global-nav-link" data-module="retention">Retention Scorecard</a>
+        <a href="2026-05-14_AgencyOS_CommercialSubmissionTracker (3) (1).html" class="global-nav-link" data-module="commercial">Commercial Tracker</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html#prime-agency" class="global-nav-link" data-module="prime-agency">Prime Agency</a>
+      </div>
+    </div>
+    <div class="global-nav-right">
+      <div class="global-search">
+        <span class="global-search-icon" aria-hidden="true">⌕</span>
+        <input type="search" class="global-search-input" placeholder="Search…" aria-label="Global search">
+      </div>
+      <button type="button" class="global-util-btn" aria-label="Notifications">🔔<span class="global-util-badge">4</span></button>
+      <button type="button" class="global-util-btn global-util-btn-ai" aria-label="AI Insights">✦ <span class="util-label">AI Insights</span></button>
+      <div class="global-profile">
+        <button type="button" class="global-profile-btn" aria-label="User profile menu">
+          <span class="global-profile-avatar">EC</span>
+          <span><span class="global-profile-name">Eva Chong</span><span class="global-profile-role">Executive</span></span>
+        </button>
+        <div class="global-profile-menu">
+          <a href="#">My Profile</a>
+          <a href="#">Settings</a>
+          <button type="button">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-context">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="dashboard.html">Agency OS</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Commercial Tracker</span>
+  </nav>
+  <h2 class="page-context-title">Commercial Submission Tracker</h2>
+  <p class="page-context-desc">Executive pipeline view, VA dashboard, submission pipeline, aging reports, daily accountability, and Sheets setup reference.</p>
+</div>
+
+<!-- CONFIDENTIALITY BANNER -->
+<div class="conf-banner">
+  ⚠️ &nbsp; Internal Insurance Town Resource &nbsp;|&nbsp; Authorized Internal Use Only &nbsp;|&nbsp; Do Not Share Outside Agency
+</div>
+
+<!-- TOP NAV -->
+<div class="top-bar">
+  <div class="brand">InsuranceTown <span>/ Commercial</span></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('exec')">Executive</button>
+    <button class="tab-btn" onclick="showTab('va')">VA Dashboard</button>
+    <button class="tab-btn" onclick="showTab('pipeline')">Pipeline</button>
+    <button class="tab-btn" onclick="showTab('aging')">Aging Report</button>
+    <button class="tab-btn" onclick="showTab('daily')">Daily</button>
+    <button class="tab-btn" onclick="showTab('formulas')">Sheets Setup</button>
+  </div>
+  <div class="version-pill">v1.0 · May 2026</div>
+</div>
+
+<!-- ============================
+     TAB 1: EXECUTIVE DASHBOARD
+============================= -->
+<div id="tab-exec" class="tab-panel active">
+  <div class="section-header">
+    <div class="section-title">Executive Overview</div>
+    <div class="section-sub">Owner View · Live KPIs</div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpi-grid">
+    <div class="kpi-card gold">
+      <div class="kpi-label">Active Pipeline</div>
+      <div class="kpi-value" id="kpi-active">12</div>
+      <div class="kpi-sub">open submissions</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Quoted This Week</div>
+      <div class="kpi-value" id="kpi-quoted">7</div>
+      <div class="kpi-sub">awaiting decision</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Follow-Up Due</div>
+      <div class="kpi-value" id="kpi-followup">4</div>
+      <div class="kpi-sub">today or overdue</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Overdue (48h+)</div>
+      <div class="kpi-value" id="kpi-overdue">2</div>
+      <div class="kpi-sub">stale — needs action</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Days Open</div>
+      <div class="kpi-value" id="kpi-avgdays">8.3</div>
+      <div class="kpi-sub">across open subs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Quote Rate</div>
+      <div class="kpi-value" id="kpi-quoterate">73%</div>
+      <div class="kpi-sub">markets → quote</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Bind Rate</div>
+      <div class="kpi-value" id="kpi-bindrate">41%</div>
+      <div class="kpi-sub">quoted → bound</div>
+    </div>
+    <div class="kpi-card gold">
+      <div class="kpi-label">Pipeline Premium</div>
+      <div class="kpi-value" style="font-size:20px;" id="kpi-premium">$184K</div>
+      <div class="kpi-sub">quoted, unbounded</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHARTS ROW -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Submissions by Status</div>
+      <div class="chart-container">
+        <canvas id="chartStatus" role="img" aria-label="Pie chart of submission statuses">Status breakdown of commercial submissions.</canvas>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:11px;color:var(--text-muted);">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2ECC71;margin-right:4px;"></span>Quoted 7</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#F1C40F;margin-right:4px;"></span>Pending 4</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#E74C3C;margin-right:4px;"></span>Overdue 2</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#6C7A89;margin-right:4px;"></span>Declined 3</span>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Submissions by LOB</div>
+      <div class="chart-container">
+        <canvas id="chartLOB" role="img" aria-label="Bar chart of submissions by line of business">LOB breakdown: GL, BOP, Workers Comp, Commercial Auto, Contractors.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="section-header" style="margin-top:8px;">
+    <div class="section-title">Alerts &amp; Flags</div>
+  </div>
+  <div class="alert-box alert-red">
+    <div class="alert-dot dot-red"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--red);">Overdue — No Update in 48h+</div>
+      <div style="color:var(--text-muted);">Martinez Landscaping (Hamad · BOP) — 3 days no update · Follow-up was May 11 · Markets: 4 submitted, 1 quoted</div>
+    </div>
+  </div>
+  <div class="alert-box alert-red">
+    <div class="alert-dot dot-red"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--red);">Market Minimum Not Met</div>
+      <div style="color:var(--text-muted);">Pak's Janitorial (JoJo · GL) — Only 2 markets submitted. Minimum required: 3. Needs immediate action.</div>
+    </div>
+  </div>
+  <div class="alert-box alert-yellow">
+    <div class="alert-dot dot-yellow"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--yellow);">Follow-Up Due Today</div>
+      <div style="color:var(--text-muted);">3 submissions have follow-up dates of May 14. Seoul Restaurant Group (Tracie), Kim's Auto Shop (Hamad), Pacific Rim Contractors (JoJo)</div>
+    </div>
+  </div>
+  <div class="alert-box alert-gold">
+    <div class="alert-dot dot-gold"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--gold);">Missing Documents</div>
+      <div style="color:var(--text-muted);">2 submissions have open doc requirements: Kim's Auto Shop (Loss runs 5yr), Pacific Rim Contractors (Signed app). Cannot bind without these.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WEEKLY SUMMARY TABLE -->
+  <div class="section-header">
+    <div class="section-title">Weekly Productivity Snapshot</div>
+    <div class="section-sub">Wk of May 12</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>VA / Producer</th>
+          <th>Subs Opened</th>
+          <th>Markets Hit</th>
+          <th>Quotes Back</th>
+          <th>Follow-Ups Done</th>
+          <th>Binds</th>
+          <th>Docs Collected</th>
+          <th>Pace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hamad</strong> <span style="font-size:10px;color:var(--text-muted);">(Broker VA2)</span></td>
+          <td>4</td>
+          <td>13</td>
+          <td>6</td>
+          <td>9</td>
+          <td>2</td>
+          <td>7/8</td>
+          <td><span class="badge badge-green">On Track</span></td>
+        </tr>
+        <tr>
+          <td><strong>JoJo</strong> <span style="font-size:10px;color:var(--text-muted);">(Broker VA1)</span></td>
+          <td>3</td>
+          <td>9</td>
+          <td>4</td>
+          <td>6</td>
+          <td>1</td>
+          <td>4/6</td>
+          <td><span class="badge badge-yellow">Watch</span></td>
+        </tr>
+        <tr>
+          <td><strong>Tracie</strong> <span style="font-size:10px;color:var(--text-muted);">(Korean Dept)</span></td>
+          <td>2</td>
+          <td>8</td>
+          <td>3</td>
+          <td>5</td>
+          <td>1</td>
+          <td>3/4</td>
+          <td><span class="badge badge-green">On Track</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================
+     TAB 2: VA DASHBOARD
+============================= -->
+<div id="tab-va" class="tab-panel">
+  <div class="section-header">
+    <div class="section-title">VA Operations Dashboard</div>
+    <div class="section-sub">Hamad · JoJo · Tracie</div>
+  </div>
+
+  <div class="filter-row">
+    <span class="filter-label">Filter by VA:</span>
+    <select id="va-filter" onchange="filterVA()">
+      <option value="all">All VAs</option>
+      <option value="Hamad">Hamad</option>
+      <option value="JoJo">JoJo</option>
+      <option value="Tracie">Tracie</option>
+    </select>
+    <select id="status-filter-va" onchange="filterVA()">
+      <option value="all">All Statuses</option>
+      <option value="Quoted">Quoted</option>
+      <option value="Pending">Pending</option>
+      <option value="Overdue">Overdue</option>
+      <option value="Declined">Declined</option>
+    </select>
+  </div>
+
+  <!-- VA KPI Row -->
+  <div class="kpi-grid" id="va-kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">My Open Subs</div>
+      <div class="kpi-value" id="va-kpi-open">9</div>
+      <div class="kpi-sub">assigned to you</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Due Today</div>
+      <div class="kpi-value" id="va-kpi-due">3</div>
+      <div class="kpi-sub">follow-ups</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Overdue</div>
+      <div class="kpi-value" id="va-kpi-over">1</div>
+      <div class="kpi-sub">needs escalation</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Quoted</div>
+      <div class="kpi-value" id="va-kpi-quoted">5</div>
+      <div class="kpi-sub">awaiting bind decision</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- VA leaderboard -->
+  <div class="chart-card" style="margin-bottom:20px;">
+    <div class="chart-title">Weekly Leaderboard — Submissions Worked</div>
+    <div class="va-row">
+      <div class="va-rank">1</div>
+      <div style="flex:1;">
+        <div class="va-name">Hamad</div>
+        <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" style="width:85%;background:var(--gold);"></div></div>
+      </div>
+      <div class="va-stat">17 actions</div>
+    </div>
+    <div class="va-row">
+      <div class="va-rank">2</div>
+      <div style="flex:1;">
+        <div class="va-name">Tracie</div>
+        <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" style="width:65%;background:var(--green);"></div></div>
+      </div>
+      <div class="va-stat">13 actions</div>
+    </div>
+    <div class="va-row">
+      <div class="va-rank">3</div>
+      <div style="flex:1;">
+        <div class="va-name">JoJo</div>
+        <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" style="width:50%;background:var(--yellow);"></div></div>
+      </div>
+      <div class="va-stat">10 actions</div>
+    </div>
+  </div>
+
+  <!-- VA SUBMISSION TABLE -->
+  <div class="table-wrap" id="va-table-wrap">
+    <table id="va-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>VA</th>
+          <th>LOB</th>
+          <th>Days Open</th>
+          <th>Markets</th>
+          <th>Quotes</th>
+          <th>Status</th>
+          <th>Follow-Up</th>
+          <th>Missing Docs</th>
+          <th>Aging</th>
+        </tr>
+      </thead>
+      <tbody id="va-tbody">
+        <!-- JS fills this -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================
+     TAB 3: PIPELINE TRACKER
+============================= -->
+<div id="tab-pipeline" class="tab-panel">
+  <div class="section-header">
+    <div class="section-title">Commercial Pipeline Tracker</div>
+    <div class="section-sub">All Submissions · Color-Coded Status</div>
+  </div>
+
+  <div class="filter-row">
+    <span class="filter-label">LOB:</span>
+    <select id="lob-filter" onchange="filterPipeline()">
+      <option value="all">All</option>
+      <option value="GL">GL</option>
+      <option value="BOP">BOP</option>
+      <option value="WC">Workers Comp</option>
+      <option value="Comm Auto">Comm Auto</option>
+      <option value="Contractors">Contractors</option>
+    </select>
+    <span class="filter-label">Producer:</span>
+    <select id="producer-filter" onchange="filterPipeline()">
+      <option value="all">All</option>
+      <option value="Eva">Eva</option>
+      <option value="Tracie">Tracie</option>
+    </select>
+    <span class="filter-label">Status:</span>
+    <select id="status-filter-pipe" onchange="filterPipeline()">
+      <option value="all">All</option>
+      <option value="Quoted">Quoted</option>
+      <option value="Pending">Pending</option>
+      <option value="Overdue">Overdue</option>
+      <option value="Declined">Declined</option>
+      <option value="Bound">Bound</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table id="pipeline-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Client Name</th>
+          <th>Producer</th>
+          <th>VA</th>
+          <th>LOB</th>
+          <th>Sub Date</th>
+          <th>Markets</th>
+          <th>Quotes</th>
+          <th>Declines</th>
+          <th>Premium</th>
+          <th>Follow-Up</th>
+          <th>Days Open</th>
+          <th>Status</th>
+          <th>Missing Docs</th>
+          <th>UW Contact</th>
+          <th>Binding</th>
+        </tr>
+      </thead>
+      <tbody id="pipeline-tbody">
+        <!-- JS fills this -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:11px;font-family:'Courier New',monospace;">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(46,204,113,0.5);margin-right:5px;"></span>Quoted / Bound</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(241,196,15,0.5);margin-right:5px;"></span>Pending Follow-Up</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(231,76,60,0.5);margin-right:5px;"></span>Overdue (48h+)</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(108,122,137,0.4);margin-right:5px;"></span>Declined</span>
+    <span style="color:var(--red);"><strong>⚠</strong> &lt;3 markets = violation</span>
+  </div>
+</div>
+
+<!-- ============================
+     TAB 4: AGING REPORT
+============================= -->
+<div id="tab-aging" class="tab-panel">
+  <div class="section-header">
+    <div class="section-title">Submission Aging Report</div>
+    <div class="section-sub">Days Since Submission · Escalation View</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">0–2 Days</div>
+      <div class="kpi-value">5</div>
+      <div class="kpi-sub">fresh</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">3–5 Days</div>
+      <div class="kpi-value">4</div>
+      <div class="kpi-sub">monitor</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">6–10 Days</div>
+      <div class="kpi-value">2</div>
+      <div class="kpi-sub">escalate</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">11+ Days</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub">critical</div>
+    </div>
+  </div>
+
+  <!-- Aging Bucket: 11+ -->
+  <div class="aging-bucket">
+    <div class="aging-row header">
+      <div>Client</div><div>Days Open</div><div>VA</div><div>Status</div><div>Action</div>
+    </div>
+    <div class="aging-row row-red">
+      <div><strong>Martinez Landscaping</strong><br><span style="font-size:10px;color:var(--text-muted);">BOP · Hamad</span></div>
+      <div style="color:var(--red);font-weight:bold;font-family:'Courier New',monospace;">14 days</div>
+      <div>Hamad</div>
+      <div><span class="badge badge-red">Overdue</span></div>
+      <div style="font-size:11px;color:var(--text-muted);">Escalate to Eva</div>
+    </div>
+  </div>
+
+  <!-- Aging Bucket: 6–10 -->
+  <div class="aging-bucket">
+    <div class="aging-row header" style="background:rgba(241,196,15,0.06);">
+      <div>Client (6–10 Days)</div><div>Days Open</div><div>VA</div><div>Status</div><div>Action</div>
+    </div>
+    <div class="aging-row row-yellow">
+      <div><strong>Pacific Rim Contractors</strong><br><span style="font-size:10px;color:var(--text-muted);">WC · JoJo</span></div>
+      <div style="color:var(--yellow);font-family:'Courier New',monospace;">9 days</div>
+      <div>JoJo</div>
+      <div><span class="badge badge-yellow">Pending</span></div>
+      <div style="font-size:11px;color:var(--text-muted);">Chase UW today</div>
+    </div>
+    <div class="aging-row row-yellow">
+      <div><strong>Kim's Auto Shop</strong><br><span style="font-size:10px;color:var(--text-muted);">Comm Auto · Hamad</span></div>
+      <div style="color:var(--yellow);font-family:'Courier New',monospace;">7 days</div>
+      <div>Hamad</div>
+      <div><span class="badge badge-yellow">Pending</span></div>
+      <div style="font-size:11px;color:var(--text-muted);">Need loss runs</div>
+    </div>
+  </div>
+
+  <!-- Aging Chart -->
+  <div class="chart-card" style="margin-top:16px;">
+    <div class="chart-title">Aging Distribution (All Open Submissions)</div>
+    <div style="position:relative;height:180px;">
+      <canvas id="chartAging" role="img" aria-label="Bar chart of submission aging">Aging distribution across open submissions.</canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     TAB 5: DAILY ACCOUNTABILITY
+============================= -->
+<div id="tab-daily" class="tab-panel">
+  <div class="section-header">
+    <div class="section-title">Daily Accountability</div>
+    <div class="section-sub">May 14, 2026 · Wednesday</div>
+  </div>
+
+  <div class="accountability-grid">
+    <div class="acc-card">
+      <div class="acc-name">Hamad</div>
+      <div class="acc-row"><span class="acc-metric">Subs touched</span><span class="acc-val">5</span></div>
+      <div class="acc-row"><span class="acc-metric">Markets hit</span><span class="acc-val">4</span></div>
+      <div class="acc-row"><span class="acc-metric">Follow-ups done</span><span class="acc-val">3</span></div>
+      <div class="acc-row"><span class="acc-metric">Docs collected</span><span class="acc-val">2</span></div>
+      <div class="acc-row"><span class="acc-metric">Overdue cleared</span><span class="acc-val" style="color:var(--red);">0</span></div>
+      <div style="margin-top:8px;"><span class="badge badge-green">Active</span></div>
+    </div>
+    <div class="acc-card">
+      <div class="acc-name">JoJo</div>
+      <div class="acc-row"><span class="acc-metric">Subs touched</span><span class="acc-val">3</span></div>
+      <div class="acc-row"><span class="acc-metric">Markets hit</span><span class="acc-val">2</span></div>
+      <div class="acc-row"><span class="acc-metric">Follow-ups done</span><span class="acc-val">2</span></div>
+      <div class="acc-row"><span class="acc-metric">Docs collected</span><span class="acc-val">1</span></div>
+      <div class="acc-row"><span class="acc-metric">Overdue cleared</span><span class="acc-val">0</span></div>
+      <div style="margin-top:8px;"><span class="badge badge-yellow">Watch</span></div>
+    </div>
+    <div class="acc-card">
+      <div class="acc-name">Tracie</div>
+      <div class="acc-row"><span class="acc-metric">Subs touched</span><span class="acc-val">2</span></div>
+      <div class="acc-row"><span class="acc-metric">Markets hit</span><span class="acc-val">3</span></div>
+      <div class="acc-row"><span class="acc-metric">Follow-ups done</span><span class="acc-val">3</span></div>
+      <div class="acc-row"><span class="acc-metric">Docs collected</span><span class="acc-val">2</span></div>
+      <div class="acc-row"><span class="acc-metric">Overdue cleared</span><span class="acc-val" style="color:var(--green);">1</span></div>
+      <div style="margin-top:8px;"><span class="badge badge-green">Active</span></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Today's Priority Queue -->
+  <div class="section-header">
+    <div class="section-title">Today's Priority Queue</div>
+    <div class="section-sub">Sorted by Urgency</div>
+  </div>
+
+  <div class="alert-box alert-red">
+    <div class="alert-dot dot-red"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--red);">P1 — Martinez Landscaping (Hamad)</div>
+      <div style="color:var(--text-muted);">14 days open · Escalate to Eva if no UW response by 2pm today. BOP quote stalled at Markel.</div>
+    </div>
+  </div>
+  <div class="alert-box alert-red">
+    <div class="alert-dot dot-red"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--red);">P1 — Pak's Janitorial (JoJo) — Market Minimum Violation</div>
+      <div style="color:var(--text-muted);">Only 2 of 3 required markets submitted. Must add a 3rd market today. GL — check Kingsway or Employers.</div>
+    </div>
+  </div>
+  <div class="alert-box alert-yellow">
+    <div class="alert-dot dot-yellow"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--yellow);">P2 — Seoul Restaurant Group (Tracie) — Follow-Up Due</div>
+      <div style="color:var(--text-muted);">BOP renewal — Markel quote received. Need signed app and health permit copy. Follow up with client.</div>
+    </div>
+  </div>
+  <div class="alert-box alert-yellow">
+    <div class="alert-dot dot-yellow"></div>
+    <div class="alert-text">
+      <div class="alert-title" style="color:var(--yellow);">P2 — Kim's Auto Shop (Hamad) — Missing Loss Runs</div>
+      <div style="color:var(--text-muted);">5-year loss runs still outstanding. Cannot bind without them. Send final request email to client today.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     TAB 6: SHEETS SETUP
+============================= -->
+<div id="tab-formulas" class="tab-panel">
+  <div class="section-header">
+    <div class="section-title">Google Sheets Setup Guide</div>
+    <div class="section-sub">Formulas · Conditional Formatting · Apps Script</div>
+  </div>
+
+  <!-- COLUMN MAP -->
+  <div class="formula-card">
+    <div class="formula-title">Column Map — Row 1 Headers (Sheet: "Submissions")</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px;font-family:'Courier New',monospace;font-size:11px;">
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">A</span> Submission ID</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">B</span> Client Name</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">C</span> Assigned Producer</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">D</span> Assigned VA</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">E</span> LOB</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">F</span> Submission Date</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">G</span> Markets Submitted #</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">H</span> Quotes Received #</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">I</span> Declines #</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">J</span> Carrier Quoted</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">K</span> Premium</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">L</span> Follow-Up Date</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">M</span> Days Open</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">N</span> Status</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">O</span> Missing Docs</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">P</span> UW Contact</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">Q</span> Notes</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">R</span> Binding Outcome</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">S</span> Last Updated</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">T</span> Overdue Flag (auto)</div>
+      <div style="padding:5px 8px;background:rgba(201,168,76,0.07);border-radius:4px;"><span style="color:var(--gold-dim);">U</span> Market Flag (auto)</div>
+    </div>
+  </div>
+
+  <!-- FORMULAS -->
+  <div class="formula-card">
+    <div class="formula-title">Key Column Formulas (paste in row 2, drag down)</div>
+    <div class="formula-row">
+      <div class="formula-col-label">M — Days Open</div>
+      <div class="formula-code">=IF(N2="Bound","—",IF(F2="","",TODAY()-F2))</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">T — Overdue Flag</div>
+      <div class="formula-code">=IF(AND(N2&lt;&gt;"Bound",N2&lt;&gt;"Declined",S2&lt;&gt;"",TODAY()-S2&gt;2),"OVERDUE","")</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">U — Market Flag</div>
+      <div class="formula-code">=IF(AND(G2&lt;3,N2&lt;&gt;"Declined",N2&lt;&gt;"Bound"),"&lt;3 MARKETS","")</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">A — Sub ID</div>
+      <div class="formula-code">=IF(B2="","","CS-"&TEXT(ROW()-1,"000"))</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Quote Rate (KPI)</div>
+      <div class="formula-code">=IFERROR(COUNTIF(H2:H100,"&gt;0")/COUNTA(B2:B100),0)</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Avg Days Open (KPI)</div>
+      <div class="formula-code">=IFERROR(AVERAGEIF(N2:N100,"&lt;&gt;Bound",M2:M100),0)</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Pipeline Premium</div>
+      <div class="formula-code">=SUMIF(N2:N100,"Quoted",K2:K100)</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Overdue Count</div>
+      <div class="formula-code">=COUNTIF(T2:T100,"OVERDUE")</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Follow-Up Today</div>
+      <div class="formula-code">=COUNTIF(L2:L100,TODAY())</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label">Bind Rate</div>
+      <div class="formula-code">=IFERROR(COUNTIF(N2:N100,"Bound")/COUNTIF(N2:N100,"Quoted"),0)</div>
+    </div>
+  </div>
+
+  <!-- CONDITIONAL FORMATTING RULES -->
+  <div class="formula-card">
+    <div class="formula-title">Conditional Formatting Rules (Format → Conditional Formatting → Custom Formula)</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Apply all rules to range A2:U500. Rules evaluate top-to-bottom; put higher-priority rules first.</div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--green);">GREEN row</div>
+      <div class="formula-code">=$N2="Quoted"<br>Color: #1E4D2B bg, #2ECC71 text</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--green);">GREEN row</div>
+      <div class="formula-code">=$N2="Bound"<br>Color: #1A3D1A bg, #27AE60 text</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--yellow);">YELLOW row</div>
+      <div class="formula-code">=$L2=TODAY()<br>Color: #3D3500 bg, #F1C40F text</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--red);">RED row</div>
+      <div class="formula-code">=$T2="OVERDUE"<br>Color: #3D0B0B bg, #E74C3C text</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--gray);">GRAY row</div>
+      <div class="formula-code">=$N2="Declined"<br>Color: #1A1A1A bg, #6C7A89 text</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-col-label" style="color:var(--red);">RED cell G</div>
+      <div class="formula-code">=$U2="&lt;3 MARKETS" (apply to col G only)<br>Color: #E74C3C bg, #FFFFFF text</div>
+    </div>
+  </div>
+
+  <!-- APPS SCRIPT -->
+  <div class="formula-card">
+    <div class="formula-title">Google Apps Script — Full Automation (Tools → Apps Script → paste and save)</div>
+    <div class="formula-row" style="margin-bottom:6px;">
+      <div class="formula-col-label">Triggers:</div>
+      <div style="font-size:11px;color:var(--text-muted);flex:1;">Set two triggers in Apps Script: <strong>dailyDigest</strong> → Time-driven → Day timer → 8:00am. <strong>onEdit</strong> → From spreadsheet → On edit.</div>
+    </div>
+  </div>
+
+  <div class="script-block"><span class="cm">// =====================================================
+// Insurance Town — Commercial Tracker Automation v1.0
+// Paste in Tools > Apps Script > Save > Set Triggers
+// =====================================================</span>
+
+<span class="kw">const</span> SHEET_NAME = <span class="str">'Submissions'</span>;
+<span class="kw">const</span> NOTIFY_EMAIL = <span class="str">'eva@insurancetownagency.com'</span>;
+<span class="kw">const</span> MIN_MARKETS = <span class="str">3</span>;
+
+<span class="cm">// ---- Auto-stamp Last Updated when row is edited ----</span>
+<span class="kw">function</span> <span class="fn">onEdit</span>(e) {
+  <span class="kw">const</span> sheet = e.source.getActiveSheet();
+  <span class="kw">if</span> (sheet.getName() !== SHEET_NAME) <span class="kw">return</span>;
+  <span class="kw">const</span> row = e.range.getRow();
+  <span class="kw">const</span> col = e.range.getColumn();
+  <span class="kw">if</span> (row < 2) <span class="kw">return</span>;
+  <span class="cm">// Col S = 19 (Last Updated) — stamp on any edit</span>
+  sheet.getRange(row, 19).setValue(<span class="kw">new</span> <span class="fn">Date</span>());
+}
+
+<span class="cm">// ---- Daily Morning Digest Email to Eva ----</span>
+<span class="kw">function</span> <span class="fn">dailyDigest</span>() {
+  <span class="kw">const</span> ss = SpreadsheetApp.<span class="fn">getActiveSpreadsheet</span>();
+  <span class="kw">const</span> sheet = ss.<span class="fn">getSheetByName</span>(SHEET_NAME);
+  <span class="kw">const</span> data = sheet.<span class="fn">getDataRange</span>().<span class="fn">getValues</span>();
+  <span class="kw">const</span> today = <span class="kw">new</span> <span class="fn">Date</span>();
+  today.<span class="fn">setHours</span>(0,0,0,0);
+
+  <span class="kw">let</span> overdueRows = [];
+  <span class="kw">let</span> followUpToday = [];
+  <span class="kw">let</span> marketViolations = [];
+
+  <span class="kw">for</span> (<span class="kw">let</span> i = 1; i < data.length; i++) {
+    <span class="kw">const</span> row = data[i];
+    <span class="kw">const</span> client = row[1]; <span class="cm">// Col B</span>
+    <span class="kw">const</span> va = row[3];     <span class="cm">// Col D</span>
+    <span class="kw">const</span> markets = row[6]; <span class="cm">// Col G</span>
+    <span class="kw">const</span> followUp = <span class="kw">new</span> <span class="fn">Date</span>(row[11]); <span class="cm">// Col L</span>
+    <span class="kw">const</span> status = row[13]; <span class="cm">// Col N</span>
+    <span class="kw">const</span> lastUpdated = <span class="kw">new</span> <span class="fn">Date</span>(row[18]); <span class="cm">// Col S</span>
+
+    <span class="kw">if</span> (!client) <span class="kw">continue</span>;
+
+    <span class="cm">// Overdue check: &gt;2 days no update, not Bound/Declined</span>
+    <span class="kw">if</span> (status !== <span class="str">'Bound'</span> && status !== <span class="str">'Declined'</span>) {
+      <span class="kw">const</span> daysSince = (today - lastUpdated) / (1000*60*60*24);
+      <span class="kw">if</span> (daysSince > 2) overdueRows.<span class="fn">push</span>(`${client} (${va})`);
+    }
+
+    <span class="cm">// Follow-up due today</span>
+    followUp.<span class="fn">setHours</span>(0,0,0,0);
+    <span class="kw">if</span> (followUp.<span class="fn">getTime</span>() === today.<span class="fn">getTime</span>()) {
+      followUpToday.<span class="fn">push</span>(`${client} (${va})`);
+    }
+
+    <span class="cm">// Market minimum check</span>
+    <span class="kw">if</span> (markets < MIN_MARKETS && status !== <span class="str">'Declined'</span> && status !== <span class="str">'Bound'</span>) {
+      marketViolations.<span class="fn">push</span>(`${client} — ${markets} markets (${va})`);
+    }
+  }
+
+  <span class="cm">// Build email</span>
+  <span class="kw">let</span> body = `INSURANCE TOWN — DAILY COMMERCIAL DIGEST\n`;
+  body += `${today.<span class="fn">toDateString</span>()}\n\n`;
+
+  <span class="kw">if</span> (overdueRows.length > 0) {
+    body += `⛔ OVERDUE (48h+ no update):\n`;
+    overdueRows.<span class="fn">forEach</span>(r => body += `  - ${r}\n`);
+    body += `\n`;
+  }
+  <span class="kw">if</span> (followUpToday.length > 0) {
+    body += `🟡 FOLLOW-UP DUE TODAY:\n`;
+    followUpToday.<span class="fn">forEach</span>(r => body += `  - ${r}\n`);
+    body += `\n`;
+  }
+  <span class="kw">if</span> (marketViolations.length > 0) {
+    body += `⚠️  MARKET MINIMUM VIOLATIONS (&lt;3 markets):\n`;
+    marketViolations.<span class="fn">forEach</span>(r => body += `  - ${r}\n`);
+    body += `\n`;
+  }
+
+  <span class="kw">if</span> (overdueRows.length === 0 && followUpToday.length === 0 && marketViolations.length === 0) {
+    body += `✅ All clear — no flags today.\n`;
+  }
+
+  body += `\nView full tracker: ${ss.<span class="fn">getUrl</span>()}`;
+
+  GmailApp.<span class="fn">sendEmail</span>(NOTIFY_EMAIL, `[InsuranceTown] Daily Commercial Digest — ${today.<span class="fn">toDateString</span>()}`, body);
+}
+
+<span class="cm">// ---- Weekly Productivity Summary ----</span>
+<span class="kw">function</span> <span class="fn">weeklyReport</span>() {
+  <span class="kw">const</span> ss = SpreadsheetApp.<span class="fn">getActiveSpreadsheet</span>();
+  <span class="kw">const</span> sheet = ss.<span class="fn">getSheetByName</span>(SHEET_NAME);
+  <span class="kw">const</span> data = sheet.<span class="fn">getDataRange</span>().<span class="fn">getValues</span>();
+  <span class="kw">const</span> today = <span class="kw">new</span> <span class="fn">Date</span>();
+  <span class="kw">const</span> weekAgo = <span class="kw">new</span> <span class="fn">Date</span>(today - 7*24*60*60*1000);
+
+  <span class="kw">let</span> vaStats = {};
+  <span class="kw">for</span> (<span class="kw">let</span> i = 1; i < data.length; i++) {
+    <span class="kw">const</span> row = data[i];
+    <span class="kw">const</span> va = row[3];
+    <span class="kw">const</span> subDate = <span class="kw">new</span> <span class="fn">Date</span>(row[5]);
+    <span class="kw">if</span> (!va || subDate < weekAgo) <span class="kw">continue</span>;
+    <span class="kw">if</span> (!vaStats[va]) vaStats[va] = { subs: 0, markets: 0, quotes: 0, binds: 0 };
+    vaStats[va].subs++;
+    vaStats[va].markets += (row[6] || 0);
+    vaStats[va].quotes += (row[7] || 0);
+    <span class="kw">if</span> (row[13] === <span class="str">'Bound'</span>) vaStats[va].binds++;
+  }
+
+  <span class="kw">let</span> body = `INSURANCE TOWN — WEEKLY VA PRODUCTIVITY REPORT\n\n`;
+  Object.<span class="fn">keys</span>(vaStats).<span class="fn">forEach</span>(va => {
+    <span class="kw">const</span> s = vaStats[va];
+    body += `${va}: ${s.subs} subs | ${s.markets} markets | ${s.quotes} quotes | ${s.binds} binds\n`;
+  });
+  body += `\nView: ${ss.<span class="fn">getUrl</span>()}`;
+  GmailApp.<span class="fn">sendEmail</span>(NOTIFY_EMAIL, `[InsuranceTown] Weekly VA Report`, body);
+}</div>
+
+  <div style="font-size:11px;color:var(--text-muted);margin-top:8px;font-family:'Courier New',monospace;padding:10px;background:rgba(201,168,76,0.04);border-radius:var(--radius);border:1px solid var(--border);">
+    TRIGGER SETUP: Apps Script → Triggers (clock icon) → Add Trigger<br>
+    • dailyDigest → Time-driven → Day timer → 8:00–9:00am<br>
+    • weeklyReport → Time-driven → Week timer → Monday → 8:00am<br>
+    • onEdit → From spreadsheet → On edit
+  </div>
+</div>
+
+<!-- DATA & SCRIPTS -->
+<script>
+const submissions = [
+  { id:'CS-001', client:'Seoul Restaurant Group', producer:'Tracie', va:'Tracie', lob:'BOP', subDate:'2026-05-10', markets:4, quotes:2, declines:1, carrier:'Markel', premium:12400, followUp:'2026-05-14', daysOpen:4, status:'Quoted', missingDocs:'Health permit', uw:'J. Kim', notes:'Quote received, need signed app', binding:'' },
+  { id:'CS-002', client:'Martinez Landscaping', producer:'Eva', va:'Hamad', lob:'BOP', subDate:'2026-04-30', markets:4, quotes:1, declines:2, carrier:'Kingsway', premium:8700, followUp:'2026-05-11', daysOpen:14, status:'Overdue', missingDocs:'None', uw:'M. Torres', notes:'Stalled at Markel — escalate', binding:'' },
+  { id:'CS-003', client:'Kim\'s Auto Shop', producer:'Eva', va:'Hamad', lob:'Comm Auto', subDate:'2026-05-07', markets:3, quotes:1, declines:1, carrier:'Bristol West', premium:6200, followUp:'2026-05-14', daysOpen:7, status:'Pending', missingDocs:'5yr loss runs', uw:'A. Nguyen', notes:'Final chase today', binding:'' },
+  { id:'CS-004', client:'Pacific Rim Contractors', producer:'Eva', va:'JoJo', lob:'WC', subDate:'2026-05-05', markets:3, quotes:1, declines:1, carrier:'ICW', premium:18900, followUp:'2026-05-14', daysOpen:9, status:'Pending', missingDocs:'Signed app', uw:'R. Park', notes:'Needs signed app to bind', binding:'' },
+  { id:'CS-005', client:'Pak\'s Janitorial', producer:'Eva', va:'JoJo', lob:'GL', subDate:'2026-05-12', markets:2, quotes:0, declines:0, carrier:'—', premium:0, followUp:'2026-05-15', daysOpen:2, status:'Pending', missingDocs:'None', uw:'—', notes:'Need 3rd market — violation', binding:'' },
+  { id:'CS-006', client:'H&J Plumbing LLC', producer:'Eva', va:'Hamad', lob:'Contractors', subDate:'2026-05-13', markets:3, quotes:2, declines:0, carrier:'Employers', premium:9400, followUp:'2026-05-16', daysOpen:1, status:'Quoted', missingDocs:'None', uw:'T. Smith', notes:'2 quotes — presenting Friday', binding:'' },
+  { id:'CS-007', client:'Greenscape Gardens', producer:'Eva', va:'Hamad', lob:'GL', subDate:'2026-05-08', markets:4, quotes:3, declines:1, carrier:'Travelers', premium:5600, followUp:'2026-05-15', daysOpen:6, status:'Quoted', missingDocs:'None', uw:'L. Chen', notes:'Best quote from Travelers', binding:'' },
+  { id:'CS-008', client:'Golden Gate Cleaning', producer:'Tracie', va:'Tracie', lob:'BOP', subDate:'2026-05-01', markets:3, quotes:0, declines:3, carrier:'—', premium:0, followUp:'', daysOpen:13, status:'Declined', missingDocs:'N/A', uw:'—', notes:'All 3 markets declined. Revisit in 6mo.', binding:'Declined' },
+  { id:'CS-009', client:'Bay Area Bistro', producer:'Tracie', va:'Tracie', lob:'BOP', subDate:'2026-04-25', markets:5, quotes:3, declines:1, carrier:'Markel', premium:14200, followUp:'', daysOpen:0, status:'Bound', missingDocs:'None', uw:'J. Kim', notes:'Bound with Markel', binding:'Bound — Markel $14,200' },
+  { id:'CS-010', client:'ProClean Services', producer:'Eva', va:'JoJo', lob:'GL', subDate:'2026-05-11', markets:3, quotes:1, declines:1, carrier:'Kingsway', premium:3900, followUp:'2026-05-16', daysOpen:3, status:'Pending', missingDocs:'W9', uw:'P. Reyes', notes:'One quote back, waiting 2 more', binding:'' },
+];
+
+function getStatusBadge(status, daysOpen, markets) {
+  let badge = '';
+  if (status === 'Bound') badge = '<span class="badge badge-green">Bound</span>';
+  else if (status === 'Quoted') badge = '<span class="badge badge-green">Quoted</span>';
+  else if (status === 'Overdue' || daysOpen > 10) badge = '<span class="badge badge-red">Overdue</span>';
+  else if (status === 'Pending') badge = '<span class="badge badge-yellow">Pending</span>';
+  else if (status === 'Declined') badge = '<span class="badge badge-gray">Declined</span>';
+  else badge = `<span class="badge badge-gold">${status}</span>`;
+  return badge;
+}
+
+function getRowClass(status, daysOpen) {
+  if (status === 'Bound' || status === 'Quoted') return 'row-green';
+  if (status === 'Overdue' || daysOpen > 2) return 'row-red';
+  if (status === 'Pending') return 'row-yellow';
+  if (status === 'Declined') return 'row-gray';
+  return '';
+}
+
+function getAgingDots(days) {
+  let html = '<div class="aging-bar">';
+  const thresholds = [0, 2, 5, 10, 14];
+  thresholds.forEach(t => {
+    let cls = 'aging-dot';
+    if (days > t) cls += days > 10 ? ' filled-red' : days > 4 ? ' filled-yellow' : ' filled-green';
+    html += `<div class="${cls}"></div>`;
+  });
+  return html + '</div>';
+}
+
+function renderVATable(vaFilter, statusFilter) {
+  const tbody = document.getElementById('va-tbody');
+  let html = '';
+  submissions.forEach(s => {
+    if (vaFilter !== 'all' && s.va !== vaFilter) return;
+    if (statusFilter !== 'all' && s.status !== statusFilter) return;
+    const rowClass = getRowClass(s.status, s.daysOpen);
+    const mktWarn = s.markets < 3 && s.status !== 'Declined' && s.status !== 'Bound' ? '<span class="mkt-warn">⚠ &lt;3</span>' : '';
+    html += `<tr class="${rowClass}">
+      <td><strong>${s.client}</strong></td>
+      <td>${s.va}</td>
+      <td>${s.lob}</td>
+      <td style="font-family:'Courier New',monospace;">${s.daysOpen}</td>
+      <td>${s.markets} ${mktWarn}</td>
+      <td>${s.quotes}</td>
+      <td>${getStatusBadge(s.status, s.daysOpen, s.markets)}</td>
+      <td style="font-size:11px;font-family:'Courier New',monospace;">${s.followUp || '—'}</td>
+      <td style="font-size:11px;color:${s.missingDocs !== 'None' && s.missingDocs !== 'N/A' ? 'var(--red)' : 'var(--text-muted)'};">${s.missingDocs}</td>
+      <td>${getAgingDots(s.daysOpen)}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+function renderPipelineTable(lobF, producerF, statusF) {
+  const tbody = document.getElementById('pipeline-tbody');
+  let html = '';
+  let idx = 1;
+  submissions.forEach(s => {
+    if (lobF !== 'all' && s.lob !== lobF) return;
+    if (producerF !== 'all' && s.producer !== producerF) return;
+    if (statusF !== 'all' && s.status !== statusF) return;
+    const rowClass = getRowClass(s.status, s.daysOpen);
+    const mktWarn = s.markets < 3 && s.status !== 'Declined' && s.status !== 'Bound' ? '<span class="mkt-warn">⚠</span>' : '';
+    const premium = s.premium ? `$${s.premium.toLocaleString()}` : '—';
+    html += `<tr class="${rowClass}">
+      <td style="font-family:'Courier New',monospace;font-size:10px;color:var(--text-muted);">${s.id}</td>
+      <td><strong>${s.client}</strong></td>
+      <td>${s.producer}</td>
+      <td>${s.va}</td>
+      <td><span class="badge badge-gold" style="font-size:10px;">${s.lob}</span></td>
+      <td style="font-size:11px;font-family:'Courier New',monospace;">${s.subDate}</td>
+      <td>${s.markets} ${mktWarn}</td>
+      <td>${s.quotes}</td>
+      <td>${s.declines}</td>
+      <td style="font-family:'Courier New',monospace;">${premium}</td>
+      <td style="font-size:11px;font-family:'Courier New',monospace;">${s.followUp || '—'}</td>
+      <td style="font-family:'Courier New',monospace;color:${s.daysOpen > 10 ? 'var(--red)' : s.daysOpen > 5 ? 'var(--yellow)' : 'var(--text-main)'};">${s.daysOpen}</td>
+      <td>${getStatusBadge(s.status, s.daysOpen, s.markets)}</td>
+      <td style="font-size:11px;color:${s.missingDocs !== 'None' && s.missingDocs !== 'N/A' ? 'var(--red)' : 'var(--text-muted)'};">${s.missingDocs}</td>
+      <td style="font-size:11px;color:var(--text-muted);">${s.uw}</td>
+      <td style="font-size:11px;">${s.binding || '—'}</td>
+    </tr>`;
+    idx++;
+  });
+  tbody.innerHTML = html;
+}
+
+function filterVA() {
+  const va = document.getElementById('va-filter').value;
+  const st = document.getElementById('status-filter-va').value;
+  renderVATable(va, st);
+}
+function filterPipeline() {
+  const lob = document.getElementById('lob-filter').value;
+  const pr = document.getElementById('producer-filter').value;
+  const st = document.getElementById('status-filter-pipe').value;
+  renderPipelineTable(lob, pr, st);
+}
+
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Init renders
+renderVATable('all', 'all');
+renderPipelineTable('all', 'all', 'all');
+
+// Charts
+window.addEventListener('load', () => {
+  // Status pie
+  new Chart(document.getElementById('chartStatus'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Quoted', 'Pending', 'Overdue', 'Declined', 'Bound'],
+      datasets: [{
+        data: [3, 4, 2, 1, 1],
+        backgroundColor: ['#2ECC71','#F1C40F','#E74C3C','#6C7A89','#27AE60'],
+        borderColor: '#152535',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      cutout: '60%'
+    }
+  });
+
+  // LOB bar
+  new Chart(document.getElementById('chartLOB'), {
+    type: 'bar',
+    data: {
+      labels: ['BOP','GL','WC','Comm Auto','Contractors'],
+      datasets: [{
+        label: 'Submissions',
+        data: [4, 3, 1, 1, 1],
+        backgroundColor: '#C9A84C',
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#9A9080', font: { size: 11 } }, grid: { color: 'rgba(201,168,76,0.08)' } },
+        y: { ticks: { color: '#9A9080', font: { size: 11 } }, grid: { color: 'rgba(201,168,76,0.08)' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // Aging bar
+  new Chart(document.getElementById('chartAging'), {
+    type: 'bar',
+    data: {
+      labels: ['0–2 Days','3–5 Days','6–10 Days','11–14 Days','15+ Days'],
+      datasets: [{
+        label: 'Submissions',
+        data: [5, 4, 2, 1, 0],
+        backgroundColor: ['#2ECC71','#F1C40F','#E67E22','#E74C3C','#922B21'],
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#9A9080', font: { size: 10 } }, grid: { color: 'rgba(201,168,76,0.08)' } },
+        y: { ticks: { color: '#9A9080', stepSize: 1 }, grid: { color: 'rgba(201,168,76,0.08)' }, beginAtZero: true }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

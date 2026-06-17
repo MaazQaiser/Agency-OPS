@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency OS — Retention + Prime Agency Scorecard</title>
+<style>
+  :root {
+    --navy:#0D1B2A;--navy-mid:#112236;--navy-light:#1a3350;--navy-card:#0f2035;
+    --gold:#C9A84C;--gold-light:#e0c070;--gold-dim:#7a6030;--gold-glow:rgba(201,168,76,0.12);
+    --white:#f0ece0;--muted:#7a96b0;
+    --green:#27ae60;--green-bg:rgba(39,174,96,0.1);
+    --red:#e74c3c;--red-bg:rgba(231,76,60,0.1);
+    --amber:#e67e22;--amber-bg:rgba(230,126,34,0.1);
+    --blue:#3498db;--blue-bg:rgba(52,152,219,0.1);
+    --purple:#9b59b6;--purple-bg:rgba(155,89,182,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--white);font-family:'Trebuchet MS',sans-serif;font-size:14px;line-height:1.7;}
+  .conf-banner{background:var(--gold);color:var(--navy);text-align:center;padding:10px;font-weight:900;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;position:sticky;top:0;z-index:100;}
+  header{background:linear-gradient(160deg,#060d14 0%,var(--navy) 100%);border-bottom:3px solid var(--gold);padding:36px 40px 28px;}
+  .h-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+  header h1{font-family:Georgia,serif;font-size:26px;color:var(--white);}
+  header h1 em{color:var(--gold);font-style:normal;}
+  .h-meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:10px;font-size:12px;color:var(--muted);}
+  .h-meta strong{color:var(--white);}
+  .patent{display:inline-block;margin-top:10px;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);color:var(--gold);font-size:10px;letter-spacing:2px;padding:4px 14px;text-transform:uppercase;}
+  .container{max-width:960px;margin:0 auto;padding:28px 24px 60px;}
+  .section-label{display:flex;align-items:center;gap:12px;margin:32px 0 14px;}
+  .sl-num{background:var(--gold);color:var(--navy);font-weight:900;font-size:11px;padding:4px 10px;border-radius:2px;flex-shrink:0;}
+  .sl-text{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);flex:1;border-bottom:1px solid var(--navy-light);padding-bottom:6px;}
+  .card{background:var(--navy-card);border:1px solid var(--navy-light);border-radius:6px;margin-bottom:12px;overflow:hidden;}
+  .card-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;cursor:pointer;user-select:none;}
+  .card-header:hover{background:rgba(201,168,76,0.04);}
+  .card.open .card-header{border-bottom:1px solid var(--navy-light);}
+  .card-title{font-weight:700;font-size:13px;display:flex;align-items:center;gap:10px;}
+  .card-icon{color:var(--gold);}
+  .card-toggle{color:var(--gold);transition:transform 0.2s;font-size:14px;}
+  .card.open .card-toggle{transform:rotate(180deg);}
+  .card-body{display:none;padding:20px;}
+  .card.open .card-body{display:block;}
+  .alert{padding:14px 18px;border-radius:4px;margin-bottom:12px;}
+  .alert-gold{background:var(--gold-glow);border-left:4px solid var(--gold);}
+  .alert-green{background:var(--green-bg);border-left:4px solid var(--green);}
+  .alert-amber{background:var(--amber-bg);border-left:4px solid var(--amber);}
+  .alert-blue{background:var(--blue-bg);border-left:4px solid var(--blue);}
+  .alert-purple{background:var(--purple-bg);border-left:4px solid var(--purple);}
+  .alert-title{font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+  .alert-gold .alert-title{color:var(--gold);} .alert-green .alert-title{color:var(--green);}
+  .alert-amber .alert-title{color:var(--amber);} .alert-blue .alert-title{color:var(--blue);}
+  .alert-purple .alert-title{color:var(--purple);}
+  .alert p,.alert li{font-size:13px;} .alert ul{margin-top:6px;padding-left:16px;} .alert li{margin-bottom:3px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px;}
+  th{background:rgba(201,168,76,0.1);color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-size:10px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--navy-light);}
+  td{padding:9px 12px;border-bottom:1px solid rgba(26,51,80,0.5);vertical-align:top;}
+  tr:last-child td{border-bottom:none;} tr:hover td{background:rgba(201,168,76,0.02);}
+  .pill{display:inline-block;padding:2px 9px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:1px;}
+  .pill-green{background:rgba(39,174,96,0.15);border:1px solid rgba(39,174,96,0.4);color:#2ecc71;}
+  .pill-amber{background:rgba(230,126,34,0.15);border:1px solid rgba(230,126,34,0.4);color:#e67e22;}
+  .pill-blue{background:rgba(52,152,219,0.15);border:1px solid rgba(52,152,219,0.4);color:#5dade2;}
+  .pill-gold{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--gold);}
+  .pill-purple{background:rgba(155,89,182,0.15);border:1px solid rgba(155,89,182,0.4);color:#c39bd3;}
+  .pill-red{background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.4);color:#e74c3c;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px;}
+  .kpi-card{background:var(--navy-mid);border:1px solid var(--navy-light);border-radius:4px;padding:14px 12px;}
+  .kpi-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .kpi-val{font-size:22px;font-weight:800;color:var(--gold);}
+  .kpi-sub{font-size:10px;color:var(--muted);margin-top:4px;}
+  .tier-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--navy-light);border-radius:4px;margin-bottom:8px;}
+  .tier-badge{font-size:10px;font-weight:900;padding:4px 10px;border-radius:2px;flex-shrink:0;min-width:60px;text-align:center;}
+  .tier-none{background:rgba(231,76,60,0.2);border:1px solid rgba(231,76,60,0.4);color:#e74c3c;}
+  .tier-1{background:rgba(230,126,34,0.2);border:1px solid rgba(230,126,34,0.4);color:#e67e22;}
+  .tier-2{background:rgba(52,152,219,0.2);border:1px solid rgba(52,152,219,0.4);color:#5dade2;}
+  .tier-3{background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.4);color:#2ecc71;}
+  .tier-body{font-size:12px;color:var(--white);}
+  .tier-body strong{color:var(--gold-light);}
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--navy-light);padding:0 0 0 0;background:var(--navy-mid);overflow-x:auto;}
+  .tab{padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:0.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;text-transform:uppercase;}
+  .tab:hover{color:var(--white);}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .tab-content{display:none;padding:20px 0;}
+  .tab-content.active{display:block;}
+  footer{border-top:1px solid var(--navy-light);padding:20px;text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;}
+</style>
+<link rel="stylesheet" href="global-nav.css">
+<script src="global-nav.js" defer></script>
+</head>
+<body class="has-global-nav" data-active-module="retention">
+
+<nav class="global-top-nav" aria-label="Agency OS product navigation">
+  <div class="global-nav-inner">
+    <div class="global-nav-left">
+      <a href="dashboard.html" class="global-nav-brand">Agency OS</a>
+      <div class="global-nav-links">
+        <a href="dashboard.html" class="global-nav-link" data-module="dashboard">Dashboard</a>
+        <a href="2026-05-29_AgencyOS_ProducerScorecard_Prototype (1).html" class="global-nav-link" data-module="producer">Producer Scorecard</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html" class="global-nav-link" data-module="retention">Retention Scorecard</a>
+        <a href="2026-05-14_AgencyOS_CommercialSubmissionTracker (3) (1).html" class="global-nav-link" data-module="commercial">Commercial Tracker</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html#prime-agency" class="global-nav-link" data-module="prime-agency">Prime Agency</a>
+      </div>
+    </div>
+    <div class="global-nav-right">
+      <div class="global-search">
+        <span class="global-search-icon" aria-hidden="true">⌕</span>
+        <input type="search" class="global-search-input" placeholder="Search…" aria-label="Global search">
+      </div>
+      <button type="button" class="global-util-btn" aria-label="Notifications">🔔<span class="global-util-badge">4</span></button>
+      <button type="button" class="global-util-btn global-util-btn-ai" aria-label="AI Insights">✦ <span class="util-label">AI Insights</span></button>
+      <div class="global-profile">
+        <button type="button" class="global-profile-btn" aria-label="User profile menu">
+          <span class="global-profile-avatar">EC</span>
+          <span><span class="global-profile-name">Eva Chong</span><span class="global-profile-role">Executive</span></span>
+        </button>
+        <div class="global-profile-menu">
+          <a href="#">My Profile</a>
+          <a href="#">Settings</a>
+          <button type="button">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-context">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="dashboard.html">Agency OS</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Retention Scorecard</span>
+  </nav>
+  <h2 class="page-context-title">Retention Scorecard</h2>
+  <p class="page-context-desc">Valerie and Tracie retention KPIs, compensation tiers, cross-sell points, cancellation save rules, and Prime Agency alignment metrics.</p>
+</div>
+
+<div class="conf-banner">⚠ CONFIDENTIAL — INSURANCE TOWN AGENCY OS — RETENTION + PRIME AGENCY SCORECARD MODULE</div>
+<header>
+  <div class="h-tag">Agency OS · Retention + Prime Agency Intelligence</div>
+  <h1>Retention <em>Scorecard</em> + Prime Agency Module</h1>
+  <div class="h-meta">
+    <div><strong>Owner:</strong> Eva Chong · Insurance Town · California</div>
+    <div><strong>Retention Leads:</strong> Valerie (English) · Tracie (Korean)</div>
+    <div><strong>Module Type:</strong> Permanent Operational Intelligence</div>
+    <div><strong>Updated:</strong> May 29, 2026</div>
+  </div>
+  <div class="patent">Patent Pending · USPTO #64/053,057</div>
+</header>
+
+<div class="container">
+
+<!-- CORE PHILOSOPHY -->
+<div class="section-label"><div class="sl-num">📌</div><div class="sl-text">Core Architecture Decision — Two Separate Compensation Ecosystems</div></div>
+
+<div class="two-col">
+  <div class="alert alert-gold">
+    <div class="alert-title">Ecosystem 1 — New Business Production</div>
+    <ul>
+      <li>Sarah — Personal Lines + Life</li>
+      <li>Jazmín — Commercial SDR (warm transfers only)</li>
+      <li>Pedro Torres — Commercial follow-up (trial)</li>
+      <li>Zahra Gul — Farmers captive new business (trial)</li>
+    </ul>
+    <p style="margin-top:8px;font-size:12px;">Measured on: premium production, close rate, policies bound, households opened.</p>
+  </div>
+  <div class="alert alert-purple">
+    <div class="alert-title">Ecosystem 2 — Retention / Account Management</div>
+    <ul>
+      <li>Valerie — English Retention + Cross-Sell Dept</li>
+      <li>Tracie — Korean Retention + Cross-Sell Dept</li>
+    </ul>
+    <p style="margin-top:8px;font-size:12px;">Measured on: retention %, PIF, household retention, saves, cross-sell points, Prime Agency contribution. NOT premium production alone.</p>
+  </div>
+</div>
+
+<div class="alert alert-green">
+  <div class="alert-title">How Valerie + Tracie Are Titled in Agency OS</div>
+  <ul>
+    <li>Account Manager</li>
+    <li>Retention Specialist</li>
+    <li>Household Protection Advisor</li>
+    <li>Cross-Sell Opportunity Manager</li>
+  </ul>
+  <p style="margin-top:6px;font-size:12px;">These are NOT service-only roles. They are profit protection + growth acceleration positions with full KPI accountability and performance compensation.</p>
+</div>
+
+<!-- RETENTION KPI SCORECARD -->
+<div class="section-label"><div class="sl-num">📊</div><div class="sl-text">Retention KPI Scorecard — Max 6 Core KPIs Per Department (Eva's Rule)</div></div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('valerie',this)">Valerie — English Dept</div>
+  <div class="tab" onclick="switchTab('tracie',this)">Tracie — Korean Dept</div>
+  <div class="tab" onclick="switchTab('combined',this)">Eva Executive View</div>
+</div>
+
+<div id="tab-valerie" class="tab-content active">
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Retention %</div>
+      <div class="kpi-val" style="color:var(--green);">94.2%</div>
+      <div class="kpi-sub">Goal: 93%+ (Tier 2)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">PIF (Policies in Force)</div>
+      <div class="kpi-val" style="color:var(--gold);">312</div>
+      <div class="kpi-sub">Month-over-month trend</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Cancellation Saves</div>
+      <div class="kpi-val" style="color:var(--blue);">7</div>
+      <div class="kpi-sub">60-day hold verified</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Cross-Sell Points</div>
+      <div class="kpi-val" style="color:var(--gold);">142</div>
+      <div class="kpi-sub">Goal: 100/month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ACRs Completed</div>
+      <div class="kpi-val" style="color:var(--green);">18</div>
+      <div class="kpi-sub">Annual Coverage Reviews</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Life Referrals</div>
+      <div class="kpi-val" style="color:var(--amber);">3</div>
+      <div class="kpi-sub">Sent to Sarah this month</div>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);">Data populates from Kyle's Google Sheets retention tab. Folio period dates — not calendar month.</p>
+</div>
+
+<div id="tab-tracie" class="tab-content">
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Retention %</div>
+      <div class="kpi-val" style="color:var(--amber);">91.8%</div>
+      <div class="kpi-sub">Goal: 93%+ (currently Tier 1)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">PIF (Korean Dept)</div>
+      <div class="kpi-val" style="color:var(--gold);">87</div>
+      <div class="kpi-sub">Month-over-month trend</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Cancellation Saves</div>
+      <div class="kpi-val" style="color:var(--blue);">2</div>
+      <div class="kpi-sub">60-day hold verified</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Cross-Sell Points</div>
+      <div class="kpi-val" style="color:var(--amber);">64</div>
+      <div class="kpi-sub">Goal: 100/month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">ACRs Completed</div>
+      <div class="kpi-val" style="color:var(--green);">9</div>
+      <div class="kpi-sub">Annual Coverage Reviews</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Life Referrals</div>
+      <div class="kpi-val" style="color:var(--amber);">1</div>
+      <div class="kpi-sub">Sent to Sarah this month</div>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);">Korean dept only. Tracie's renewals never route to Valerie. Separate board, separate scorecard.</p>
+</div>
+
+<div id="tab-combined" class="tab-content">
+  <table>
+    <thead><tr><th>KPI</th><th>Valerie (English)</th><th>Tracie (Korean)</th><th>Combined</th><th>Goal</th></tr></thead>
+    <tbody>
+      <tr><td>Retention %</td><td style="color:var(--green);">94.2%</td><td style="color:var(--amber);">91.8%</td><td>93.1%</td><td>93%+ (Tier 2)</td></tr>
+      <tr><td>PIF</td><td>312</td><td>87</td><td>399</td><td>Grow MoM</td></tr>
+      <tr><td>Cancellation Saves</td><td>7</td><td>2</td><td>9</td><td>Track + bonus</td></tr>
+      <tr><td>Cross-Sell Points</td><td>142</td><td>64</td><td>206</td><td>200+/month combined</td></tr>
+      <tr><td>ACRs</td><td>18</td><td>9</td><td>27</td><td>Eva sets monthly target</td></tr>
+      <tr><td>Life Referrals to Sarah</td><td>3</td><td>1</td><td>4</td><td>Eva sets monthly target</td></tr>
+      <tr><td>Commercial Referral Opps</td><td>—</td><td>—</td><td>—</td><td>Track — bonus eligible</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- RETENTION BONUS STRUCTURE -->
+<div class="section-label"><div class="sl-num">💰</div><div class="sl-text">Compensation Structure — Retention Ecosystem</div></div>
+
+<div class="alert alert-gold">
+  <div class="alert-title">Compensation Formula</div>
+  <p>Base Hourly + Retention Score Bonus + Cross-Sell Point Bonus + Cancellation Save Bonus + Prime Agency Alignment Bonus + Agency Achievement Bonus</p>
+  <p style="margin-top:6px;font-size:12px;color:var(--muted);">NOT commission-heavy. Stability first. Performance bonuses reward preservation and growth — not production volume alone.</p>
+</div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">📈</span> Retention Score Bonus — Monthly Tiers</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Measured monthly on folio period dates. Uses retained premium + household retention + cancellation prevention + rewrite prevention + PIF preservation. NOT raw policy count alone.</p>
+    <div class="tier-row">
+      <div class="tier-badge tier-none">No Bonus</div>
+      <div class="tier-body">Below 90% retention · No performance bonus this period</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-badge tier-1">Tier 1</div>
+      <div class="tier-body"><strong>91–92% retention</strong> · Base bonus applies · Eva sets dollar amount</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-badge tier-2">Tier 2</div>
+      <div class="tier-body"><strong>93–94% retention</strong> · Enhanced bonus · Eligible for Prime Agency alignment bonus</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-badge tier-3">Tier 3</div>
+      <div class="tier-body"><strong>95%+ retention</strong> · Maximum bonus · Full Prime Agency + 5-Star Agency bonus eligibility</div>
+    </div>
+    <div class="alert alert-amber" style="margin-top:12px;">
+      <div class="alert-title">Hassan Builds This — Agency OS Calculates It Automatically</div>
+      <p>Eva sets the dollar values per tier once. Agency OS reads retention % from Kyle's Sheets layer, applies the tier formula, and shows the calculated bonus amount in each person's scorecard view. No manual calculation ever.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">⭐</span> Cross-Sell Point System</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Activity</th><th>Points</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Annual Coverage Review (ACR) completed</td><td><span class="pill pill-gold">10 pts</span></td><td>Must be documented in AZ</td></tr>
+        <tr><td>Auto + Home bundle added to existing client</td><td><span class="pill pill-green">15 pts</span></td><td>Policy must bind</td></tr>
+        <tr><td>Umbrella added to existing household</td><td><span class="pill pill-green">12 pts</span></td><td>Policy must bind</td></tr>
+        <tr><td>Renters policy added</td><td><span class="pill pill-gold">8 pts</span></td><td>Policy must bind</td></tr>
+        <tr><td>Life appointment booked (referred to Sarah)</td><td><span class="pill pill-blue">10 pts</span></td><td>Appointment set + documented in AZ</td></tr>
+        <tr><td>Life policy issued (from referral)</td><td><span class="pill pill-green">20 pts</span></td><td>Sarah confirms + documents referral source</td></tr>
+        <tr><td>Commercial referral opportunity identified</td><td><span class="pill pill-blue">8 pts</span></td><td>Client name + commercial need logged in AZ</td></tr>
+        <tr><td>Commercial policy bound from referral</td><td><span class="pill pill-green">25 pts</span></td><td>Highest value activity</td></tr>
+        <tr><td>EPLI conversation initiated</td><td><span class="pill pill-gold">5 pts</span></td><td>Commercial client — must be documented</td></tr>
+        <tr><td>Existing client referral (new household)</td><td><span class="pill pill-gold">8 pts</span></td><td>Referral received + logged in AZ</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-blue" style="margin-top:12px;">
+      <div class="alert-title">Where This Lives</div>
+      <p>Cross-sell points tracked in: AgencyZoom pipeline activity · Monday.com cross-sell task group · Agency OS weighted scoring engine (Hassan builds) · Kyle automates point calculation from AZ activity log.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">🛡</span> Cancellation Save Bonus Rules</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <div class="alert alert-amber">
+      <div class="alert-title">Save Bonus Eligibility — All 4 Conditions Required</div>
+      <ul>
+        <li>Policy remains active for <strong>60+ days</strong> after the save</li>
+        <li>Premium successfully collected for that period</li>
+        <li>Save documented properly in AgencyZoom notes</li>
+        <li>No rewrite manipulation — genuine save only</li>
+      </ul>
+    </div>
+    <table style="margin-top:12px;">
+      <thead><tr><th>Save Type</th><th>Weighted Value</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Personal Lines save</td><td><span class="pill pill-gold">Standard</span></td><td>Base save bonus — Eva sets dollar amount</td></tr>
+        <tr><td>Commercial Lines save</td><td><span class="pill pill-green">Higher weighted</span></td><td>Commercial carries higher premium — higher bonus value</td></tr>
+        <tr><td>Multi-policy household save</td><td><span class="pill pill-green">Higher weighted</span></td><td>Preserving bundle = higher retention impact</td></tr>
+        <tr><td>Rewrite (same carrier)</td><td><span class="pill pill-amber">Reduced or Zero</span></td><td>Rewrite to avoid cancellation — not a genuine save</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PRIME AGENCY SCORECARD -->
+<div class="section-label" id="prime-agency"><div class="sl-num">🏆</div><div class="sl-text">Prime Agency Scorecard — Farmers-Specific Tracking</div></div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">📋</span> Prime Agency KPIs — Agency OS Must Track All of These</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Metric</th><th>Frequency</th><th>Data Source</th><th>Who Owns It</th></tr></thead>
+      <tbody>
+        <tr><td>PIF movement (growth/loss)</td><td>Monthly · Quarterly · Rolling 12mo</td><td>Farmers system → Kyle's Sheets</td><td>Eva + Valerie + Tracie</td></tr>
+        <tr><td>Retention %</td><td>Monthly · Quarterly · Rolling 12mo</td><td>Farmers system → Kyle's Sheets</td><td>Valerie (English) + Tracie (Korean)</td></tr>
+        <tr><td>Growth % (new policies ÷ PIF)</td><td>Monthly · Quarterly</td><td>AgencyZoom + Farmers system</td><td>Sarah + Eva</td></tr>
+        <tr><td>Life production</td><td>Monthly · Quarterly</td><td>AgencyZoom pipeline 3 (Life/FFS)</td><td>Sarah (production) + Valerie/Tracie (referrals)</td></tr>
+        <tr><td>Commercial production</td><td>Monthly · Quarterly</td><td>AgencyZoom pipelines 4+5</td><td>Jazmín + Pedro</td></tr>
+        <tr><td>Prime Agency status</td><td>Quarterly</td><td>Farmers scorecard</td><td>Eva executive view only</td></tr>
+        <tr><td>Quarterly ranking movement</td><td>Quarterly</td><td>Farmers system</td><td>Eva executive view only</td></tr>
+        <tr><td>Persistency rate</td><td>Monthly · Rolling 12mo</td><td>Farmers system</td><td>Eva + retention team</td></tr>
+        <tr><td>Household penetration</td><td>Monthly · Quarterly</td><td>AgencyZoom + Farmers system</td><td>Valerie + Tracie</td></tr>
+        <tr><td>Cancellation rate</td><td>Monthly · Rolling 12mo</td><td>AgencyZoom + Farmers system</td><td>Valerie + Tracie</td></tr>
+        <tr><td>RC alignment goals</td><td>Monthly</td><td>Farmers system</td><td>Eva</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-gold" style="margin-top:12px;">
+      <div class="alert-title">Display Format — All Scorecards Must Show Three Views</div>
+      <p>Monthly · Quarterly · Rolling 12-month trend. Never just one view. Eva needs all three to see whether the agency is building momentum or trending down.</p>
+    </div>
+  </div>
+</div>
+
+<!-- AGENCYZOOM PIPELINES — RETENTION LAYER -->
+<div class="section-label"><div class="sl-num">🔄</div><div class="sl-text">AgencyZoom Pipelines — Retention Layer (Arminda Manages Data Entry)</div></div>
+
+<div class="alert alert-amber">
+  <div class="alert-title">⚠ Arminda's Role Clarification</div>
+  <p>Arminda Sumido is confirmed as <strong>CERT + AgencyZoom data entry only</strong>. She does NOT own pipeline setup or operational workflows. Her role is to support pipeline maintenance and data accuracy — not to design or modify pipelines. Pipeline ownership = Eva (design) + Kyle (automation). Arminda executes data entry tasks assigned to her via Monday board.</p>
+</div>
+
+<table>
+  <thead><tr><th>Pipeline</th><th>Owner (AZ)</th><th>Kyle Automation</th><th>Monday Board Owner</th></tr></thead>
+  <tbody>
+    <tr><td>Renewal Review Pipeline</td><td>Valerie (English) + Tracie (Korean)</td><td>21-day/14-day/7-day/30-day SLA flows — SEPARATE by language</td><td>Valerie board + Tracie board (never shared)</td></tr>
+    <tr><td>Cancellation Save Pipeline</td><td>Valerie + Tracie (by language)</td><td>Save trigger → 60-day verification → bonus calculation signal</td><td>Each VA's Monday board</td></tr>
+    <tr><td>Cross-Sell Pipeline</td><td>Valerie + Tracie</td><td>Cross-sell point calculation + AZ activity log sync</td><td>Cross-sell group on each VA board</td></tr>
+    <tr><td>Life Referral Pipeline</td><td>Valerie/Tracie (referral) → Sarah (production)</td><td>AZ activity → Sarah's pipeline trigger → Slack alert [Sarah]</td><td>Sarah's board</td></tr>
+    <tr><td>Commercial Opportunity Pipeline</td><td>Valerie/Tracie (identify) → Jazmín (outreach)</td><td>Commercial opp identified → Slack alert [Jazmín] + Monday card</td><td>Jazmín's SDR board</td></tr>
+    <tr><td>Annual Coverage Review Pipeline</td><td>Valerie + Tracie</td><td>ACR scheduled → completion logged → points awarded</td><td>Each VA's Monday board</td></tr>
+  </tbody>
+</table>
+
+<!-- SYSTEM OWNERSHIP -->
+<div class="section-label"><div class="sl-num">⚙</div><div class="sl-text">System Ownership — Retention Layer</div></div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">🗂</span> Who Builds What — Retention Module</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>System</th><th>Who Builds</th><th>What They Build</th></tr></thead>
+      <tbody>
+        <tr><td>AgencyZoom</td><td>Kyle (sequences) + Arminda (data entry) + Eva (design)</td><td>6 retention pipelines above. Sequences: renewal reminders, save follow-ups, ACR scheduling, cross-sell prompts.</td></tr>
+        <tr><td>Monday.com</td><td>Kyle</td><td>Retention task queues per VA. Overdue alerts. SLA tracking. Manager visibility for Eva.</td></tr>
+        <tr><td>Agency OS Dashboard</td><td>Hassan</td><td>KPI dashboards, compensation calculations, weighted cross-sell scoring, retention analytics, Prime Agency score tracking, executive reporting, leaderboard, quarterly trend forecasting.</td></tr>
+        <tr><td>Make.com automation</td><td>Kyle</td><td>AZ → Monday retention triggers. Save verification flows. Scorecard sync. Overdue escalation. Cross-sell point calculation. Dashboard data pipeline.</td></tr>
+        <tr><td>Compensation calculation</td><td>Hassan (dashboard display) + Kyle (data sync)</td><td>Eva sets tier dollar values once in a config Sheets tab. Agency OS reads retention % → applies tier → displays calculated bonus in each person's scorecard. Automatic. Never manual.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FUTURE ROADMAP -->
+<div class="section-label"><div class="sl-num">🔭</div><div class="sl-text">Future Agency OS Features — Retention Layer (Phase 3+)</div></div>
+
+<div class="card open">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="card-title"><span class="card-icon">🚀</span> Future Development — Retention Intelligence</div>
+    <div class="card-toggle">▾</div>
+  </div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Feature</th><th>What It Does</th><th>Phase</th></tr></thead>
+      <tbody>
+        <tr><td>Weighted account scoring</td><td>Each client scored by household value, policy count, retention risk — helps prioritize who to call first</td><td><span class="pill pill-blue">Phase 3</span></td></tr>
+        <tr><td>Predictive cancellation risk</td><td>AI flags clients likely to cancel based on payment patterns, tenure, policy changes — proactive save opportunities</td><td><span class="pill pill-blue">Phase 3</span></td></tr>
+        <tr><td>Household penetration scoring</td><td>Visual score per household showing coverage gaps and cross-sell opportunities remaining</td><td><span class="pill pill-blue">Phase 3</span></td></tr>
+        <tr><td>Automated compensation calculations</td><td>Full bonus calculation automation — Eva reviews and approves, system does the math</td><td><span class="pill pill-amber">Phase 2</span></td></tr>
+        <tr><td>Prime Agency forecasting</td><td>Dashboard shows projected Prime status at end of quarter based on current trajectory</td><td><span class="pill pill-amber">Phase 2</span></td></tr>
+        <tr><td>AI recommendation engine</td><td>Suggests which clients to call for ACR, cross-sell, or save based on policy data</td><td><span class="pill pill-blue">Phase 3</span></td></tr>
+        <tr><td>Retention risk heat maps</td><td>Visual map of all clients by risk level — high risk clients surface to the top of each VA's queue</td><td><span class="pill pill-blue">Phase 3</span></td></tr>
+        <tr><td>Executive forecasting dashboards</td><td>Eva sees full agency trend: where Prime status will land, what needs to change, which department is behind</td><td><span class="pill pill-amber">Phase 2</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>INSURANCE TOWN | AGENCY OS · Retention + Prime Agency Scorecard Module · Patent Pending USPTO #64/053,057 · Confidential · May 29, 2026</footer>
+<script>
+  document.querySelectorAll('.card-header').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('open')));
+  function switchTab(name,el){
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

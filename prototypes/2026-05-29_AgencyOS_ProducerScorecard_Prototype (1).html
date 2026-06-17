@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insurance Town — Producer Scorecard Prototype</title>
+<style>
+  :root{--navy:#0D1B2A;--navy-mid:#112236;--navy-light:#1a3350;--navy-card:#0f2035;--gold:#C9A84C;--gold-dim:#7a6030;--gold-glow:rgba(201,168,76,0.12);--white:#f0ece0;--muted:#7a96b0;--green:#27ae60;--green-bg:rgba(39,174,96,0.1);--red:#e74c3c;--red-bg:rgba(231,76,60,0.1);--amber:#e67e22;--amber-bg:rgba(230,126,34,0.1);--blue:#3498db;--blue-bg:rgba(52,152,219,0.1);--purple:#9b59b6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--white);font-family:'Trebuchet MS',sans-serif;font-size:14px;line-height:1.7;}
+  .conf-banner{background:var(--gold);color:var(--navy);text-align:center;padding:10px;font-weight:900;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;position:sticky;top:0;z-index:100;}
+  header{background:linear-gradient(160deg,#06101a 0%,var(--navy) 100%);border-bottom:3px solid var(--gold);padding:36px 40px 28px;}
+  .h-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+  header h1{font-family:Georgia,serif;font-size:26px;color:var(--white);}
+  header h1 em{color:var(--gold);font-style:normal;}
+  .h-meta{display:flex;flex-wrap:wrap;gap:20px;margin-top:10px;font-size:12px;color:var(--muted);}
+  .h-meta strong{color:var(--white);}
+  .patent{display:inline-block;margin-top:10px;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);color:var(--gold);font-size:10px;letter-spacing:2px;padding:4px 14px;text-transform:uppercase;}
+  .container{max-width:1100px;margin:0 auto;padding:0;}
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--navy-light);background:var(--navy-mid);overflow-x:auto;}
+  .tab{padding:13px 20px;font-size:11px;font-weight:700;letter-spacing:0.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;text-transform:uppercase;}
+  .tab:hover{color:var(--white);}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .tab-content{display:none;padding:28px;}
+  .tab-content.active{display:block;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px;}
+  .kpi-card{background:var(--navy-card);border:1px solid var(--navy-light);border-radius:6px;padding:18px 16px;}
+  .kpi-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .kpi-val{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;}
+  .kpi-val.green{color:var(--green);}  .kpi-val.amber{color:var(--amber);}
+  .kpi-val.red{color:var(--red);}  .kpi-val.gold{color:var(--gold);}  .kpi-val.blue{color:var(--blue);}
+  .kpi-sub{font-size:11px;color:var(--muted);margin-top:6px;}
+  .kpi-card.featured{grid-column:span 2;}
+  .kpi-card.featured .kpi-val{font-size:40px;}
+  .progress-bar{height:3px;background:var(--navy-light);border-radius:2px;margin-top:10px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:2px;}
+  .progress-fill.green{background:var(--green);}  .progress-fill.amber{background:var(--amber);}
+  .progress-fill.red{background:var(--red);}  .progress-fill.gold{background:var(--gold);}
+  .producer-cards{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+  .producer-card{background:var(--navy-card);border:2px solid var(--navy-light);border-radius:6px;padding:12px 18px;cursor:pointer;transition:all 0.2s;min-width:130px;}
+  .producer-card:hover{border-color:var(--gold-dim);}
+  .producer-card.active{border-color:var(--gold);background:var(--gold-glow);}
+  .producer-card .pc-name{font-weight:700;font-size:13px;}
+  .producer-card .pc-role{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+  .producer-card .pc-score{font-size:18px;font-weight:800;color:var(--gold);margin-top:6px;}
+  .section-hdr{display:flex;align-items:center;gap:10px;margin:24px 0 14px;}
+  .section-hdr .sh-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+  .section-hdr::after{content:'';flex:1;height:1px;background:var(--navy-light);}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;}
+  th{background:rgba(201,168,76,0.1);color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-size:10px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--navy-light);}
+  td{padding:9px 12px;border-bottom:1px solid rgba(26,51,80,0.5);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .lob-tag{display:inline-block;padding:3px 10px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+  .lob-personal{background:rgba(52,152,219,0.12);border:1px solid rgba(52,152,219,0.3);color:var(--blue);}
+  .lob-commercial{background:rgba(155,89,182,0.12);border:1px solid rgba(155,89,182,0.3);color:var(--purple);}
+  .lob-life{background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);color:var(--green);}
+  .roi-section{background:var(--navy-card);border:1px solid var(--navy-light);border-radius:6px;padding:24px;margin-bottom:24px;}
+  .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media(max-width:640px){.roi-grid{grid-template-columns:1fr;}.kpi-card.featured{grid-column:span 1;}}
+  .roi-input-group{margin-bottom:18px;}
+  .roi-input-group label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;}
+  .roi-input-group label span{color:var(--white);font-weight:700;}
+  .roi-slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--navy-light);outline:none;}
+  .roi-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--navy);}
+  .roi-result{background:var(--navy);border-radius:6px;padding:20px;}
+  .roi-results-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+  .roi-mini{background:rgba(255,255,255,0.03);border:1px solid var(--navy-light);border-radius:4px;padding:12px;}
+  .roi-mini .rml{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .roi-mini .rmv{font-size:18px;font-weight:700;margin-top:4px;}
+  .race-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .race-avatar{width:32px;height:32px;border-radius:50%;background:var(--navy-mid);border:2px solid var(--navy-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+  .race-name{font-size:13px;font-weight:600;width:80px;flex-shrink:0;}
+  .race-bar-wrap{flex:1;height:12px;background:var(--navy-light);border-radius:6px;overflow:hidden;}
+  .race-bar-fill{height:100%;border-radius:6px;}
+  .race-pts{font-size:13px;font-weight:700;color:var(--gold);width:60px;text-align:right;flex-shrink:0;}
+  .speed-indicator{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:4px;margin-bottom:8px;font-size:12px;}
+  .speed-green{background:var(--green-bg);border-left:3px solid var(--green);}
+  .speed-amber{background:var(--amber-bg);border-left:3px solid var(--amber);}
+  .speed-red{background:var(--red-bg);border-left:3px solid var(--red);}
+  .alert{padding:14px 18px;border-radius:4px;margin-bottom:16px;}
+  .alert-gold{background:var(--gold-glow);border-left:4px solid var(--gold);}
+  .alert-title{font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;color:var(--gold);}
+  footer{border-top:1px solid var(--navy-light);padding:20px;text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;}
+</style>
+<link rel="stylesheet" href="global-nav.css">
+<script src="global-nav.js" defer></script>
+</head>
+<body class="has-global-nav" data-active-module="producer">
+
+<nav class="global-top-nav" aria-label="Agency OS product navigation">
+  <div class="global-nav-inner">
+    <div class="global-nav-left">
+      <a href="dashboard.html" class="global-nav-brand">Agency OS</a>
+      <div class="global-nav-links">
+        <a href="dashboard.html" class="global-nav-link" data-module="dashboard">Dashboard</a>
+        <a href="2026-05-29_AgencyOS_ProducerScorecard_Prototype (1).html" class="global-nav-link" data-module="producer">Producer Scorecard</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html" class="global-nav-link" data-module="retention">Retention Scorecard</a>
+        <a href="2026-05-14_AgencyOS_CommercialSubmissionTracker (3) (1).html" class="global-nav-link" data-module="commercial">Commercial Tracker</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html#prime-agency" class="global-nav-link" data-module="prime-agency">Prime Agency</a>
+      </div>
+    </div>
+    <div class="global-nav-right">
+      <div class="global-search">
+        <span class="global-search-icon" aria-hidden="true">⌕</span>
+        <input type="search" class="global-search-input" placeholder="Search…" aria-label="Global search">
+      </div>
+      <button type="button" class="global-util-btn" aria-label="Notifications">🔔<span class="global-util-badge">4</span></button>
+      <button type="button" class="global-util-btn global-util-btn-ai" aria-label="AI Insights">✦ <span class="util-label">AI Insights</span></button>
+      <div class="global-profile">
+        <button type="button" class="global-profile-btn" aria-label="User profile menu">
+          <span class="global-profile-avatar">EC</span>
+          <span><span class="global-profile-name">Eva Chong</span><span class="global-profile-role">Executive</span></span>
+        </button>
+        <div class="global-profile-menu">
+          <a href="#">My Profile</a>
+          <a href="#">Settings</a>
+          <button type="button">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-context">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="dashboard.html">Agency OS</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Producer Scorecard</span>
+  </nav>
+  <h2 class="page-context-title">Producer Scorecard</h2>
+  <p class="page-context-desc">Visual reference for Hassan — producer performance KPIs, speed-to-lead, ROI calculator, weekly race, and pipeline metrics.</p>
+</div>
+
+<div class="conf-banner">⚠ CONFIDENTIAL — INSURANCE TOWN — PRODUCER SCORECARD PROTOTYPE — FOR HASSAN REFERENCE ONLY</div>
+<header>
+  <div class="h-tag">Agency OS · Producer Performance · Prototype Reference</div>
+  <h1>Producer <em>Scorecard</em> — Internal Dashboard</h1>
+  <div class="h-meta">
+    <div><strong>Owner:</strong> Eva Chong · Insurance Town · California</div>
+    <div><strong>Purpose:</strong> Visual reference for Hassan — replaces ISL entirely</div>
+    <div><strong>Date:</strong> May 29, 2026</div>
+  </div>
+  <div class="patent">Patent Pending · USPTO #64/053,057</div>
+</header>
+
+<div class="container">
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('scorecard',this)">Producer Scorecard</div>
+  <div class="tab" onclick="switchTab('speed',this)">Speed-to-Lead</div>
+  <div class="tab" onclick="switchTab('roi',this)">ROI Calculator</div>
+  <div class="tab" onclick="switchTab('race',this)">Weekly Race</div>
+  <div class="tab" onclick="switchTab('pipeline',this)">Pipeline KPI</div>
+</div>
+
+<!-- SCORECARD TAB -->
+<div id="tab-scorecard" class="tab-content active">
+  <div class="alert alert-gold">
+    <div class="alert-title">How This Works for Hassan</div>
+    <p style="font-size:12px;">Each producer card reads from Kyle's Sales_Scorecard Sheets tab. Adding a new producer = Eva adds one Tab 11 row. Dashboard auto-generates a new KPI card. Zero developer involvement per addition. Sarah = Personal Lines + Life ONLY — commercial CPA never appears on her view.</p>
+  </div>
+
+  <div class="producer-cards">
+    <div class="producer-card active" onclick="selectProducer('sarah',this)">
+      <div class="pc-name">Sarah</div>
+      <div class="pc-role">Personal Lines + Life</div>
+      <div class="pc-score">$6.6k</div>
+    </div>
+    <div class="producer-card" onclick="selectProducer('jazmin',this)">
+      <div class="pc-name">Jazmín</div>
+      <div class="pc-role">SDR / Commercial</div>
+      <div class="pc-score">42 dials</div>
+    </div>
+    <div class="producer-card" onclick="selectProducer('pedro',this)">
+      <div class="pc-name">Pedro</div>
+      <div class="pc-role">Brokerage VA2</div>
+      <div class="pc-score">8 follow-ups</div>
+    </div>
+    <div class="producer-card" onclick="selectProducer('zahra',this)">
+      <div class="pc-name">Zahra</div>
+      <div class="pc-role">Farmers VA</div>
+      <div class="pc-score">3 COIs</div>
+    </div>
+  </div>
+
+  <!-- Sarah KPIs -->
+  <div id="kpi-sarah">
+    <div class="kpi-grid">
+      <div class="kpi-card featured">
+        <div class="kpi-label">Premium Written</div>
+        <div class="kpi-val gold">$6,600</div>
+        <div class="kpi-sub">Target $30,000 · Need $805/day · Folio period May 20–Jun 18</div>
+        <div class="progress-bar"><div class="progress-fill amber" style="width:22%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Close Rate</div>
+        <div class="kpi-val amber">18%</div>
+        <div class="kpi-sub">Goal: 25%</div>
+        <div class="progress-bar"><div class="progress-fill amber" style="width:72%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Contact Rate</div>
+        <div class="kpi-val green">44%</div>
+        <div class="kpi-sub">Goal: 40% · On track</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">New Conversations</div>
+        <div class="kpi-val blue">22</div>
+        <div class="kpi-sub">Goal: 10/day · Ahead</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Policies / HH</div>
+        <div class="kpi-val green">2.0</div>
+        <div class="kpi-sub">Goal: 1.5 · Exceeding</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Households Closed</div>
+        <div class="kpi-val white">3</div>
+        <div class="kpi-sub">Target: 8/month</div>
+        <div class="progress-bar"><div class="progress-fill amber" style="width:38%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Life Apps</div>
+        <div class="kpi-val green">1</div>
+        <div class="kpi-sub">Target: 1/month · Met</div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Referrals</div>
+        <div class="kpi-val red">0</div>
+        <div class="kpi-sub">Quoted: 0 · Closed: 0</div>
+        <div class="progress-bar"><div class="progress-fill red" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="section-hdr"><div class="sh-label">Lines of Business — Sarah (Personal + Life Only)</div></div>
+    <table>
+      <thead><tr><th>Line</th><th>Quoted</th><th>Bound</th><th>Close Rate</th><th>Premium</th></tr></thead>
+      <tbody>
+        <tr><td><span class="lob-tag lob-personal">Auto</span></td><td>8</td><td>2</td><td>25%</td><td>$2,100</td></tr>
+        <tr><td><span class="lob-tag lob-personal">Home</span></td><td>5</td><td>1</td><td>20%</td><td>$1,800</td></tr>
+        <tr><td><span class="lob-tag lob-personal">Bundle</span></td><td>4</td><td>2</td><td>50%</td><td>$2,700</td></tr>
+        <tr><td><span class="lob-tag lob-life">Life</span></td><td>3</td><td>1</td><td>33%</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="kpi-other" style="display:none;">
+    <div style="padding:40px;text-align:center;color:var(--muted);">
+      <div style="font-size:32px;margin-bottom:12px;">📊</div>
+      <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px;">Producer KPI View</div>
+      <div style="font-size:12px;">Populates from Kyle's Sales_Scorecard Sheets tab.<br>Monthly reports align to folio period dates — not calendar month.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SPEED-TO-LEAD TAB -->
+<div id="tab-speed" class="tab-content">
+  <div class="section-hdr"><div class="sh-label">Speed-to-Lead Indicator — Agency-Wide (All Team Members)</div></div>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">This indicator appears in EACH person's individual view AND in Eva's owner summary. Not Jazmín only.</p>
+
+  <div class="speed-indicator speed-green">
+    <strong style="width:100px;">Sarah</strong> Last lead: 1 min 12 sec ago · ✅ Within 3-min window · RingCentral lead vendor call
+  </div>
+  <div class="speed-indicator speed-amber">
+    <strong style="width:100px;">Jazmín</strong> Last lead: 2 min 48 sec ago · ⚠ Approaching 3-min limit · Ricochet auto-dial
+  </div>
+  <div class="speed-indicator speed-red">
+    <strong style="width:100px;">Jaffer</strong> Last lead: 7 min 22 sec ago · ❌ Past 5-min window · Meta commercial lead
+  </div>
+  <div class="speed-indicator speed-green">
+    <strong style="width:100px;">Eva</strong> Last lead: 45 sec ago · ✅ Immediate · Direct line
+  </div>
+
+  <div style="margin-top:20px;background:var(--navy-card);border:1px solid var(--navy-light);border-radius:6px;padding:20px;">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Contact Window Rules</div>
+    <table>
+      <thead><tr><th>Team Member</th><th>Lead Source</th><th>Window</th><th>Missed Action</th></tr></thead>
+      <tbody>
+        <tr><td>Jazmín</td><td>Personal lines drops via Ricochet</td><td>3 minutes</td><td>Disposition logged, recycled to queue</td></tr>
+        <tr><td>Jaffer (Researcher)</td><td>Meta + LinkedIn commercial leads</td><td>5 minutes</td><td>Slack alert to Eva</td></tr>
+        <tr><td>Sarah</td><td>RingCentral lead vendor calls</td><td>Immediate</td><td>Auto SMS within 60 seconds</td></tr>
+        <tr><td>Eva</td><td>Direct line</td><td>Immediate</td><td>Auto SMS within 60 seconds</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ROI CALCULATOR TAB -->
+<div id="tab-roi" class="tab-content">
+  <div class="section-hdr"><div class="sh-label">Internet Lead ROI Calculator — Internal</div></div>
+  <div class="roi-section">
+    <div class="roi-grid">
+      <div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:18px;">Adjust inputs to see exactly what lead spend is returning — and what improving close rate is worth.</p>
+        <div class="roi-input-group">
+          <label>Monthly Lead Spend <span id="spendVal">$500</span></label>
+          <input type="range" class="roi-slider" id="spend" min="100" max="5000" value="500" step="50" oninput="calcROI()">
+        </div>
+        <div class="roi-input-group">
+          <label>Cost Per Lead <span id="cplVal">$25</span></label>
+          <input type="range" class="roi-slider" id="cpl" min="5" max="100" value="25" step="1" oninput="calcROI()">
+        </div>
+        <div class="roi-input-group">
+          <label>Current Close Rate <span id="closeVal">18%</span></label>
+          <input type="range" class="roi-slider" id="closeRate" min="1" max="50" value="18" step="1" oninput="calcROI()">
+        </div>
+        <div class="roi-input-group">
+          <label>Avg Annual Premium <span id="premVal">$1,500</span></label>
+          <input type="range" class="roi-slider" id="prem" min="500" max="5000" value="1500" step="100" oninput="calcROI()">
+        </div>
+        <div class="roi-input-group">
+          <label>Commission % <span id="commVal">12%</span></label>
+          <input type="range" class="roi-slider" id="comm" min="5" max="25" value="12" step="1" oninput="calcROI()">
+        </div>
+      </div>
+      <div>
+        <div class="roi-result">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Monthly Revenue from Leads</div>
+          <div style="font-size:32px;font-weight:800;color:var(--gold);" id="roiRevenue">$0</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="roiSub">Calculating...</div>
+        </div>
+        <div class="roi-results-grid">
+          <div class="roi-mini"><div class="rml">Leads Purchased</div><div class="rmv" style="color:var(--blue);" id="roiLeads">—</div></div>
+          <div class="roi-mini"><div class="rml">Policies Bound</div><div class="rmv" style="color:var(--green);" id="roiBound">—</div></div>
+          <div class="roi-mini"><div class="rml">Commission Earned</div><div class="rmv" style="color:var(--gold);" id="roiComm">—</div></div>
+          <div class="roi-mini"><div class="rml">ROI on Ad Spend</div><div class="rmv" style="color:var(--amber);" id="roiROI">—</div></div>
+          <div class="roi-mini" style="grid-column:span 2;border-color:rgba(39,174,96,0.3);">
+            <div class="rml">If close rate hits 25% → Commission</div>
+            <div class="rmv" style="color:var(--green);" id="roiUpside">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WEEKLY RACE TAB -->
+<div id="tab-race" class="tab-content">
+  <div class="section-hdr"><div class="sh-label">Weekly Race — 300 Pt Goal · Points configurable in Sheets tab Eva controls</div></div>
+  <div style="background:var(--navy-card);border:1px solid var(--navy-light);border-radius:6px;padding:20px;">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:16px;">🏁 WEEKLY ACTIVITY RACE</div>
+    <div class="race-row">
+      <div class="race-avatar" style="background:rgba(201,168,76,0.2);color:var(--gold);border-color:var(--gold);">S</div>
+      <div class="race-name">Sarah</div>
+      <div class="race-bar-wrap"><div class="race-bar-fill" style="width:42%;background:var(--gold);"></div></div>
+      <div class="race-pts">125 pts</div>
+    </div>
+    <div class="race-row">
+      <div class="race-avatar" style="background:rgba(52,152,219,0.2);color:var(--blue);border-color:var(--blue);">J</div>
+      <div class="race-name">Jazmín</div>
+      <div class="race-bar-wrap"><div class="race-bar-fill" style="width:38%;background:var(--blue);"></div></div>
+      <div class="race-pts">115 pts</div>
+    </div>
+    <div class="race-row">
+      <div class="race-avatar" style="background:rgba(155,89,182,0.2);color:var(--purple);border-color:var(--purple);">P</div>
+      <div class="race-name">Pedro</div>
+      <div class="race-bar-wrap"><div class="race-bar-fill" style="width:20%;background:var(--purple);"></div></div>
+      <div class="race-pts">60 pts</div>
+    </div>
+    <div class="race-row">
+      <div class="race-avatar" style="background:rgba(39,174,96,0.2);color:var(--green);border-color:var(--green);">Z</div>
+      <div class="race-name">Zahra</div>
+      <div class="race-bar-wrap"><div class="race-bar-fill" style="width:8%;background:var(--green);"></div></div>
+      <div class="race-pts">24 pts</div>
+    </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--navy-light);font-size:11px;color:var(--muted);">
+      Points: 1pt/dial · 3pts/conversation · 5pts/quote · 10pts/bind · 5pts/Life app. Configured in Kyle's Points Config Sheets tab — Eva edits.
+    </div>
+  </div>
+</div>
+
+<!-- PIPELINE KPI TAB -->
+<div id="tab-pipeline" class="tab-content">
+  <div class="section-hdr"><div class="sh-label">Pipeline KPI — All Lines + All Pipelines</div></div>
+  <table>
+    <thead><tr><th>Pipeline</th><th>Line</th><th>New Leads</th><th>Contacted</th><th>Quoted</th><th>Bound</th><th>Contact %</th><th>Close %</th><th>CPA</th></tr></thead>
+    <tbody>
+      <tr><td>1 New Personal Leads</td><td><span class="lob-tag lob-personal">Personal</span></td><td>20</td><td>11</td><td>7</td><td>2</td><td>55%</td><td>18%</td><td>$250</td></tr>
+      <tr><td>Home/Auto Bundle</td><td><span class="lob-tag lob-personal">Personal</span></td><td>14</td><td>9</td><td>6</td><td>3</td><td>64%</td><td>33%</td><td>$133</td></tr>
+      <tr><td>Commercial New</td><td><span class="lob-tag lob-commercial">Commercial</span></td><td>24</td><td>9</td><td>5</td><td>1</td><td>38%</td><td>14%</td><td>$350</td></tr>
+      <tr><td>Life / FFS</td><td><span class="lob-tag lob-life">Life</span></td><td>8</td><td>6</td><td>4</td><td>1</td><td>75%</td><td>13%</td><td>—</td></tr>
+      <tr><td>Korean Department</td><td><span class="lob-tag lob-personal">Personal</span></td><td>4</td><td>3</td><td>2</td><td>1</td><td>75%</td><td>25%</td><td>—</td></tr>
+      <tr style="font-weight:700;background:rgba(201,168,76,0.05);"><td colspan="2">TOTALS</td><td>70</td><td>38</td><td>24</td><td>8</td><td>54%</td><td>21%</td><td>$236</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- /container -->
+
+<footer>INSURANCE TOWN | AGENCY OS · Producer Scorecard Prototype · For Hassan Reference · Patent Pending USPTO #64/053,057 · May 29, 2026</footer>
+
+<script>
+function switchTab(name,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+function selectProducer(id,el){
+  document.querySelectorAll('.producer-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('kpi-sarah').style.display = id==='sarah' ? '' : 'none';
+  document.getElementById('kpi-other').style.display = id!=='sarah' ? '' : 'none';
+}
+function fmt(n){return n>=1000?'$'+(n/1000).toFixed(1)+'k':'$'+Math.round(n).toLocaleString();}
+function calcROI(){
+  const spend=+document.getElementById('spend').value;
+  const cpl=+document.getElementById('cpl').value;
+  const cr=+document.getElementById('closeRate').value/100;
+  const prem=+document.getElementById('prem').value;
+  const cp=+document.getElementById('comm').value/100;
+  document.getElementById('spendVal').textContent='$'+spend.toLocaleString();
+  document.getElementById('cplVal').textContent='$'+cpl;
+  document.getElementById('closeVal').textContent=Math.round(cr*100)+'%';
+  document.getElementById('premVal').textContent='$'+prem.toLocaleString();
+  document.getElementById('commVal').textContent=Math.round(cp*100)+'%';
+  const leads=Math.floor(spend/cpl);
+  const bound=Math.round(leads*cr);
+  const rev=bound*prem;
+  const comm=rev*cp;
+  const roi=spend>0?Math.round((comm-spend)/spend*100):0;
+  const up=Math.round(leads*0.25)*prem*cp;
+  document.getElementById('roiLeads').textContent=leads;
+  document.getElementById('roiBound').textContent=bound;
+  document.getElementById('roiRevenue').textContent=fmt(rev);
+  document.getElementById('roiComm').textContent=fmt(comm);
+  document.getElementById('roiROI').textContent=roi+'%';
+  document.getElementById('roiUpside').textContent=fmt(up)+' ('+Math.round(leads*0.25)+' policies)';
+  document.getElementById('roiSub').textContent=leads+' leads → '+bound+' bound at '+Math.round(cr*100)+'% close rate';
+}
+calcROI();
+</script>
+</body>
+</html>

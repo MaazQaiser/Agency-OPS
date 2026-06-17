@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency OS — Executive Dashboard</title>
+<style>
+  :root{--navy:#0D1B2A;--navy-mid:#112236;--navy-card:#0f2035;--gold:#C9A84C;--gold-dim:#7a6030;--white:#f0ece0;--muted:#7a96b0;--green:#27ae60;--red:#e74c3c;--amber:#e67e22;--yellow:#F1C40F;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--white);font-family:'Trebuchet MS',sans-serif;font-size:14px;line-height:1.7;}
+  .conf-banner{background:var(--gold);color:var(--navy);text-align:center;padding:10px;font-weight:900;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;position:sticky;top:0;z-index:100;}
+  .container{max-width:1100px;margin:0 auto;padding:24px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px;}
+  .kpi-card{background:var(--navy-card);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:16px;}
+  .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+  .kpi-val{font-size:26px;font-weight:800;color:var(--gold);}
+  .kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+  .module-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:8px;}
+  .module-link{display:block;background:var(--navy-mid);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:16px;text-decoration:none;color:var(--white);transition:border-color 0.15s;}
+  .module-link:hover{border-color:var(--gold);}
+  .module-link-title{font-weight:700;color:var(--gold);margin-bottom:4px;}
+  .module-link-desc{font-size:12px;color:var(--muted);}
+  footer{border-top:1px solid #1a3350;padding:20px;text-align:center;font-size:11px;color:var(--muted);}
+</style>
+<link rel="stylesheet" href="global-nav.css">
+<script src="global-nav.js" defer></script>
+</head>
+<body class="has-global-nav" data-active-module="dashboard">
+
+<nav class="global-top-nav" aria-label="Agency OS product navigation">
+  <div class="global-nav-inner">
+    <div class="global-nav-left">
+      <a href="dashboard.html" class="global-nav-brand">Agency OS</a>
+      <div class="global-nav-links">
+        <a href="dashboard.html" class="global-nav-link" data-module="dashboard">Dashboard</a>
+        <a href="2026-05-29_AgencyOS_ProducerScorecard_Prototype (1).html" class="global-nav-link" data-module="producer">Producer Scorecard</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html" class="global-nav-link" data-module="retention">Retention Scorecard</a>
+        <a href="2026-05-14_AgencyOS_CommercialSubmissionTracker (3) (1).html" class="global-nav-link" data-module="commercial">Commercial Tracker</a>
+        <a href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html#prime-agency" class="global-nav-link" data-module="prime-agency">Prime Agency</a>
+      </div>
+    </div>
+    <div class="global-nav-right">
+      <div class="global-search">
+        <span class="global-search-icon" aria-hidden="true">⌕</span>
+        <input type="search" class="global-search-input" placeholder="Search…" aria-label="Global search">
+      </div>
+      <button type="button" class="global-util-btn" aria-label="Notifications">🔔<span class="global-util-badge">4</span></button>
+      <button type="button" class="global-util-btn global-util-btn-ai" aria-label="AI Insights">✦ <span class="util-label">AI Insights</span></button>
+      <div class="global-profile">
+        <button type="button" class="global-profile-btn" aria-label="User profile menu">
+          <span class="global-profile-avatar">EC</span>
+          <span><span class="global-profile-name">Eva Chong</span><span class="global-profile-role">Executive</span></span>
+        </button>
+        <div class="global-profile-menu">
+          <a href="#">My Profile</a>
+          <a href="#">Settings</a>
+          <button type="button">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-context">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="dashboard.html">Agency OS</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>Dashboard</span>
+  </nav>
+  <h2 class="page-context-title">Executive Dashboard</h2>
+  <p class="page-context-desc">Unified entry point across Production, Retention, Commercial, and Prime Agency modules. KPIs below are sourced from existing prototype scorecards.</p>
+</div>
+
+<div class="conf-banner">⚠ CONFIDENTIAL — INSURANCE TOWN AGENCY OS — EXECUTIVE DASHBOARD — INTERNAL USE ONLY</div>
+
+<div class="container">
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">Premium Written (Sarah)</div><div class="kpi-val">$6,600</div><div class="kpi-sub">Producer · Target $30,000</div></div>
+    <div class="kpi-card"><div class="kpi-label">Combined Retention %</div><div class="kpi-val" style="color:var(--green)">93.1%</div><div class="kpi-sub">Retention · Goal 93%+</div></div>
+    <div class="kpi-card"><div class="kpi-label">Active Pipeline</div><div class="kpi-val">12</div><div class="kpi-sub">Commercial · open submissions</div></div>
+    <div class="kpi-card"><div class="kpi-label">Follow-Up Due</div><div class="kpi-val" style="color:var(--yellow)">4</div><div class="kpi-sub">Commercial · today or overdue</div></div>
+    <div class="kpi-card"><div class="kpi-label">Overdue (48h+)</div><div class="kpi-val" style="color:var(--red)">2</div><div class="kpi-sub">Commercial · stale submissions</div></div>
+    <div class="kpi-card"><div class="kpi-label">Cross-Sell Points</div><div class="kpi-val">206</div><div class="kpi-sub">Retention · combined monthly</div></div>
+  </div>
+
+  <h3 style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Modules</h3>
+  <div class="module-links">
+    <a class="module-link" href="2026-05-29_AgencyOS_ProducerScorecard_Prototype (1).html"><div class="module-link-title">Producer Scorecard</div><div class="module-link-desc">Sarah, Jazmín, Pedro, Zahra — KPIs, speed-to-lead, ROI, weekly race, pipeline</div></a>
+    <a class="module-link" href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html"><div class="module-link-title">Retention Scorecard</div><div class="module-link-desc">Valerie + Tracie KPIs, compensation, cross-sell, cancellation saves</div></a>
+    <a class="module-link" href="2026-05-14_AgencyOS_CommercialSubmissionTracker (3) (1).html"><div class="module-link-title">Commercial Tracker</div><div class="module-link-desc">Executive view, VA dashboard, pipeline, aging, daily accountability</div></a>
+    <a class="module-link" href="2026-05-29_AgencyOS_RetentionScorecard_PrimeAgency_Module (1) (1).html#prime-agency"><div class="module-link-title">Prime Agency</div><div class="module-link-desc">Farmers-specific scorecard KPIs and quarterly tracking</div></a>
+  </div>
+</div>
+
+<footer>INSURANCE TOWN | AGENCY OS · Executive Dashboard · Patent Pending USPTO #64/053,057 · May 29, 2026</footer>
+</body>
+</html>

@@ -1,0 +1,351 @@
+/* Agency OS — Global Product Navigation Layer (extends existing prototypes) */
+:root {
+  --global-nav-height: 56px;
+  --global-border: rgba(201, 168, 76, 0.15);
+  --global-border-mid: rgba(201, 168, 76, 0.25);
+}
+
+body.has-global-nav {
+  padding-top: 0;
+}
+
+.global-top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--global-nav-height);
+  background: #112236;
+  border-bottom: 1px solid var(--global-border-mid);
+}
+
+.global-nav-inner {
+  max-width: 100%;
+  height: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.global-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.global-nav-brand {
+  font-size: 13px;
+  font-weight: 800;
+  color: #C9A84C;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  white-space: nowrap;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.global-nav-brand:hover {
+  color: #E8C97A;
+}
+
+.global-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+}
+
+.global-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.global-nav-link {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a96b0;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.global-nav-link:hover {
+  color: #f0ece0;
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.global-nav-link.active {
+  color: #E8C97A;
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.global-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.global-search {
+  position: relative;
+  width: 200px;
+}
+
+.global-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7a96b0;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.global-search-input {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px 0 30px;
+  border-radius: 6px;
+  border: 1px solid var(--global-border);
+  background: #0f2035;
+  color: #f0ece0;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.global-search-input::placeholder {
+  color: #7a96b0;
+}
+
+.global-search-input:focus {
+  outline: none;
+  border-color: #7a6030;
+}
+
+.global-util-btn {
+  position: relative;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--global-border);
+  background: #0f2035;
+  color: #f0ece0;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.global-util-btn:hover {
+  border-color: var(--global-border-mid);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+.global-util-btn-ai {
+  color: #E8C97A;
+  border-color: #7a6030;
+}
+
+.global-util-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #e74c3c;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.global-profile {
+  position: relative;
+}
+
+.global-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 3px 10px 3px 3px;
+  border-radius: 6px;
+  border: 1px solid var(--global-border);
+  background: #0f2035;
+  color: #f0ece0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.global-profile-btn:hover,
+.global-profile.open .global-profile-btn {
+  border-color: var(--global-border-mid);
+}
+
+.global-profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid #7a6030;
+  color: #C9A84C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.global-profile-name {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.global-profile-role {
+  font-size: 10px;
+  color: #7a96b0;
+  display: block;
+}
+
+.global-profile-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: #112236;
+  border: 1px solid var(--global-border-mid);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 1100;
+}
+
+.global-profile.open .global-profile-menu {
+  display: block;
+}
+
+.global-profile-menu a,
+.global-profile-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  color: #f0ece0;
+  font-size: 12px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.global-profile-menu a:hover,
+.global-profile-menu button:hover {
+  background: rgba(201, 168, 76, 0.08);
+}
+
+/* Page context (breadcrumb + title) */
+.page-context {
+  background: #0D1B2A;
+  border-bottom: 1px solid var(--global-border);
+  padding: 14px 24px 16px;
+}
+
+.page-context .breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #7a96b0;
+  margin-bottom: 6px;
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.page-context .breadcrumb a {
+  color: #7a96b0;
+  text-decoration: none;
+}
+
+.page-context .breadcrumb a:hover {
+  color: #C9A84C;
+}
+
+.page-context .breadcrumb-sep {
+  color: #7a6030;
+}
+
+.page-context-title {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: normal;
+  color: #f0ece0;
+  margin: 0;
+}
+
+.page-context-desc {
+  font-size: 12px;
+  color: #7a96b0;
+  margin: 6px 0 0;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+/* Sticky offsets for existing prototype layers */
+body.has-global-nav .conf-banner {
+  top: var(--global-nav-height) !important;
+}
+
+body.has-global-nav .top-bar {
+  top: var(--global-nav-height);
+}
+
+@media (max-width: 900px) {
+  .global-search {
+    width: 140px;
+  }
+
+  .global-util-btn-ai span.util-label {
+    display: none;
+  }
+
+  .global-profile-name,
+  .global-profile-role {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .global-nav-inner {
+    padding: 0 10px;
+  }
+
+  .global-search {
+    display: none;
+  }
+
+  .global-nav-link {
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}
