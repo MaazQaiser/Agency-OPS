@@ -1,5 +1,5 @@
+import { Suspense } from "react";
 import { TopHeader } from "./TopHeader";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -7,11 +7,11 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <ThemeProvider>
-      <div className="app-shell">
+    <div className="app-shell">
+      <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
         <TopHeader />
-        <main className="app-content">{children}</main>
-      </div>
-    </ThemeProvider>
+      </Suspense>
+      <main className="app-content">{children}</main>
+    </div>
   );
 }

@@ -13,14 +13,6 @@ export const metadata: Metadata = {
   description: "Insurance Town Agency OS — Dashboard, Production, Retention, Commercial, and Prime Agency",
 };
 
-const themeInitScript = `
-try {
-  var theme = localStorage.getItem("agency-os-theme");
-  var valid = theme === "obsidian" || theme === "midnight";
-  if (valid) document.documentElement.dataset.theme = theme;
-} catch (e) {}
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,9 +20,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={urbanist.variable} data-theme="obsidian" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className={urbanist.className}>{children}</body>
     </html>
   );

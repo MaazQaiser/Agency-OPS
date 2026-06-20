@@ -1,12 +1,12 @@
 export const routes = {
   home: "/",
   login: "/login",
-  welcome: "/welcome",
   dashboard: "/dashboard",
   producer: "/producer",
   retention: "/retention",
   commercial: "/commercial",
   primeAgency: "/prime-agency",
+  vaOperations: "/va-operations",
   /** @deprecated Use routes.producer */
   production: "/production",
 } as const;
@@ -16,7 +16,8 @@ export type AppModule =
   | "producer"
   | "retention"
   | "commercial"
-  | "prime-agency";
+  | "prime-agency"
+  | "va-operations";
 
 export const navItems: {
   key: AppModule;
@@ -28,5 +29,6 @@ export const navItems: {
   { key: "producer", label: "Producer Scorecard", href: routes.producer, icon: "▣" },
   { key: "retention", label: "Retention Scorecard", href: routes.retention, icon: "◉" },
   { key: "commercial", label: "Commercial Tracker", href: routes.commercial, icon: "▤" },
+  { key: "va-operations", label: "VA Operations", href: routes.vaOperations, icon: "◆" },
   { key: "prime-agency", label: "Prime Agency", href: routes.primeAgency, icon: "★" },
 ];

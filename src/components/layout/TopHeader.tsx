@@ -1,22 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { logoutAction } from "@/app/login/actions";
 import evaChongAvatar from "@/assets/avatars/eva-chong.jpg";
 import { AppIcon } from "@/components/ui/AppIcon";
-import { useTheme } from "@/components/theme/ThemeProvider";
+import { vaOperationsTabs } from "@/data/vaOperations";
 import { navItems, routes } from "@/lib/routes";
+import { cn } from "@/lib/cn";
 
 function isActive(pathname: string, href: string) {
   if (href === routes.dashboard) return pathname === routes.dashboard || pathname === routes.home;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function vaOperationsViewHref(tabId: string) {
+  return tabId === "overview" ? routes.vaOperations : `${routes.vaOperations}?view=${tabId}`;
+}
+
 export function TopHeader() {
   const pathname = usePathname();
-  const { openThemePicker } = useTheme();
+  const searchParams = useSearchParams();
+  const isVaOperations = pathname === routes.vaOperations || pathname.startsWith(`${routes.vaOperations}/`);
+  const activeVaView = searchParams.get("view") ?? "overview";
   const [avatarError, setAvatarError] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -118,14 +125,30 @@ export function TopHeader() {
                   <span className="top-header-profile-dropdown-name">Eva Chong</span>
                   <span className="top-header-profile-dropdown-role">Executive · Insurance Town</span>
                 </div>
+                <div className="top-header-profile-dropdown-section">
+                  <div className="top-header-profile-dropdown-section-label">VA Role Views</div>
+                  {vaOperationsTabs.map((tab) => (
+                    <Link
+                      key={tab.id}
+                      href={vaOperationsViewHref(tab.id)}
+                      className={cn(
+                        "top-header-profile-dropdown-item",
+                        "top-header-profile-dropdown-role-item",
+                        isVaOperations && activeVaView === tab.id && "active",
+                      )}
+                      role="menuitem"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      <AppIcon name="users" size={15} strokeWidth={2.25} />
+                      {tab.label}
+                    </Link>
+                  ))}
+                </div>
                 <button
                   type="button"
                   className="top-header-profile-dropdown-item"
                   role="menuitem"
-                  onClick={() => {
-                    setProfileOpen(false);
-                    openThemePicker();
-                  }}
+                  onClick={() => setProfileOpen(false)}
                 >
                   <AppIcon name="settings" size={15} strokeWidth={2.25} />
                   Profile Settings
