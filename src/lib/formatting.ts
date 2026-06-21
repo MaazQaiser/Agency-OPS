@@ -4,6 +4,16 @@ export function fmt(n: number): string {
     : "$" + Math.round(n).toLocaleString();
 }
 
+/** Stable en-US time label for SSR-safe client rendering. */
+export function formatTimeLabel(date: Date): string {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+}
+
 export type RoiInputs = {
   spend: number;
   cpl: number;

@@ -36,6 +36,7 @@ import {
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
+import { formatTimeLabel } from "@/lib/formatting";
 import { toastMessages } from "@/lib/toastMessages";
 import { CardSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
 import { SystemHealthDependencyMap } from "./SystemHealthDependencyMap";
@@ -64,6 +65,7 @@ export function SystemHealthModule() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<SystemHealthRecord | null>(null);
   const [lastRefresh, setLastRefresh] = useState(() => new Date());
+  const [refreshTimeLabel, setRefreshTimeLabel] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   useSyncBreadcrumbDetail(selected?.name ?? null, {
@@ -96,6 +98,10 @@ export function SystemHealthModule() {
     const interval = window.setInterval(refreshData, 30_000);
     return () => window.clearInterval(interval);
   }, [autoRefresh, refreshData]);
+
+  useEffect(() => {
+    setRefreshTimeLabel(formatTimeLabel(lastRefresh));
+  }, [lastRefresh]);
 
   const persistSystem = useCallback((updated: SystemHealthRecord) => {
     setSystems((prev) => {
@@ -222,7 +228,7 @@ export function SystemHealthModule() {
             <span className="badge badge-red system-health-alert-badge">{criticalAlerts} critical</span>
           )}
           <span className="system-health-refresh-label">
-            Last refresh: {lastRefresh.toLocaleTimeString()}
+            Last refresh: {refreshTimeLabel ?? "—"}
           </span>
           <button
             type="button"
@@ -254,8 +260,8 @@ export function SystemHealthModule() {
         ))}
       </section>
 
-      <section className="va-ops-panel system-health-alerts-panel" aria-label="Live alerts">
-        <div className="va-ops-panel-header">
+      <section className="system-health-alerts-section" aria-label="Live alerts">
+        <div className="system-health-section-header">
           <h2 className="va-ops-section-title">Live Alerts</h2>
           <p className="va-ops-section-sub">Active infrastructure incidents requiring attention.</p>
         </div>
