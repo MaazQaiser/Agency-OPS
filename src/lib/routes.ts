@@ -1,7 +1,6 @@
 export const routes = {
   home: "/",
   login: "/login",
-  dashboard: "/dashboard",
   producer: "/producer",
   retention: "/retention",
   commercial: "/commercial",
@@ -21,7 +20,6 @@ export const routes = {
 } as const;
 
 export type AppModule =
-  | "dashboard"
   | "producer"
   | "retention"
   | "commercial"

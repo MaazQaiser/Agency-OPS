@@ -28,7 +28,7 @@ export async function loginAction(
     maxAge: 60 * 60 * 24 * 7,
   });
 
-  redirect("/dashboard");
+  redirect("/va-operations");
 }
 
 export async function logoutAction() {

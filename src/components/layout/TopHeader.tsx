@@ -18,7 +18,14 @@ import { useOwnerQuickActions } from "@/components/owner-quick-actions/OwnerQuic
 import { ClickableAvatar } from "@/components/user-profile/UserProfileTrigger";
 
 function isActive(pathname: string, href: string) {
-  if (href === routes.dashboard) return pathname === routes.dashboard || pathname === routes.home;
+  if (href === routes.vaOperations) {
+    return (
+      pathname === routes.vaOperations ||
+      pathname.startsWith(`${routes.vaOperations}/`) ||
+      pathname === routes.home ||
+      pathname === "/dashboard"
+    );
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -70,7 +77,7 @@ export function TopHeader() {
 
   return (
     <header className="app-top-header">
-      <Link href={routes.dashboard} className="top-header-brand" aria-label="Agency OPS home">
+      <Link href={routes.vaOperations} className="top-header-brand" aria-label="Agency OPS home">
         <span className="top-header-brand-mark" aria-hidden="true">
           <img
             src="/brand/agency-os-mark.png"

@@ -8,7 +8,7 @@ export function proxy(request: NextRequest) {
 
   if (pathname.startsWith("/login")) {
     if (authed) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/va-operations", request.url));
     }
     return NextResponse.next();
   }
@@ -17,7 +17,11 @@ export function proxy(request: NextRequest) {
     if (!authed) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/va-operations", request.url));
+  }
+
+  if (pathname === "/dashboard") {
+    return NextResponse.redirect(new URL("/va-operations", request.url));
   }
 
   if (!authed) {

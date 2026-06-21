@@ -90,7 +90,6 @@ const modulePermissionMap: Record<AppModule | "system-health", Permission> = {
   "epay-policy": "access:epay-policy",
   "send-center": "access:send-center",
   "global-search": "access:global-search",
-  dashboard: "access:commercial-hub",
   producer: "access:commercial-hub",
   retention: "access:commercial-hub",
   "prime-agency": "access:commercial-hub",
@@ -290,7 +289,7 @@ export function pathnameToModule(pathname: string): AppModule | "system-health" 
   if (pathname.startsWith("/send-center")) return "send-center";
   if (pathname.startsWith("/global-search")) return "global-search";
   if (pathname.startsWith("/system-health")) return "system-health";
-  if (pathname === "/dashboard" || pathname === "/") return "dashboard";
+  if (pathname === "/dashboard" || pathname === "/") return "va-operations";
   return null;
 }
 
