@@ -91,7 +91,7 @@ export const leadQueue: DialerLead[] = [
       { action: "Lead assigned to Kat", time: "14 minutes ago" },
       { action: "Referral from JoJo — existing client", time: "14 minutes ago" },
     ],
-    notes: ["Referred by Seoul Restaurant Group.", "Needs GL quote for auto shop."],
+    notes: ["Referred by Greenline Logistics.", "Needs GL quote for auto shop."],
     lastInteraction: "No contact yet",
   },
 ];
@@ -122,7 +122,7 @@ export const liveCallSessions: LiveCallSession[] = [
     status: "wrap-up",
     statusLabel: "Wrap-up",
     duration: "01:12",
-    client: "Seoul Restaurant Group",
+    client: "Greenline Logistics",
   },
 ];
 
@@ -213,7 +213,7 @@ export const callTimeline: CallTimelineItem[] = [
   {
     id: "tl-3",
     time: "10:45 AM",
-    action: "Callback completed for Seoul Restaurant Group",
+    action: "Callback completed for Greenline Logistics",
     outcome: "Follow-up scheduled",
   },
 ];

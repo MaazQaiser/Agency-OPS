@@ -10,9 +10,13 @@ import {
   getStatusBadgeClass,
   needsMarketWarning,
 } from "@/lib/commercialHelpers";
-import { getNameInitials } from "@/lib/nameInitials";
+import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 
-const vaTeam = ["Hamad", "JoJo", "Tracie"] as const;
+const vaTeam = [
+  { name: "Hamad", userId: "jaffer" },
+  { name: "JoJo", userId: "jojo" },
+  { name: "Tracie", userId: "tracie" },
+] as const;
 
 export function VADashboardTab() {
   const [vaFilter, setVaFilter] = useState("all");
@@ -29,13 +33,8 @@ export function VADashboardTab() {
         <div className="section-header-main">
           <div className="section-title">VA Operations Dashboard</div>
           <div className="section-sub name-badge-row">
-            {vaTeam.map((name) => (
-              <span key={name} className="name-badge">
-                <span className="name-badge-initial" aria-hidden="true">
-                  {getNameInitials(name)}
-                </span>
-                {name}
-              </span>
+            {vaTeam.map((member) => (
+              <UserChip key={member.name} userId={member.userId} name={member.name} className="name-badge-user-chip" />
             ))}
           </div>
         </div>
@@ -47,9 +46,9 @@ export function VADashboardTab() {
             aria-label="Filter by VA"
           >
             <option value="all">All VAs</option>
-            {vaTeam.map((name) => (
-              <option key={name} value={name}>
-                {name}
+            {vaTeam.map((member) => (
+              <option key={member.name} value={member.name}>
+                {member.name}
               </option>
             ))}
           </select>

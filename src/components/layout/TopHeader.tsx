@@ -6,17 +6,28 @@ import { useEffect, useRef, useState } from "react";
 import { logoutAction } from "@/app/login/actions";
 import evaChongAvatar from "@/assets/avatars/eva-chong.jpg";
 import { AppIcon } from "@/components/ui/AppIcon";
-import { vaOperationsTabs } from "@/data/vaOperations";
+import { vaOperationsRoles } from "@/data/vaOperations";
 import { navItems, routes } from "@/lib/routes";
+import { agencyRoles, getRoleLabel } from "@/data/rolePermissions";
+import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { cn } from "@/lib/cn";
+import { useGlobalSearch } from "@/components/global-search/GlobalSearchProvider";
+import { useKeyboardShortcuts } from "@/components/keyboard/KeyboardShortcutsProvider";
+import { useNotificationCenter } from "@/components/notifications/NotificationCenterProvider";
+import { useOwnerQuickActions } from "@/components/owner-quick-actions/OwnerQuickActionsProvider";
+import { ClickableAvatar } from "@/components/user-profile/UserProfileTrigger";
 
 function isActive(pathname: string, href: string) {
   if (href === routes.dashboard) return pathname === routes.dashboard || pathname === routes.home;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function vaOperationsViewHref(tabId: string) {
-  return tabId === "overview" ? routes.vaOperations : `${routes.vaOperations}?view=${tabId}`;
+function vaOperationsRoleHref(roleId: string, view: string | null) {
+  const params = new URLSearchParams();
+  if (view && view !== "overview") params.set("view", view);
+  if (roleId !== "owner") params.set("role", roleId);
+  const query = params.toString();
+  return query ? `${routes.vaOperations}?${query}` : routes.vaOperations;
 }
 
 export function TopHeader() {
@@ -24,6 +35,14 @@ export function TopHeader() {
   const searchParams = useSearchParams();
   const isVaOperations = pathname === routes.vaOperations || pathname.startsWith(`${routes.vaOperations}/`);
   const activeVaView = searchParams.get("view") ?? "overview";
+  const activeVaRole = searchParams.get("role") ?? "owner";
+  const { open: openSearch } = useGlobalSearch();
+  const { openHelp } = useKeyboardShortcuts();
+  const { toggle: toggleNotifications, unreadCount, hasCritical, hasUrgentPulse, loading: notificationsLoading } = useNotificationCenter();
+  const { toggle: toggleQuickActions } = useOwnerQuickActions();
+  const { role, setRole, canAccessModule, can } = usePermissions();
+  const showSystemHealth = can("access:system-health");
+  const visibleNav = navItems.filter((item) => canAccessModule(item.key));
   const [avatarError, setAvatarError] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -68,7 +87,7 @@ export function TopHeader() {
       </Link>
 
       <nav className="top-header-nav" aria-label="Main navigation">
-        {navItems.map((item) => (
+        {visibleNav.map((item) => (
           <Link
             key={item.key}
             href={item.href}
@@ -80,67 +99,173 @@ export function TopHeader() {
       </nav>
 
       <div className="top-header-right">
-        <div className="top-header-actions">
-          <button type="button" className="top-header-btn" aria-label="Notifications">
-            <AppIcon name="bell" size={16} strokeWidth={2} />
-            <span className="top-header-badge">4</span>
-          </button>
+        <button
+          type="button"
+          className="top-header-search-trigger"
+          onClick={() => openSearch()}
+          aria-label="Open global search"
+        >
+          <AppIcon name="search" size={16} strokeWidth={2} />
+          <span className="top-header-search-label">Search</span>
+          <kbd className="top-header-search-kbd">⌘K</kbd>
+        </button>
 
-          <button type="button" className="top-header-btn top-header-btn-ai">
-            <AppIcon name="sparkles" size={16} strokeWidth={2} />
-            <span className="top-header-btn-ai-label">AI Insights</span>
+        <div className="top-header-actions">
+          <button
+            type="button"
+            className={cn(
+              "top-header-btn",
+              hasUrgentPulse && "top-header-btn-notifications-pulse",
+              notificationsLoading && "notification-bell-loading",
+            )}
+            aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}. Shift+N`}
+            onClick={toggleNotifications}
+          >
+            <AppIcon name="bell" size={16} strokeWidth={2} />
+            <kbd className="top-header-search-kbd top-header-notif-kbd">⇧N</kbd>
+            {unreadCount > 0 && (
+              <span
+                className={cn(
+                  "top-header-badge",
+                  hasCritical && "top-header-badge-critical",
+                )}
+              >
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
           </button>
 
           <div className="top-header-profile-menu" ref={profileMenuRef}>
+          <div className={cn("top-header-profile", profileOpen && "open")}>
+            <ClickableAvatar
+              userId="eva-chong"
+              name="Eva Chong"
+              size="md"
+              className="top-header-avatar-btn"
+              imageSrc={avatarError ? undefined : evaChongAvatar.src}
+              imageAlt="Eva Chong"
+              onImageError={() => setAvatarError(true)}
+            />
             <button
               type="button"
-              className={`top-header-profile${profileOpen ? " open" : ""}`}
+              className="top-header-profile-trigger"
               aria-label="User profile menu"
               aria-expanded={profileOpen}
               aria-haspopup="menu"
               onClick={() => setProfileOpen((open) => !open)}
             >
-              {avatarError ? (
-                <span className="top-header-avatar top-header-avatar-fallback">EC</span>
-              ) : (
-                <img
-                  src={evaChongAvatar.src}
-                  alt="Eva Chong"
-                  width={32}
-                  height={32}
-                  className="top-header-avatar"
-                  onError={() => setAvatarError(true)}
-                />
-              )}
               <span className="top-header-user">
                 <span className="top-header-user-name">Eva Chong</span>
-                <span className="top-header-user-role">Executive</span>
+                <span className="top-header-user-role">{getRoleLabel(role)}</span>
               </span>
               <AppIcon name="chevron-down" size={14} strokeWidth={2.25} className="top-header-profile-chevron" />
             </button>
+          </div>
 
             {profileOpen && (
               <div className="top-header-profile-dropdown" role="menu">
                 <div className="top-header-profile-dropdown-header">
                   <span className="top-header-profile-dropdown-name">Eva Chong</span>
-                  <span className="top-header-profile-dropdown-role">Executive · Insurance Town</span>
+                  <span className="top-header-profile-dropdown-role">{getRoleLabel(role)} · Insurance Town</span>
                 </div>
                 <div className="top-header-profile-dropdown-section">
-                  <div className="top-header-profile-dropdown-section-label">VA Role Views</div>
-                  {vaOperationsTabs.map((tab) => (
+                  <div className="top-header-profile-dropdown-section-label">Tools</div>
+                  {showSystemHealth && (
                     <Link
-                      key={tab.id}
-                      href={vaOperationsViewHref(tab.id)}
+                      href={routes.systemHealth}
+                      className={cn(
+                        "top-header-profile-dropdown-item",
+                        isActive(pathname, routes.systemHealth) && "active",
+                      )}
+                      role="menuitem"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      <AppIcon name="refresh" size={15} strokeWidth={2.25} />
+                      System Health
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    className="top-header-profile-dropdown-item top-header-profile-dropdown-item-with-kbd"
+                    role="menuitem"
+                    aria-label="Keyboard shortcuts. Press question mark"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      openHelp();
+                    }}
+                  >
+                    <AppIcon name="clipboard" size={15} strokeWidth={2.25} />
+                    <span>Shortcuts</span>
+                    <kbd className="top-header-search-kbd top-header-profile-dropdown-kbd">?</kbd>
+                  </button>
+                  {can("action:owner-quick-actions") && (
+                    <button
+                      type="button"
+                      className="top-header-profile-dropdown-item top-header-profile-dropdown-item-with-kbd"
+                      role="menuitem"
+                      aria-label="Quick Actions. Shift+O"
+                      onClick={() => {
+                        setProfileOpen(false);
+                        toggleQuickActions();
+                      }}
+                    >
+                      <AppIcon name="rocket" size={15} strokeWidth={2.25} />
+                      <span>Quick Actions</span>
+                      <kbd className="top-header-search-kbd top-header-profile-dropdown-kbd">⇧O</kbd>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="top-header-profile-dropdown-item"
+                    role="menuitem"
+                    aria-label="Switch language"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    <AppIcon name="globe" size={15} strokeWidth={2.25} />
+                    Language · EN
+                  </button>
+                </div>
+                <div className="top-header-profile-dropdown-section">
+                  <div className="top-header-profile-dropdown-section-label">Access Role</div>
+                  {agencyRoles.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
                       className={cn(
                         "top-header-profile-dropdown-item",
                         "top-header-profile-dropdown-role-item",
-                        isVaOperations && activeVaView === tab.id && "active",
+                        role === r.id && "active",
+                      )}
+                      role="menuitem"
+                      onClick={() => {
+                        setRole(r.id);
+                        setProfileOpen(false);
+                      }}
+                    >
+                      <AppIcon name="users" size={15} strokeWidth={2.25} />
+                      <span>
+                        {r.label}
+                        <span className="top-header-role-desc">{r.description}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <div className="top-header-profile-dropdown-section">
+                  <div className="top-header-profile-dropdown-section-label">VA Role Views</div>
+                  {vaOperationsRoles.map((role) => (
+                    <Link
+                      key={role.id}
+                      href={vaOperationsRoleHref(role.id, activeVaView)}
+                      className={cn(
+                        "top-header-profile-dropdown-item",
+                        "top-header-profile-dropdown-role-item",
+                        isVaOperations && activeVaRole === role.id && "active",
                       )}
                       role="menuitem"
                       onClick={() => setProfileOpen(false)}
                     >
                       <AppIcon name="users" size={15} strokeWidth={2.25} />
-                      {tab.label}
+                      {role.label}
                     </Link>
                   ))}
                 </div>

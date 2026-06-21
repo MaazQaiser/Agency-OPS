@@ -1,10 +1,23 @@
+export const vaOperationsRoles = [
+  { id: "owner", label: "Owner" },
+  { id: "dialer", label: "Dialer" },
+  { id: "research", label: "Research" },
+  { id: "brokerage", label: "Brokerage" },
+  { id: "retention", label: "Retention" },
+  { id: "sales", label: "Sales", private: true as const },
+  { id: "automation", label: "Automation" },
+] as const;
+
+export type VaOperationsRoleId = (typeof vaOperationsRoles)[number]["id"];
+
 export const vaOperationsTabs = [
   { id: "overview", label: "Overview" },
-  { id: "dialer", label: "Dialer VA" },
-  { id: "research", label: "Research VA" },
-  { id: "brokerage", label: "Brokerage Team" },
-  { id: "sales", label: "Sales", private: true as const },
-  { id: "automation", label: "Automation Builder" },
+  { id: "tasks", label: "Tasks" },
+  { id: "activity", label: "Activity" },
+  { id: "approvals", label: "Approvals" },
+  { id: "automations", label: "Automations" },
+  { id: "dnc-log", label: "DNC Log" },
+  { id: "bilingual-queue", label: "Bilingual Queue" },
 ] as const;
 
 export type VaOperationsTabId = (typeof vaOperationsTabs)[number]["id"];
@@ -14,7 +27,6 @@ export const vaOperationsHeader = {
   subtitle: "Manage team activity, workload, and daily priorities",
   searchPlaceholder: "Search tasks, clients, VAs, notes, or leads",
   folioTracker: "12 days left in current folio",
-  notificationCount: 4,
 };
 
 export const vaOperationsKpis = [
@@ -40,27 +52,103 @@ export const vaOperationsKpis = [
     color: "green" as const,
   },
   {
+    label: "SLA Breaches",
+    value: "4",
+    sub: "Requires immediate action",
+    helper: "Tasks past SLA threshold",
+    color: "red" as const,
+  },
+  {
     label: "Pending Approvals",
     value: "9",
     sub: "Requires producer review",
     helper: "Drafts awaiting approval",
-    color: "red" as const,
+    color: "orange" as const,
   },
 ];
 
+export type OperationalSnapshotKey =
+  | "calls"
+  | "docs"
+  | "quotes"
+  | "renewals"
+  | "automation";
+
+export type OperationalSnapshotItem = {
+  key: OperationalSnapshotKey;
+  label: string;
+  value: string;
+  sub: string;
+};
+
+export const operationalSnapshot: OperationalSnapshotItem[] = [
+  { key: "calls", label: "Total calls today", value: "47", sub: "Across dialer team" },
+  { key: "docs", label: "Docs collected", value: "18", sub: "Brokerage submissions" },
+  { key: "quotes", label: "Quotes sent", value: "12", sub: "Commercial + Send Center" },
+  { key: "renewals", label: "Renewals saved", value: "5", sub: "Retention wins today" },
+  { key: "automation", label: "Automation triggers", value: "142", sub: "Workflows fired today" },
+];
+
 export type TeamMemberStatus = "active" | "away" | "offline";
+
+export type VaRoleType =
+  | "dialer"
+  | "research"
+  | "brokerage"
+  | "retention"
+  | "automation"
+  | "sales"
+  | "developer";
+
+export type DialerStats = {
+  callsMade: number;
+  speedToLead: string;
+  transfers: number;
+  dncFlags: number;
+};
+
+export type ResearchStats = {
+  leadsEnriched: number;
+  recordsCompleted: number;
+  missingData: number;
+  queueLoad: number;
+};
+
+export type BrokerageStats = {
+  submissionsWorked: number;
+  docsCollected: number;
+  marketsAdded: number;
+  followUpsDue: number;
+};
+
+export type RetentionStats = {
+  renewalsSaved: number;
+  pifRetention: string;
+  cancellationSaves: number;
+  crossSells: number;
+};
+
+export type AutomationStats = {
+  workflowsUpdated: number;
+  triggersActive: number;
+  failedRuns: number;
+  integrationsHealthy: number;
+};
+
+export type TeamMemberStats =
+  | DialerStats
+  | ResearchStats
+  | BrokerageStats
+  | RetentionStats
+  | AutomationStats;
 
 export type TeamMember = {
   id: string;
   name: string;
   role: string;
+  roleType: VaRoleType;
   status: TeamMemberStatus;
-  stats: {
-    calls: number;
-    tasksCompleted: number;
-    leadsAssigned: number;
-    followUpsDue: number;
-  };
+  stats: TeamMemberStats;
   recentNotes: string[];
   recentActions: { text: string; time: string }[];
 };
@@ -70,8 +158,9 @@ export const teamMembers: TeamMember[] = [
     id: "kat",
     name: "Kat",
     role: "Dialer VA",
+    roleType: "dialer",
     status: "active",
-    stats: { calls: 18, tasksCompleted: 7, leadsAssigned: 4, followUpsDue: 2 },
+    stats: { callsMade: 18, speedToLead: "2m 11s", transfers: 3, dncFlags: 1 },
     recentNotes: ["Follow-up scheduled for Martinez Landscaping at 11:30 AM.", "Inbound lead from Ricochet — callback completed."],
     recentActions: [
       { text: "Called new inbound lead", time: "2 minutes ago" },
@@ -82,8 +171,9 @@ export const teamMembers: TeamMember[] = [
     id: "jaffer",
     name: "Jaffer",
     role: "Research VA",
+    roleType: "research",
     status: "active",
-    stats: { calls: 6, tasksCompleted: 4, leadsAssigned: 8, followUpsDue: 1 },
+    stats: { leadsEnriched: 12, recordsCompleted: 4, missingData: 2, queueLoad: 8 },
     recentNotes: ["Added 4 commercial prospects from Meta campaign.", "Loss run request pending for Kim Auto Shop."],
     recentActions: [
       { text: "Added 4 new commercial prospects", time: "5 minutes ago" },
@@ -94,9 +184,10 @@ export const teamMembers: TeamMember[] = [
     id: "jojo",
     name: "JoJo",
     role: "Brokerage Team",
+    roleType: "brokerage",
     status: "active",
-    stats: { calls: 12, tasksCompleted: 6, leadsAssigned: 3, followUpsDue: 3 },
-    recentNotes: ["Carrier documents uploaded for Seoul Restaurant Group.", "Renewal reminder draft awaiting approval."],
+    stats: { submissionsWorked: 6, docsCollected: 4, marketsAdded: 2, followUpsDue: 3 },
+    recentNotes: ["Carrier documents uploaded for Greenline Logistics.", "Renewal reminder draft awaiting approval."],
     recentActions: [
       { text: "Uploaded carrier documents", time: "11 minutes ago" },
       { text: "Submitted renewal reminder draft", time: "27 minutes ago" },
@@ -106,8 +197,9 @@ export const teamMembers: TeamMember[] = [
     id: "pedro",
     name: "Pedro",
     role: "Brokerage Team",
+    roleType: "brokerage",
     status: "active",
-    stats: { calls: 14, tasksCompleted: 8, leadsAssigned: 5, followUpsDue: 4 },
+    stats: { submissionsWorked: 8, docsCollected: 5, marketsAdded: 3, followUpsDue: 4 },
     recentNotes: ["BOP quote request submitted for Kim Auto Shop.", "Missing loss runs flagged for follow-up."],
     recentActions: [
       { text: "Submitted BOP quote request", time: "8 minutes ago" },
@@ -115,11 +207,25 @@ export const teamMembers: TeamMember[] = [
     ],
   },
   {
+    id: "sara",
+    name: "Sara",
+    role: "Retention VA",
+    roleType: "retention",
+    status: "active",
+    stats: { renewalsSaved: 5, pifRetention: "92%", cancellationSaves: 2, crossSells: 1 },
+    recentNotes: ["Saved cancellation for Lopez Family Auto — payment plan offered.", "Renewal reminder sent for Kim Auto Shop."],
+    recentActions: [
+      { text: "Completed retention save call", time: "14 minutes ago" },
+      { text: "Queued renewal follow-up", time: "35 minutes ago" },
+    ],
+  },
+  {
     id: "kyle",
     name: "Kyle",
     role: "Automation Builder",
+    roleType: "automation",
     status: "away",
-    stats: { calls: 0, tasksCompleted: 3, leadsAssigned: 0, followUpsDue: 0 },
+    stats: { workflowsUpdated: 3, triggersActive: 12, failedRuns: 1, integrationsHealthy: 4 },
     recentNotes: ["Workflow update deployed for lead routing.", "Testing Ricochet webhook integration."],
     recentActions: [
       { text: "Updated automation workflow", time: "18 minutes ago" },
@@ -130,8 +236,9 @@ export const teamMembers: TeamMember[] = [
     id: "hassan",
     name: "Hassan",
     role: "Developer",
+    roleType: "developer",
     status: "away",
-    stats: { calls: 0, tasksCompleted: 2, leadsAssigned: 0, followUpsDue: 1 },
+    stats: { workflowsUpdated: 2, triggersActive: 0, failedRuns: 0, integrationsHealthy: 3 },
     recentNotes: ["API endpoint for lead sync in progress.", "Bug fix deployed for document upload."],
     recentActions: [
       { text: "Pushed lead sync API update", time: "1 hour ago" },
@@ -142,15 +249,38 @@ export const teamMembers: TeamMember[] = [
 
 export type PriorityTaskStatus = "urgent" | "pending" | "critical";
 
+export type PriorityType =
+  | "lead-callback"
+  | "missing-docs"
+  | "quote-follow-up"
+  | "producer-approval"
+  | "retention-save";
+
+export type TaskSource = "commercial" | "intake" | "send-center" | "retention";
+
 export type PriorityTask = {
   id: string;
   title: string;
   assignedTo: string;
   due: string;
-  type: string;
+  priorityType: PriorityType;
+  source: TaskSource;
+  roleType: VaRoleType;
   status: PriorityTaskStatus;
-  cta: string;
 };
+
+export function getTaskCta(priorityType: PriorityType): string {
+  switch (priorityType) {
+    case "lead-callback":
+      return "Call Client";
+    case "producer-approval":
+      return "Review Draft";
+    case "retention-save":
+      return "Open Case";
+    default:
+      return "Open Task";
+  }
+}
 
 export const priorityQueue: PriorityTask[] = [
   {
@@ -158,42 +288,71 @@ export const priorityQueue: PriorityTask[] = [
     title: "Follow up with Martinez Landscaping",
     assignedTo: "JoJo",
     due: "11:30 AM",
-    type: "Client Follow-up",
+    priorityType: "quote-follow-up",
+    source: "commercial",
+    roleType: "brokerage",
     status: "urgent",
-    cta: "Open Task",
   },
   {
     id: "task-2",
     title: "Collect missing loss runs",
     assignedTo: "Pedro",
     due: "2:00 PM",
-    type: "Document Collection",
+    priorityType: "missing-docs",
+    source: "intake",
+    roleType: "brokerage",
     status: "pending",
-    cta: "Review",
   },
   {
     id: "task-3",
     title: "Return inbound lead callback",
     assignedTo: "Kat",
     due: "In 10 minutes",
-    type: "Lead Response",
+    priorityType: "lead-callback",
+    source: "intake",
+    roleType: "dialer",
     status: "critical",
-    cta: "Call Now",
+  },
+  {
+    id: "task-4",
+    title: "Producer approval — BOP quote draft",
+    assignedTo: "Pedro",
+    due: "3:00 PM",
+    priorityType: "producer-approval",
+    source: "send-center",
+    roleType: "brokerage",
+    status: "urgent",
+  },
+  {
+    id: "task-5",
+    title: "Retention save — Lopez Family Auto",
+    assignedTo: "Sara",
+    due: "4:30 PM",
+    priorityType: "retention-save",
+    source: "retention",
+    roleType: "retention",
+    status: "critical",
   },
 ];
+
+export type ActivityCategory = "calls" | "commercial" | "approvals" | "retention";
 
 export type ActivityItem = {
   id: string;
   text: string;
   time: string;
+  category: ActivityCategory;
+  roleType: VaRoleType;
 };
 
 export const liveActivity: ActivityItem[] = [
-  { id: "act-1", text: "Kat called new inbound lead", time: "2 minutes ago" },
-  { id: "act-2", text: "Jaffer added 4 new commercial prospects", time: "5 minutes ago" },
-  { id: "act-3", text: "Pedro submitted BOP quote request", time: "8 minutes ago" },
-  { id: "act-4", text: "JoJo uploaded carrier documents", time: "11 minutes ago" },
-  { id: "act-5", text: "Kyle updated automation workflow", time: "18 minutes ago" },
+  { id: "act-1", text: "Kat called new inbound lead", time: "2 minutes ago", category: "calls", roleType: "dialer" },
+  { id: "act-2", text: "Jaffer added 4 new commercial prospects", time: "5 minutes ago", category: "commercial", roleType: "research" },
+  { id: "act-3", text: "Pedro submitted BOP quote request", time: "8 minutes ago", category: "commercial", roleType: "brokerage" },
+  { id: "act-4", text: "JoJo uploaded carrier documents", time: "11 minutes ago", category: "commercial", roleType: "brokerage" },
+  { id: "act-5", text: "Sara completed retention save call", time: "14 minutes ago", category: "retention", roleType: "retention" },
+  { id: "act-6", text: "Pedro submitted quote draft for producer approval", time: "16 minutes ago", category: "approvals", roleType: "brokerage" },
+  { id: "act-7", text: "Kyle updated automation workflow", time: "18 minutes ago", category: "commercial", roleType: "automation" },
 ];
 
 export type SlaStatus = "within" | "near" | "breached";
@@ -204,28 +363,42 @@ export type LeadResponseRow = {
   source: string;
   responseTime: string;
   status: SlaStatus;
+  roleType: VaRoleType;
 };
 
 export const leadResponseTracker: LeadResponseRow[] = [
-  { id: "lead-1", name: "Kat", source: "Ricochet", responseTime: "2m 11s", status: "within" },
-  { id: "lead-2", name: "Jaffer", source: "Meta Leads", responseTime: "4m 48s", status: "near" },
-  { id: "lead-3", name: "JoJo", source: "Referral", responseTime: "7m 02s", status: "breached" },
+  { id: "lead-1", name: "Kat", source: "Ricochet", responseTime: "2m 11s", status: "within", roleType: "dialer" },
+  { id: "lead-2", name: "Jaffer", source: "Meta Leads", responseTime: "4m 48s", status: "near", roleType: "research" },
+  { id: "lead-3", name: "JoJo", source: "Referral", responseTime: "7m 02s", status: "breached", roleType: "brokerage" },
 ];
+
+export type SlaRiskLevel = "on-track" | "at-risk" | "critical";
 
 export type WorkloadRow = {
   id: string;
   name: string;
+  role: string;
+  roleType: VaRoleType;
   openTasks: number;
   completedToday: number;
+  overdueCount: number;
+  slaRisk: SlaRiskLevel;
   pendingApprovals: number;
 };
 
 export const workloadDistribution: WorkloadRow[] = [
-  { id: "wl-kat", name: "Kat", openTasks: 8, completedToday: 5, pendingApprovals: 0 },
-  { id: "wl-jaffer", name: "Jaffer", openTasks: 6, completedToday: 4, pendingApprovals: 1 },
-  { id: "wl-pedro", name: "Pedro", openTasks: 12, completedToday: 8, pendingApprovals: 2 },
-  { id: "wl-jojo", name: "JoJo", openTasks: 9, completedToday: 6, pendingApprovals: 1 },
+  { id: "wl-kat", name: "Kat", role: "Dialer", roleType: "dialer", openTasks: 8, completedToday: 5, overdueCount: 2, slaRisk: "at-risk", pendingApprovals: 0 },
+  { id: "wl-jaffer", name: "Jaffer", role: "Research", roleType: "research", openTasks: 6, completedToday: 4, overdueCount: 0, slaRisk: "on-track", pendingApprovals: 1 },
+  { id: "wl-pedro", name: "Pedro", role: "Brokerage", roleType: "brokerage", openTasks: 12, completedToday: 8, overdueCount: 3, slaRisk: "at-risk", pendingApprovals: 2 },
+  { id: "wl-jojo", name: "JoJo", role: "Brokerage", roleType: "brokerage", openTasks: 9, completedToday: 6, overdueCount: 1, slaRisk: "on-track", pendingApprovals: 1 },
+  { id: "wl-sara", name: "Sara", role: "Retention", roleType: "retention", openTasks: 5, completedToday: 3, overdueCount: 0, slaRisk: "on-track", pendingApprovals: 0 },
 ];
+
+export type ApprovalType = "quote" | "proposal" | "renewal" | "exception-request";
+
+export type ApprovalHub = "commercial" | "send-center" | "retention";
+
+export type ApprovalPriority = "low" | "medium" | "high" | "critical";
 
 export type ApprovalDraft = {
   id: string;
@@ -233,6 +406,10 @@ export type ApprovalDraft = {
   preparedBy: string;
   client: string;
   submitted: string;
+  approvalType: ApprovalType;
+  hub: ApprovalHub;
+  roleType: VaRoleType;
+  priority: ApprovalPriority;
   cta: string;
 };
 
@@ -243,23 +420,188 @@ export const approvalQueue: ApprovalDraft[] = [
     preparedBy: "Pedro",
     client: "Kim Auto Shop",
     submitted: "15 min ago",
+    approvalType: "quote",
+    hub: "commercial",
+    roleType: "brokerage",
+    priority: "high",
     cta: "Approve Draft",
   },
   {
     id: "draft-2",
     title: "Policy Renewal Reminder",
     preparedBy: "JoJo",
-    client: "Seoul Restaurant Group",
+    client: "Greenline Logistics",
     submitted: "27 min ago",
+    approvalType: "renewal",
+    hub: "retention",
+    roleType: "brokerage",
+    priority: "medium",
     cta: "Review Draft",
+  },
+  {
+    id: "draft-3",
+    title: "BOP Proposal — Send Center",
+    preparedBy: "Pedro",
+    client: "Martinez Landscaping",
+    submitted: "32 min ago",
+    approvalType: "proposal",
+    hub: "send-center",
+    roleType: "brokerage",
+    priority: "high",
+    cta: "Review Draft",
+  },
+  {
+    id: "draft-4",
+    title: "Rate Exception Request",
+    preparedBy: "Sara",
+    client: "Lopez Family Auto",
+    submitted: "45 min ago",
+    approvalType: "exception-request",
+    hub: "retention",
+    roleType: "retention",
+    priority: "critical",
+    cta: "Review Request",
   },
 ];
 
-export type PlaceholderTabId = "brokerage";
+const roleToMemberTypes: Record<VaOperationsRoleId, VaRoleType[] | "all"> = {
+  owner: "all",
+  dialer: ["dialer"],
+  research: ["research"],
+  brokerage: ["brokerage"],
+  retention: ["retention"],
+  sales: ["brokerage"],
+  automation: ["automation", "developer"],
+};
+
+export function roleMatchesMemberType(role: VaOperationsRoleId, roleType: VaRoleType): boolean {
+  const mapping = roleToMemberTypes[role];
+  if (mapping === "all") return true;
+  return mapping.includes(roleType);
+}
+
+export function filterByRole<T extends { roleType: VaRoleType }>(
+  items: T[],
+  role: VaOperationsRoleId,
+): T[] {
+  if (role === "owner") return items;
+  return items.filter((item) => roleMatchesMemberType(role, item.roleType));
+}
+
+export const priorityTypeLabels: Record<PriorityType, string> = {
+  "lead-callback": "Lead callback",
+  "missing-docs": "Missing docs",
+  "quote-follow-up": "Quote follow-up",
+  "producer-approval": "Producer approval",
+  "retention-save": "Retention save",
+};
+
+export const taskSourceLabels: Record<TaskSource, string> = {
+  commercial: "Commercial",
+  intake: "Intake",
+  "send-center": "Send Center",
+  retention: "Retention",
+};
+
+export const approvalTypeLabels: Record<ApprovalType, string> = {
+  quote: "Quote",
+  proposal: "Proposal",
+  renewal: "Renewal",
+  "exception-request": "Exception request",
+};
+
+export const approvalPriorityLabels: Record<ApprovalPriority, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  critical: "Critical",
+};
+
+export function filterOperationalSnapshot(role: VaOperationsRoleId): OperationalSnapshotItem[] {
+  if (role === "owner") return operationalSnapshot;
+  if (role === "dialer") return operationalSnapshot.filter((item) => item.key === "calls");
+  if (role === "research") return operationalSnapshot.filter((item) => item.key === "quotes");
+  if (role === "brokerage" || role === "sales") {
+    return operationalSnapshot.filter((item) => item.key === "docs" || item.key === "quotes");
+  }
+  if (role === "retention") return operationalSnapshot.filter((item) => item.key === "renewals");
+  if (role === "automation") return operationalSnapshot.filter((item) => item.key === "automation");
+  return operationalSnapshot;
+}
+
+export const approvalHubLabels: Record<ApprovalHub, string> = {
+  commercial: "Commercial",
+  "send-center": "Send Center",
+  retention: "Retention",
+};
+
+export const slaRiskLabels: Record<SlaRiskLevel, string> = {
+  "on-track": "On Track",
+  "at-risk": "At Risk",
+  critical: "Critical",
+};
+
+export type TeamMemberStatEntry = { label: string; value: string | number };
+
+export function getTeamMemberStatEntries(member: TeamMember): TeamMemberStatEntry[] {
+  switch (member.roleType) {
+    case "dialer": {
+      const s = member.stats as DialerStats;
+      return [
+        { label: "Calls made", value: s.callsMade },
+        { label: "Speed to lead", value: s.speedToLead },
+        { label: "Transfers", value: s.transfers },
+        { label: "DNC flags", value: s.dncFlags },
+      ];
+    }
+    case "research": {
+      const s = member.stats as ResearchStats;
+      return [
+        { label: "Leads enriched", value: s.leadsEnriched },
+        { label: "Records completed", value: s.recordsCompleted },
+        { label: "Missing data", value: s.missingData },
+        { label: "Queue load", value: s.queueLoad },
+      ];
+    }
+    case "brokerage": {
+      const s = member.stats as BrokerageStats;
+      return [
+        { label: "Submissions worked", value: s.submissionsWorked },
+        { label: "Docs collected", value: s.docsCollected },
+        { label: "Markets added", value: s.marketsAdded },
+        { label: "Follow-ups due", value: s.followUpsDue },
+      ];
+    }
+    case "retention": {
+      const s = member.stats as RetentionStats;
+      return [
+        { label: "Renewals saved", value: s.renewalsSaved },
+        { label: "PIF retention", value: s.pifRetention },
+        { label: "Cancellation saves", value: s.cancellationSaves },
+        { label: "Cross-sells", value: s.crossSells },
+      ];
+    }
+    default: {
+      const s = member.stats as AutomationStats;
+      return [
+        { label: "Workflows updated", value: s.workflowsUpdated },
+        { label: "Triggers active", value: s.triggersActive },
+        { label: "Failed runs", value: s.failedRuns },
+        { label: "Integrations healthy", value: s.integrationsHealthy },
+      ];
+    }
+  }
+}
+
+export type PlaceholderTabId = "brokerage" | "retention";
 
 export const tabPlaceholders: Record<PlaceholderTabId, { title: string; description: string }> = {
   brokerage: {
     title: "Brokerage Team",
     description: "JoJo and Pedro's brokerage workspace — quotes, documents, and client follow-ups.",
+  },
+  retention: {
+    title: "Retention VA",
+    description: "Sara's retention workspace — renewals, cancellation saves, and cross-sell follow-ups.",
   },
 };

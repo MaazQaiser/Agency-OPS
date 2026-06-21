@@ -5,8 +5,17 @@ export const routes = {
   producer: "/producer",
   retention: "/retention",
   commercial: "/commercial",
+  commercialHub: "/commercial-hub",
+  intakeForms: "/intake-forms",
+  trainingHub: "/training-hub",
+  carrierLibrary: "/carrier-library",
+  epayPolicy: "/epay-policy",
+  sendCenter: "/send-center",
+  sendCenterProposal: (id: string) => `/send-center/proposal/${id}`,
+  globalSearch: "/global-search",
   primeAgency: "/prime-agency",
   vaOperations: "/va-operations",
+  systemHealth: "/system-health",
   /** @deprecated Use routes.producer */
   production: "/production",
 } as const;
@@ -16,6 +25,12 @@ export type AppModule =
   | "producer"
   | "retention"
   | "commercial"
+  | "intake-forms"
+  | "training-hub"
+  | "carrier-library"
+  | "epay-policy"
+  | "send-center"
+  | "global-search"
   | "prime-agency"
   | "va-operations";
 
@@ -25,10 +40,11 @@ export const navItems: {
   href: string;
   icon: string;
 }[] = [
-  { key: "dashboard", label: "Dashboard", href: routes.dashboard, icon: "◈" },
-  { key: "producer", label: "Producer Scorecard", href: routes.producer, icon: "▣" },
-  { key: "retention", label: "Retention Scorecard", href: routes.retention, icon: "◉" },
-  { key: "commercial", label: "Commercial Tracker", href: routes.commercial, icon: "▤" },
   { key: "va-operations", label: "VA Operations", href: routes.vaOperations, icon: "◆" },
-  { key: "prime-agency", label: "Prime Agency", href: routes.primeAgency, icon: "★" },
+  { key: "commercial", label: "Commercial Hub", href: routes.commercialHub, icon: "▤" },
+  { key: "intake-forms", label: "Intake Forms", href: routes.intakeForms, icon: "▦" },
+  { key: "training-hub", label: "Training Hub", href: routes.trainingHub, icon: "▧" },
+  { key: "carrier-library", label: "Carrier Library", href: routes.carrierLibrary, icon: "▨" },
+  { key: "epay-policy", label: "ePayPolicy", href: routes.epayPolicy, icon: "▩" },
+  { key: "send-center", label: "Send Center", href: routes.sendCenter, icon: "▪" },
 ];

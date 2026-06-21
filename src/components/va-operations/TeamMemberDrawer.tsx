@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
-import type { TeamMember } from "@/data/vaOperations";
+import { getTeamMemberStatEntries, type TeamMember } from "@/data/vaOperations";
 import { getNameInitials } from "@/lib/nameInitials";
 import { cn } from "@/lib/cn";
 
@@ -35,6 +35,8 @@ export function TeamMemberDrawer({ member, onClose }: TeamMemberDrawerProps) {
   }, [member, onClose]);
 
   if (!member) return null;
+
+  const statEntries = getTeamMemberStatEntries(member);
 
   return (
     <div className="va-ops-drawer-root" role="presentation">
@@ -71,22 +73,12 @@ export function TeamMemberDrawer({ member, onClose }: TeamMemberDrawerProps) {
           <div className="va-ops-drawer-section">
             <div className="va-ops-drawer-section-label">Today&apos;s Metrics</div>
             <div className="va-ops-drawer-metrics">
-              <div className="va-ops-drawer-metric">
-                <span className="va-ops-drawer-metric-value">{member.stats.calls}</span>
-                <span className="va-ops-drawer-metric-label">Calls</span>
-              </div>
-              <div className="va-ops-drawer-metric">
-                <span className="va-ops-drawer-metric-value">{member.stats.tasksCompleted}</span>
-                <span className="va-ops-drawer-metric-label">Tasks</span>
-              </div>
-              <div className="va-ops-drawer-metric">
-                <span className="va-ops-drawer-metric-value">{member.stats.leadsAssigned}</span>
-                <span className="va-ops-drawer-metric-label">Leads</span>
-              </div>
-              <div className="va-ops-drawer-metric">
-                <span className="va-ops-drawer-metric-value">{member.stats.followUpsDue}</span>
-                <span className="va-ops-drawer-metric-label">Follow-ups</span>
-              </div>
+              {statEntries.map((stat) => (
+                <div key={stat.label} className="va-ops-drawer-metric">
+                  <span className="va-ops-drawer-metric-value">{stat.value}</span>
+                  <span className="va-ops-drawer-metric-label">{stat.label}</span>
+                </div>
+              ))}
             </div>
           </div>
 

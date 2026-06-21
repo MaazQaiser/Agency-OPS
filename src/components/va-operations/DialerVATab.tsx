@@ -41,31 +41,35 @@ const missedStatusClass = {
   critical: "badge-red",
 } as const;
 
-export function DialerVATab() {
+export function DialerVATab({ embedded = false }: { embedded?: boolean } = {}) {
   const [selectedLead, setSelectedLead] = useState<DialerLead | null>(null);
 
   const openLead = (lead: DialerLead) => setSelectedLead(lead);
 
   return (
-    <div className="va-ops-role-view va-ops-dialer">
-      <RoleTabHeader
-        title={dialerVAHeader.title}
-        subtitle={dialerVAHeader.subtitle}
-        quickActions={dialerVAHeader.quickActions}
-      />
+    <div className={cn("va-ops-role-view va-ops-dialer", embedded && "embedded")}>
+      {!embedded && (
+        <RoleTabHeader
+          title={dialerVAHeader.title}
+          subtitle={dialerVAHeader.subtitle}
+          quickActions={dialerVAHeader.quickActions}
+        />
+      )}
 
-      <section className="va-ops-kpi-strip" aria-label="Dialer performance summary">
-        <div className="va-ops-kpi-grid">
-          {dialerKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
-        </div>
-      </section>
+      {!embedded && (
+        <section className="va-ops-kpi-strip" aria-label="Dialer performance summary">
+          <div className="va-ops-kpi-grid">
+            {dialerKpis.map((kpi) => (
+              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
+                <div className="va-ops-kpi-label">{kpi.label}</div>
+                <div className="va-ops-kpi-value">{kpi.value}</div>
+                <div className="va-ops-kpi-sub">{kpi.sub}</div>
+                <div className="va-ops-kpi-helper">{kpi.helper}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="va-ops-content-grid">
         <section className="va-ops-panel va-ops-lead-queue-panel" aria-label="Lead queue">

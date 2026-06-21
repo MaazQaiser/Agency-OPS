@@ -1,25 +1,41 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useToast } from "@/hooks/useToast";
+import { toastMessages } from "@/lib/toastMessages";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
-  activeWorkflows,
   automationBuilderHeader,
   automationKpis,
+  buildExecutionLogDetails,
   connectedSystems,
-  executionHistory,
-  failedExecutions,
+  executionHistory as initialExecutionHistory,
+  failedExecutions as initialFailedExecutions,
   featuredWorkflowId,
   featuredWorkflowLogic,
-  liveTriggerActivity,
+  liveTriggerActivity as initialTriggerActivity,
+  activeWorkflows as initialWorkflows,
   optimizationQueue,
+  type AddTriggerPayload,
   type AutomationWorkflow,
+  type CreateWorkflowPayload,
+  type ExecutionLogItem,
   type ExecutionLogVariant,
+  type FailedExecution,
   type IntegrationStatus,
+  type TriggerActivityItem,
+  type WorkflowLogicStep,
   type WorkflowStatus,
 } from "@/data/automationBuilder";
+import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
+import { useTabLoading } from "@/hooks/useTabLoading";
 import { cn } from "@/lib/cn";
+import { AddTriggerDrawer } from "./AddTriggerDrawer";
+import { CreateWorkflowModal } from "./CreateWorkflowModal";
+import { LogicStepDrawer } from "./LogicStepDrawer";
 import { RoleTabHeader } from "./RoleTabHeader";
+import { RunTestModal, type RunTestResult } from "./RunTestModal";
+import { ViewLogsModal } from "./ViewLogsModal";
 import { WorkflowDrawer } from "./WorkflowDrawer";
 
 const workflowStatusClass: Record<WorkflowStatus, string> = {
@@ -53,40 +69,197 @@ const logicStepClass = {
   outcome: "va-ops-logic-outcome",
 } as const;
 
-export function AutomationBuilderTab() {
+type ActiveModal = "create" | "logs" | "test" | null;
+
+export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean } = {}) {
+  const toast = useToast();
+  const testToastIdRef = useRef<string | null>(null);
+  const loading = useTabLoading();
+  const [workflows, setWorkflows] = useState(initialWorkflows);
+  const [triggers, setTriggers] = useState(initialTriggerActivity);
+  const [execLogs, setExecLogs] = useState(initialExecutionHistory);
+  const [failedRuns, setFailedRuns] = useState(initialFailedExecutions);
+  const [executionsToday, setExecutionsToday] = useState(324);
+
   const [selectedWorkflowId, setSelectedWorkflowId] = useState(featuredWorkflowId);
   const [drawerWorkflow, setDrawerWorkflow] = useState<AutomationWorkflow | null>(null);
+  const [selectedLogicStep, setSelectedLogicStep] = useState<WorkflowLogicStep | null>(null);
+
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
+  const [triggerDrawerOpen, setTriggerDrawerOpen] = useState(false);
 
   const focusedWorkflow = useMemo(
-    () => activeWorkflows.find((w) => w.id === selectedWorkflowId) ?? activeWorkflows[0],
-    [selectedWorkflowId],
+    () => workflows.find((w) => w.id === selectedWorkflowId) ?? workflows[0],
+    [workflows, selectedWorkflowId],
   );
+
+  const logDetails = useMemo(
+    () => buildExecutionLogDetails(execLogs, failedRuns),
+    [execLogs, failedRuns],
+  );
+
+  const liveCount = workflows.filter((w) => w.status === "active").length;
+  const pausedCount = workflows.filter((w) => w.status === "paused").length;
+
+  const displayKpis = useMemo(() => {
+    return automationKpis.map((kpi) => {
+      if (kpi.label === "Active Workflows") {
+        return {
+          ...kpi,
+          value: String(workflows.length),
+          sub: `${liveCount} live / ${pausedCount} paused`,
+        };
+      }
+      if (kpi.label === "Executions Today") {
+        return { ...kpi, value: String(executionsToday) };
+      }
+      if (kpi.label === "Failed Runs") {
+        return { ...kpi, value: String(failedRuns.length) };
+      }
+      return kpi;
+    });
+  }, [workflows.length, liveCount, pausedCount, executionsToday, failedRuns.length]);
 
   const openWorkflow = (workflow: AutomationWorkflow) => {
     setSelectedWorkflowId(workflow.id);
     setDrawerWorkflow(workflow);
   };
 
-  return (
-    <div className="va-ops-role-view va-ops-automation">
-      <RoleTabHeader
-        title={automationBuilderHeader.title}
-        subtitle={automationBuilderHeader.subtitle}
-        quickActions={automationBuilderHeader.quickActions}
-      />
+  const handleQuickAction = useCallback((actionId: string) => {
+    if (actionId === "create-workflow") setActiveModal("create");
+    if (actionId === "add-trigger") setTriggerDrawerOpen(true);
+    if (actionId === "view-logs") setActiveModal("logs");
+    if (actionId === "run-test") setActiveModal("test");
+  }, []);
 
-      <section className="va-ops-kpi-strip" aria-label="Automation KPI summary">
-        <div className="va-ops-kpi-grid">
-          {automationKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
-        </div>
-      </section>
+  const handleCreateWorkflow = useCallback((payload: CreateWorkflowPayload) => {
+    toast.success(toastMessages.vaOps.workflowCreated);
+    const newWorkflow: AutomationWorkflow = {
+      id: `wf-${Date.now()}`,
+      name: payload.name.trim(),
+      trigger: payload.triggerType,
+      action: payload.actionType,
+      status: "active",
+      statusLabel: "Active",
+      runsToday: 1,
+      cta: "Open Workflow",
+      conditions: [payload.condition],
+      actions: [`Assign to ${payload.assignTo}`, payload.actionType],
+      dependencies: [],
+      connectedTools: ["AgencyZoom"],
+      lastExecution: "Just now — success",
+      failureLogs: [],
+    };
+
+    setWorkflows((prev) => [newWorkflow, ...prev]);
+    setSelectedWorkflowId(newWorkflow.id);
+    setExecutionsToday((prev) => prev + 1);
+    setExecLogs((prev) => [
+      {
+        id: `el-${Date.now()}`,
+        text: `${newWorkflow.name} created and activated`,
+        time: "Just now",
+        variant: "triggered",
+      },
+      ...prev,
+    ]);
+  }, [toast]);
+
+  const handleRunTestStart = useCallback(() => {
+    testToastIdRef.current = toast.processing("Running workflow test…");
+  }, [toast]);
+
+  const handleAddTrigger = useCallback((payload: AddTriggerPayload) => {
+    const newTrigger: TriggerActivityItem = {
+      id: `ta-${Date.now()}`,
+      trigger: `${payload.name} triggered (${payload.source})`,
+      status: payload.enabled ? "success" : "running",
+      time: "Just now",
+    };
+    setTriggers((prev) => [newTrigger, ...prev]);
+  }, []);
+
+  const handleRunTest = useCallback((result: RunTestResult) => {
+    if (testToastIdRef.current) {
+      toast.update(
+        testToastIdRef.current,
+        result.success ? "Workflow test completed" : (result.error ?? "Workflow test failed"),
+        result.success ? "success" : "error",
+      );
+      testToastIdRef.current = null;
+    }
+
+    setExecutionsToday((prev) => prev + 1);
+
+    const logEntry: ExecutionLogItem = {
+      id: `el-${Date.now()}`,
+      text: result.success
+        ? `${result.workflowName} test completed`
+        : `${result.workflowName} test failed`,
+      time: "Just now",
+      variant: result.success ? "success" : "failed",
+    };
+    setExecLogs((prev) => [logEntry, ...prev]);
+
+    if (result.success) {
+      setWorkflows((prev) =>
+        prev.map((workflow) =>
+          workflow.name === result.workflowName
+            ? {
+                ...workflow,
+                runsToday: workflow.runsToday + 1,
+                lastExecution: "Just now — test success",
+              }
+            : workflow,
+        ),
+      );
+      return;
+    }
+
+    const failedEntry: FailedExecution = {
+      id: `fe-${Date.now()}`,
+      workflow: result.workflowName,
+      error: result.error ?? "Test simulation failed",
+      time: "Just now",
+      cta: "Debug",
+    };
+    setFailedRuns((prev) => [failedEntry, ...prev]);
+  }, [toast]);
+
+  if (loading) {
+    return (
+      <div className={cn("va-ops-role-view va-ops-automation", embedded && "embedded")}>
+        <KpiSkeletonGrid count={4} />
+        <CardSkeletonGrid count={3} tall />
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("va-ops-role-view va-ops-automation", embedded && "embedded")}>
+      {!embedded && (
+        <RoleTabHeader
+          title={automationBuilderHeader.title}
+          subtitle={automationBuilderHeader.subtitle}
+          quickActions={automationBuilderHeader.quickActions}
+          onQuickActionClick={handleQuickAction}
+        />
+      )}
+
+      {!embedded && (
+        <section className="va-ops-kpi-strip" aria-label="Automation KPI summary">
+          <div className="va-ops-kpi-grid">
+            {displayKpis.map((kpi) => (
+              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
+                <div className="va-ops-kpi-label">{kpi.label}</div>
+                <div className="va-ops-kpi-value">{kpi.value}</div>
+                <div className="va-ops-kpi-sub">{kpi.sub}</div>
+                <div className="va-ops-kpi-helper">{kpi.helper}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="va-ops-content-grid">
         <section className="va-ops-panel va-ops-workflow-library" aria-label="Active workflows">
@@ -95,7 +268,7 @@ export function AutomationBuilderTab() {
             <p className="va-ops-section-sub">Current operational automations.</p>
           </div>
           <ul className="va-ops-workflow-list">
-            {activeWorkflows.map((workflow) => (
+            {workflows.map((workflow) => (
               <li
                 key={workflow.id}
                 className={cn(
@@ -139,7 +312,7 @@ export function AutomationBuilderTab() {
             <p className="va-ops-section-sub">Real-time system events.</p>
           </div>
           <ul className="va-ops-trigger-activity-list">
-            {liveTriggerActivity.map((item) => (
+            {triggers.map((item) => (
               <li key={item.id} className={cn("va-ops-trigger-activity-row", triggerStatusClass[item.status])}>
                 <span className="va-ops-trigger-activity-dot" aria-hidden="true" />
                 <div>
@@ -156,23 +329,31 @@ export function AutomationBuilderTab() {
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Workflow Logic</h3>
           <p className="va-ops-section-sub">
-            Step structure for <strong>{focusedWorkflow.name}</strong>
+            Step structure for <strong>{focusedWorkflow?.name}</strong>
           </p>
         </div>
         <div className="va-ops-logic-flow">
           {featuredWorkflowLogic.map((step, index) => (
             <div key={step.id} className="va-ops-logic-step-wrap">
-              <div className={cn("va-ops-logic-step", logicStepClass[step.type])}>
+              <button
+                type="button"
+                className={cn("va-ops-logic-step va-ops-logic-step-btn", logicStepClass[step.type])}
+                onClick={() => setSelectedLogicStep(step)}
+              >
                 <span className="va-ops-logic-step-type">{step.type}</span>
                 <span className="va-ops-logic-step-label">{step.label}</span>
-              </div>
+              </button>
               {index < featuredWorkflowLogic.length - 1 && (
                 <div className="va-ops-logic-arrow" aria-hidden="true">↓</div>
               )}
             </div>
           ))}
         </div>
-        <button type="button" className="va-ops-action-btn">
+        <button
+          type="button"
+          className="va-ops-action-btn"
+          onClick={() => setSelectedLogicStep(featuredWorkflowLogic[0])}
+        >
           <AppIcon name="settings" size={14} strokeWidth={2.25} />
           Edit Logic
         </button>
@@ -184,7 +365,7 @@ export function AutomationBuilderTab() {
           <p className="va-ops-section-sub">Workflow errors requiring attention.</p>
         </div>
         <ul className="va-ops-failed-list">
-          {failedExecutions.map((item) => (
+          {failedRuns.map((item) => (
             <li key={item.id} className="va-ops-failed-row">
               <div className="va-ops-failed-main">
                 <div className="va-ops-failed-workflow">{item.workflow}</div>
@@ -251,7 +432,7 @@ export function AutomationBuilderTab() {
             <p className="va-ops-section-sub">Full automation visibility.</p>
           </div>
           <ul className="va-ops-exec-history">
-            {executionHistory.map((item) => (
+            {execLogs.map((item) => (
               <li
                 key={item.id}
                 className={cn("va-ops-exec-history-item", executionVariantClass[item.variant])}
@@ -268,6 +449,33 @@ export function AutomationBuilderTab() {
       </div>
 
       <WorkflowDrawer workflow={drawerWorkflow} onClose={() => setDrawerWorkflow(null)} />
+      <LogicStepDrawer
+        step={selectedLogicStep}
+        workflowName={focusedWorkflow?.name ?? "Workflow"}
+        onClose={() => setSelectedLogicStep(null)}
+      />
+      <CreateWorkflowModal
+        open={activeModal === "create"}
+        onClose={() => setActiveModal(null)}
+        onSave={handleCreateWorkflow}
+      />
+      <AddTriggerDrawer
+        open={triggerDrawerOpen}
+        onClose={() => setTriggerDrawerOpen(false)}
+        onSave={handleAddTrigger}
+      />
+      <ViewLogsModal
+        open={activeModal === "logs"}
+        logs={logDetails}
+        onClose={() => setActiveModal(null)}
+      />
+      <RunTestModal
+        open={activeModal === "test"}
+        workflows={workflows}
+        onClose={() => setActiveModal(null)}
+        onRunStart={handleRunTestStart}
+        onRun={handleRunTest}
+      />
     </div>
   );
 }

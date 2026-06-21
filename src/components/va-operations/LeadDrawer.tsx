@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { DialerLead } from "@/data/dialerVA";
+import { crossModuleRoutes, LEAD_NAME_TO_SUBMISSION_ID, resolveDncId, resolveSubmissionId } from "@/lib/crossModuleLinks";
+import { routes } from "@/lib/routes";
 import { getNameInitials } from "@/lib/nameInitials";
 import { cn } from "@/lib/cn";
 
@@ -18,6 +21,8 @@ const priorityLabels = {
 } as const;
 
 export function LeadDrawer({ lead, onClose }: LeadDrawerProps) {
+  const router = useRouter();
+
   useEffect(() => {
     if (!lead) return;
 
@@ -35,6 +40,28 @@ export function LeadDrawer({ lead, onClose }: LeadDrawerProps) {
   }, [lead, onClose]);
 
   if (!lead) return null;
+
+  const openSubmission = () => {
+    const submissionId = LEAD_NAME_TO_SUBMISSION_ID[lead.name] ?? resolveSubmissionId(lead.name);
+    router.push(
+      crossModuleRoutes.submissionTracker(submissionId, {
+        href: `${routes.vaOperations}?role=dialer&view=tasks`,
+        label: "Dialer VA",
+      }),
+    );
+    onClose();
+  };
+
+  const viewDnc = () => {
+    const dncId = resolveDncId(lead.name);
+    router.push(
+      crossModuleRoutes.vaOpsDncLog(dncId, {
+        href: `${routes.vaOperations}?role=dialer&view=tasks`,
+        label: "Dialer VA",
+      }),
+    );
+    onClose();
+  };
 
   return (
     <div className="va-ops-drawer-root" role="presentation">
@@ -124,21 +151,21 @@ export function LeadDrawer({ lead, onClose }: LeadDrawerProps) {
           <div className="va-ops-drawer-section">
             <div className="va-ops-drawer-section-label">Quick Actions</div>
             <div className="va-ops-drawer-quick-actions">
-              <button type="button" className="va-ops-drawer-action-btn primary">
+              <button type="button" className="va-ops-drawer-action-btn primary" onClick={openSubmission}>
+                <AppIcon name="folder" size={15} strokeWidth={2} />
+                Open Submission
+              </button>
+              <button type="button" className="va-ops-drawer-action-btn" onClick={viewDnc}>
+                <AppIcon name="shield" size={15} strokeWidth={2} />
+                View DNC Record
+              </button>
+              <button type="button" className="va-ops-drawer-action-btn">
                 <AppIcon name="phone" size={15} strokeWidth={2} />
                 Call
               </button>
               <button type="button" className="va-ops-drawer-action-btn">
                 <AppIcon name="plus" size={15} strokeWidth={2} />
                 Add Note
-              </button>
-              <button type="button" className="va-ops-drawer-action-btn">
-                <AppIcon name="refresh" size={15} strokeWidth={2} />
-                Reassign
-              </button>
-              <button type="button" className="va-ops-drawer-action-btn">
-                <AppIcon name="check" size={15} strokeWidth={2} />
-                Mark Completed
               </button>
             </div>
           </div>

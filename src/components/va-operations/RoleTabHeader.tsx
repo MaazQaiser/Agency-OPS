@@ -10,9 +10,10 @@ type RoleTabHeaderProps = {
   title: string;
   subtitle: string;
   quickActions?: QuickAction[];
+  onQuickActionClick?: (actionId: string) => void;
 };
 
-export function RoleTabHeader({ title, subtitle, quickActions }: RoleTabHeaderProps) {
+export function RoleTabHeader({ title, subtitle, quickActions, onQuickActionClick }: RoleTabHeaderProps) {
   return (
     <header className="va-ops-role-header">
       <div className="va-ops-role-header-left">
@@ -22,7 +23,12 @@ export function RoleTabHeader({ title, subtitle, quickActions }: RoleTabHeaderPr
       {quickActions && quickActions.length > 0 && (
         <div className="va-ops-role-actions">
           {quickActions.map((action) => (
-            <button key={action.id} type="button" className="va-ops-role-action-btn">
+            <button
+              key={action.id}
+              type="button"
+              className="va-ops-role-action-btn"
+              onClick={() => onQuickActionClick?.(action.id)}
+            >
               <AppIcon name={action.icon} size={15} strokeWidth={2} />
               {action.label}
             </button>

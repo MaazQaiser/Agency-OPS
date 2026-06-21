@@ -37,34 +37,40 @@ const decisionVariantClass = {
   revision: "va-ops-decision-revision",
 } as const;
 
-export function SalesVATab() {
+export function SalesVATab({ embedded = false }: { embedded?: boolean } = {}) {
   const [selectedApproval, setSelectedApproval] = useState<SalesApproval | null>(null);
 
   return (
-    <div className="va-ops-role-view va-ops-sales">
-      <div className="va-ops-sales-private-badge" aria-label="Private owner workspace">
-        <AppIcon name="shield" size={14} strokeWidth={2.25} />
-        <span>Eva Only · Private Decision Layer</span>
-      </div>
-
-      <RoleTabHeader
-        title={salesVAHeader.title}
-        subtitle={salesVAHeader.subtitle}
-        quickActions={salesVAHeader.quickActions}
-      />
-
-      <section className="va-ops-kpi-strip" aria-label="Sales KPI summary">
-        <div className="va-ops-kpi-grid">
-          {salesKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
+    <div className={cn("va-ops-role-view va-ops-sales", embedded && "embedded")}>
+      {!embedded && (
+        <div className="va-ops-sales-private-badge" aria-label="Private owner workspace">
+          <AppIcon name="shield" size={14} strokeWidth={2.25} />
+          <span>Eva Only · Private Decision Layer</span>
         </div>
-      </section>
+      )}
+
+      {!embedded && (
+        <RoleTabHeader
+          title={salesVAHeader.title}
+          subtitle={salesVAHeader.subtitle}
+          quickActions={salesVAHeader.quickActions}
+        />
+      )}
+
+      {!embedded && (
+        <section className="va-ops-kpi-strip" aria-label="Sales KPI summary">
+          <div className="va-ops-kpi-grid">
+            {salesKpis.map((kpi) => (
+              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
+                <div className="va-ops-kpi-label">{kpi.label}</div>
+                <div className="va-ops-kpi-value">{kpi.value}</div>
+                <div className="va-ops-kpi-sub">{kpi.sub}</div>
+                <div className="va-ops-kpi-helper">{kpi.helper}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="va-ops-content-grid">
         <section className="va-ops-panel va-ops-sales-approval-panel" aria-label="Approval queue">

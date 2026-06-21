@@ -128,13 +128,39 @@ export type WorkflowLogicStep = {
   id: string;
   label: string;
   type: "trigger" | "condition" | "action" | "outcome";
+  description: string;
+  details: string[];
 };
 
 export const featuredWorkflowLogic: WorkflowLogicStep[] = [
-  { id: "s1", label: "Lead created", type: "trigger" },
-  { id: "s2", label: "If commercial lead", type: "condition" },
-  { id: "s3", label: "Assign Research VA", type: "action" },
-  { id: "s4", label: "Notify Dialer", type: "outcome" },
+  {
+    id: "s1",
+    label: "Lead created",
+    type: "trigger",
+    description: "Fires when a new lead record is created in Ricochet or intake forms.",
+    details: ["Source: Ricochet webhook", "De-dupe window: 5 minutes", "Runs on: all inbound leads"],
+  },
+  {
+    id: "s2",
+    label: "If commercial lead",
+    type: "condition",
+    description: "Routes leads based on line of business and campaign source.",
+    details: ["LOB equals Commercial", "OR campaign tag contains BOP", "Fallback: personal lines queue"],
+  },
+  {
+    id: "s3",
+    label: "Assign Research VA",
+    type: "action",
+    description: "Assigns the lead to the next available Research VA with capacity.",
+    details: ["Round-robin pool: Jaffer", "Max queue load: 10", "Notify via Slack #research"],
+  },
+  {
+    id: "s4",
+    label: "Notify Dialer",
+    type: "outcome",
+    description: "Alerts the dialer team when research handoff is complete or SLA is near breach.",
+    details: ["Slack channel: #dialer-ops", "SMS fallback: enabled", "Log outcome to activity feed"],
+  },
 ];
 
 export type FailedExecution = {
@@ -222,3 +248,101 @@ export const executionHistory: ExecutionLogItem[] = [
 ];
 
 export const featuredWorkflowId = "wf-lead-assignment";
+
+export const workflowTriggerTypes = [
+  "New lead enters system",
+  "No response after 5 mins",
+  "Missing docs after 24 hours",
+  "Quote sent to client",
+  "Policy expiring in 30 days",
+] as const;
+
+export const workflowConditions = [
+  "Lead source is valid",
+  "Lead has contact info",
+  "Priority is high or critical",
+  "Submission status is pending docs",
+  "Commercial line of business",
+] as const;
+
+export const workflowActionTypes = [
+  "Assign to Dialer VA",
+  "Assign to Research VA",
+  "Send reminder",
+  "Notify Owner",
+  "Create follow-up task",
+] as const;
+
+export const workflowAssignToOptions = [
+  "Dialer VA",
+  "Research VA",
+  "Brokerage Team",
+  "Retention VA",
+  "Owner",
+] as const;
+
+export const triggerSourceOptions = [
+  "Lead Created",
+  "Quote Sent",
+  "Policy Expiring",
+  "Missing Docs",
+  "Follow-Up Due",
+] as const;
+
+export type CreateWorkflowPayload = {
+  name: string;
+  triggerType: string;
+  condition: string;
+  actionType: string;
+  assignTo: string;
+};
+
+export type AddTriggerPayload = {
+  name: string;
+  source: string;
+  delayTime: string;
+  condition: string;
+  enabled: boolean;
+};
+
+export type RunTestPayload = {
+  workflowId: string;
+  mockPayload: string;
+};
+
+export type ExecutionLogDetail = {
+  id: string;
+  workflowName: string;
+  status: "success" | "failed";
+  executedAt: string;
+  duration: string;
+  result: string;
+  errors?: string;
+};
+
+export function buildExecutionLogDetails(
+  history: ExecutionLogItem[],
+  failed: FailedExecution[],
+): ExecutionLogDetail[] {
+  const fromHistory: ExecutionLogDetail[] = history.map((item) => ({
+    id: item.id,
+    workflowName: item.text.replace(/ completed| failed| sent| triggered/gi, ""),
+    status: item.variant === "failed" ? "failed" : "success",
+    executedAt: item.time,
+    duration: item.variant === "failed" ? "1.2s" : "0.8s",
+    result: item.text,
+    errors: item.variant === "failed" ? "Execution returned non-200 response" : undefined,
+  }));
+
+  const fromFailed: ExecutionLogDetail[] = failed.map((item) => ({
+    id: item.id,
+    workflowName: item.workflow,
+    status: "failed" as const,
+    executedAt: item.time,
+    duration: "2.4s",
+    result: "Workflow execution failed",
+    errors: item.error,
+  }));
+
+  return [...fromHistory, ...fromFailed];
+}

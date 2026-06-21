@@ -1,0 +1,468 @@
+export const epayPolicyTabs = [
+  { id: "builder", label: "Invoice Builder" },
+  { id: "tracker", label: "Payment Tracker" },
+  { id: "trust", label: "Trust Account" },
+] as const;
+
+export type EPayPolicyTabId = (typeof epayPolicyTabs)[number]["id"];
+
+export const epayPolicyHeader = {
+  title: "ePayPolicy",
+  subtitle: "Generate invoices, collect payments, and manage broker fees.",
+  quickActions: [
+    { id: "new-invoice", label: "New Invoice", icon: "plus" as const },
+    { id: "export", label: "Export Ledger", icon: "download" as const },
+    { id: "reconcile", label: "Reconcile Funds", icon: "check" as const },
+  ],
+};
+
+export const invoiceBuilderHeader = {
+  title: "Invoice Builder",
+  subtitle: "Generate invoices and prepare payment requests.",
+  quickActions: [
+    { id: "save", label: "Save Invoice", icon: "folder" as const },
+    { id: "send-link", label: "Send Payment Link", icon: "send" as const },
+    { id: "download", label: "Download PDF", icon: "download" as const },
+    { id: "mark-ready", label: "Mark Ready", icon: "check" as const },
+  ],
+};
+
+export type PaymentMethod = "Card" | "ACH" | "Check" | "Wire";
+export type InstallmentOption = "Full Pay" | "Monthly" | "Quarterly";
+export type PaymentLinkStatus = "Sent" | "Pending" | "Opened" | "Not Sent";
+
+export type PaymentLifecycleStage = "Generated" | "Sent" | "Viewed" | "Paid";
+
+export type PaymentLifecycle = Record<Lowercase<PaymentLifecycleStage>, boolean>;
+export type PendingPaymentStatus = "Pending" | "Overdue";
+export type InvoicePaymentStatus = "Pending Payment" | "Paid" | "Overdue" | "Draft";
+
+export type ComplianceItem = {
+  id: string;
+  label: string;
+  complete: boolean;
+};
+
+export type PaymentActivity = {
+  id: string;
+  message: string;
+  timeAgo: string;
+};
+
+export type InvoiceFormData = {
+  invoiceNumber: string;
+  policyPremium: number;
+  brokerFee: number;
+  taxesFees: number;
+  paymentDueDate: string;
+  paymentMethod: PaymentMethod;
+  installmentOption: InstallmentOption;
+  notes: string;
+};
+
+export type InvoiceClient = {
+  id: string;
+  clientName: string;
+  policyType: string;
+  carrier: string;
+  producer: string;
+  assignedVa: string;
+  effectiveDate: string;
+  renewalDate: string;
+  status: string;
+  invoice: InvoiceFormData;
+  paymentRequest: {
+    linkGenerated: boolean;
+    linkStatus: PaymentLinkStatus;
+    sentTo: string;
+    sentAt: string;
+    paymentLink: string;
+    lifecycle: PaymentLifecycle;
+  };
+  trustAccount: {
+    accountName: string;
+    depositMethod: string;
+    referenceNumber: string;
+    expectedDepositDate: string;
+  };
+  activity: PaymentActivity[];
+  compliance: ComplianceItem[];
+};
+
+export type PendingInvoice = {
+  id: string;
+  clientName: string;
+  amount: string;
+  amountValue: number;
+  due: string;
+  status: PendingPaymentStatus;
+  cta: string;
+  drawer: {
+    invoiceNumber: string;
+    policyPremium: string;
+    brokerFee: string;
+    taxesFees: string;
+    totalDue: string;
+    paymentHistory: { id: string; action: string; date: string }[];
+    brokerFeeNote: string;
+    trustAccountLogs: { id: string; entry: string; date: string }[];
+    clientNotes: string[];
+  };
+};
+
+export const paymentMethodOptions: PaymentMethod[] = ["Card", "ACH", "Check", "Wire"];
+export const installmentOptions: InstallmentOption[] = ["Full Pay", "Monthly", "Quarterly"];
+
+export const DEFAULT_INVOICE_CLIENT_ID = "inv-martinez";
+
+const martinezClient: InvoiceClient = {
+  id: "inv-martinez",
+  clientName: "Martinez Landscaping",
+  policyType: "BOP + Workers Comp",
+  carrier: "Markel",
+  producer: "Eva",
+  assignedVa: "JoJo",
+  effectiveDate: "July 12, 2026",
+  renewalDate: "July 12, 2027",
+  status: "Ready to Invoice",
+  invoice: {
+    invoiceNumber: "INV-2048",
+    policyPremium: 4200,
+    brokerFee: 500,
+    taxesFees: 120,
+    paymentDueDate: "June 28, 2026",
+    paymentMethod: "ACH",
+    installmentOption: "Full Pay",
+    notes: "Broker fee due upfront.",
+  },
+  paymentRequest: {
+    linkGenerated: true,
+    linkStatus: "Sent",
+    sentTo: "martinez@landscape.com",
+    sentAt: "Today, 11:22 AM",
+    paymentLink: "https://pay.epaypolicy.com/inv-2048-martinez",
+    lifecycle: {
+      generated: true,
+      sent: true,
+      viewed: true,
+      paid: false,
+    },
+  },
+  trustAccount: {
+    accountName: "Insurance Town Trust",
+    depositMethod: "ACH Deposit",
+    referenceNumber: "TR-88341",
+    expectedDepositDate: "June 29, 2026",
+  },
+  activity: [
+    { id: "pa-1", message: "Invoice created", timeAgo: "Today" },
+    { id: "pa-2", message: "Payment link sent", timeAgo: "Today" },
+    { id: "pa-3", message: "Client opened payment link", timeAgo: "2 hours later" },
+    { id: "pa-4", message: "Payment pending", timeAgo: "Current" },
+  ],
+  compliance: [
+    { id: "c-broker", label: "Broker fee separated", complete: true },
+    { id: "c-premium", label: "Premium verified", complete: true },
+    { id: "c-carrier", label: "Carrier confirmed", complete: true },
+    { id: "c-method", label: "Payment method selected", complete: true },
+    { id: "c-producer", label: "Producer approved", complete: true },
+    { id: "c-client", label: "Client notified", complete: false },
+  ],
+};
+
+const kimClient: InvoiceClient = {
+  id: "inv-kim",
+  clientName: "Kim Auto Shop",
+  policyType: "Commercial Auto",
+  carrier: "Travelers",
+  producer: "Pedro",
+  assignedVa: "Tracie",
+  effectiveDate: "August 1, 2026",
+  renewalDate: "August 1, 2027",
+  status: "Pending Payment",
+  invoice: {
+    invoiceNumber: "INV-2045",
+    policyPremium: 5200,
+    brokerFee: 450,
+    taxesFees: 150,
+    paymentDueDate: "June 22, 2026",
+    paymentMethod: "ACH",
+    installmentOption: "Full Pay",
+    notes: "Awaiting signed app before bind.",
+  },
+  paymentRequest: {
+    linkGenerated: true,
+    linkStatus: "Opened",
+    sentTo: "david@kimautoshop.com",
+    sentAt: "June 18, 2026",
+    paymentLink: "https://pay.epaypolicy.com/inv-2045-kim",
+    lifecycle: { generated: true, sent: true, viewed: true, paid: false },
+  },
+  trustAccount: {
+    accountName: "Insurance Town Trust",
+    depositMethod: "ACH Deposit",
+    referenceNumber: "TR-88338",
+    expectedDepositDate: "June 23, 2026",
+  },
+  activity: [
+    { id: "pa-k1", message: "Invoice sent", timeAgo: "3 days ago" },
+    { id: "pa-k2", message: "Payment link opened", timeAgo: "Today" },
+  ],
+  compliance: [
+    { id: "c-broker", label: "Broker fee separated", complete: true },
+    { id: "c-premium", label: "Premium verified", complete: true },
+    { id: "c-carrier", label: "Carrier confirmed", complete: true },
+    { id: "c-method", label: "Payment method selected", complete: true },
+    { id: "c-producer", label: "Producer approved", complete: true },
+    { id: "c-client", label: "Client notified", complete: true },
+  ],
+};
+
+const riveraClient: InvoiceClient = {
+  id: "inv-rivera",
+  clientName: "Rivera Construction",
+  policyType: "Workers Comp",
+  carrier: "ICW",
+  producer: "Sarah",
+  assignedVa: "Valerie",
+  effectiveDate: "June 15, 2026",
+  renewalDate: "June 15, 2027",
+  status: "Partial Payment",
+  invoice: {
+    invoiceNumber: "INV-2046",
+    policyPremium: 3600,
+    brokerFee: 400,
+    taxesFees: 100,
+    paymentDueDate: "June 25, 2026",
+    paymentMethod: "Wire",
+    installmentOption: "Full Pay",
+    notes: "Balance due after partial wire received.",
+  },
+  paymentRequest: {
+    linkGenerated: true,
+    linkStatus: "Sent",
+    sentTo: "j.rivera@riveraconstruction.com",
+    sentAt: "June 19, 2026",
+    paymentLink: "https://pay.epaypolicy.com/inv-2046-rivera",
+    lifecycle: { generated: true, sent: true, viewed: false, paid: false },
+  },
+  trustAccount: {
+    accountName: "Insurance Town Trust",
+    depositMethod: "Wire Transfer",
+    referenceNumber: "TR-88342",
+    expectedDepositDate: "June 26, 2026",
+  },
+  activity: [
+    { id: "pa-r1", message: "Partial payment received", timeAgo: "3 hours ago" },
+    { id: "pa-r2", message: "Invoice sent", timeAgo: "2 days ago" },
+  ],
+  compliance: [
+    { id: "c-broker", label: "Broker fee separated", complete: true },
+    { id: "c-premium", label: "Premium verified", complete: true },
+    { id: "c-carrier", label: "Carrier confirmed", complete: true },
+    { id: "c-method", label: "Payment method selected", complete: true },
+    { id: "c-producer", label: "Producer approved", complete: true },
+    { id: "c-client", label: "Client notified", complete: true },
+  ],
+};
+
+const greenlineClient: InvoiceClient = {
+  id: "inv-greenline",
+  clientName: "Greenline Logistics",
+  policyType: "BOP",
+  carrier: "CNA",
+  producer: "Eva",
+  assignedVa: "JoJo",
+  effectiveDate: "September 1, 2026",
+  renewalDate: "September 1, 2027",
+  status: "Overdue",
+  invoice: {
+    invoiceNumber: "INV-2042",
+    policyPremium: 5500,
+    brokerFee: 550,
+    taxesFees: 150,
+    paymentDueDate: "June 18, 2026",
+    paymentMethod: "Card",
+    installmentOption: "Full Pay",
+    notes: "Renewal BOP — payment overdue.",
+  },
+  paymentRequest: {
+    linkGenerated: true,
+    linkStatus: "Opened",
+    sentTo: "min@greenlinelogistics.com",
+    sentAt: "June 15, 2026",
+    paymentLink: "https://pay.epaypolicy.com/inv-2042-greenline",
+    lifecycle: { generated: true, sent: true, viewed: true, paid: false },
+  },
+  trustAccount: {
+    accountName: "Insurance Town Trust",
+    depositMethod: "Card Deposit",
+    referenceNumber: "TR-88335",
+    expectedDepositDate: "Overdue",
+  },
+  activity: [
+    { id: "pa-g1", message: "Payment overdue", timeAgo: "1 day ago" },
+    { id: "pa-g2", message: "Reminder sent", timeAgo: "1 day ago" },
+  ],
+  compliance: [
+    { id: "c-broker", label: "Broker fee separated", complete: true },
+    { id: "c-premium", label: "Premium verified", complete: true },
+    { id: "c-carrier", label: "Carrier confirmed", complete: true },
+    { id: "c-method", label: "Payment method selected", complete: true },
+    { id: "c-producer", label: "Producer approved", complete: true },
+    { id: "c-client", label: "Client notified", complete: false },
+  ],
+};
+
+const atlasClient: InvoiceClient = {
+  id: "inv-atlas",
+  clientName: "Atlas Roofing",
+  policyType: "General Liability",
+  carrier: "Kingsway",
+  producer: "Pedro",
+  assignedVa: "Tracie",
+  effectiveDate: "July 15, 2026",
+  renewalDate: "July 15, 2027",
+  status: "Paid",
+  invoice: {
+    invoiceNumber: "INV-2041",
+    policyPremium: 4900,
+    brokerFee: 560,
+    taxesFees: 140,
+    paymentDueDate: "June 15, 2026",
+    paymentMethod: "ACH",
+    installmentOption: "Full Pay",
+    notes: "GL renewal — paid in full.",
+  },
+  paymentRequest: {
+    linkGenerated: true,
+    linkStatus: "Sent",
+    sentTo: "r.chen@atlasroofing.com",
+    sentAt: "June 14, 2026",
+    paymentLink: "https://pay.epaypolicy.com/inv-2041-atlas",
+    lifecycle: { generated: true, sent: true, viewed: true, paid: true },
+  },
+  trustAccount: {
+    accountName: "Insurance Town Trust",
+    depositMethod: "ACH Deposit",
+    referenceNumber: "TR-88333",
+    expectedDepositDate: "June 16, 2026",
+  },
+  activity: [
+    { id: "pa-a1", message: "Payment received", timeAgo: "2 days ago" },
+    { id: "pa-a2", message: "Invoice sent", timeAgo: "1 week ago" },
+  ],
+  compliance: [
+    { id: "c-broker", label: "Broker fee separated", complete: true },
+    { id: "c-premium", label: "Premium verified", complete: true },
+    { id: "c-carrier", label: "Carrier confirmed", complete: true },
+    { id: "c-method", label: "Payment method selected", complete: true },
+    { id: "c-producer", label: "Producer approved", complete: true },
+    { id: "c-client", label: "Client notified", complete: true },
+  ],
+};
+
+export const invoiceClients: InvoiceClient[] = [
+  martinezClient,
+  kimClient,
+  riveraClient,
+  greenlineClient,
+  atlasClient,
+];
+
+export const pendingInvoices: PendingInvoice[] = [
+  {
+    id: "pend-kim-auto",
+    clientName: "Kim Auto Shop",
+    amount: "$5,800",
+    amountValue: 5800,
+    due: "Tomorrow",
+    status: "Pending",
+    cta: "Send Reminder",
+    drawer: {
+      invoiceNumber: "INV-2045",
+      policyPremium: "$5,200",
+      brokerFee: "$450",
+      taxesFees: "$150",
+      totalDue: "$5,800",
+      paymentHistory: [
+        { id: "ph-1", action: "Invoice sent", date: "June 18, 2026" },
+        { id: "ph-2", action: "Reminder sent", date: "June 20, 2026" },
+      ],
+      brokerFeeNote: "Broker fee listed separately per compliance — $450 agency fee.",
+      trustAccountLogs: [
+        { id: "tl-1", entry: "Pending deposit — TR-88338", date: "June 18, 2026" },
+      ],
+      clientNotes: ["Follow up on auto dec page before bind."],
+    },
+  },
+  {
+    id: "pend-greenline",
+    clientName: "Greenline Logistics",
+    amount: "$6,200",
+    amountValue: 6200,
+    due: "Today",
+    status: "Overdue",
+    cta: "Follow Up",
+    drawer: {
+      invoiceNumber: "INV-2042",
+      policyPremium: "$5,500",
+      brokerFee: "$550",
+      taxesFees: "$150",
+      totalDue: "$6,200",
+      paymentHistory: [
+        { id: "ph-3", action: "Invoice sent", date: "June 15, 2026" },
+        { id: "ph-4", action: "Payment link opened", date: "June 17, 2026" },
+        { id: "ph-5", action: "Reminder sent", date: "June 19, 2026" },
+      ],
+      brokerFeeNote: "Broker fee separated — logistics BOP package.",
+      trustAccountLogs: [
+        { id: "tl-2", entry: "Overdue — no deposit received", date: "June 20, 2026" },
+      ],
+      clientNotes: ["Owner requested payment plan — follow up with producer."],
+    },
+  },
+  {
+    id: "pend-rivera",
+    clientName: "Rivera Construction",
+    amount: "$4,100",
+    amountValue: 4100,
+    due: "June 25, 2026",
+    status: "Pending",
+    cta: "Send Reminder",
+    drawer: {
+      invoiceNumber: "INV-2046",
+      policyPremium: "$3,600",
+      brokerFee: "$400",
+      taxesFees: "$100",
+      totalDue: "$4,100",
+      paymentHistory: [{ id: "ph-6", action: "Invoice created", date: "June 19, 2026" }],
+      brokerFeeNote: "Standard broker fee separation applied.",
+      trustAccountLogs: [],
+      clientNotes: [],
+    },
+  },
+];
+
+export function getInvoiceClient(clientId: string): InvoiceClient | undefined {
+  return invoiceClients.find((c) => c.id === clientId);
+}
+
+export function formatMoney(amount: number): string {
+  return `$${amount.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+}
+
+export function calculateTotalDue(invoice: Pick<InvoiceFormData, "policyPremium" | "brokerFee" | "taxesFees">): number {
+  return invoice.policyPremium + invoice.brokerFee + invoice.taxesFees;
+}
+
+export function getComplianceStatus(compliance: ComplianceItem[]): "Ready" | "Blocked" {
+  return compliance.every((item) => item.complete) ? "Ready" : "Blocked";
+}
+
+import { epayStatusClass } from "./epayStatus";
+
+export const pendingStatusClass: Record<PendingPaymentStatus, string> = {
+  Pending: epayStatusClass.Pending,
+  Overdue: epayStatusClass.Overdue,
+};

@@ -2,67 +2,89 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { vaOperationsTabs, type VaOperationsTabId } from "@/data/vaOperations";
+import {
+  vaOperationsRoles,
+  vaOperationsTabs,
+  type VaOperationsRoleId,
+  type VaOperationsTabId,
+} from "@/data/vaOperations";
+import { getVisibleVaOpsTabs } from "@/data/rolePermissions";
+import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
+import { ActivityTab } from "./ActivityTab";
+import { ApprovalsTab } from "./ApprovalsTab";
 import { AutomationBuilderTab } from "./AutomationBuilderTab";
-import { DialerVATab } from "./DialerVATab";
+import { DNCLogTab } from "./DNCLogTab";
+import { BilingualQueueTab } from "./BilingualQueueTab";
 import { OverviewTab } from "./OverviewTab";
-import { PlaceholderTab } from "./PlaceholderTab";
-import { ResearchVATab } from "./ResearchVATab";
-import { SalesVATab } from "./SalesVATab";
+import { TasksTab } from "./TasksTab";
 import { VAOperationsPageHeader } from "./VAOperationsPageHeader";
-import { AppIcon } from "@/components/ui/AppIcon";
 
 const validTabIds = new Set<string>(vaOperationsTabs.map((tab) => tab.id));
+const validRoleIds = new Set<string>(vaOperationsRoles.map((role) => role.id));
 
 function resolveTab(view: string | null): VaOperationsTabId {
   if (view && validTabIds.has(view)) return view as VaOperationsTabId;
   return "overview";
 }
 
+function resolveRole(role: string | null): VaOperationsRoleId {
+  if (role && validRoleIds.has(role)) return role as VaOperationsRoleId;
+  return "owner";
+}
+
+function buildHref(tabId: VaOperationsTabId, roleId: VaOperationsRoleId): string {
+  const params = new URLSearchParams();
+  if (tabId !== "overview") params.set("view", tabId);
+  if (roleId !== "owner") params.set("role", roleId);
+  const query = params.toString();
+  return query ? `${routes.vaOperations}?${query}` : routes.vaOperations;
+}
+
 export function VAOperationsModule() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const active = resolveTab(searchParams.get("view"));
+  const { role } = usePermissions();
+  const visibleTabs = getVisibleVaOpsTabs(role);
+  const validVisibleIds = new Set(visibleTabs.map((t) => t.id));
+  const activeTab = resolveTab(searchParams.get("view"));
+  const safeActiveTab = validVisibleIds.has(activeTab) ? activeTab : (visibleTabs[0]?.id ?? "overview");
+  const activeRole = resolveRole(searchParams.get("role"));
 
-  const setActive = useCallback(
+  const setActiveTab = useCallback(
     (tabId: VaOperationsTabId) => {
-      const href =
-        tabId === "overview"
-          ? routes.vaOperations
-          : `${routes.vaOperations}?view=${tabId}`;
-      router.push(href, { scroll: false });
+      router.push(buildHref(tabId, activeRole), { scroll: false });
     },
-    [router],
+    [router, activeRole],
   );
 
   return (
     <>
       <VAOperationsPageHeader />
 
-      <nav className="va-ops-tab-nav" aria-label="VA Operations views">
-        {vaOperationsTabs.map((tab) => (
+      <nav className="va-ops-tab-nav" aria-label="VA Operations workflows">
+        {visibleTabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
-            className={`va-ops-tab-btn${active === tab.id ? " active" : ""}${"private" in tab && tab.private ? " private" : ""}`}
-            onClick={() => setActive(tab.id)}
+            className={`va-ops-tab-btn${safeActiveTab === tab.id ? " active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
           >
-            {"private" in tab && tab.private && (
-              <AppIcon name="shield" size={12} strokeWidth={2.25} className="va-ops-tab-lock" />
-            )}
             {tab.label}
           </button>
         ))}
       </nav>
 
       <div className="va-ops-tab-content">
-        {active === "overview" && <OverviewTab />}
-        {active === "dialer" && <DialerVATab />}
-        {active === "research" && <ResearchVATab />}
-        {active === "brokerage" && <PlaceholderTab tabId="brokerage" />}
-        {active === "sales" && <SalesVATab />}
-        {active === "automation" && <AutomationBuilderTab />}
+        {safeActiveTab === "overview" && <OverviewTab role={activeRole} />}
+        {safeActiveTab === "tasks" && <TasksTab role={activeRole} />}
+        {safeActiveTab === "activity" && <ActivityTab role={activeRole} />}
+        {safeActiveTab === "approvals" && <ApprovalsTab role={activeRole} />}
+        {safeActiveTab === "automations" && <AutomationBuilderTab />}
+        {safeActiveTab === "dnc-log" && (
+          <DNCLogTab role={activeRole} initialDncId={searchParams.get("dnc")} />
+        )}
+        {safeActiveTab === "bilingual-queue" && <BilingualQueueTab role={activeRole} />}
       </div>
     </>
   );

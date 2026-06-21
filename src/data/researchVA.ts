@@ -169,8 +169,8 @@ export const leadSources = [
 export const researchActivity = [
   { id: "ra-1", text: "Added Martinez Landscaping", time: "8 minutes ago" },
   { id: "ra-2", text: "Updated owner contact for Kim Auto Shop", time: "14 minutes ago" },
-  { id: "ra-3", text: "Qualified Seoul Restaurant Group", time: "26 minutes ago" },
-  { id: "ra-4", text: "Sent Pacific Rim Contractors to Dialer", time: "41 minutes ago" },
+  { id: "ra-3", text: "Qualified Greenline Logistics", time: "26 minutes ago" },
+  { id: "ra-4", text: "Sent Atlas Roofing to Dialer", time: "41 minutes ago" },
 ];
 
 export type HandoffPriority = "high" | "medium";

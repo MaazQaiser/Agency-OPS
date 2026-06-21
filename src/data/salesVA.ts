@@ -90,7 +90,7 @@ export const approvalQueue: SalesApproval[] = [
     id: "appr-2",
     title: "Policy Renewal Reminder",
     preparedBy: "JoJo",
-    client: "Seoul Restaurant Group",
+    client: "Greenline Logistics",
     type: "sms",
     typeLabel: "SMS Draft",
     submitted: "27 min ago",
@@ -104,7 +104,7 @@ export const approvalQueue: SalesApproval[] = [
       "Renewal docs pending from carrier.",
     ],
     draftCommunication:
-      "Hi — this is Insurance Town. Your BOP policy for Seoul Restaurant Group renews in 45 days. Reply YES to schedule a renewal review or call us at (555) 012-3456.",
+      "Hi — this is Insurance Town. Your BOP policy for Greenline Logistics renews in 45 days. Reply YES to schedule a renewal review or call us at (555) 012-3456.",
     complianceChecklist: [
       { id: "c1", label: "Licensed producer review completed", checked: false },
       { id: "c2", label: "Opt-out language included", checked: true },
@@ -180,7 +180,7 @@ export type HighValueOpportunity = {
 export const highValuePipeline: HighValueOpportunity[] = [
   {
     id: "hvo-1",
-    client: "Pacific Rim Contractors",
+    client: "Atlas Roofing",
     coverage: "Workers Comp",
     estimatedPremium: "$18,000",
     stage: "quoted",
@@ -190,7 +190,7 @@ export const highValuePipeline: HighValueOpportunity[] = [
   },
   {
     id: "hvo-2",
-    client: "Seoul Restaurant Group",
+    client: "Greenline Logistics",
     coverage: "BOP",
     estimatedPremium: "$14,500",
     stage: "negotiation",
@@ -218,5 +218,5 @@ export const decisionTimeline: DecisionTimelineItem[] = [
   { id: "dt-1", text: "Approved Kim Auto quote", time: "18 minutes ago", variant: "approved" },
   { id: "dt-2", text: "Bound Martinez Landscaping policy", time: "34 minutes ago", variant: "bound" },
   { id: "dt-3", text: "Rejected draft due to compliance issue", time: "1 hour ago", variant: "rejected" },
-  { id: "dt-4", text: "Requested revision on Seoul Restaurant quote", time: "2 hours ago", variant: "revision" },
+  { id: "dt-4", text: "Requested revision on Greenline Logistics quote", time: "2 hours ago", variant: "revision" },
 ];

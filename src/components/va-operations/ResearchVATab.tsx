@@ -34,7 +34,7 @@ const qualificationStatusClass = {
   incomplete: "badge-yellow",
 } as const;
 
-export function ResearchVATab() {
+export function ResearchVATab({ embedded = false }: { embedded?: boolean } = {}) {
   const [selectedId, setSelectedId] = useState(featuredProspectId);
   const [drawerProspect, setDrawerProspect] = useState<ResearchProspect | null>(null);
 
@@ -49,25 +49,29 @@ export function ResearchVATab() {
   };
 
   return (
-    <div className="va-ops-role-view va-ops-research">
-      <RoleTabHeader
-        title={researchVAHeader.title}
-        subtitle={researchVAHeader.subtitle}
-        quickActions={researchVAHeader.quickActions}
-      />
+    <div className={cn("va-ops-role-view va-ops-research", embedded && "embedded")}>
+      {!embedded && (
+        <RoleTabHeader
+          title={researchVAHeader.title}
+          subtitle={researchVAHeader.subtitle}
+          quickActions={researchVAHeader.quickActions}
+        />
+      )}
 
-      <section className="va-ops-kpi-strip" aria-label="Research performance summary">
-        <div className="va-ops-kpi-grid">
-          {researchKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
-        </div>
-      </section>
+      {!embedded && (
+        <section className="va-ops-kpi-strip" aria-label="Research performance summary">
+          <div className="va-ops-kpi-grid">
+            {researchKpis.map((kpi) => (
+              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
+                <div className="va-ops-kpi-label">{kpi.label}</div>
+                <div className="va-ops-kpi-value">{kpi.value}</div>
+                <div className="va-ops-kpi-sub">{kpi.sub}</div>
+                <div className="va-ops-kpi-helper">{kpi.helper}</div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="va-ops-content-grid">
         <section className="va-ops-panel va-ops-prospect-panel" aria-label="Prospect queue">
