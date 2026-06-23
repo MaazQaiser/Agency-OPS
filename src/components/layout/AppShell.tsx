@@ -20,27 +20,27 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <ToastProvider>
     <PermissionProvider>
-      <GlobalSearchProvider>
-        <NotificationCenterProvider>
-          <OwnerQuickActionsProvider>
-            <KeyboardShortcutsProvider>
-            <AvatarProfileProvider>
-              <div className="app-shell">
-                <Suspense fallback={null}>
-                  <CrossModuleLinkHandler />
-                </Suspense>
-                <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
-                  <TopHeader />
-                </Suspense>
-                <main className="app-content">
-                  <ModuleAccessGate>{children}</ModuleAccessGate>
-                </main>
-              </div>
-            </AvatarProfileProvider>
-            </KeyboardShortcutsProvider>
-          </OwnerQuickActionsProvider>
-        </NotificationCenterProvider>
-      </GlobalSearchProvider>
+      <AvatarProfileProvider>
+        <GlobalSearchProvider>
+          <NotificationCenterProvider>
+            <OwnerQuickActionsProvider>
+              <KeyboardShortcutsProvider>
+                <div className="app-shell">
+                  <Suspense fallback={null}>
+                    <CrossModuleLinkHandler />
+                  </Suspense>
+                  <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
+                    <TopHeader />
+                  </Suspense>
+                  <main className="app-content">
+                    <ModuleAccessGate>{children}</ModuleAccessGate>
+                  </main>
+                </div>
+              </KeyboardShortcutsProvider>
+            </OwnerQuickActionsProvider>
+          </NotificationCenterProvider>
+        </GlobalSearchProvider>
+      </AvatarProfileProvider>
     </PermissionProvider>
     </ToastProvider>
   );
