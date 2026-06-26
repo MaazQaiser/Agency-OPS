@@ -2,6 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { resolveInvoiceClientId } from "@/lib/crossModuleLinks";
 import {
@@ -21,9 +22,11 @@ import {
   type PendingInvoice,
 } from "@/data/epayPolicy";
 import { epayStatusClass } from "@/data/epayStatus";
-import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
-import { CardSkeletonGrid, FormSkeleton } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { exportEpayInvoicePdf } from "@/lib/export";
+import { ExportMenu } from "@/components/export/ExportMenu";
+import { FormSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
@@ -32,6 +35,7 @@ import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadge
 import { getClientLanguage, getLanguageBadgeCode } from "@/data/bilingualClient";
 import { EPayAccordion } from "./EPayAccordion";
 import { EPayConfirmModal } from "./EPayConfirmModal";
+import { BrokerFeeTriggerConfirmation } from "./BrokerFeeTriggerConfirmation";
 import { InvoiceDrawer } from "./InvoiceDrawer";
 
 const lifecycleSteps = ["Generated", "Sent", "Viewed", "Paid"] as const;
@@ -47,7 +51,16 @@ type InvoiceBuilderTabProps = {
 
 export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
   const toast = useToast();
-  const loading = useTabLoading();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => invoiceClients,
+    errorPreset: "supabase-timeout",
+  });
   const [clientId, setClientId] = useState(DEFAULT_INVOICE_CLIENT_ID);
   const client = useMemo(() => getInvoiceClient(clientId) ?? invoiceClients[0], [clientId]);
   const [form, setForm] = useState<InvoiceFormData>(client.invoice);
@@ -91,6 +104,8 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
   const lifecycle = client.paymentRequest.lifecycle;
   const billingLang = getClientLanguage(client.clientName);
   const invoiceLocalized = billingLang.billingLanguage === billingLang.preferredLanguage;
+  const pendingTotal = pendingInvoices.reduce((sum, inv) => sum + inv.amountValue, 0);
+  const overduePendingCount = pendingInvoices.filter((inv) => inv.status === "Overdue").length;
 
   const updateForm = <K extends keyof InvoiceFormData>(key: K, value: InvoiceFormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -123,7 +138,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
 
   const handleSaveInvoice = () => toast.success(toastMessages.epay.invoiceCreated);
   const handleMarkReady = () => toast.success("Invoice marked ready");
-  const handleDownloadPdf = () => toast.info("PDF download started");
+  const handleDownloadPdf = () => exportEpayInvoicePdf(client, totalDue);
 
   const handleSendInvoice = async () => {
     const toastId = toast.processing(toastMessages.epay.generatingInvoice);
@@ -131,21 +146,38 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
     toast.update(toastId, toastMessages.epay.invoiceCreated, "success");
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view epay-invoice-builder">
-        <FormSkeleton />
-        <CardSkeletonGrid count={2} />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view epay-invoice-builder">
+          <FormSkeleton />
+        </div>
+      }
+      empty={<HubEmptyState preset="epay-invoices" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view epay-invoice-builder">
-      <RoleTabHeader
-        title={invoiceBuilderHeader.title}
-        subtitle={invoiceBuilderHeader.subtitle}
-      />
+      <div className="export-table-header-export">
+        <RoleTabHeader
+          title={invoiceBuilderHeader.title}
+          subtitle={invoiceBuilderHeader.subtitle}
+        />
+        <ExportMenu
+          kind="epay-invoice"
+          invoiceExport={() => exportEpayInvoicePdf(client, totalDue)}
+        />
+      </div>
 
       <section className="va-ops-panel epay-client-summary" aria-label="Client summary">
         <div className="epay-client-summary-top">
@@ -185,7 +217,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
         )}
       </section>
 
-      <div className="epay-builder-main">
+      <div className="epay-builder-main epay-builder-split">
         <section className="va-ops-panel" aria-label="Invoice details">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Invoice Details</h3>
@@ -252,13 +284,27 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
               <div className="epay-preview-row epay-preview-broker"><dt>Broker Fee</dt><dd>{formatMoney(form.brokerFee)}</dd></div>
               <div className="epay-preview-row"><dt>Taxes</dt><dd>{formatMoney(form.taxesFees)}</dd></div>
               <div className="epay-preview-row epay-preview-total"><dt>Total Due</dt><dd>{formatMoney(totalDue)}</dd></div>
-              <div className="epay-preview-row"><dt>Due Date</dt><dd>{form.paymentDueDate}</dd></div>
+              <div className="epay-preview-row epay-preview-due"><dt>Due Date</dt><dd>{form.paymentDueDate}</dd></div>
               <div className="epay-preview-row"><dt>Payment Method</dt><dd>{form.paymentMethod}</dd></div>
-              <div className="epay-preview-row">
+              <div className="epay-preview-row epay-preview-status-row">
                 <dt>Status</dt>
-                <dd><span className={cn("badge", epayStatusClass.Pending)}>Pending Payment</span></dd>
+                <dd>
+                  <span className={cn("epay-preview-status-badge", epayStatusClass.Pending)}>Pending Payment</span>
+                </dd>
+              </div>
+              <div className="epay-preview-row">
+                <dt>Billing Type</dt>
+                <dd>
+                  <span className={cn("badge", client.billingType === "Agency Bill" ? "badge-violet" : "badge-blue")}>
+                    {client.billingType}
+                  </span>
+                </dd>
               </div>
             </dl>
+            <BrokerFeeTriggerConfirmation
+              billingType={client.billingType}
+              steps={client.brokerFeeTrigger}
+            />
           </section>
 
           <section className="va-ops-panel epay-compliance-panel" aria-label="Invoice compliance review">
@@ -271,7 +317,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
                 {complianceStatus}
               </span>
             </div>
-            <div className="commercial-hub-table-wrap">
+            <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
               <table className="commercial-hub-table epay-compliance-table">
                 <thead>
                   <tr><th>Requirement</th><th>Status</th></tr>
@@ -340,7 +386,13 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           </div>
         </EPayAccordion>
 
-        <EPayAccordion title="Trust Account Reference" subtitle="Internal financial tracking.">
+        <EPayAccordion title="Trust Account Reference" subtitle="Internal financial tracking." countBadge={1} statusSummary={client.trustAccount.referenceNumber} preview={
+          <div className="epay-accordion-preview-row">
+            <span><strong>{client.trustAccount.accountName}</strong></span>
+            <span>{client.trustAccount.depositMethod}</span>
+            <span>Expected: {client.trustAccount.expectedDepositDate}</span>
+          </div>
+        }>
           <dl className="epay-trust-grid">
             <div><dt>Trust Account Name</dt><dd>{client.trustAccount.accountName}</dd></div>
             <div><dt>Deposit Method</dt><dd>{client.trustAccount.depositMethod}</dd></div>
@@ -349,7 +401,22 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           </dl>
         </EPayAccordion>
 
-        <EPayAccordion title="Payment Activity" subtitle="Track payment flow and client engagement.">
+        <EPayAccordion
+          title="Payment Activity"
+          subtitle="Track payment flow and client engagement."
+          countBadge={client.activity.length}
+          statusSummary={client.activity[0]?.message ?? "No recent activity"}
+          preview={
+            <ul className="epay-accordion-preview-list">
+              {client.activity.slice(0, 2).map((item) => (
+                <li key={item.id} className="epay-accordion-preview-item">
+                  <span className="epay-accordion-preview-label">{item.message}</span>
+                  <span className="epay-accordion-preview-meta">{item.timeAgo}</span>
+                </li>
+              ))}
+            </ul>
+          }
+        >
           <ol className="outreach-activity-timeline">
             {client.activity.map((item) => (
               <li key={item.id} className="outreach-activity-item">
@@ -363,14 +430,33 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           </ol>
         </EPayAccordion>
 
-        <EPayAccordion title="Pending Payments" subtitle="Collections visibility — click a row for full invoice details.">
+        <EPayAccordion
+          title="Pending Payments"
+          subtitle="Collections visibility — click a row for full invoice details."
+          countBadge={pendingInvoices.length}
+          statusSummary={`${formatMoney(pendingTotal)} outstanding${overduePendingCount > 0 ? ` · ${overduePendingCount} overdue` : ""}`}
+          preview={
+            pendingInvoices.length === 0 ? (
+              <p className="epay-accordion-preview-row">No pending invoices.</p>
+            ) : (
+              <ul className="epay-accordion-preview-list">
+                {pendingInvoices.slice(0, 2).map((row) => (
+                  <li key={row.id} className="epay-accordion-preview-item">
+                    <span className="epay-accordion-preview-label">{row.clientName}</span>
+                    <span className="epay-accordion-preview-meta">{row.amount} · {row.due}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        >
           {pendingInvoices.length === 0 ? (
             <div className="epay-empty-state">
               <AppIcon name="folder" size={28} strokeWidth={1.5} />
               <p>No pending invoices — all caught up.</p>
             </div>
           ) : (
-            <div className="commercial-hub-table-wrap">
+            <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
               <table className="commercial-hub-table epay-pending-table">
                 <thead>
                   <tr><th>Client</th><th>Amount</th><th>Due</th><th>Status</th><th aria-label="Action" /></tr>
@@ -447,5 +533,6 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
 
       <InvoiceDrawer invoice={selectedPending} onClose={() => setSelectedPending(null)} />
     </div>
+    </DataStateView>
   );
 }

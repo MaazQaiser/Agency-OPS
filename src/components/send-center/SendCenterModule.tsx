@@ -3,7 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { createDraftQueueRecordFromForm, type NewDraftFormValues } from "@/data/newDraftForm";
 import {
   draftQueueRecords,
@@ -15,11 +16,12 @@ import {
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { useToast, createLegacyToastHandler } from "@/hooks/useToast";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { getVisibleSendCenterTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
-import { cn } from "@/lib/cn";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { SendCenterPageHeader } from "./SendCenterPageHeader";
 import { DraftQueueTab } from "./DraftQueueTab";
 import { PendingReviewTab } from "./PendingReviewTab";
@@ -49,7 +51,17 @@ export function SendCenterModule() {
   const [newDraftOpen, setNewDraftOpen] = useState(false);
   const [draftPrefill, setDraftPrefill] = useState<Partial<NewDraftFormValues> | undefined>();
   const [draftRows, setDraftRows] = useState<DraftQueueRecord[]>(draftQueueRecords);
-  const kpiLoading = useTabLoading();
+  const {
+    status: kpiStatus,
+    retry: retryKpis,
+    lastSyncedAt: kpiSyncedAt,
+    isStale: kpiStale,
+    retrying: kpiRetrying,
+  } = useHubDataState({
+    load: () => sendCenterKpis,
+    isEmpty: () => false,
+    errorPreset: "supabase-timeout",
+  });
 
   useCrossModuleHandoff("quote-to-draft", (payload) => {
     setDraftPrefill({
@@ -129,23 +141,31 @@ export function SendCenterModule() {
       <ModuleBreadcrumbBar />
 
       <section className="va-ops-kpi-strip send-center-kpi-strip" aria-label="Send Center summary">
-        {kpiLoading ? (
-          <KpiSkeletonGrid count={4} />
-        ) : (
-        <div className="commercial-hub-kpi-grid send-center-kpi-grid">
-          {sendCenterKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
-        </div>
-        )}
+        <DataStateView
+          status={kpiStatus}
+          lastSyncedAt={kpiSyncedAt}
+          isStale={kpiStale}
+          showFreshness={false}
+          loading={<KpiSkeletonGrid count={4} />}
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retryKpis}
+              retrying={kpiRetrying}
+              lastSyncedAt={kpiSyncedAt}
+              compact
+            />
+          }
+        >
+          <div className="commercial-hub-kpi-grid send-center-kpi-grid hub-kpi-grid">
+            {sendCenterKpis.map((kpi) => (
+              <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
+            ))}
+          </div>
+        </DataStateView>
       </section>
 
-      <nav className="va-ops-tab-nav" aria-label="Send Center views">
+      <nav className="va-ops-tab-nav send-center-tab-nav" aria-label="Send Center views">
         {visibleTabs.map((tab) => (
           <button
             key={tab.id}
@@ -159,6 +179,7 @@ export function SendCenterModule() {
       </nav>
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={safeActive}>
         {safeActive === "draft-queue" && (
           <DraftQueueTab
             rows={draftRows}
@@ -171,6 +192,7 @@ export function SendCenterModule() {
         {safeActive === "approved" && <ApprovedDraftsTab onToast={showToast} />}
         {safeActive === "sent" && <SentProposalsTab onToast={showToast} />}
         {safeActive === "templates" && <TemplatesTab onToast={showToast} />}
+        </TabTransitionPanel>
       </div>
     </>
   );

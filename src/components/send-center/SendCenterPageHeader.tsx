@@ -1,4 +1,5 @@
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { sendCenterHeader } from "@/data/sendCenter";
 
 type SendCenterPageHeaderProps = {
@@ -25,6 +26,7 @@ export function SendCenterPageHeader({ onQuickActionClick }: SendCenterPageHeade
             onClick={() => onQuickActionClick?.(action.id)}
           />
         ))}
+        <HubHelpTrigger hubId="send-center" />
       </div>
     </header>
   );

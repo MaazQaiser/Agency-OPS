@@ -42,8 +42,9 @@ export const shortcutCategoryLabels: Record<ShortcutCategory, string> = {
 };
 
 export const keyboardShortcutCatalog: ShortcutDefinition[] = [
-  { id: "global-search", label: "Open Global Search", keys: "Mod+K", category: "global", type: "ui", actionId: "open-search" },
+  { id: "global-search", label: "Open Command Palette", keys: "Mod+K", category: "global", type: "ui", actionId: "open-search" },
   { id: "owner-quick-actions", label: "Open Owner Quick Actions", keys: "Shift+O", category: "global", type: "ui", actionId: "owner-quick-actions" },
+  { id: "audit-log", label: "Open Audit Log", keys: "Mod+Shift+J", category: "global", type: "ui", actionId: "open-audit-log" },
   { id: "new-submission", label: "New Submission", keys: "N", category: "global", type: "navigate", route: `${routes.intakeForms}?view=new-submission` },
   { id: "new-draft", label: "New Draft", keys: "D", category: "global", type: "action", actionId: "new-draft", route: routes.sendCenter },
   { id: "new-invoice", label: "New Invoice", keys: "I", category: "global", type: "navigate", route: routes.epayPolicy },

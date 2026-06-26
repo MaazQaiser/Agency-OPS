@@ -1,8 +1,9 @@
 "use client";
 
 import type { VaOperationsRoleId } from "@/data/vaOperations";
-import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { VaOpsApprovalQueue, VaOpsKpiStrip, VaOpsWorkload } from "./VaOpsPanels";
 
 type ApprovalsTabProps = {
@@ -10,22 +11,38 @@ type ApprovalsTabProps = {
 };
 
 export function ApprovalsTab({ role }: ApprovalsTabProps) {
-  const loading = useTabLoading();
-
-  if (loading) {
-    return (
-      <div className="va-ops-approvals-view">
-        <KpiSkeletonGrid count={4} />
-        <CardSkeletonGrid count={4} />
-      </div>
-    );
-  }
+  const { status, retry, lastSyncedAt, isStale, retrying } = useHubDataState({
+    load: () => true,
+    isEmpty: () => false,
+    errorPreset: "supabase-timeout",
+  });
 
   return (
-    <div className="va-ops-approvals-view">
-      <VaOpsKpiStrip role={role} />
-      <VaOpsApprovalQueue role={role} />
-      <VaOpsWorkload role={role} />
-    </div>
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-approvals-view">
+          <TableSkeleton rows={6} />
+        </div>
+      }
+      empty={<HubEmptyState preset="generic-list" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+      <div className="va-ops-approvals-view">
+        <VaOpsKpiStrip role={role} />
+        <VaOpsApprovalQueue role={role} />
+        <VaOpsWorkload role={role} />
+      </div>
+    </DataStateView>
   );
 }

@@ -10,6 +10,8 @@ import {
   type OwnerRecentAction,
   type OwnerSummaryCard,
 } from "@/data/ownerQuickActions";
+import { ExportMenu } from "@/components/export/ExportMenu";
+import { useEntitlements } from "@/hooks/useEntitlements";
 import { cn } from "@/lib/cn";
 import type { PermissionAuditEntry } from "@/data/rolePermissions";
 
@@ -30,6 +32,19 @@ export function OwnerQuickActionsPanel({
   onAction,
   onSummaryCard,
 }: OwnerQuickActionsPanelProps) {
+  const { canOpenHref } = useEntitlements();
+
+  const summaryCards = ownerSummaryCards.filter(
+    (card) => !card.route || canOpenHref(card.route),
+  );
+
+  const actionSections = ownerQuickActionSections
+    .map((section) => ({
+      ...section,
+      actions: section.actions.filter((action) => !action.route || canOpenHref(action.route)),
+    }))
+    .filter((section) => section.actions.length > 0);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -63,9 +78,12 @@ export function OwnerQuickActionsPanel({
             <h2>Quick Actions</h2>
             <p>Fast owner controls</p>
           </div>
-          <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
+          <div className="owner-quick-actions-header-actions">
+            <ExportMenu kind="owner-kpi" compact />
+            <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />
           </button>
+          </div>
         </header>
 
         <div className="owner-quick-actions-body">
@@ -79,7 +97,7 @@ export function OwnerQuickActionsPanel({
             <>
               <section className="owner-quick-actions-summary" aria-label="Summary">
                 <div className="owner-quick-actions-summary-grid">
-                  {ownerSummaryCards.map((card) => (
+                  {summaryCards.map((card) => (
                     <button
                       key={card.id}
                       type="button"
@@ -93,7 +111,7 @@ export function OwnerQuickActionsPanel({
                 </div>
               </section>
 
-              {ownerQuickActionSections.map((section) => (
+              {actionSections.map((section) => (
                 <section key={section.id} className="owner-quick-actions-section" aria-label={section.title}>
                   <h3 className="owner-quick-actions-section-title">{section.title}</h3>
                   <div className="owner-quick-actions-grid">

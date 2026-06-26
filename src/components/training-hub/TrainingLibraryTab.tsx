@@ -6,6 +6,9 @@ import { AppIcon } from "@/components/ui/AppIcon";
 import {
   assignmentStatusClass,
   resourceTypeClass,
+  resourceTypeCardClass,
+  resourceTypeIconClass,
+  resourceTypeLabel,
 } from "@/data/trainingHub";
 import {
   findResourceByTitleLoose,
@@ -17,7 +20,7 @@ import {
   libraryFilterOptions,
   librarySearchPlaceholder,
   matchesLibraryFilters,
-  popularTags,
+  popularTopics,
   recentlyViewed,
   resourceCompletionClass,
   trainingLibraryHeader,
@@ -26,12 +29,24 @@ import {
   type LibraryFilterState,
 } from "@/data/trainingLibrary";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
-import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
 import { cn } from "@/lib/cn";
 import { AssignTrainingModal } from "./AssignTrainingModal";
 import { ManageCategoriesModal } from "./ManageCategoriesModal";
+
+const memberUserIds: Record<string, string> = {
+  Kat: "kat",
+  Jaffer: "jaffer",
+  Pedro: "pedro-va",
+  JoJo: "jojo",
+  Eva: "eva-chong",
+};
 
 const filterLabels: Record<keyof LibraryFilterState, string> = {
   department: "Department",
@@ -42,10 +57,19 @@ const filterLabels: Record<keyof LibraryFilterState, string> = {
 };
 
 export function TrainingLibraryTab() {
-  const loading = useTabLoading();
   const router = useRouter();
   const searchParams = useSearchParams();
   const deptParam = searchParams.get("dept");
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => trainingResources,
+    errorPreset: "supabase-timeout",
+  });
 
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<LibraryFilterState>(() =>
@@ -72,6 +96,8 @@ export function TrainingLibraryTab() {
     () => trainingResources.filter((r) => matchesLibraryFilters(r, search, effectiveFilters)),
     [search, effectiveFilters],
   );
+
+  const status = resolveDisplayStatus(loadStatus, filteredResources, (d) => d.length === 0);
 
   const openDetail = (resourceId: string) => {
     router.push(
@@ -104,16 +130,27 @@ export function TrainingLibraryTab() {
     if (actionId === "categories") setCategoriesOpen(true);
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view training-library">
-        <KpiSkeletonGrid count={4} />
-        <CardSkeletonGrid count={6} tall />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view training-library">
+          <TableSkeleton rows={6} />
+        </div>
+      }
+      empty={<HubEmptyState preset="training-content" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view training-library">
       <RoleTabHeader
         title={trainingLibraryHeader.title}
@@ -152,19 +189,14 @@ export function TrainingLibraryTab() {
       </div>
 
       <section className="va-ops-kpi-strip" aria-label="Training library KPI summary">
-        <div className="commercial-hub-kpi-grid training-kpi-grid">
+        <div className="commercial-hub-kpi-grid hub-kpi-grid training-kpi-grid">
           {trainingLibraryKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
+            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
           ))}
         </div>
       </section>
 
-      <div className="va-ops-panel-header">
+      <div className="va-ops-panel-header training-library-resources-header">
         <h3 className="va-ops-section-title">Training Resources</h3>
         <p className="va-ops-section-sub">
           {filteredResources.length} resource{filteredResources.length === 1 ? "" : "s"} — click a card for details.
@@ -172,34 +204,49 @@ export function TrainingLibraryTab() {
       </div>
       <div className="training-resource-grid">
           {filteredResources.map((resource) => (
-            <article key={resource.id} className="training-resource-card">
+            <article key={resource.id} className={cn("training-resource-card", resourceTypeCardClass[resource.type])}>
               <button
                 type="button"
                 className="training-resource-card-body"
                 onClick={() => openDetail(resource.id)}
               >
+                <span className={cn("training-resource-type-icon", resourceTypeIconClass[resource.type])} aria-hidden="true">
+                  <AppIcon
+                    name={resource.type === "Loom" ? "telescope" : resource.type === "Doc" ? "file-text" : "clipboard"}
+                    size={14}
+                    strokeWidth={2.25}
+                  />
+                </span>
                 <h4 className="training-resource-title">{resource.title}</h4>
+                <div className="training-resource-priority-row">
+                  <span className={cn("badge", resourceCompletionClass[resource.completionStatus])}>
+                    {resource.completionStatus}
+                  </span>
+                  <span className={cn("badge", resourceTypeClass[resource.type])}>
+                    {resourceTypeLabel[resource.type]}
+                  </span>
+                </div>
                 <dl className="training-resource-meta">
-                  <div><dt>Department</dt><dd>{resource.department}</dd></div>
-                  <div>
-                    <dt>Type</dt>
-                    <dd>
-                      <span className={cn("badge", resourceTypeClass[resource.type])}>
-                        {resource.type}
-                      </span>
-                    </dd>
+                  <div className="training-resource-meta-row training-resource-meta-row--secondary">
+                    <dt>Duration</dt>
+                    <dd>{resource.duration}</dd>
                   </div>
-                  <div><dt>Duration</dt><dd>{resource.duration}</dd></div>
-                  <div><dt>Assigned To</dt><dd>{resource.assignedTo}</dd></div>
-                  <div>
-                    <dt>Status</dt>
-                    <dd>
-                      <span className={cn("badge", resourceCompletionClass[resource.completionStatus])}>
-                        {resource.completionStatus}
-                      </span>
-                    </dd>
+                  <div className="training-resource-meta-row training-resource-meta-row--category">
+                    <dt>Department</dt>
+                    <dd>{resource.department}</dd>
                   </div>
-                  <div><dt>Last Updated</dt><dd>{resource.lastUpdated}</dd></div>
+                  <div className="training-resource-meta-row training-resource-meta-row--category">
+                    <dt>Difficulty</dt>
+                    <dd>{resource.difficulty}</dd>
+                  </div>
+                  <div className="training-resource-meta-row training-resource-meta-row--tertiary">
+                    <dt>Updated</dt>
+                    <dd>{resource.lastUpdated}</dd>
+                  </div>
+                  <div className="training-resource-meta-row training-resource-meta-row--tertiary">
+                    <dt>Assigned</dt>
+                    <dd>{resource.assignedTo}</dd>
+                  </div>
                 </dl>
                 <div className="training-resource-tags">
                   {resource.tags.map((tag) => (
@@ -207,24 +254,26 @@ export function TrainingLibraryTab() {
                   ))}
                 </div>
               </button>
-              <button
-                type="button"
-                className="training-resource-cta"
-                onClick={() => openDetail(resource.id)}
-              >
-                Open Resource
-              </button>
+              <div className="training-resource-action-strip">
+                <button
+                  type="button"
+                  className="training-resource-action-btn"
+                  onClick={() => openDetail(resource.id)}
+                >
+                  <span>Open Resource</span>
+                </button>
+              </div>
             </article>
           ))}
       </div>
 
-      <div className="commercial-hub-mid-grid">
-        <section className="va-ops-panel" aria-label="Assigned training queue">
+      <div className="training-library-lower-grid">
+        <section className="va-ops-panel training-library-primary" aria-label="Assigned training queue">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Assigned Training</h3>
             <p className="va-ops-section-sub">Track assigned resources across the team.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr>
@@ -264,88 +313,60 @@ export function TrainingLibraryTab() {
           </div>
         </section>
 
-        <section className="va-ops-panel" aria-label="Recently viewed">
+        <section className="va-ops-panel training-library-secondary-compact" aria-label="Recently viewed">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Recently Viewed</h3>
             <p className="va-ops-section-sub">Fast return to recent learning.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
-            <table className="commercial-hub-table">
-              <thead>
-                <tr>
-                  <th>Resource</th>
-                  <th>Viewed</th>
-                  <th aria-label="Action" />
-                </tr>
-              </thead>
-              <tbody>
-                {recentlyViewed.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="training-hub-clickable-row"
-                    tabIndex={0}
-                    role="button"
-                    onClick={() => openRecentlyViewed(row.title)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        openRecentlyViewed(row.title);
-                      }
-                    }}
-                  >
-                    <td className="commercial-hub-client-cell">{row.title}</td>
-                    <td>{row.viewed}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="va-ops-action-btn"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openRecentlyViewed(row.title);
-                        }}
-                      >
-                        Open
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ul className="training-recent-list">
+            {recentlyViewed.map((row) => (
+              <li key={row.id}>
+                <button
+                  type="button"
+                  className="training-recent-item"
+                  onClick={() => openRecentlyViewed(row.title)}
+                >
+                  <span className="training-recent-title">{row.title}</span>
+                  <span className="training-recent-time">{row.viewed}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
 
-      <section className="va-ops-panel" aria-label="Popular topics">
+      <section className="va-ops-panel training-topics-panel" aria-label="Popular topics">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Popular Topics</h3>
-          <p className="va-ops-section-sub">Quick topic navigation by tag.</p>
+          <p className="va-ops-section-sub">Filter by tag usage across the library.</p>
         </div>
         <div className="training-popular-tags">
-          {popularTags.map((tag) => (
+          {popularTopics.map(({ tag, usageCount }) => (
             <button
               key={tag}
               type="button"
               className={cn("training-popular-tag", activeTag === tag && "active")}
               onClick={() => applyTagFilter(tag)}
             >
-              {tag}
+              <span className="training-popular-tag-label">{tag}</span>
+              <span className="training-popular-tag-count">{usageCount}</span>
             </button>
           ))}
         </div>
       </section>
 
-      <section className="va-ops-panel" aria-label="Training activity">
+      <section className="va-ops-panel training-activity-panel" aria-label="Training activity">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Training Activity</h3>
           <p className="va-ops-section-sub">Learning visibility across the team.</p>
         </div>
-        <ol className="outreach-activity-timeline">
+        <ol className="training-activity-timeline">
           {libraryActivity.map((item) => {
             const linkedResource = findResourceFromActivityMessage(item.message);
             return (
             <li
               key={item.id}
-              className={cn("outreach-activity-item", linkedResource && "training-hub-clickable-row")}
+              className={cn("training-activity-item", linkedResource && "training-hub-clickable-row")}
               tabIndex={linkedResource ? 0 : undefined}
               role={linkedResource ? "button" : undefined}
               onClick={() => linkedResource && openDetail(linkedResource.id)}
@@ -357,10 +378,16 @@ export function TrainingLibraryTab() {
                 }
               }}
             >
-              <div className="outreach-activity-dot" aria-hidden="true" />
-              <div className="outreach-activity-content">
-                <div className="outreach-activity-message">{item.message}</div>
-                <div className="outreach-activity-time">{item.timeAgo}</div>
+              <TeamAvatar
+                userId={memberUserIds[item.actor]}
+                name={item.actor}
+                size="sm"
+                showStatus={false}
+                className="training-activity-avatar"
+              />
+              <div className="training-activity-body">
+                <div className="training-activity-message">{item.message}</div>
+                <time className="training-activity-time">{item.timeAgo}</time>
               </div>
             </li>
             );
@@ -379,5 +406,6 @@ export function TrainingLibraryTab() {
         onSave={() => undefined}
       />
     </div>
+    </DataStateView>
   );
 }

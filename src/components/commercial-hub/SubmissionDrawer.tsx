@@ -8,6 +8,10 @@ import type { HubSubmission } from "@/data/commercialHub";
 import { getNameInitials } from "@/lib/nameInitials";
 import { cn } from "@/lib/cn";
 import { ClientLanguagePanel } from "@/components/bilingual/BilingualQueueDrawer";
+import { EoRiskBreakdown } from "@/components/commercial/EoRiskBreakdown";
+import { CoverageChecklistProgress } from "@/components/commercial/CoverageChecklistProgress";
+import { eoRiskFromHubSubmission } from "@/lib/eoRiskScore";
+import { progressFromHubMissingDocs } from "@/lib/coverageChecklistProgress";
 
 type SubmissionDrawerProps = {
   submission: HubSubmission | null;
@@ -42,6 +46,9 @@ export function SubmissionDrawer({ submission, onClose }: SubmissionDrawerProps)
   }, [submission, onClose]);
 
   if (!submission) return null;
+
+  const eoRisk = eoRiskFromHubSubmission(submission);
+  const checklistProgress = progressFromHubMissingDocs(submission.missingDocs);
 
   return (
     <div className="va-ops-drawer-root" role="presentation">
@@ -82,6 +89,10 @@ export function SubmissionDrawer({ submission, onClose }: SubmissionDrawerProps)
           <ClientLanguagePanel clientName={submission.client} />
 
           <div className="va-ops-drawer-section">
+            <EoRiskBreakdown score={eoRisk} />
+          </div>
+
+          <div className="va-ops-drawer-section">
             <div className="va-ops-drawer-section-label">Current Stage</div>
             <span className={cn("badge", statusClass[submission.status])}>{submission.status}</span>
           </div>
@@ -117,6 +128,10 @@ export function SubmissionDrawer({ submission, onClose }: SubmissionDrawerProps)
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div className="va-ops-drawer-section">
+            <CoverageChecklistProgress progress={checklistProgress} />
           </div>
 
           <div className="va-ops-drawer-section">

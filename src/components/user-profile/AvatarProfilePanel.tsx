@@ -11,7 +11,8 @@ import {
   type PerformancePeriod,
 } from "@/data/userProfiles";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
-import { getNameInitials } from "@/lib/nameInitials";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
+import { presenceToAvatarStatus } from "@/lib/teamIdentity";
 import { KpiSkeletonGrid, ProfileSkeleton } from "@/components/shared/loading";
 import { cn } from "@/lib/cn";
 
@@ -123,13 +124,14 @@ export function AvatarProfilePanel({
       <aside className="va-ops-drawer avatar-profile-panel" role="dialog" aria-modal="true" aria-label={`${profile.name} profile`}>
         <header className="avatar-profile-header">
           <div className="avatar-profile-header-main">
-            <span className="avatar-profile-photo" aria-hidden="true">
-              {profile.avatarUrl ? (
-                <img src={profile.avatarUrl} alt="" />
-              ) : (
-                getNameInitials(profile.name)
-              )}
-            </span>
+            <TeamAvatar
+              userId={profile.id}
+              name={profile.name}
+              size="xl"
+              status={presenceToAvatarStatus(profile.status)}
+              imageSrc={profile.avatarUrl}
+              showTooltip={false}
+            />
             <div>
               <h2>{profile.name}</h2>
               <p className="avatar-profile-role">{profile.role}</p>

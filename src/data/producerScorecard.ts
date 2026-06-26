@@ -1,4 +1,6 @@
 import type { KpiItem, Producer } from "@/types";
+import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
+import { buildKpiTrendFromPoints } from "@/lib/kpiTrend";
 
 export const productionHeader = {
   tag: "Agency OS · Producer Performance · Prototype Reference",
@@ -44,12 +46,77 @@ export const sarahLobTable = [
   { line: "Life", lineType: "life" as const, quoted: 3, bound: 1, closeRate: "33%", premium: "—" },
 ];
 
-export const speedToLead = [
-  { name: "Sarah", variant: "green" as const, text: "Last lead: 1 min 12 sec ago · Within 3-min window · RingCentral lead vendor call" },
-  { name: "Jazmín", variant: "amber" as const, text: "Last lead: 2 min 48 sec ago · Approaching 3-min limit · Ricochet auto-dial" },
-  { name: "Jaffer", variant: "red" as const, text: "Last lead: 7 min 22 sec ago · Past 5-min window · Meta commercial lead" },
-  { name: "Eva", variant: "green" as const, text: "Last lead: 45 sec ago · Immediate · Direct line" },
+import type { SpeedToLeadSlaState } from "@/lib/speedToLead";
+
+export type SpeedToLeadEntry = {
+  id: string;
+  name: string;
+  source: string;
+  detail: string;
+  slaWindowSeconds: number;
+  secondsSinceLastLead: number;
+  lastResponseSeconds: number;
+  avgResponseSeconds: number;
+};
+
+export const speedToLead: SpeedToLeadEntry[] = [
+  {
+    id: "stl-sarah",
+    name: "Sarah",
+    source: "RingCentral lead vendor call",
+    detail: "Personal lines · vendor drop",
+    slaWindowSeconds: 180,
+    secondsSinceLastLead: 72,
+    lastResponseSeconds: 72,
+    avgResponseSeconds: 105,
+  },
+  {
+    id: "stl-jazmin",
+    name: "Jazmín",
+    source: "Ricochet auto-dial",
+    detail: "Personal lines drops",
+    slaWindowSeconds: 180,
+    secondsSinceLastLead: 168,
+    lastResponseSeconds: 168,
+    avgResponseSeconds: 142,
+  },
+  {
+    id: "stl-jaffer",
+    name: "Jaffer",
+    source: "Meta commercial lead",
+    detail: "Commercial researcher queue",
+    slaWindowSeconds: 300,
+    secondsSinceLastLead: 442,
+    lastResponseSeconds: 442,
+    avgResponseSeconds: 248,
+  },
+  {
+    id: "stl-eva",
+    name: "Eva",
+    source: "Direct line",
+    detail: "Owner line · immediate routing",
+    slaWindowSeconds: 60,
+    secondsSinceLastLead: 45,
+    lastResponseSeconds: 45,
+    avgResponseSeconds: 38,
+  },
 ];
+
+/** @deprecated Use SpeedToLeadEntry + live card — kept for export PDF compatibility */
+export type SpeedToLeadLegacyRow = {
+  name: string;
+  variant: "green" | "amber" | "red";
+  text: string;
+};
+
+export function toLegacySpeedToLeadRow(entry: SpeedToLeadEntry, slaState: SpeedToLeadSlaState): SpeedToLeadLegacyRow {
+  const variant = slaState === "breached" ? "red" : slaState === "warning" ? "amber" : "green";
+  return {
+    name: entry.name,
+    variant,
+    text: `Last lead: ${entry.secondsSinceLastLead}s ago · ${entry.source}`,
+  };
+}
 
 export const contactWindowRules = [
   { member: "Jazmín", source: "Personal lines drops via Ricochet", window: "3 minutes", missed: "Disposition logged, recycled to queue" },
@@ -66,11 +133,82 @@ export const roiDefaults = {
   comm: { min: 5, max: 25, value: 12, step: 1 },
 };
 
-export const weeklyRace = [
-  { initial: "S", name: "Sarah", points: 125, width: "42%", color: "primary" },
-  { initial: "J", name: "Jazmín", points: 115, width: "38%", color: "blue" },
-  { initial: "P", name: "Pedro", points: 60, width: "20%", color: "purple" },
-  { initial: "Z", name: "Zahra", points: 24, width: "8%", color: "green" },
+export const weeklyRaceGoal = 300;
+
+export type WeeklyRaceMomentum = "surging" | "steady" | "cooling";
+
+export type WeeklyRaceEntry = {
+  id: string;
+  initial: string;
+  name: string;
+  points: number;
+  width: string;
+  color: "primary" | "blue" | "purple" | "green";
+  rank: number;
+  previousRank: number;
+  isWeeklyWinner: boolean;
+  momentum: WeeklyRaceMomentum;
+  weeklyPoints: number[];
+  trend: KpiTrendData;
+};
+
+export const weeklyRace: WeeklyRaceEntry[] = [
+  {
+    id: "sarah",
+    initial: "S",
+    name: "Sarah",
+    points: 125,
+    width: "42%",
+    color: "primary",
+    rank: 1,
+    previousRank: 2,
+    isWeeklyWinner: true,
+    momentum: "surging",
+    weeklyPoints: [42, 58, 72, 88, 98, 112, 125],
+    trend: buildKpiTrendFromPoints([42, 58, 72, 88, 98, 112, 125], "higher-better"),
+  },
+  {
+    id: "jazmin",
+    initial: "J",
+    name: "Jazmín",
+    points: 115,
+    width: "38%",
+    color: "blue",
+    rank: 2,
+    previousRank: 1,
+    isWeeklyWinner: false,
+    momentum: "cooling",
+    weeklyPoints: [52, 70, 86, 98, 108, 114, 115],
+    trend: buildKpiTrendFromPoints([52, 70, 86, 98, 108, 114, 115], "higher-better"),
+  },
+  {
+    id: "pedro",
+    initial: "P",
+    name: "Pedro",
+    points: 60,
+    width: "20%",
+    color: "purple",
+    rank: 3,
+    previousRank: 4,
+    isWeeklyWinner: false,
+    momentum: "surging",
+    weeklyPoints: [6, 12, 20, 28, 38, 50, 60],
+    trend: buildKpiTrendFromPoints([6, 12, 20, 28, 38, 50, 60], "higher-better"),
+  },
+  {
+    id: "zahra",
+    initial: "Z",
+    name: "Zahra",
+    points: 24,
+    width: "8%",
+    color: "green",
+    rank: 4,
+    previousRank: 3,
+    isWeeklyWinner: false,
+    momentum: "steady",
+    weeklyPoints: [4, 8, 11, 14, 17, 21, 24],
+    trend: buildKpiTrendFromPoints([4, 8, 11, 14, 17, 21, 24], "higher-better"),
+  },
 ];
 
 export const weeklyRaceRules = "Points: 1pt/dial · 3pts/conversation · 5pts/quote · 10pts/bind · 5pts/Life app. Configured in Kyle's Points Config Sheets tab — Eva edits.";
@@ -84,6 +222,70 @@ export const pipelineKpi = [
 ];
 
 export const pipelineKpiTotals = { newLeads: 70, contacted: 38, quoted: 24, bound: 8, contactPct: "54%", closePct: "21%", cpa: "$236" };
+
+export type PipelineSummaryKpi = {
+  id: string;
+  label: string;
+  value: string;
+  sub: string;
+  color: KpiItem["color"];
+  polarity?: KpiPolarity;
+  weeklyPoints: number[];
+  trend: KpiTrendData;
+};
+
+export const pipelineSummaryKpis: PipelineSummaryKpi[] = [
+  {
+    id: "quote-count",
+    label: "Quote Count",
+    value: String(pipelineKpiTotals.quoted),
+    sub: "All pipelines · +5 vs prior folio week",
+    color: "blue",
+    polarity: "higher-better",
+    weeklyPoints: [14, 16, 17, 19, 20, 22, 24],
+    trend: buildKpiTrendFromPoints([14, 16, 17, 19, 20, 22, 24], "higher-better"),
+  },
+  {
+    id: "policies-bound",
+    label: "Policies Bound",
+    value: String(pipelineKpiTotals.bound),
+    sub: "8 binds · Personal 5 · Commercial 1 · Life 2",
+    color: "primary",
+    polarity: "higher-better",
+    weeklyPoints: [3, 4, 4, 5, 6, 7, 8],
+    trend: buildKpiTrendFromPoints([3, 4, 4, 5, 6, 7, 8], "higher-better"),
+  },
+  {
+    id: "close-rate",
+    label: "Close Rate",
+    value: pipelineKpiTotals.closePct,
+    sub: "Goal 25% · Blended all lines",
+    color: "amber",
+    polarity: "higher-better",
+    weeklyPoints: [15, 16, 17, 18, 19, 20, 21],
+    trend: buildKpiTrendFromPoints([15, 16, 17, 18, 19, 20, 21], "higher-better"),
+  },
+  {
+    id: "households-closed",
+    label: "Households Closed",
+    value: "6",
+    sub: "Target 8 this folio · Bundle + home wins",
+    color: "green",
+    polarity: "higher-better",
+    weeklyPoints: [2, 2, 3, 3, 4, 5, 6],
+    trend: buildKpiTrendFromPoints([2, 2, 3, 3, 4, 5, 6], "higher-better"),
+  },
+  {
+    id: "life-applications",
+    label: "Life Applications",
+    value: "2",
+    sub: "Life / FFS pipeline · 1 bound",
+    color: "green",
+    polarity: "higher-better",
+    weeklyPoints: [0, 1, 1, 1, 1, 2, 2],
+    trend: buildKpiTrendFromPoints([0, 1, 1, 1, 1, 2, 2], "higher-better"),
+  },
+];
 
 export const productionTabs = [
   { id: "scorecard", label: "Producer Scorecard" },

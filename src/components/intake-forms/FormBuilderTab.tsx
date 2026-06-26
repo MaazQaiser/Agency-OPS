@@ -27,7 +27,8 @@ import type { IntakeFormType } from "@/data/intakeForms";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { FormSkeleton } from "@/components/shared/loading";
 import { UploadProgressBar, type UploadPhase } from "@/components/shared/loading/UploadProgressBar";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
@@ -111,9 +112,20 @@ function errorFor(errors: ReturnType<typeof getFieldErrors>, field: string) {
 
 export function FormBuilderTab() {
   const toast = useToast();
-  const loading = useTabLoading();
   const searchParams = useSearchParams();
   const formType = resolveFormType(searchParams.get("form"));
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => formType,
+    deps: [formType],
+    isEmpty: () => false,
+    errorPreset: "supabase-timeout",
+  });
 
   const [currentStep, setCurrentStep] = useState<FormBuilderStepId>(1);
   const [data, setData] = useState<IntakeFormData>(() => getFormDataByType(formType));
@@ -432,7 +444,7 @@ export function FormBuilderTab() {
           phase={uploadState.phase}
         />
       )}
-    <div className="commercial-hub-table-wrap">
+    <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
       <table className="commercial-hub-table">
         <thead>
           <tr>
@@ -523,16 +535,46 @@ export function FormBuilderTab() {
   const currentStepMeta = formBuilderSteps.find((s) => s.id === currentStep)!;
   const stepTitle = currentStep === 1 ? getStep1Title(formType) : currentStepMeta.label;
   const continueLabel = stepContinueLabels[currentStep];
+  const hasNotesContent = Boolean(data.internalNotes.trim());
+  const showSidebar = suggestions.length > 0 || hasNotesContent;
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view intake-form-builder">
-        <FormSkeleton fields={8} />
+  const notesPanel = (
+    <section className="va-ops-panel">
+      <div className="va-ops-panel-header">
+        <h3 className="va-ops-section-title">Notes</h3>
+        <p className="va-ops-section-sub">Internal notes before submit.</p>
       </div>
-    );
-  }
+      <textarea
+        className="intake-form-input intake-form-textarea intake-helper-notes"
+        rows={4}
+        placeholder="Add internal notes..."
+        value={data.internalNotes}
+        onChange={(e) => update("internalNotes", e.target.value)}
+      />
+    </section>
+  );
 
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view intake-form-builder">
+          <FormSkeleton fields={8} />
+        </div>
+      }
+      empty={<HubEmptyState preset="intake-forms" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view intake-form-builder">
       <RoleTabHeader
         title={formBuilderHeader.title}
@@ -576,7 +618,7 @@ export function FormBuilderTab() {
         </ol>
       </div>
 
-      <div className="intake-form-builder-main">
+      <div className={cn("intake-form-builder-main", !showSidebar && "intake-form-builder-main--solo")}>
         <section className="va-ops-panel intake-form-panel" aria-label="Form fields">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">{stepTitle}</h3>
@@ -585,62 +627,56 @@ export function FormBuilderTab() {
           {renderStep()}
         </section>
 
-        <aside className="intake-form-helper">
-          {suggestions.length > 0 && (
-            <section className="va-ops-panel">
-              <div className="va-ops-panel-header">
-                <h3 className="va-ops-section-title">Suggested Coverages</h3>
-              </div>
-              <ul className="intake-suggestions-list">
-                {suggestions.map((s) => <li key={s}>{s}</li>)}
-              </ul>
-            </section>
-          )}
-
-          <section className="va-ops-panel">
-            <div className="va-ops-panel-header">
-              <h3 className="va-ops-section-title">Notes</h3>
-              <p className="va-ops-section-sub">Internal notes before submit.</p>
-            </div>
-            <textarea
-              className="intake-form-input intake-form-textarea intake-helper-notes"
-              rows={4}
-              placeholder="Add internal notes..."
-              value={data.internalNotes}
-              onChange={(e) => update("internalNotes", e.target.value)}
-            />
-          </section>
-        </aside>
+        {showSidebar && (
+          <aside className="intake-form-helper intake-form-helper--sticky">
+            {suggestions.length > 0 && (
+              <section className="va-ops-panel">
+                <div className="va-ops-panel-header">
+                  <h3 className="va-ops-section-title">Suggested Coverages</h3>
+                </div>
+                <ul className="intake-suggestions-list">
+                  {suggestions.map((s) => <li key={s}>{s}</li>)}
+                </ul>
+              </section>
+            )}
+            {notesPanel}
+          </aside>
+        )}
       </div>
 
-      <div className="intake-form-sticky-actions">
+      {!showSidebar && (
+        <div className="intake-form-notes-inline">
+          {notesPanel}
+        </div>
+      )}
+
+      <div className="intake-form-sticky-actions" role="toolbar" aria-label="Form actions">
         <div className="intake-form-sticky-inner">
           <div className="intake-form-sticky-left">
-            <button type="button" className="va-ops-role-action-btn intake-form-discard-btn" onClick={handleDiscard}>
-              <AppIcon name="x" size={15} strokeWidth={2} />
+            <button type="button" className="intake-form-action-btn intake-form-action-discard" onClick={handleDiscard}>
               Discard
             </button>
           </div>
           <div className="intake-form-sticky-center">
-            <button type="button" className="va-ops-role-action-btn" onClick={handleSaveDraft}>
+            <button type="button" className="intake-form-action-btn intake-form-action-secondary" onClick={handleSaveDraft}>
               <AppIcon name="folder" size={15} strokeWidth={2} />
               Save Draft
             </button>
           </div>
           <div className="intake-form-sticky-right">
             {currentStep > 1 && (
-              <button type="button" className="va-ops-role-action-btn" onClick={goBack}>
+              <button type="button" className="intake-form-action-btn intake-form-action-secondary" onClick={goBack}>
                 Back
               </button>
             )}
             {currentStep < 6 ? (
-              <button type="button" className="va-ops-role-action-btn intake-form-continue-btn" onClick={validateAndContinue}>
+              <button type="button" className="intake-form-action-btn intake-form-action-primary" onClick={validateAndContinue}>
                 {continueLabel}
               </button>
             ) : (
               <button
                 type="button"
-                className="va-ops-role-action-btn intake-form-submit-btn"
+                className="intake-form-action-btn intake-form-action-primary"
                 disabled={allErrors.length > 0}
                 onClick={() => setReviewOpen(true)}
               >
@@ -667,5 +703,6 @@ export function FormBuilderTab() {
         onClose={() => setRulesOpen(false)}
       />
     </div>
+    </DataStateView>
   );
 }

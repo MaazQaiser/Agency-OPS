@@ -1,4 +1,5 @@
 import { AppIcon } from "@/components/ui/AppIcon";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { intakeFormsHeader } from "@/data/intakeForms";
 
 type IntakeFormsPageHeaderProps = {
@@ -27,6 +28,7 @@ export function IntakeFormsPageHeader({ onQuickActionClick }: IntakeFormsPageHea
             {action.label}
           </button>
         ))}
+        <HubHelpTrigger hubId="intake-forms" />
       </div>
     </header>
   );

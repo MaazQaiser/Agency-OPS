@@ -56,7 +56,7 @@ export function ExecutiveTab() {
     datasets: [{
       label: "Submissions",
       data: chartLobData.data,
-      backgroundColor: colors.primary.DEFAULT,
+      backgroundColor: colors.chart.bar,
       borderRadius: 8,
       borderSkipped: false,
     }],

@@ -1,0 +1,238 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Print & Export System
+   ═══════════════════════════════════════════════════════════════ */
+
+.export-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.export-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-default);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.export-menu-trigger:hover {
+  border-color: var(--ita-primary);
+  background: color-mix(in srgb, var(--ita-primary) 8%, var(--surface-card));
+}
+
+.export-menu-trigger--compact {
+  padding: 8px 10px;
+}
+
+.export-menu-chevron {
+  transition: transform 0.15s;
+  opacity: 0.6;
+}
+
+.export-menu-chevron.open {
+  transform: rotate(180deg);
+}
+
+.export-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 500;
+  min-width: 180px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
+  background: var(--surface-header);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+}
+
+.export-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: var(--font-family);
+  text-align: left;
+  cursor: pointer;
+}
+
+.export-menu-item:hover {
+  background: color-mix(in srgb, var(--ita-primary) 12%, transparent);
+}
+
+.export-menu-sheet-root {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+}
+
+.export-menu-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+}
+
+.export-menu-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--surface-header);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.export-menu-sheet-handle {
+  width: 36px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: var(--border-default);
+}
+
+.export-menu-sheet-title {
+  margin: 0 0 12px;
+  font-family: var(--font-family-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.export-menu-sheet-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.export-menu-sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  color: var(--text-primary);
+  font-size: var(--font-size-base-sm);
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+
+.export-table-header-export {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.export-table-header-export .va-ops-role-header {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.submission-queue-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.owner-quick-actions-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.owner-quick-actions-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media print {
+  .app-top-header-stack,
+  .mobile-bottom-nav,
+  .va-ops-tab-nav,
+  .va-ops-page-header,
+  .va-ops-role-header,
+  .va-ops-role-actions,
+  .commercial-hub-filters,
+  .send-center-filters,
+  .send-center-bulk-bar,
+  .submission-tracker-filters,
+  .export-menu,
+  .export-menu-sheet-root,
+  .va-ops-drawer-root,
+  .va-ops-modal-root,
+  .notification-center-root,
+  .owner-quick-actions-root,
+  .eva-fab-cluster,
+  .cmd-palette-backdrop,
+  .help-drawer-root,
+  .folio-progress-stat-spark,
+  .hub-help-trigger,
+  .module-breadcrumb-bar,
+  .data-state-freshness-row,
+  button,
+  .va-ops-action-btn,
+  .va-ops-role-action-btn,
+  input,
+  select,
+  .send-center-checkbox-col {
+    display: none !important;
+  }
+
+  .app-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #1c2b35 !important;
+    font-size: 10pt;
+  }
+
+  .va-ops-tab-content {
+    padding: 0 !important;
+  }
+
+  .badge {
+    border: 1px solid #999 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 0.75in;
+    size: letter;
+  }
+}

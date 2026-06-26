@@ -21,16 +21,28 @@ import {
 } from "@/data/trainingLibrary";
 import { crossModuleRoutes, resolveUserProfileId } from "@/lib/crossModuleLinks";
 import { routes } from "@/lib/routes";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
-import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { KpiSkeletonGrid } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useAvatarProfile } from "@/components/user-profile/AvatarProfileProvider";
 import { DepartmentDetailDrawer } from "./DepartmentDetailDrawer";
+import { DepartmentProgressRing } from "./DepartmentProgressRing";
 
 export function DepartmentOverviewTab() {
-  const loading = useTabLoading();
   const router = useRouter();
   const { openProfile } = useAvatarProfile();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => trainingDepartments,
+    errorPreset: "supabase-timeout",
+  });
   const [selectedDepartment, setSelectedDepartment] = useState<TrainingDepartment | null>(null);
 
   const openLibrary = (departmentId: string) => {
@@ -63,26 +75,32 @@ export function DepartmentOverviewTab() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view training-department-overview">
-        <KpiSkeletonGrid count={4} />
-        <CardSkeletonGrid count={6} />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view training-department-overview">
+          <KpiSkeletonGrid count={4} />
+        </div>
+      }
+      empty={<HubEmptyState preset="training-content" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view training-department-overview">
       <section className="va-ops-kpi-strip" aria-label="Training hub KPI summary">
         <div className="commercial-hub-kpi-grid training-kpi-grid">
           {trainingHubKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
+            <VaOpsKpiCard key={kpi.label} {...kpi} />
           ))}
         </div>
       </section>
@@ -99,8 +117,15 @@ export function DepartmentOverviewTab() {
               className="training-dept-card-body"
               onClick={() => setSelectedDepartment(dept)}
             >
-              <div className="training-dept-card-icon" aria-hidden="true">
-                <AppIcon name={dept.icon} size={22} strokeWidth={2} />
+              <div className="training-dept-card-header-row">
+                <div className="training-dept-card-icon" aria-hidden="true">
+                  <AppIcon name={dept.icon} size={22} strokeWidth={2} />
+                </div>
+                <DepartmentProgressRing
+                  completion={dept.completion}
+                  size={44}
+                  label={dept.title}
+                />
               </div>
               <h4 className="training-dept-card-title">{dept.title}</h4>
               <p className="training-dept-card-desc">{dept.description}</p>
@@ -110,22 +135,10 @@ export function DepartmentOverviewTab() {
                   <dd>{dept.resources}</dd>
                 </div>
                 <div>
-                  <dt>Completion</dt>
-                  <dd>{dept.completion}%</dd>
-                </div>
-                <div>
                   <dt>Last updated</dt>
                   <dd>{dept.lastUpdated}</dd>
                 </div>
               </dl>
-              <div className="training-dept-progress">
-                <div className="training-dept-progress-bar">
-                  <div
-                    className="training-dept-progress-fill"
-                    style={{ width: `${dept.completion}%` }}
-                  />
-                </div>
-              </div>
             </button>
             <button
               type="button"
@@ -144,7 +157,7 @@ export function DepartmentOverviewTab() {
             <h3 className="va-ops-section-title">Recently Added</h3>
             <p className="va-ops-section-sub">Fresh training content across departments.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr>
@@ -187,7 +200,7 @@ export function DepartmentOverviewTab() {
             <h3 className="va-ops-section-title">Assigned Training</h3>
             <p className="va-ops-section-sub">Active assignments needing completion.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr>
@@ -313,5 +326,6 @@ export function DepartmentOverviewTab() {
         onOpenLibrary={openLibrary}
       />
     </div>
+    </DataStateView>
   );
 }

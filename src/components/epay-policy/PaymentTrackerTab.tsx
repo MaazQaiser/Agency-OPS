@@ -25,8 +25,11 @@ import {
 } from "@/data/paymentTracker";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { KpiSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
 import { getClientLanguage } from "@/data/bilingualClient";
@@ -53,7 +56,16 @@ type PaymentTrackerTabProps = {
 };
 
 export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerTabProps) {
-  const loading = useTabLoading();
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => paymentRecords,
+    errorPreset: "supabase-timeout",
+  });
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(defaultPaymentTrackerFilters);
   const [selectedPayment, setSelectedPayment] = useState<PaymentRecord | null>(null);
@@ -63,6 +75,8 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
     () => paymentRecords.filter((row) => matchesPaymentFilters(row, search, filters)),
     [search, filters],
   );
+
+  const status = resolveDisplayStatus(loadStatus, filteredRows, (d) => d.length === 0);
 
   const updateFilter = (key: keyof TrackerFilterState, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -106,28 +120,35 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
     }
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view epay-payment-tracker">
-        <KpiSkeletonGrid count={4} />
-        <TableSkeleton rows={6} />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view epay-payment-tracker">
+          <KpiSkeletonGrid count={4} />
+          <TableSkeleton rows={6} />
+        </div>
+      }
+      empty={<HubEmptyState preset="epay-payments" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view epay-payment-tracker">
       <RoleTabHeader title={paymentTrackerHeader.title} subtitle={paymentTrackerHeader.subtitle} quickActions={paymentTrackerHeader.quickActions} />
 
       <section className="va-ops-kpi-strip" aria-label="Payment tracker KPI summary">
-        <div className="commercial-hub-kpi-grid epay-tracker-kpi-grid">
+        <div className="commercial-hub-kpi-grid hub-kpi-grid epay-tracker-kpi-grid">
           {paymentTrackerKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
+            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
           ))}
         </div>
       </section>
@@ -240,15 +261,15 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
       </section>
 
       <div className="epay-tracker-mid-grid">
-        <section className="va-ops-panel" aria-label="Overdue invoices">
+        <section className="va-ops-panel epay-tracker-overdue-panel" aria-label="Overdue invoices">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Overdue Invoices</h3>
             <p className="va-ops-section-sub">Action queue — overdue, follow-up, and high priority only.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
-                <tr><th>Client</th><th>Amount</th><th>Due</th><th>Queue</th><th aria-label="Action" /></tr>
+                <tr><th>Client</th><th>Amount</th><th>Due</th><th>Queue</th><th>Quick Actions</th></tr>
               </thead>
               <tbody>
                 {overdueInvoices.map((row) => (
@@ -263,9 +284,29 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                     <td>{row.due}</td>
                     <td><span className={cn("badge", queueTypeClass[row.queueType])}>{row.queueType}</span></td>
                     <td>
-                      <button type="button" className="va-ops-action-btn" onClick={(e) => { e.stopPropagation(); onToast?.(`${row.cta} for ${row.clientName}`, "success"); }}>
-                        {row.cta}
-                      </button>
+                      <div className="epay-overdue-actions" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className="epay-overdue-action-btn epay-overdue-action-btn--primary"
+                          onClick={() => onToast?.(`Invoice resent to ${row.clientName}`, "success")}
+                        >
+                          Resend Invoice
+                        </button>
+                        <button
+                          type="button"
+                          className="epay-overdue-action-btn"
+                          onClick={() => onToast?.(`Call logged for ${row.clientName}`, "success")}
+                        >
+                          Call Client
+                        </button>
+                        <button
+                          type="button"
+                          className="epay-overdue-action-btn epay-overdue-action-btn--promise"
+                          onClick={() => onToast?.(`Promised payment noted for ${row.clientName}`, "success")}
+                        >
+                          Mark Promised
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -274,12 +315,12 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
           </div>
         </section>
 
-        <section className="va-ops-panel" aria-label="Failed transactions">
+        <section className="va-ops-panel epay-tracker-failed-panel" aria-label="Failed transactions">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Failed Transactions</h3>
             <p className="va-ops-section-sub">Recovery queue — retry or contact client.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr><th>Client</th><th>Reason</th><th>Amount</th><th>Time</th><th aria-label="Action" /></tr>
@@ -353,5 +394,6 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
 
       <PaymentDrawer payment={selectedPayment} onClose={() => setSelectedPayment(null)} onToast={onToast} />
     </div>
+    </DataStateView>
   );
 }

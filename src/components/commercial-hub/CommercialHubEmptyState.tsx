@@ -1,27 +1,40 @@
-import { AppIcon } from "@/components/ui/AppIcon";
+import { HubEmptyState } from "@/components/state/HubEmptyState";
+import type { HubEmptyPresetId } from "@/data/hubStatePresets";
+import type { AppIconName } from "@/components/ui/AppIcon";
 
 type CommercialHubEmptyStateProps = {
   icon?: "folder" | "check" | "search";
   title: string;
   description: string;
+  ctaLabel?: string;
+  onAction?: () => void;
+  preset?: HubEmptyPresetId;
 };
 
-const iconMap = {
+const iconMap: Record<string, AppIconName> = {
   folder: "folder",
   check: "check",
   search: "search",
-} as const;
+};
 
+/** @deprecated Use HubEmptyState — kept for backward compatibility */
 export function CommercialHubEmptyState({
   icon = "folder",
   title,
   description,
+  ctaLabel,
+  onAction,
+  preset,
 }: CommercialHubEmptyStateProps) {
   return (
-    <div className="commercial-hub-empty-state" role="status">
-      <AppIcon name={iconMap[icon]} size={28} strokeWidth={1.75} className="commercial-hub-empty-state-icon" />
-      <div className="commercial-hub-empty-state-title">{title}</div>
-      <p className="commercial-hub-empty-state-desc">{description}</p>
-    </div>
+    <HubEmptyState
+      preset={preset}
+      icon={iconMap[icon]}
+      title={title}
+      description={description}
+      ctaLabel={ctaLabel}
+      onAction={onAction}
+      className="commercial-hub-empty-state-compat"
+    />
   );
 }

@@ -1,37 +1,39 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AppIcon } from "@/components/ui/AppIcon";
+import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import {
   approvalHubLabels,
+  approvalLifecycleLabels,
   approvalPriorityLabels,
   approvalQueue,
   approvalTypeLabels,
   filterByRole,
   filterOperationalSnapshot,
-  getTaskCta,
   leadResponseTracker,
   liveActivity,
   priorityQueue,
-  priorityTypeLabels,
   slaRiskLabels,
-  taskSourceLabels,
   vaOperationsKpis,
   workloadDistribution,
   type ActivityCategory,
+  type ActivityEventType,
+  type ActivityItem,
   type ApprovalDraft,
+  type ApprovalLifecycleStage,
   type ApprovalPriority,
   type PriorityTask,
-  type PriorityTaskStatus,
   type SlaRiskLevel,
   type SlaStatus,
   type TaskSource,
   type VaOperationsRoleId,
 } from "@/data/vaOperations";
 import { cn } from "@/lib/cn";
-import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
+import { VaTaskQueueRow } from "./VaTaskQueueRow";
 
 const memberUserIds: Record<string, string> = {
   Kat: "kat",
@@ -41,12 +43,12 @@ const memberUserIds: Record<string, string> = {
   Sara: "sara",
   Kyle: "kyle",
   Hassan: "hassan",
-};
-
-const taskStatusClass: Record<PriorityTaskStatus, string> = {
-  urgent: "badge-yellow",
-  pending: "badge-gray",
-  critical: "badge-red",
+  Valerie: "valerie-martinez",
+  Tracie: "tracie-wong",
+  Sarah: "sarah-chen",
+  Arminda: "arminda-ops",
+  Eva: "eva-chong",
+  Hamad: "jaffer",
 };
 
 const approvalPriorityClass: Record<ApprovalPriority, string> = {
@@ -73,6 +75,156 @@ const slaRiskClass: Record<SlaRiskLevel, string> = {
   "at-risk": "badge-yellow",
   critical: "badge-red",
 };
+
+const activityEventIcon: Record<ActivityEventType, AppIconName> = {
+  call: "phone",
+  upload: "upload",
+  "sla-miss": "triangle-alert",
+  send: "send",
+  add: "plus",
+  complete: "check",
+};
+
+const activityIconClass: Record<ActivityEventType, string> = {
+  call: "va-ops-activity-icon-wrap--call",
+  upload: "va-ops-activity-icon-wrap--upload",
+  "sla-miss": "va-ops-activity-icon-wrap--sla-miss",
+  send: "va-ops-activity-icon-wrap--send",
+  add: "va-ops-activity-icon-wrap--default",
+  complete: "va-ops-activity-icon-wrap--upload",
+};
+
+const leadTimerSuffix: Record<SlaStatus, string> = {
+  within: "live",
+  near: "near breach",
+  breached: "breached",
+};
+
+const approvalLifecycleOrder: ApprovalLifecycleStage[] = ["draft", "review", "approved", "sent"];
+
+function resolveApprovalCtaClass(draft: ApprovalDraft): string {
+  if (/approve/i.test(draft.cta)) return "va-ops-action-btn--approve";
+  if (draft.priority === "critical") return "va-ops-action-btn--critical-review";
+  return "va-ops-action-btn--review";
+}
+
+function VaOpsPanelHeader({
+  title,
+  sub,
+  freshness,
+  source,
+}: {
+  title: string;
+  sub: string;
+  freshness?: string;
+  source?: { label: string; type: "LIVE" | "CONFIG" | "SYNC" };
+}) {
+  return (
+    <div className="va-ops-panel-header">
+      <div className="va-ops-panel-header-main">
+        <h2 className="va-ops-section-title">{title}</h2>
+        <p className="va-ops-section-sub">{sub}</p>
+      </div>
+      {(freshness || source) && (
+        <div className="va-ops-panel-header-meta">
+          {source && (
+            <span className={cn("va-ops-data-source-badge", `va-ops-data-source-badge--${source.type.toLowerCase()}`)}>
+              <span className="va-ops-data-source-badge-type">{source.type}</span>
+              {source.label}
+            </span>
+          )}
+          {freshness && <span className="va-ops-freshness">{freshness}</span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ApprovalLifecycleTracker({ stage }: { stage: ApprovalLifecycleStage }) {
+  const currentIndex = approvalLifecycleOrder.indexOf(stage);
+
+  return (
+    <div className="va-ops-approval-lifecycle" aria-label={`Approval stage: ${approvalLifecycleLabels[stage]}`}>
+      {approvalLifecycleOrder.map((step, index) => (
+        <span key={step} className="va-ops-approval-lifecycle-step-wrap">
+          {index > 0 && <span className="va-ops-approval-lifecycle-arrow" aria-hidden="true">→</span>}
+          <span
+            className={cn(
+              "va-ops-approval-lifecycle-step",
+              index < currentIndex && "is-complete",
+              index === currentIndex && "is-current",
+            )}
+          >
+            {approvalLifecycleLabels[step]}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ActivityFeedItem({ item }: { item: ActivityItem }) {
+  return (
+    <li
+      className={cn("va-ops-activity-item", item.eventType === "sla-miss" && "va-ops-activity-item--sla-miss")}
+    >
+      <TeamAvatar
+        userId={memberUserIds[item.actor]}
+        name={item.actor}
+        size="sm"
+        showStatus={false}
+        className="va-ops-activity-avatar"
+      />
+      <span className={cn("va-ops-activity-icon-wrap", activityIconClass[item.eventType])}>
+        <AppIcon name={activityEventIcon[item.eventType]} size={14} strokeWidth={2.25} />
+      </span>
+      <div className="va-ops-activity-body">
+        <div className="va-ops-activity-text">{item.summary}</div>
+        <div className="va-ops-activity-meta">
+          <span className="va-ops-activity-source-tag">{item.source}</span>
+          <time className="va-ops-activity-time">{item.time}</time>
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function WorkloadSegmentBar({
+  openTasks,
+  overdueCount,
+  completedToday,
+}: {
+  openTasks: number;
+  overdueCount: number;
+  completedToday: number;
+}) {
+  const openNonOverdue = Math.max(0, openTasks - overdueCount);
+  const total = openNonOverdue + overdueCount + completedToday || 1;
+  const openPct = (openNonOverdue / total) * 100;
+  const overduePct = (overdueCount / total) * 100;
+  const completedPct = (completedToday / total) * 100;
+
+  return (
+    <div className="va-ops-workload-segments">
+      <div className="va-ops-workload-segment-bar" aria-hidden="true">
+        <span className="va-ops-workload-segment va-ops-workload-segment--open" style={{ width: `${openPct}%` }} />
+        <span className="va-ops-workload-segment va-ops-workload-segment--overdue" style={{ width: `${overduePct}%` }} />
+        <span className="va-ops-workload-segment va-ops-workload-segment--completed" style={{ width: `${completedPct}%` }} />
+      </div>
+      <div className="va-ops-workload-segment-legend">
+        <span>
+          <strong>{openNonOverdue}</strong> open
+        </span>
+        <span className="is-overdue">
+          <strong>{overdueCount}</strong> overdue
+        </span>
+        <span className="is-completed">
+          <strong>{completedToday}</strong> completed
+        </span>
+      </div>
+    </div>
+  );
+}
 
 const activityFilters: { id: "all" | ActivityCategory; label: string }[] = [
   { id: "all", label: "All" },
@@ -121,12 +273,7 @@ export function VaOpsKpiStrip({ role }: { role: VaOperationsRoleId }) {
     <section className="va-ops-kpi-strip" aria-label="KPI overview">
       <div className={cn("va-ops-kpi-grid", kpis.length === 5 && "cols-5", kpis.length === 3 && "cols-3")}>
         {kpis.map((kpi) => (
-          <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-            <div className="va-ops-kpi-label">{kpi.label}</div>
-            <div className="va-ops-kpi-value">{kpi.value}</div>
-            <div className="va-ops-kpi-sub">{kpi.sub}</div>
-            <div className="va-ops-kpi-helper">{kpi.helper}</div>
-          </article>
+          <VaOpsKpiCard key={kpi.label} {...kpi} />
         ))}
       </div>
     </section>
@@ -162,47 +309,19 @@ function PriorityQueueTable({ tasks }: { tasks: PriorityTask[] }) {
         <thead>
           <tr>
             <th>Task</th>
+            <th>Priority</th>
             <th>Source</th>
-            <th>Assigned to</th>
+            <th>Assignment</th>
             <th>Due</th>
-            <th>Type</th>
+            <th>Blocker</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => {
-            const cta = getTaskCta(task.priorityType);
-            return (
-              <tr key={task.id} className={cn("va-ops-priority-row", task.status)}>
-                <td>
-                  <span className="va-ops-priority-title">{task.title}</span>
-                </td>
-                <td>
-                  <span className="va-ops-source-badge">{taskSourceLabels[task.source]}</span>
-                </td>
-                <td>
-                  <UserChip userId={memberUserIds[task.assignedTo]} name={task.assignedTo} />
-                </td>
-                <td className="va-ops-priority-due">{task.due}</td>
-                <td>{priorityTypeLabels[task.priorityType]}</td>
-                <td>
-                  <span className={cn("badge", taskStatusClass[task.status])}>
-                    {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-                  </span>
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    className={cn("va-ops-task-cta", task.status === "critical" && "critical")}
-                  >
-                    {cta === "Call Client" && <AppIcon name="phone" size={14} strokeWidth={2.25} />}
-                    {cta}
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {tasks.map((task) => (
+            <VaTaskQueueRow key={task.id} task={task} />
+          ))}
         </tbody>
       </table>
     </div>
@@ -233,12 +352,12 @@ export function VaOpsPriorityQueue({
 
   return (
     <section className="va-ops-panel va-ops-priority-panel" aria-label="Today's priority queue">
-      <div className="va-ops-panel-header">
-        <h2 className="va-ops-section-title">Today&apos;s Priority Queue</h2>
-        <p className="va-ops-section-sub">
-          {expanded ? "All tasks sorted by urgency and due time." : "Tasks sorted by urgency and due time."}
-        </p>
-      </div>
+      <VaOpsPanelHeader
+        title="Today's Priority Queue"
+        sub={expanded ? "All tasks sorted by urgency and due time." : "Tasks sorted by urgency and due time."}
+        freshness="Synced 1m ago"
+        source={{ label: "Google Sheets", type: "SYNC" }}
+      />
       {showFilters && (
         <div className="va-ops-filter-row" role="tablist" aria-label="Task filters">
           {taskFilters.map((item) => (
@@ -278,11 +397,13 @@ export function VaOpsActivityFeed({
   const visible = limit ? filtered.slice(0, limit) : filtered;
 
   return (
-    <section className="va-ops-panel va-ops-activity-panel" aria-label="Live activity">
-      <div className="va-ops-panel-header">
-        <h2 className="va-ops-section-title">Live Activity</h2>
-        <p className="va-ops-section-sub">Recent actions happening across the team.</p>
-      </div>
+    <section className="va-ops-panel va-ops-activity-panel va-ops-panel--accent" aria-label="Live activity">
+      <VaOpsPanelHeader
+        title="Live Activity"
+        sub="Recent actions happening across the team."
+        freshness="Updated 2m ago"
+        source={{ label: "RingCentral", type: "LIVE" }}
+      />
       {showFilters && (
         <div className="va-ops-filter-row" role="tablist" aria-label="Activity filters">
           {activityFilters.map((item) => (
@@ -301,13 +422,7 @@ export function VaOpsActivityFeed({
       )}
       <ul className={cn("va-ops-activity-feed", scrollable && "scrollable")}>
         {visible.map((item) => (
-          <li key={item.id} className="va-ops-activity-item">
-            <span className="va-ops-activity-dot" aria-hidden="true" />
-            <div>
-              <div className="va-ops-activity-text">{item.text}</div>
-              <time className="va-ops-activity-time">{item.time}</time>
-            </div>
-          </li>
+          <ActivityFeedItem key={item.id} item={item} />
         ))}
       </ul>
     </section>
@@ -318,11 +433,13 @@ export function VaOpsLeadTracker({ role }: { role: VaOperationsRoleId }) {
   const rows = filterByRole(leadResponseTracker, role);
 
   return (
-    <section className="va-ops-panel va-ops-lead-panel" aria-label="Lead response tracker">
-      <div className="va-ops-panel-header">
-        <h2 className="va-ops-section-title">Lead Response Tracker</h2>
-        <p className="va-ops-section-sub">Monitor response times and SLA performance.</p>
-      </div>
+    <section className="va-ops-panel va-ops-lead-panel va-ops-panel--accent" aria-label="Lead response tracker">
+      <VaOpsPanelHeader
+        title="Lead Response Tracker"
+        sub="Monitor response times and SLA performance."
+        freshness="Latency updated 30s ago"
+        source={{ label: "AgencyZoom", type: "LIVE" }}
+      />
       <div className="va-ops-lead-table-wrap">
         <table className="va-ops-lead-table">
           <thead>
@@ -337,10 +454,18 @@ export function VaOpsLeadTracker({ role }: { role: VaOperationsRoleId }) {
             {rows.map((row) => (
               <tr key={row.id} className={cn("va-ops-lead-row", row.status)}>
                 <td>
-                  <UserChip userId={memberUserIds[row.name]} name={row.name} />
+                  <div className="va-ops-lead-member-cell">
+                    <span className={cn("va-ops-lead-live-dot", `va-ops-lead-live-dot--${row.status}`)} aria-hidden="true" />
+                    <TeamAvatar userId={memberUserIds[row.name]} name={row.name} size="sm" showStatus={false} />
+                  </div>
                 </td>
                 <td>{row.source}</td>
-                <td className="va-ops-lead-time">{row.responseTime}</td>
+                <td>
+                  <span className={cn("va-ops-lead-timer-pill", `va-ops-lead-timer-pill--${row.status}`)}>
+                    {row.responseTime}
+                    <span className="va-ops-lead-timer-suffix">{leadTimerSuffix[row.status]}</span>
+                  </span>
+                </td>
                 <td>
                   <span className={cn("badge", slaStatusClass[row.status])}>
                     {slaStatusLabels[row.status]}
@@ -359,36 +484,36 @@ export function VaOpsWorkload({ role }: { role: VaOperationsRoleId }) {
   const rows = filterByRole(workloadDistribution, role);
 
   return (
-    <section className="va-ops-panel va-ops-workload-panel" aria-label="Workload distribution">
-      <div className="va-ops-panel-header">
-        <h2 className="va-ops-section-title">Workload Distribution</h2>
-        <p className="va-ops-section-sub">Open tasks and completions by team member.</p>
-      </div>
+    <section className="va-ops-panel va-ops-workload-panel va-ops-panel--accent" aria-label="Workload distribution">
+      <VaOpsPanelHeader
+        title="Workload Distribution"
+        sub="Open tasks and completions by team member."
+      />
       <div className="va-ops-workload-list">
         {rows.map((row) => (
           <div key={row.id} className="va-ops-workload-row">
             <div className="va-ops-workload-identity">
-              <UserChip userId={memberUserIds[row.name]} name={row.name} className="va-ops-workload-chip" />
-              <span className="va-ops-workload-role">{row.role}</span>
+              <TeamAvatar userId={memberUserIds[row.name]} name={row.name} size="sm" showStatus={false} />
+              <div>
+                <span className="va-ops-workload-name">{row.name}</span>
+                <span className="va-ops-workload-role">{row.role}</span>
+              </div>
             </div>
-            <span className="va-ops-workload-stat">
-              <strong>{row.openTasks}</strong> open
-            </span>
-            <span className="va-ops-workload-stat va-ops-workload-overdue">
-              <strong>{row.overdueCount}</strong> overdue
-            </span>
-            <span className="va-ops-workload-divider">/</span>
-            <span className="va-ops-workload-stat">
-              <strong>{row.completedToday}</strong> completed
-            </span>
-            <span className={cn("badge va-ops-workload-risk", slaRiskClass[row.slaRisk])}>
-              {slaRiskLabels[row.slaRisk]}
-            </span>
-            {row.pendingApprovals > 0 && (
-              <span className="va-ops-workload-approvals">
-                {row.pendingApprovals} pending approval{row.pendingApprovals > 1 ? "s" : ""}
+            <WorkloadSegmentBar
+              openTasks={row.openTasks}
+              overdueCount={row.overdueCount}
+              completedToday={row.completedToday}
+            />
+            <div className="va-ops-workload-side">
+              <span className={cn("badge va-ops-workload-risk", slaRiskClass[row.slaRisk])}>
+                {slaRiskLabels[row.slaRisk]}
               </span>
-            )}
+              {row.pendingApprovals > 0 && (
+                <span className="va-ops-workload-approvals">
+                  {row.pendingApprovals} pending approval{row.pendingApprovals > 1 ? "s" : ""}
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -423,10 +548,11 @@ function ApprovalQueueItem({
           <span>Client: <strong>{draft.client}</strong></span>
           <span>Submitted: <strong>{draft.submitted}</strong></span>
         </div>
+        <ApprovalLifecycleTracker stage={draft.lifecycleStage} />
       </div>
       <button
         type="button"
-        className="va-ops-action-btn"
+        className={cn("va-ops-action-btn", resolveApprovalCtaClass(draft))}
         onClick={() => {
           if (isApproveAction) onApprove(draft);
         }}
@@ -447,11 +573,13 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
   };
 
   return (
-    <section className="va-ops-panel va-ops-approval-panel" aria-label="Approval queue">
-      <div className="va-ops-panel-header">
-        <h2 className="va-ops-section-title">Approval Queue</h2>
-        <p className="va-ops-section-sub">Shared across Commercial, Send Center, and Retention.</p>
-      </div>
+    <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent" aria-label="Approval queue">
+      <VaOpsPanelHeader
+        title="Approval Queue"
+        sub="Shared across Commercial, Send Center, and Retention."
+        freshness="Live sync active"
+        source={{ label: "Supabase", type: "SYNC" }}
+      />
       <ul className="va-ops-approval-list">
         {drafts.map((draft) => (
           <ApprovalQueueItem key={draft.id} draft={draft} onApprove={handleApprove} />

@@ -1,40 +1,55 @@
 import { AppIcon } from "@/components/ui/AppIcon";
-import { weeklyRace, weeklyRaceRules } from "@/data/producerScorecard";
-
-const colorMap: Record<string, { bg: string; color: string; border: string }> = {
-  primary: { bg: "var(--primary-glow)", color: "var(--primary)", border: "var(--primary)" },
-  blue: { bg: "var(--blue-bg)", color: "var(--blue)", border: "var(--blue)" },
-  purple: { bg: "var(--purple-bg)", color: "var(--purple)", border: "var(--purple)" },
-  green: { bg: "var(--green-bg)", color: "var(--green)", border: "var(--green)" },
-};
+import { weeklyRace, weeklyRaceGoal, weeklyRaceRules } from "@/data/producerScorecard";
+import { WeeklyRaceRow } from "./WeeklyRaceRow";
 
 export function WeeklyRaceTab() {
+  const winner = weeklyRace.find((row) => row.isWeeklyWinner);
+
   return (
     <>
       <div className="section-hdr">
-        <div className="sh-label">Weekly Race — 300 Pt Goal · Points configurable in Sheets tab Eva controls</div>
+        <div className="sh-label">
+          Weekly Race — {weeklyRaceGoal} Pt Goal · Points configurable in Sheets tab Eva controls
+        </div>
       </div>
-      <div className="glass-panel" style={{ background: "var(--surface-card)", border: "1px solid var(--border-default)", borderRadius: "var(--radius)", padding: 20 }}>
+
+      <div className="weekly-race-panel glass-panel">
         <div className="weekly-race-title">
           <AppIcon name="flag" size={14} strokeWidth={2.25} />
           Weekly Activity Race
         </div>
-        {weeklyRace.map((row) => {
-          const c = colorMap[row.color];
-          return (
-            <div key={row.name} className="race-row">
-              <div className="race-avatar" style={{ background: c.bg, color: c.color, borderColor: c.border }}>{row.initial}</div>
-              <div className="race-name">{row.name}</div>
-              <div className="race-bar-wrap">
-                <div className="race-bar-fill" style={{ width: row.width, background: c.color }} />
-              </div>
-              <div className="race-pts">{row.points} pts</div>
+
+        {winner && (
+          <div className="weekly-race-winner-banner" role="status">
+            <div className="weekly-race-winner-icon" aria-hidden="true">
+              <AppIcon name="trophy" size={20} strokeWidth={2} />
             </div>
-          );
-        })}
-        <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--navy-light)", fontSize: "var(--font-size-12)", color: "var(--muted)" }}>
-          {weeklyRaceRules}
+            <div className="weekly-race-winner-copy">
+              <span className="weekly-race-winner-label">Weekly winner</span>
+              <strong>{winner.name}</strong>
+              <span className="weekly-race-winner-meta">
+                {winner.points} pts · {Math.round((winner.points / weeklyRaceGoal) * 100)}% of goal
+              </span>
+            </div>
+          </div>
+        )}
+
+        <div className="weekly-race-leaderboard">
+          <div className="weekly-race-col-hdr" aria-hidden="true">
+            <span>Rank</span>
+            <span className="weekly-race-col-hdr-spacer" />
+            <span>Producer</span>
+            <span>Progress</span>
+            <span>7-day trend</span>
+            <span>Points</span>
+          </div>
+
+          {weeklyRace.map((row) => (
+            <WeeklyRaceRow key={row.id} entry={row} />
+          ))}
         </div>
+
+        <div className="weekly-race-rules">{weeklyRaceRules}</div>
       </div>
     </>
   );

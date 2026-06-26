@@ -134,18 +134,18 @@ export const trackerSubmissions: TrackerSubmission[] = [
     declines: 0,
     premiumValue: "$4,200",
     followUpDate: "Today",
-    daysOpen: 8,
+    daysOpen: 32,
     status: "Quoted",
-    missingDocs: "None",
+    missingDocs: "Loss runs, Signed app",
     nextAction: "Add Market",
     state: "CA",
     carriers: [
-      { carrier: "Markel", status: "Pending" },
-      { carrier: "Travelers", status: "Quoted" },
+      { carrier: "Markel", status: "Declined" },
+      { carrier: "Travelers", status: "Declined" },
     ],
     documents: [
-      { label: "Signed Application", status: "complete" },
-      { label: "Loss Runs", status: "complete" },
+      { label: "Signed Application", status: "missing" },
+      { label: "Loss Runs", status: "missing" },
       { label: "Payroll Report", status: "complete" },
       { label: "Certificate of Insurance", status: "complete" },
     ],
@@ -424,6 +424,16 @@ export function formatCarrierAging(daysSinceSent: number, followUpCount: number)
 
 export type DocUrgency = "critical" | "waiting-client" | "follow-up-sent";
 
+export type GranularDocStatus = "Pending" | "Received" | "Overdue";
+
+export type GranularDocumentItem = {
+  id: string;
+  name: string;
+  requestedDate: string;
+  lastReminder: string;
+  status: GranularDocStatus;
+};
+
 export type DocumentBlocker = {
   id: string;
   client: string;
@@ -432,37 +442,61 @@ export type DocumentBlocker = {
   assigned: string;
   action: string;
   urgency: DocUrgency;
+  documents: GranularDocumentItem[];
 };
 
 export const documentBlockers: DocumentBlocker[] = [
   {
     id: "doc-1",
     client: "Martinez Landscaping",
-    missing: "Loss Runs",
+    missing: "Loss Runs, Signed Application",
     requested: "2 days ago",
     assigned: "JoJo",
     action: "Send Reminder",
     urgency: "critical",
+    documents: [
+      { id: "d1-loss", name: "Loss Runs", requestedDate: "May 18, 2026", lastReminder: "Today", status: "Overdue" },
+      { id: "d1-driver", name: "Driver Schedule", requestedDate: "May 19, 2026", lastReminder: "Yesterday", status: "Received" },
+      { id: "d1-app", name: "Signed Application", requestedDate: "May 18, 2026", lastReminder: "Today", status: "Overdue" },
+      { id: "d1-payroll", name: "Payroll Report", requestedDate: "May 15, 2026", lastReminder: "—", status: "Received" },
+      { id: "d1-vehicles", name: "Vehicle List", requestedDate: "May 17, 2026", lastReminder: "2 days ago", status: "Pending" },
+    ],
   },
   {
     id: "doc-2",
     client: "Kim Auto Shop",
-    missing: "Signed App",
+    missing: "Signed Application",
     requested: "Today",
     assigned: "Pedro",
     action: "Follow Up",
     urgency: "waiting-client",
+    documents: [
+      { id: "d2-loss", name: "Loss Runs", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
+      { id: "d2-driver", name: "Driver Schedule", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
+      { id: "d2-app", name: "Signed Application", requestedDate: "May 21, 2026", lastReminder: "Today", status: "Pending" },
+      { id: "d2-payroll", name: "Payroll Report", requestedDate: "May 19, 2026", lastReminder: "Yesterday", status: "Received" },
+      { id: "d2-vehicles", name: "Vehicle List", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
+    ],
   },
   {
     id: "doc-3",
     client: "Atlas Roofing",
-    missing: "Signed App",
+    missing: "Signed Application",
     requested: "Today",
     assigned: "Pedro",
     action: "Follow Up",
     urgency: "follow-up-sent",
+    documents: [
+      { id: "d3-loss", name: "Loss Runs", requestedDate: "May 17, 2026", lastReminder: "2 days ago", status: "Received" },
+      { id: "d3-driver", name: "Driver Schedule", requestedDate: "May 18, 2026", lastReminder: "Yesterday", status: "Pending" },
+      { id: "d3-app", name: "Signed Application", requestedDate: "May 19, 2026", lastReminder: "Today", status: "Pending" },
+      { id: "d3-payroll", name: "Payroll Report", requestedDate: "May 16, 2026", lastReminder: "3 days ago", status: "Received" },
+      { id: "d3-vehicles", name: "Vehicle List", requestedDate: "May 18, 2026", lastReminder: "Yesterday", status: "Received" },
+    ],
   },
 ];
+
+export type CarrierSlaStatus = "Healthy" | "At Risk" | "Breached";
 
 export type CarrierFollowUpItem = {
   id: string;
@@ -474,6 +508,9 @@ export type CarrierFollowUpItem = {
   action: string;
   daysSinceSent: number;
   followUpCount: number;
+  slaTargetHours: number;
+  slaElapsedHours: number;
+  slaStatus: CarrierSlaStatus;
 };
 
 export const trackerFollowUpQueue: CarrierFollowUpItem[] = [
@@ -487,6 +524,9 @@ export const trackerFollowUpQueue: CarrierFollowUpItem[] = [
     action: "Call Underwriter",
     daysSinceSent: 4,
     followUpCount: 2,
+    slaTargetHours: 48,
+    slaElapsedHours: 62,
+    slaStatus: "Breached",
   },
   {
     id: "tfu-2",
@@ -498,6 +538,9 @@ export const trackerFollowUpQueue: CarrierFollowUpItem[] = [
     action: "Request Update",
     daysSinceSent: 2,
     followUpCount: 1,
+    slaTargetHours: 48,
+    slaElapsedHours: 18,
+    slaStatus: "Healthy",
   },
   {
     id: "tfu-3",
@@ -509,6 +552,9 @@ export const trackerFollowUpQueue: CarrierFollowUpItem[] = [
     action: "Review Quote Options",
     daysSinceSent: 3,
     followUpCount: 1,
+    slaTargetHours: 24,
+    slaElapsedHours: 22,
+    slaStatus: "At Risk",
   },
   {
     id: "tfu-4",
@@ -520,14 +566,35 @@ export const trackerFollowUpQueue: CarrierFollowUpItem[] = [
     action: "Escalate Follow-Up",
     daysSinceSent: 6,
     followUpCount: 3,
+    slaTargetHours: 48,
+    slaElapsedHours: 71,
+    slaStatus: "Breached",
   },
 ];
+
+export function formatCarrierResponseSla(item: CarrierFollowUpItem): string {
+  return `${item.slaTargetHours}h target / ${item.slaElapsedHours}h elapsed`;
+}
+
+export const carrierSlaStatusClass: Record<CarrierSlaStatus, string> = {
+  Healthy: "badge-green",
+  "At Risk": "badge-yellow",
+  Breached: "badge-red",
+};
+
+export function getGranularDocsCompletion(documents: GranularDocumentItem[]): number {
+  if (documents.length === 0) return 0;
+  const received = documents.filter((doc) => doc.status === "Received").length;
+  return Math.round((received / documents.length) * 100);
+}
 
 export type ReadyToBindState =
   | "awaiting-signed-app"
   | "awaiting-payment"
   | "awaiting-producer-check"
   | "ready-to-issue";
+
+export type PaymentStatus = "Paid" | "Pending" | "Failed" | "Not Sent";
 
 export type ReadyToBindItem = {
   id: string;
@@ -540,6 +607,8 @@ export type ReadyToBindItem = {
   producerApproved: boolean;
   va: string;
   bindState: ReadyToBindState;
+  paymentStatus: PaymentStatus;
+  paymentMethod?: string;
 };
 
 export const readyToBindStateLabels: Record<ReadyToBindState, string> = {
@@ -561,6 +630,7 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     producerApproved: true,
     va: "Pedro",
     bindState: "awaiting-signed-app",
+    paymentStatus: "Not Sent",
   },
   {
     id: "rtb-seoul",
@@ -573,6 +643,8 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     producerApproved: true,
     va: "JoJo",
     bindState: "awaiting-payment",
+    paymentStatus: "Pending",
+    paymentMethod: "ACH · Invoice #4821",
   },
   {
     id: "rtb-martinez",
@@ -585,6 +657,7 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     producerApproved: false,
     va: "JoJo",
     bindState: "awaiting-producer-check",
+    paymentStatus: "Not Sent",
   },
   {
     id: "rtb-kim",
@@ -597,8 +670,17 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     producerApproved: true,
     va: "Pedro",
     bindState: "ready-to-issue",
+    paymentStatus: "Paid",
+    paymentMethod: "Card · Visa ···· 4242",
   },
 ];
+
+export const paymentStatusClass: Record<PaymentStatus, string> = {
+  Paid: "badge-green",
+  Pending: "badge-yellow",
+  Failed: "badge-red",
+  "Not Sent": "badge-gray",
+};
 
 export type TrackerFilterKey = keyof typeof trackerFilterOptions;
 

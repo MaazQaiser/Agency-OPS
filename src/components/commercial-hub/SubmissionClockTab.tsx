@@ -33,8 +33,21 @@ import {
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
-import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import type { DataStatus } from "@/lib/dataState";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { clockSummaryToKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 import { computeLiveStageAge, SubmissionClockDrawer } from "./SubmissionClockDrawer";
 
 function liveStageAge(record: SubmissionClockRecord, tickMs: number): string {
@@ -54,16 +67,27 @@ export function SubmissionClockTab() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<ClockFilters>(defaultClockFilters);
   const [summaryFilter, setSummaryFilter] = useState<ClockSummaryCard["filterKey"] | null>(null);
-  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<SubmissionClockRecord | null>(null);
   const [tickMs, setTickMs] = useState(() => Date.now());
 
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+    data: hydratedRecords,
+  } = useHubDataState({
+    load: () => {
+      const overrides = loadClockOverrides();
+      return mergeClockRecords(seedSubmissionClockRecords, overrides);
+    },
+    errorPreset: "agencyzoom-unavailable",
+  });
+
   useEffect(() => {
-    const overrides = loadClockOverrides();
-    setRecords(mergeClockRecords(seedSubmissionClockRecords, overrides));
-    const timer = window.setTimeout(() => setLoading(false), 420);
-    return () => window.clearTimeout(timer);
-  }, []);
+    if (hydratedRecords) setRecords(hydratedRecords);
+  }, [hydratedRecords]);
 
   useEffect(() => {
     const interval = window.setInterval(() => setTickMs(Date.now()), 60_000);
@@ -97,6 +121,13 @@ export function SubmissionClockTab() {
   }, [records, search, filters, summaryFilter]);
 
   const summaryCards = useMemo(() => computeClockSummaryCards(records), [records]);
+
+  const tableStatus: DataStatus =
+    loadStatus === "loading" || loadStatus === "error"
+      ? loadStatus
+      : filtered.length === 0
+        ? "empty"
+        : "success";
 
   const handleAction = useCallback(
     (action: string, record: SubmissionClockRecord) => {
@@ -218,31 +249,150 @@ export function SubmissionClockTab() {
   const selectedLiveAge = selected ? computeLiveStageAge(selected, tickMs) : "";
 
   return (
-    <div className="submission-clock-view">
-      <RoleTabHeader
-        title="Submission Clock"
-        subtitle="Time-based lifecycle tracker — stage accountability, SLA compliance, and bind velocity."
+    <CommercialHubTabShell className="submission-clock-view">
+      <CommercialHubTabHeader
+        title={commercialHubTabHeaders["submission-clock"].title}
+        subtitle={commercialHubTabHeaders["submission-clock"].subtitle}
       />
 
-      <section className="submission-clock-summary-strip" aria-label="Submission clock summary">
-        {summaryCards.map((card) => (
-          <button
-            key={card.id}
-            type="button"
-            className={cn("submission-clock-summary-card", summaryFilter === card.filterKey && "active")}
-            onClick={() => setSummaryFilter((prev) => (prev === card.filterKey ? null : card.filterKey))}
-          >
-            <span className="submission-clock-summary-value">{card.value}</span>
-            <span className="submission-clock-summary-label">{card.label}</span>
-          </button>
-        ))}
-      </section>
+      <CommercialHubKpiStrip kpis={clockSummaryToKpis(summaryCards)} columns={6} />
 
-      <section className="va-ops-panel submission-clock-alerts-panel" aria-label="Clock alerts">
-        <div className="va-ops-panel-header">
-          <h2 className="va-ops-section-title">SLA Alerts</h2>
-          <p className="va-ops-section-sub">Submissions breaching time thresholds or stuck in stage.</p>
-        </div>
+      <CommercialHubWorkspace
+        ariaLabel="Submission clock records"
+        title="Submission Records"
+        subtitle="Stage accountability, SLA compliance, and bind velocity."
+        toolbar={
+          <>
+            <div className="submission-clock-toolbar">
+              <div className="send-center-search-wrap">
+                <AppIcon name="search" size={16} strokeWidth={2} />
+                <input
+                  type="search"
+                  placeholder="Search by client or submission ID…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search submissions"
+                />
+              </div>
+              <div className="submission-clock-filter-row">
+                {(
+                  [
+                    ["stage", clockStageFilterOptions],
+                    ["age", clockAgeFilterOptions],
+                    ["slaStatus", clockSlaFilterOptions],
+                    ["assignedVa", clockVaFilterOptions],
+                    ["assignedProducer", clockProducerFilterOptions],
+                    ["carrier", clockCarrierFilterOptions],
+                    ["priority", clockPriorityFilterOptions],
+                  ] as const
+                ).map(([key, options]) => (
+                  <select
+                    key={key}
+                    className="header-filter-select"
+                    value={filters[key]}
+                    onChange={(e) => updateFilter(key, e.target.value)}
+                    aria-label={key}
+                  >
+                    {options.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <DataStateView
+          status={tableStatus}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<TableSkeleton rows={6} columns={8} />}
+          empty={
+            <HubEmptyState
+              preset="commercial-submissions"
+              title={search || summaryFilter ? "No submissions match your filters" : undefined}
+              description={
+                search || summaryFilter
+                  ? "Try adjusting your search or summary filters."
+                  : undefined
+              }
+            />
+          }
+          error={
+            <HubErrorState
+              preset="agencyzoom-unavailable"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+            <table className="commercial-hub-table submission-clock-table">
+              <thead>
+                <tr>
+                  <th>SLA Status</th>
+                  <th>Assigned VA</th>
+                  <th>Assigned Producer</th>
+                  <th>Total Age</th>
+                  <th>Current Stage Age</th>
+                  <th>Client Name</th>
+                  <th>Submission ID</th>
+                  <th>Current Stage</th>
+                  <th>Bind Probability</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((row) => {
+                  const stageAge = liveStageAge(row, tickMs);
+                  const isOverdue = row.slaStatus === "Overdue" || row.slaStatus === "Delayed";
+                  return (
+                    <tr
+                      key={row.id}
+                      className="commercial-hub-table-row-clickable"
+                      onClick={() => setSelected(row)}
+                    >
+                      <td><span className={cn("badge", slaHealthClass[row.slaStatus])}>{row.slaStatus}</span></td>
+                      <td><UserChip name={row.assignedVa} /></td>
+                      <td><UserChip name={row.assignedProducer} /></td>
+                      <td>{row.totalAge}</td>
+                      <td className={cn(isOverdue && "submission-clock-overdue-text")}>{stageAge}</td>
+                      <td className="commercial-hub-client-cell">
+                        <span className="submission-clock-client-cell">
+                          {row.clientName}
+                          {row.slaPaused && <span className="badge badge-yellow submission-clock-badge">Paused</span>}
+                          {isOverdue && <span className="badge badge-red submission-clock-badge">Overdue</span>}
+                        </span>
+                      </td>
+                      <td>{row.submissionId}</td>
+                      <td>{row.currentStage}</td>
+                      <td>
+                        <span className={cn("submission-clock-bind-prob", row.bindProbability >= 70 && "high")}>
+                          {row.bindProbability}%
+                        </span>
+                      </td>
+                      <td onClick={(e) => e.stopPropagation()}>
+                        <div className="send-center-row-actions">
+                          <button type="button" className="va-ops-action-btn" onClick={() => handleAction("View timeline", row)}>
+                            Timeline
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </DataStateView>
+      </CommercialHubWorkspace>
+
+      <CommercialHubIntelPanel title="SLA Alerts" subtitle="Submissions breaching time thresholds or stuck in stage." className="commercial-hub-intel-tall">
         <ul className="submission-clock-alerts-list">
           {clockComplianceAlerts.map((alert) => (
             <li key={alert.id} className={cn("submission-clock-alert-item", alert.severity)}>
@@ -269,125 +419,9 @@ export function SubmissionClockTab() {
             </li>
           ))}
         </ul>
-      </section>
+      </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel" aria-label="Submission clock records">
-        <div className="submission-clock-toolbar">
-          <div className="send-center-search-wrap">
-            <AppIcon name="search" size={16} strokeWidth={2} />
-            <input
-              type="search"
-              placeholder="Search by client or submission ID…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search submissions"
-            />
-          </div>
-          <div className="submission-clock-filter-row">
-            {(
-              [
-                ["stage", clockStageFilterOptions],
-                ["age", clockAgeFilterOptions],
-                ["slaStatus", clockSlaFilterOptions],
-                ["assignedVa", clockVaFilterOptions],
-                ["assignedProducer", clockProducerFilterOptions],
-                ["carrier", clockCarrierFilterOptions],
-                ["priority", clockPriorityFilterOptions],
-              ] as const
-            ).map(([key, options]) => (
-              <select
-                key={key}
-                className="header-filter-select"
-                value={filters[key]}
-                onChange={(e) => updateFilter(key, e.target.value)}
-                aria-label={`Filter by ${key}`}
-              >
-                {options.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-            ))}
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="send-center-skeleton" aria-busy="true" aria-label="Loading submission clock">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="send-center-skeleton-row" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="commercial-hub-empty-state" role="status">
-            <div className="commercial-hub-empty-state-title">No submissions found</div>
-            <p className="commercial-hub-empty-state-desc">
-              {search || summaryFilter
-                ? "Try adjusting your search or filters."
-                : "No commercial submissions are being tracked yet."}
-            </p>
-          </div>
-        ) : (
-          <div className="commercial-hub-table-wrap">
-            <table className="commercial-hub-table submission-clock-table">
-              <thead>
-                <tr>
-                  <th>Client Name</th>
-                  <th>Submission ID</th>
-                  <th>Current Stage</th>
-                  <th>Total Age</th>
-                  <th>Current Stage Age</th>
-                  <th>Assigned VA</th>
-                  <th>Assigned Producer</th>
-                  <th>SLA Status</th>
-                  <th>Bind Probability</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((row) => {
-                  const stageAge = liveStageAge(row, tickMs);
-                  const isOverdue = row.slaStatus === "Overdue" || row.slaStatus === "Delayed";
-                  return (
-                    <tr
-                      key={row.id}
-                      className="commercial-hub-table-row-clickable"
-                      onClick={() => setSelected(row)}
-                    >
-                      <td className="commercial-hub-client-cell">
-                        <span className="submission-clock-client-cell">
-                          {row.clientName}
-                          {row.slaPaused && <span className="badge badge-yellow submission-clock-badge">Paused</span>}
-                          {isOverdue && <span className="badge badge-red submission-clock-badge">Overdue</span>}
-                        </span>
-                      </td>
-                      <td>{row.submissionId}</td>
-                      <td>{row.currentStage}</td>
-                      <td>{row.totalAge}</td>
-                      <td className={cn(isOverdue && "submission-clock-overdue-text")}>{stageAge}</td>
-                      <td><UserChip name={row.assignedVa} /></td>
-                      <td><UserChip name={row.assignedProducer} /></td>
-                      <td><span className={cn("badge", slaHealthClass[row.slaStatus])}>{row.slaStatus}</span></td>
-                      <td>
-                        <span className={cn("submission-clock-bind-prob", row.bindProbability >= 70 && "high")}>
-                          {row.bindProbability}%
-                        </span>
-                      </td>
-                      <td onClick={(e) => e.stopPropagation()}>
-                        <div className="send-center-row-actions">
-                          <button type="button" className="va-ops-action-btn" onClick={() => handleAction("View timeline", row)}>
-                            Timeline
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
+      <CommercialHubTabFooter title="SLA Rules" subtitle="Automatic breach detection thresholds.">
         <div className="submission-clock-sla-rules">
           <AppIcon name="triangle-alert" size={16} strokeWidth={2} />
           <p>
@@ -395,7 +429,7 @@ export function SubmissionClockTab() {
             Submissions stuck &gt; 3 days, missing docs &gt; 24h, and carrier delays are flagged automatically.
           </p>
         </div>
-      </section>
+      </CommercialHubTabFooter>
 
       <SubmissionClockDrawer
         record={selected}
@@ -403,6 +437,6 @@ export function SubmissionClockTab() {
         onClose={() => setSelected(null)}
         onAction={handleAction}
       />
-    </div>
+    </CommercialHubTabShell>
   );
 }

@@ -25,6 +25,7 @@ import { resolveSearchNavigation } from "@/lib/crossModuleLinks";
 import { useAvatarProfile } from "@/components/user-profile/AvatarProfileProvider";
 import { cn } from "@/lib/cn";
 import { SearchingIndicator, SearchResultsSkeleton } from "@/components/shared/loading";
+import { HubEmptyState } from "@/components/state";
 import { QuickResultDrawer } from "./QuickResultDrawer";
 
 const filterLabels: Record<keyof GlobalSearchFilterState, string> = {
@@ -232,11 +233,28 @@ export function UniversalSearchTab() {
       <div className="global-search-results">
         {loading && debouncedSearch.trim() && <SearchingIndicator />}
 
-        {loading && (
+        {loading && debouncedSearch.trim() && (
           <SearchResultsSkeleton rows={4} label="Searching results" />
         )}
 
+        {!loading && !debouncedSearch.trim() && (
+          <HubEmptyState preset="global-search" onAction={() => openPalette()} />
+        )}
+
         {!loading &&
+          debouncedSearch.trim() &&
+          filteredResults.length === 0 && (
+            <HubEmptyState
+              title="No results found"
+              description="Try adjusting your search or filters."
+              ctaLabel="Open Command Palette"
+              onAction={() => openPalette(search)}
+            />
+          )}
+
+        {!loading &&
+          debouncedSearch.trim() &&
+          filteredResults.length > 0 &&
           searchGroupOrder.map((group) => {
             const items = grouped[group];
             if (items.length === 0) return null;
@@ -314,16 +332,6 @@ export function UniversalSearchTab() {
               </section>
             );
           })}
-
-        {!loading && filteredResults.length === 0 && (
-          <section className="va-ops-panel global-search-empty">
-            <AppIcon name="search" size={28} strokeWidth={2} />
-            <p>No results found. Try adjusting your search or filters.</p>
-            <button type="button" className="va-ops-action-btn" onClick={() => openPalette(search)}>
-              Open command palette
-            </button>
-          </section>
-        )}
       </div>
 
       <div className="global-search-bottom-grid">

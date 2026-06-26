@@ -3,70 +3,52 @@
 import { useEffect, useRef } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
-  notificationCategoryLabels,
   notificationFilterTabs,
-  priorityBadgeClass,
-  priorityLabels,
+  notificationTypeLabels,
   tabCount,
   type AppNotification,
   type NotificationFilterTab,
-  type NotificationPriority,
 } from "@/data/notifications";
 import { cn } from "@/lib/cn";
+import { NotificationListSkeleton } from "@/components/shared/loading";
+import { HubEmptyState, HubErrorState } from "@/components/state";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { NotificationCard } from "./NotificationCard";
 
 type NotificationCenterPanelProps = {
   notifications: AppNotification[];
   allNotifications: AppNotification[];
   activeTab: NotificationFilterTab;
-  priorityFilter: NotificationPriority | "all";
-  filterOpen: boolean;
   loading: boolean;
+  error?: boolean;
+  onRetry?: () => void;
+  retrying?: boolean;
+  lastSyncedAt?: Date | null;
   unreadCount: number;
   onTabChange: (tab: NotificationFilterTab) => void;
-  onPriorityFilterChange: (priority: NotificationPriority | "all") => void;
-  onFilterToggle: () => void;
   onClose: () => void;
-  onMarkAllRead: () => void;
-  onClearResolved: () => void;
+  onClearAll: () => void;
   onOpenNotification: (notification: AppNotification) => void;
-  onMarkAsRead: (id: string) => void;
-  onSnooze: (id: string) => void;
   onDismiss: (id: string) => void;
-  onResolve: (id: string) => void;
-  onAction: (notification: AppNotification, actionLabel: string) => void;
 };
-
-const priorityOptions: { id: NotificationPriority | "all"; label: string }[] = [
-  { id: "all", label: "All priorities" },
-  { id: "critical", label: "Critical" },
-  { id: "high", label: "High" },
-  { id: "medium", label: "Medium" },
-  { id: "low", label: "Low" },
-];
 
 export function NotificationCenterPanel({
   notifications,
   allNotifications,
   activeTab,
-  priorityFilter,
-  filterOpen,
   loading,
+  error = false,
+  onRetry,
+  retrying = false,
+  lastSyncedAt,
   unreadCount,
   onTabChange,
-  onPriorityFilterChange,
-  onFilterToggle,
   onClose,
-  onMarkAllRead,
-  onClearResolved,
+  onClearAll,
   onOpenNotification,
-  onMarkAsRead,
-  onSnooze,
   onDismiss,
-  onResolve,
-  onAction,
 }: NotificationCenterPanelProps) {
-  const filterRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -80,17 +62,9 @@ export function NotificationCenterPanel({
     };
   }, [onClose]);
 
-  useEffect(() => {
-    if (!filterOpen) return;
-    const handlePointerDown = (event: MouseEvent) => {
-      if (filterRef.current?.contains(event.target as Node)) return;
-      onFilterToggle();
-    };
-    document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, [filterOpen, onFilterToggle]);
-
-  const hasResolved = allNotifications.some((n) => n.status === "resolved");
+  const hasClearable = allNotifications.some(
+    (n) => n.status !== "dismissed" && n.status !== "snoozed",
+  );
 
   return (
     <div className="va-ops-drawer-root notification-center-root" role="presentation">
@@ -101,6 +75,7 @@ export function NotificationCenterPanel({
         onClick={onClose}
       />
       <aside
+        ref={panelRef}
         className="va-ops-drawer notification-center-panel"
         role="dialog"
         aria-modal="true"
@@ -110,54 +85,25 @@ export function NotificationCenterPanel({
           <div className="notification-center-header-title">
             <h2>Notifications</h2>
             {unreadCount > 0 && (
-              <span className="badge badge-blue notification-center-unread-badge">{unreadCount}</span>
+              <span className="badge badge-blue notification-center-unread-badge" aria-live="polite">
+                {unreadCount} unread
+              </span>
             )}
           </div>
           <div className="notification-center-header-actions">
+            <ExportMenu kind="notification-history" compact />
             <button
               type="button"
-              className="notification-center-header-btn"
-              onClick={onMarkAllRead}
-              disabled={unreadCount === 0}
+              className="notification-center-header-btn notification-center-header-btn--clear"
+              onClick={onClearAll}
+              disabled={!hasClearable}
             >
-              Mark all as read
+              Clear all
             </button>
-            <div className="notification-center-filter-wrap" ref={filterRef}>
-              <button
-                type="button"
-                className={cn("notification-center-header-icon-btn", filterOpen && "active")}
-                aria-label="Filter by priority"
-                aria-expanded={filterOpen}
-                onClick={onFilterToggle}
-              >
-                <AppIcon name="settings" size={16} strokeWidth={2} />
-              </button>
-              {filterOpen && (
-                <div className="notification-center-filter-menu" role="menu">
-                  {priorityOptions.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      role="menuitem"
-                      className={cn(
-                        "notification-center-filter-item",
-                        priorityFilter === opt.id && "active",
-                      )}
-                      onClick={() => {
-                        onPriorityFilterChange(opt.id);
-                        onFilterToggle();
-                      }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
             <button
               type="button"
               className="va-ops-drawer-close"
-              aria-label="Close"
+              aria-label="Close notifications"
               onClick={onClose}
             >
               <AppIcon name="close" size={18} strokeWidth={2.25} />
@@ -172,7 +118,11 @@ export function NotificationCenterPanel({
               <button
                 key={tab.id}
                 type="button"
-                className={cn("notification-center-tab", activeTab === tab.id && "active")}
+                className={cn(
+                  "notification-center-tab",
+                  activeTab === tab.id && "active",
+                  tab.id !== "all" && `notification-center-tab--${tab.id}`,
+                )}
                 onClick={() => onTabChange(tab.id)}
               >
                 {tab.label}
@@ -182,36 +132,28 @@ export function NotificationCenterPanel({
           })}
         </nav>
 
-        {priorityFilter !== "all" && (
-          <div className="notification-center-active-filter">
-            <span className={cn("badge", priorityBadgeClass[priorityFilter])}>
-              {priorityLabels[priorityFilter]}
-            </span>
-            <button type="button" onClick={() => onPriorityFilterChange("all")}>
-              Clear filter
-            </button>
-          </div>
-        )}
-
         <div className="notification-center-body">
           {loading ? (
-            <div className="notification-center-skeleton" aria-busy="true" aria-label="Loading notifications">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="notification-center-skeleton-card" />
-              ))}
-            </div>
+            <NotificationListSkeleton count={5} />
+          ) : error ? (
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={onRetry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+              compact
+            />
           ) : notifications.length === 0 ? (
-            <div className="notification-center-empty" role="status">
-              <AppIcon name="bell" size={32} strokeWidth={1.75} />
-              <p className="notification-center-empty-title">No new notifications</p>
-              <p className="notification-center-empty-desc">
-                {activeTab === "all"
-                  ? priorityFilter !== "all"
-                    ? `No ${priorityLabels[priorityFilter].toLowerCase()} priority notifications right now.`
-                    : "You're all caught up. Alerts from across Agency OPS will appear here."
-                  : `No ${notificationCategoryLabels[activeTab].toLowerCase()} notifications right now.`}
-              </p>
-            </div>
+            <HubEmptyState
+              preset="notifications"
+              title={activeTab === "all" ? undefined : `No ${notificationTypeLabels[activeTab].toLowerCase()} notifications`}
+              description={
+                activeTab === "all"
+                  ? undefined
+                  : `Switch to All to see every alert, or check back when new ${notificationTypeLabels[activeTab].toLowerCase()} signals arrive.`
+              }
+              compact
+            />
           ) : (
             <ul className="notification-center-list">
               {notifications.map((notification) => (
@@ -219,24 +161,12 @@ export function NotificationCenterPanel({
                   key={notification.id}
                   notification={notification}
                   onOpen={() => onOpenNotification(notification)}
-                  onMarkAsRead={() => onMarkAsRead(notification.id)}
-                  onSnooze={() => onSnooze(notification.id)}
                   onDismiss={() => onDismiss(notification.id)}
-                  onResolve={() => onResolve(notification.id)}
-                  onAction={(label) => onAction(notification, label)}
                 />
               ))}
             </ul>
           )}
         </div>
-
-        {hasResolved && (
-          <footer className="notification-center-footer">
-            <button type="button" className="notification-center-footer-btn" onClick={onClearResolved}>
-              Clear resolved
-            </button>
-          </footer>
-        )}
       </aside>
     </div>
   );

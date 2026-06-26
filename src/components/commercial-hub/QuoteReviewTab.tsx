@@ -1,23 +1,36 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
   buildProducerReviewCases,
   buildQuoteReviewRows,
-  quoteReviewHeader,
 } from "@/data/quoteReview";
-import { CardSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { getCommercialHubSnapshot } from "@/data/commercialHubStore";
 import { useCommercialHubStore } from "@/hooks/useCommercialHubStore";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useOutreachHubStore } from "@/hooks/useOutreachHubStore";
 import { crossModuleRoutes, navigateWithHandoff } from "@/lib/crossModuleLinks";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
+import { buildAllQuoteRecommendations } from "@/lib/quoteRecommendations";
+import type { QuoteRecommendationTag } from "@/lib/quoteRecommendations";
 import { QuoteDetailsModal } from "./QuoteDetailsModal";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { quoteReviewTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 
 const quoteStatusClass: Record<string, string> = {
   Quoted: "badge-green",
@@ -35,11 +48,44 @@ const decisionStatusClass: Record<string, string> = {
 export function QuoteReviewTab() {
   const router = useRouter();
   const toast = useToast();
-  const loading = useTabLoading();
   const { trackerSubmissions } = useCommercialHubStore();
   const { clientDecisionQueue } = useOutreachHubStore();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => getCommercialHubSnapshot().trackerSubmissions,
+    errorPreset: "agencyzoom-unavailable",
+  });
   const quoteReviewRows = buildQuoteReviewRows(trackerSubmissions);
   const producerReviewCases = buildProducerReviewCases(trackerSubmissions);
+  const quoteRecommendations = useMemo(
+    () => buildAllQuoteRecommendations(trackerSubmissions),
+    [trackerSubmissions],
+  );
+
+  const recommendationByQuoteId = useMemo(() => {
+    const map = new Map<string, QuoteRecommendationTag[]>();
+    for (const group of quoteRecommendations) {
+      for (const quote of group.quotes) {
+        map.set(quote.id, quote.recommendations);
+      }
+    }
+    return map;
+  }, [quoteRecommendations]);
+
+  const topRecommendation = quoteRecommendations[0] ?? null;
+  const topRecommendedQuote = topRecommendation?.quotes.find(
+    (quote) => quote.id === topRecommendation.recommendedQuoteId,
+  ) ?? null;
+
+  const getQuoteRecommendations = (row: (typeof quoteReviewRows)[number]): QuoteRecommendationTag[] => {
+    const quoteId = row.id.slice(row.submissionId.length + 1);
+    return recommendationByQuoteId.get(quoteId) ?? [];
+  };
 
   const [quoteModalClient, setQuoteModalClient] = useState<string | null>(null);
   const [quoteModalQuotes, setQuoteModalQuotes] = useState(
@@ -67,31 +113,63 @@ export function QuoteReviewTab() {
     setQuoteModalQuotes(submission.quotes);
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view quote-review">
-        <TableSkeleton rows={5} />
-        <CardSkeletonGrid count={2} />
-      </div>
-    );
-  }
+  const header = commercialHubTabHeaders["quote-review"];
 
   return (
-    <div className="va-ops-role-view quote-review">
-      <div className="quote-review-header">
-        <h2 className="va-ops-section-title">{quoteReviewHeader.title}</h2>
-        <p className="va-ops-section-sub">{quoteReviewHeader.subtitle}</p>
-      </div>
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <CommercialHubTabShell className="quote-review">
+          <TableSkeleton rows={5} />
+        </CommercialHubTabShell>
+      }
+      empty={<HubEmptyState preset="commercial-submissions" />}
+      error={
+        <HubErrorState
+          preset="agencyzoom-unavailable"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+    <CommercialHubTabShell className="quote-review">
+      <CommercialHubTabHeader title={header.title} subtitle={header.subtitle} />
 
-      <section className="va-ops-panel" aria-label="Quote comparison">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Quote Comparison</h3>
-          <p className="va-ops-section-sub">Compare returned carrier quotes across active submissions.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubKpiStrip kpis={quoteReviewTabKpis(trackerSubmissions)} columns={4} />
+
+      <CommercialHubWorkspace
+        ariaLabel="Quote comparison"
+        title="Quote Comparison"
+        subtitle="Compare returned carrier quotes across active submissions."
+      >
+        {topRecommendedQuote && topRecommendation && (
+          <article className="quote-ai-recommended-card" aria-label="Recommended quote">
+            <div className="quote-ai-recommended-header">
+              <span className="quote-ai-chip">AI Recommended</span>
+              <span className="quote-ai-recommended-client">{topRecommendation.client}</span>
+            </div>
+            <div className="quote-ai-recommended-body">
+              <strong>{topRecommendedQuote.carrier}</strong>
+              <span className="commercial-hub-premium">{topRecommendedQuote.premium}</span>
+              <span>{topRecommendedQuote.deductible} deductible</span>
+            </div>
+            <div className="quote-ai-recommendation-chips">
+              {topRecommendedQuote.recommendations.map((tag) => (
+                <span key={tag} className="quote-ai-recommendation-chip">{tag}</span>
+              ))}
+            </div>
+            <p className="quote-ai-recommended-note">{topRecommendedQuote.notes}</p>
+          </article>
+        )}
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
+                <th>Status</th>
                 <th>Client</th>
                 <th>Carrier</th>
                 <th>Premium</th>
@@ -99,13 +177,18 @@ export function QuoteReviewTab() {
                 <th>Coverage Limits</th>
                 <th>Exclusions</th>
                 <th>Broker Fee</th>
-                <th>Status</th>
+                <th>AI Insight</th>
                 <th aria-label="Actions" />
               </tr>
             </thead>
             <tbody>
               {quoteReviewRows.map((row) => (
                 <tr key={row.id}>
+                  <td>
+                    <span className={cn("badge", quoteStatusClass[row.status] ?? "badge-gray")}>
+                      {row.status}
+                    </span>
+                  </td>
                   <td>
                     <button
                       type="button"
@@ -122,14 +205,18 @@ export function QuoteReviewTab() {
                   <td>{row.exclusions}</td>
                   <td>{row.brokerFee}</td>
                   <td>
-                    <span className={cn("badge", quoteStatusClass[row.status] ?? "badge-gray")}>
-                      {row.status}
-                    </span>
+                    <div className="quote-ai-recommendation-chips">
+                      {getQuoteRecommendations(row).map((tag) => (
+                        <span key={tag} className="quote-ai-recommendation-chip">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </td>
                   <td>
                     <button
                       type="button"
-                      className="va-ops-action-btn"
+                      className="va-ops-action-btn primary"
                       onClick={() => sendToSendCenter(row.client, row.carrier, row.premium, row.brokerFee)}
                     >
                       Send to Send Center
@@ -140,15 +227,13 @@ export function QuoteReviewTab() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubWorkspace>
 
-      <section className="va-ops-panel quote-review-producer-section" aria-label="Producer review">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Producer Review Panel</h3>
-          <p className="va-ops-section-sub">
-            Producer approval is required before a quote can move to Ready to Bind.
-          </p>
-        </div>
+      <CommercialHubIntelPanel
+        title="Producer Review Panel"
+        subtitle="Producer approval is required before a quote can move to Ready to Bind."
+        className="commercial-hub-intel-tall quote-review-producer-section"
+      >
         {producerReviewCases.length === 0 ? (
           <div className="commercial-hub-empty-state" role="status">
             <div className="commercial-hub-empty-state-title">No pending producer reviews</div>
@@ -283,40 +368,39 @@ export function QuoteReviewTab() {
             ))}
           </div>
         )}
-      </section>
+      </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel" aria-label="Client decision queue">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Client Decision Queue</h3>
-          <p className="va-ops-section-sub">Track client response after quotes are sent.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubTabFooter
+        title="Client Decision Queue"
+        subtitle="Track client response after quotes are sent."
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
+                <th>Decision Status</th>
                 <th>Client</th>
                 <th>Sent Date</th>
                 <th>Last Contact</th>
-                <th>Decision Status</th>
               </tr>
             </thead>
             <tbody>
               {clientDecisionQueue.map((row) => (
                 <tr key={row.id}>
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td>{row.sentDate}</td>
-                  <td>{row.lastContact}</td>
                   <td>
                     <span className={cn("badge", decisionStatusClass[row.decisionStatus])}>
                       {row.decisionStatus}
                     </span>
                   </td>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>{row.sentDate}</td>
+                  <td>{row.lastContact}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubTabFooter>
 
       <QuoteDetailsModal
         open={Boolean(quoteModalClient)}
@@ -324,6 +408,7 @@ export function QuoteReviewTab() {
         quotes={quoteModalQuotes}
         onClose={() => setQuoteModalClient(null)}
       />
-    </div>
+    </CommercialHubTabShell>
+    </DataStateView>
   );
 }

@@ -14,6 +14,7 @@ import {
   type DialerLead,
   type LeadPriority,
 } from "@/data/dialerVA";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import { LeadDrawer } from "./LeadDrawer";
 import { RoleTabHeader } from "./RoleTabHeader";
@@ -60,12 +61,7 @@ export function DialerVATab({ embedded = false }: { embedded?: boolean } = {}) {
         <section className="va-ops-kpi-strip" aria-label="Dialer performance summary">
           <div className="va-ops-kpi-grid">
             {dialerKpis.map((kpi) => (
-              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-                <div className="va-ops-kpi-label">{kpi.label}</div>
-                <div className="va-ops-kpi-value">{kpi.value}</div>
-                <div className="va-ops-kpi-sub">{kpi.sub}</div>
-                <div className="va-ops-kpi-helper">{kpi.helper}</div>
-              </article>
+              <VaOpsKpiCard key={kpi.label} {...kpi} />
             ))}
           </div>
         </section>

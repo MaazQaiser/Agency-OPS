@@ -1,7 +1,7 @@
 import type { Submission } from "@/types/submission";
 
 export const submissions: Submission[] = [
-  { id: "CS-001", client: "Martinez Landscaping", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-04-30", markets: 4, quotes: 1, declines: 2, carrier: "Markel", premium: 8700, followUp: "2026-05-11", daysOpen: 14, status: "Overdue", missingDocs: "None", uw: "M. Torres", notes: "Stalled at Markel — escalate", binding: "" },
+  { id: "CS-001", client: "Martinez Landscaping", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-04-30", markets: 4, quotes: 1, declines: 2, carrier: "", premium: 8700, followUp: "2026-05-11", daysOpen: 32, status: "Overdue", missingDocs: "Loss runs, Signed app", uw: "M. Torres", notes: "Stalled at Markel — escalate", binding: "" },
   { id: "CS-002", client: "Kim Auto Shop", producer: "Pedro", va: "Tracie", lob: "Comm Auto", subDate: "2026-05-07", markets: 3, quotes: 1, declines: 1, carrier: "Travelers", premium: 5800, followUp: "2026-05-14", daysOpen: 7, status: "Pending", missingDocs: "5yr loss runs", uw: "A. Nguyen", notes: "Final chase today", binding: "" },
   { id: "CS-003", client: "Rivera Construction", producer: "Sarah", va: "Valerie", lob: "WC", subDate: "2026-05-05", markets: 3, quotes: 1, declines: 1, carrier: "ICW", premium: 18900, followUp: "2026-05-14", daysOpen: 9, status: "Pending", missingDocs: "Signed app", uw: "R. Park", notes: "Needs signed app to bind", binding: "" },
   { id: "CS-004", client: "Greenline Logistics", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-05-10", markets: 4, quotes: 2, declines: 1, carrier: "CNA", premium: 14500, followUp: "2026-05-14", daysOpen: 4, status: "Quoted", missingDocs: "None", uw: "J. Kim", notes: "Quote received, pending producer approval", binding: "" },
@@ -22,7 +22,7 @@ export const executiveKpis = [
 export const chartStatusData = {
   labels: ["Quoted", "Pending", "Overdue", "Declined", "Bound"],
   data: [2, 2, 1, 0, 0],
-  colors: ["#10B981", "#F59E0B", "#F43F5E", "#6C7A89", "#3B82F6"],
+  colors: ["#10B981", "#F59E0B", "#F43F5E", "#8B5CF6", "#3B82F6"],
   legend: [
     { label: "Quoted 2", color: "#10B981" },
     { label: "Pending 2", color: "#F59E0B" },
@@ -38,7 +38,7 @@ export const chartLobData = {
 export const chartAgingData = {
   labels: ["0–2 Days", "3–5 Days", "6–10 Days", "11–14 Days", "15+ Days"],
   data: [1, 1, 2, 1, 0],
-  colors: ["#10B981", "#F59E0B", "#F59E0B", "#F43F5E", "#6366F1"],
+  colors: ["#10B981", "#F59E0B", "#F59E0B", "#F43F5E", "#8B5CF6"],
 };
 
 export const executiveAlerts = [

@@ -1,9 +1,12 @@
 import type { AppIconName } from "@/components/ui/AppIcon";
 import { routes } from "@/lib/routes";
 
+export type NotificationType = "danger" | "warning" | "success" | "info" | "draft";
+
+/** @deprecated Legacy module grouping — prefer `type` for filters and styling */
 export type NotificationCategory = "urgent" | "approvals" | "payments" | "training" | "system";
 
-export type NotificationFilterTab = "all" | NotificationCategory;
+export type NotificationFilterTab = "all" | NotificationType;
 
 export type NotificationPriority = "critical" | "high" | "medium" | "low";
 
@@ -16,6 +19,7 @@ export type NotificationAction = {
 
 export type AppNotification = {
   id: string;
+  type: NotificationType;
   category: NotificationCategory;
   priority: NotificationPriority;
   status: NotificationStatus;
@@ -26,10 +30,30 @@ export type AppNotification = {
   module: string;
   moduleRoute: string;
   icon: AppIconName;
+  relatedUserId?: string;
+  relatedUserName?: string;
   actions: NotificationAction[];
   snoozedUntil?: number;
 };
 
+export const notificationTypeLabels: Record<NotificationType, string> = {
+  danger: "Danger",
+  warning: "Warning",
+  success: "Success",
+  info: "Info",
+  draft: "Draft",
+};
+
+export const notificationFilterTabs: { id: NotificationFilterTab; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "danger", label: "Danger" },
+  { id: "warning", label: "Warnings" },
+  { id: "success", label: "Success" },
+  { id: "info", label: "Info" },
+  { id: "draft", label: "Draft" },
+];
+
+/** @deprecated Use notificationTypeLabels */
 export const notificationCategoryLabels: Record<NotificationCategory, string> = {
   urgent: "Urgent",
   approvals: "Approvals",
@@ -38,14 +62,13 @@ export const notificationCategoryLabels: Record<NotificationCategory, string> = 
   system: "System",
 };
 
-export const notificationFilterTabs: { id: NotificationFilterTab; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "urgent", label: "Urgent" },
-  { id: "approvals", label: "Approvals" },
-  { id: "payments", label: "Payments" },
-  { id: "training", label: "Training" },
-  { id: "system", label: "System" },
-];
+export const typeBadgeClass: Record<NotificationType, string> = {
+  danger: "badge-red",
+  warning: "badge-amber",
+  success: "badge-green",
+  info: "badge-blue",
+  draft: "badge-violet",
+};
 
 export const priorityBadgeClass: Record<NotificationPriority, string> = {
   critical: "badge-red",
@@ -61,12 +84,20 @@ export const priorityLabels: Record<NotificationPriority, string> = {
   low: "Low",
 };
 
-export const categoryIcon: Record<NotificationCategory, AppIconName> = {
-  urgent: "triangle-alert",
-  approvals: "shield",
-  payments: "dollar",
-  training: "trophy",
-  system: "refresh",
+export const typeIcon: Record<NotificationType, AppIconName> = {
+  danger: "triangle-alert",
+  warning: "flag",
+  success: "check",
+  info: "bell",
+  draft: "file-text",
+};
+
+const TYPE_SORT_ORDER: Record<NotificationType, number> = {
+  danger: 0,
+  warning: 1,
+  success: 2,
+  info: 3,
+  draft: 4,
 };
 
 const now = Date.now();
@@ -75,385 +106,25 @@ const day = 24 * hour;
 
 export const seedNotifications: AppNotification[] = [
   {
-    id: "n-urg-1",
+    id: "n-crit-1",
+    type: "danger",
     category: "urgent",
     priority: "critical",
     status: "unread",
-    title: "Submission overdue by 3 days",
-    description: "Martinez Landscaping BOP submission has exceeded SLA — missing loss runs blocking bind.",
-    timestamp: "2h ago",
-    timestampMs: now - 2 * hour,
+    title: "E&O exposure critical",
+    description: "Martinez Landscaping scored 6 on E&O risk — 32 days open, no carrier, 2 missing documents.",
+    timestamp: "2m ago",
+    timestampMs: now - 2 * 60 * 1000,
     module: "Commercial Hub",
     moduleRoute: routes.commercialHub,
     icon: "triangle-alert",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "assign", label: "Assign" },
-      { id: "resolve", label: "Resolve" },
-    ],
+    relatedUserId: "pedro-va",
+    relatedUserName: "Pedro",
+    actions: [{ id: "review", label: "Review" }, { id: "assign", label: "Assign" }],
   },
   {
-    id: "n-urg-2",
-    category: "urgent",
-    priority: "high",
-    status: "unread",
-    title: "Missing docs blocking bind",
-    description: "Rivera Construction WC bind is blocked — signed ACORD 125 not uploaded.",
-    timestamp: "45m ago",
-    timestampMs: now - 45 * 60 * 1000,
-    module: "Commercial Hub",
-    moduleRoute: routes.commercialHub,
-    icon: "triangle-alert",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "assign", label: "Assign" },
-      { id: "resolve", label: "Resolve" },
-    ],
-  },
-  {
-    id: "n-urg-3",
-    category: "urgent",
-    priority: "high",
-    status: "unread",
-    title: "Proposal pending review > 60 mins",
-    description: "Kim Auto Shop commercial auto proposal has been in licensed review for 72 minutes.",
-    timestamp: "1h ago",
-    timestampMs: now - hour,
-    module: "Send Center",
-    moduleRoute: `${routes.sendCenter}?view=pending-review`,
-    icon: "triangle-alert",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "assign", label: "Assign" },
-      { id: "resolve", label: "Resolve" },
-    ],
-  },
-  {
-    id: "n-urg-4",
-    category: "urgent",
-    priority: "medium",
-    status: "read",
-    title: "Carrier no response > SLA",
-    description: "CNA has not responded to Greenline Logistics quote request in 48 hours.",
-    timestamp: "3h ago",
-    timestampMs: now - 3 * hour,
-    module: "Commercial Hub",
-    moduleRoute: routes.commercialHub,
-    icon: "triangle-alert",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "assign", label: "Assign" },
-      { id: "resolve", label: "Resolve" },
-    ],
-  },
-  {
-    id: "n-apr-1",
-    category: "approvals",
-    priority: "high",
-    status: "unread",
-    title: "Proposal waiting producer review",
-    description: "Atlas Roofing BOP package is approved by licensing — awaiting producer sign-off.",
-    timestamp: "30m ago",
-    timestampMs: now - 30 * 60 * 1000,
-    module: "Send Center",
-    moduleRoute: `${routes.sendCenter}?view=approved`,
-    icon: "shield",
-    actions: [
-      { id: "review", label: "Review" },
-      { id: "approve", label: "Approve" },
-      { id: "reject", label: "Reject" },
-    ],
-  },
-  {
-    id: "n-apr-2",
-    category: "approvals",
-    priority: "medium",
-    status: "unread",
-    title: "Quote approval required",
-    description: "Harbor Logistics GL + Umbrella quote needs executive approval above $30K premium.",
-    timestamp: "4h ago",
-    timestampMs: now - 4 * hour,
-    module: "Commercial Hub",
-    moduleRoute: routes.commercialHub,
-    icon: "shield",
-    actions: [
-      { id: "review", label: "Review" },
-      { id: "approve", label: "Approve" },
-      { id: "reject", label: "Reject" },
-    ],
-  },
-  {
-    id: "n-apr-3",
-    category: "approvals",
-    priority: "medium",
-    status: "read",
-    title: "Payment release pending",
-    description: "Trust account release for Martinez Landscaping bind requires manager approval.",
-    timestamp: "Yesterday",
-    timestampMs: now - day,
-    module: "ePayPolicy",
-    moduleRoute: routes.epayPolicy,
-    icon: "shield",
-    actions: [
-      { id: "review", label: "Review" },
-      { id: "approve", label: "Approve" },
-      { id: "reject", label: "Reject" },
-    ],
-  },
-  {
-    id: "n-pay-1",
-    category: "payments",
-    priority: "low",
-    status: "read",
-    title: "Invoice paid",
-    description: "Greenline Logistics paid invoice #INV-2026-0842 — $26,831 via ACH.",
-    timestamp: "5h ago",
-    timestampMs: now - 5 * hour,
-    module: "ePayPolicy",
-    moduleRoute: routes.epayPolicy,
-    icon: "dollar",
-    actions: [
-      { id: "view-invoice", label: "View Invoice" },
-      { id: "reconcile", label: "Reconcile" },
-    ],
-  },
-  {
-    id: "n-pay-2",
-    category: "payments",
-    priority: "critical",
-    status: "unread",
-    title: "Payment failed",
-    description: "Kim Auto Shop card payment declined for policy premium — retry required.",
-    timestamp: "20m ago",
-    timestampMs: now - 20 * 60 * 1000,
-    module: "ePayPolicy",
-    moduleRoute: routes.epayPolicy,
-    icon: "dollar",
-    actions: [
-      { id: "view-invoice", label: "View Invoice" },
-      { id: "retry", label: "Retry" },
-      { id: "reconcile", label: "Reconcile" },
-    ],
-  },
-  {
-    id: "n-pay-3",
-    category: "payments",
-    priority: "high",
-    status: "unread",
-    title: "Trust release pending",
-    description: "Rivera Construction bind payment held in trust — release awaiting documentation.",
-    timestamp: "2h ago",
-    timestampMs: now - 2 * hour,
-    module: "ePayPolicy",
-    moduleRoute: routes.epayPolicy,
-    icon: "dollar",
-    actions: [
-      { id: "view-invoice", label: "View Invoice" },
-      { id: "reconcile", label: "Reconcile" },
-    ],
-  },
-  {
-    id: "n-pay-4",
-    category: "payments",
-    priority: "high",
-    status: "unread",
-    title: "Overdue invoice reminder",
-    description: "Atlas Roofing invoice #INV-2026-0891 is 5 days past due — $12,474 outstanding.",
-    timestamp: "6h ago",
-    timestampMs: now - 6 * hour,
-    module: "ePayPolicy",
-    moduleRoute: routes.epayPolicy,
-    icon: "dollar",
-    actions: [
-      { id: "view-invoice", label: "View Invoice" },
-      { id: "retry", label: "Retry" },
-    ],
-  },
-  {
-    id: "n-trn-1",
-    category: "training",
-    priority: "medium",
-    status: "unread",
-    title: "New training assigned",
-    description: "Licensed Producer Compliance Refresher assigned to your team — due Jun 28.",
-    timestamp: "1d ago",
-    timestampMs: now - day,
-    module: "Training Hub",
-    moduleRoute: routes.trainingHub,
-    icon: "trophy",
-    actions: [
-      { id: "open-training", label: "Open Training" },
-      { id: "mark-complete", label: "Mark Complete" },
-    ],
-  },
-  {
-    id: "n-trn-2",
-    category: "training",
-    priority: "high",
-    status: "unread",
-    title: "Due in 2 days",
-    description: "E&O Best Practices module due Jun 23 — 3 team members have not started.",
-    timestamp: "8h ago",
-    timestampMs: now - 8 * hour,
-    module: "Training Hub",
-    moduleRoute: routes.trainingHub,
-    icon: "trophy",
-    actions: [
-      { id: "open-training", label: "Open Training" },
-      { id: "mark-complete", label: "Mark Complete" },
-    ],
-  },
-  {
-    id: "n-trn-3",
-    category: "training",
-    priority: "medium",
-    status: "read",
-    title: "Training expired",
-    description: "Cyber Liability Product Overview certification expired for Kyle Nguyen — renewal required.",
-    timestamp: "2d ago",
-    timestampMs: now - 2 * day,
-    module: "Training Hub",
-    moduleRoute: routes.trainingHub,
-    icon: "trophy",
-    actions: [
-      { id: "open-training", label: "Open Training" },
-      { id: "mark-complete", label: "Mark Complete" },
-    ],
-  },
-  {
-    id: "n-trn-4",
-    category: "training",
-    priority: "low",
-    status: "read",
-    title: "SOP updated",
-    description: "Send Center proposal workflow SOP v2.4 published — review changes before next send.",
-    timestamp: "3d ago",
-    timestampMs: now - 3 * day,
-    module: "Training Hub",
-    moduleRoute: routes.trainingHub,
-    icon: "trophy",
-    actions: [
-      { id: "open-training", label: "Open Training" },
-    ],
-  },
-  {
-    id: "n-sys-1",
-    category: "system",
-    priority: "high",
-    status: "unread",
-    title: "AgencyZoom sync failed",
-    description: "Last sync failed at 6:12 AM — 14 records could not be pushed to AgencyZoom.",
-    timestamp: "3h ago",
-    timestampMs: now - 3 * hour,
-    module: "VA Operations",
-    moduleRoute: routes.vaOperations,
-    icon: "refresh",
-    actions: [
-      { id: "view-logs", label: "View Logs" },
-      { id: "retry-sync", label: "Retry Sync" },
-    ],
-  },
-  {
-    id: "n-sys-2",
-    category: "system",
-    priority: "medium",
-    status: "unread",
-    title: "Slack webhook failed",
-    description: "Send Center delivery webhook returned 503 — 2 proposal notifications not delivered.",
-    timestamp: "5h ago",
-    timestampMs: now - 5 * hour,
-    module: "Send Center",
-    moduleRoute: routes.sendCenter,
-    icon: "refresh",
-    actions: [
-      { id: "view-logs", label: "View Logs" },
-      { id: "retry-sync", label: "Retry Sync" },
-    ],
-  },
-  {
-    id: "n-sys-3",
-    category: "system",
-    priority: "low",
-    status: "read",
-    title: "Monday sync delayed",
-    description: "Monday.com board sync running 12 minutes behind schedule — no action required.",
-    timestamp: "7h ago",
-    timestampMs: now - 7 * hour,
-    module: "VA Operations",
-    moduleRoute: routes.vaOperations,
-    icon: "refresh",
-    actions: [
-      { id: "view-logs", label: "View Logs" },
-    ],
-  },
-  {
-    id: "n-sys-4",
-    category: "system",
-    priority: "medium",
-    status: "unread",
-    title: "Carrier market updated",
-    description: "Travelers BOP appetite expanded to landscaping accounts in TX — review Carrier Library.",
-    timestamp: "1d ago",
-    timestampMs: now - day,
-    module: "Carrier Library",
-    moduleRoute: routes.carrierLibrary,
-    icon: "refresh",
-    actions: [
-      { id: "open", label: "Open" },
-    ],
-  },
-  {
-    id: "n-sc-1",
-    category: "urgent",
-    priority: "medium",
-    status: "unread",
-    title: "Proposal not viewed",
-    description: "Greenline Logistics renewal proposal sent 4 days ago — client has not opened.",
-    timestamp: "4h ago",
-    timestampMs: now - 4 * hour,
-    module: "Send Center",
-    moduleRoute: `${routes.sendCenter}?view=sent`,
-    icon: "send",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "resolve", label: "Resolve" },
-    ],
-  },
-  {
-    id: "n-sc-2",
-    category: "urgent",
-    priority: "low",
-    status: "read",
-    title: "Proposal opened",
-    description: "Martinez Landscaping opened proposal 4 times — high engagement detected.",
-    timestamp: "30m ago",
-    timestampMs: now - 30 * 60 * 1000,
-    module: "Send Center",
-    moduleRoute: routes.sendCenterProposal("prop-martinez"),
-    icon: "send",
-    actions: [
-      { id: "open", label: "Open" },
-    ],
-  },
-  {
-    id: "n-va-1",
-    category: "urgent",
-    priority: "high",
-    status: "unread",
-    title: "DNC flag triggered",
-    description: "Lead #4821 marked Do Not Contact — outreach queue item requires review.",
-    timestamp: "1h ago",
-    timestampMs: now - hour,
-    module: "VA Operations",
-    moduleRoute: `${routes.vaOperations}?view=dnc-log`,
-    icon: "flag",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "resolve", label: "Resolve" },
-    ],
-  },
-  {
-    id: "n-va-2",
+    id: "n-crit-2",
+    type: "danger",
     category: "urgent",
     priority: "critical",
     status: "unread",
@@ -463,68 +134,350 @@ export const seedNotifications: AppNotification[] = [
     timestampMs: now - 22 * 60 * 1000,
     module: "VA Operations",
     moduleRoute: routes.vaOperations,
-    icon: "flag",
-    actions: [
-      { id: "open", label: "Open" },
-      { id: "assign", label: "Assign" },
-      { id: "resolve", label: "Resolve" },
-    ],
+    icon: "triangle-alert",
+    relatedUserId: "jaffer",
+    relatedUserName: "Jazmín",
+    actions: [{ id: "open", label: "Open" }, { id: "assign", label: "Assign" }],
   },
   {
-    id: "n-bl-1",
+    id: "n-crit-3",
+    type: "danger",
     category: "urgent",
     priority: "critical",
     status: "unread",
-    title: "No bilingual support assigned",
-    description: "Atlas Roofing requires Mandarin support — no bilingual VA assigned.",
+    title: "Policy at risk — bind blocked",
+    description: "Rivera Construction WC bind blocked — signed ACORD 125 missing. Policy at risk of lapse.",
     timestamp: "45m ago",
     timestampMs: now - 45 * 60 * 1000,
-    module: "VA Operations",
-    moduleRoute: `${routes.vaOperations}?view=bilingual-queue`,
-    icon: "globe",
-    actions: [{ id: "open", label: "Open" }, { id: "assign", label: "Assign VA" }],
+    module: "Commercial Hub",
+    moduleRoute: routes.commercialHub,
+    icon: "shield",
+    relatedUserId: "sarah-chen",
+    relatedUserName: "Sarah",
+    actions: [{ id: "review", label: "Review" }, { id: "resolve", label: "Resolve" }],
   },
   {
-    id: "n-bl-2",
-    category: "urgent",
+    id: "n-crit-4",
+    type: "danger",
+    category: "payments",
     priority: "critical",
     status: "unread",
-    title: "Proposal sent in wrong language",
-    description: "Martinez Landscaping proposal sent in English — client prefers Spanish.",
-    timestamp: "2h ago",
-    timestampMs: now - 2 * hour,
-    module: "Send Center",
-    moduleRoute: routes.sendCenterProposal("prop-martinez"),
-    icon: "send",
-    actions: [{ id: "open", label: "Open" }, { id: "translate", label: "Translate" }],
+    title: "Payment failed",
+    description: "Kim Auto Shop card payment declined — premium bind cannot complete until retry.",
+    timestamp: "20m ago",
+    timestampMs: now - 20 * 60 * 1000,
+    module: "ePayPolicy",
+    moduleRoute: routes.epayPolicy,
+    icon: "dollar",
+    relatedUserId: "pedro-alvarez",
+    relatedUserName: "Pedro",
+    actions: [{ id: "view-invoice", label: "View Invoice" }, { id: "retry", label: "Retry" }],
   },
   {
-    id: "n-bl-3",
-    category: "system",
+    id: "n-crit-5",
+    type: "danger",
+    category: "approvals",
+    priority: "critical",
+    status: "unread",
+    title: "Approval missed",
+    description: "Harbor Logistics GL + Umbrella executive approval window expired — quote may lapse.",
+    timestamp: "1h ago",
+    timestampMs: now - hour,
+    module: "Commercial Hub",
+    moduleRoute: routes.commercialHub,
+    icon: "shield",
+    relatedUserId: "eva-chong",
+    relatedUserName: "Eva",
+    actions: [{ id: "review", label: "Review" }, { id: "approve", label: "Approve" }],
+  },
+  {
+    id: "n-warn-1",
+    type: "warning",
+    category: "urgent",
     priority: "high",
     status: "unread",
-    title: "Intake incomplete — language mismatch",
-    description: "Kim Auto Shop intake blocked — Korean labels needed for signed application.",
+    title: "Folio nearing close",
+    description: "Folio 18 closes in 7 days at 61% pace — $11.8K gap to $30K premium goal.",
+    timestamp: "12m ago",
+    timestampMs: now - 12 * 60 * 1000,
+    module: "VA Operations",
+    moduleRoute: routes.vaOperations,
+    icon: "flag",
+    relatedUserId: "eva-chong",
+    relatedUserName: "Eva",
+    actions: [{ id: "open", label: "View Folio" }],
+  },
+  {
+    id: "n-warn-2",
+    type: "warning",
+    category: "approvals",
+    priority: "high",
+    status: "unread",
+    title: "Producer review delayed",
+    description: "Atlas Roofing BOP package in licensed review for 72 minutes — producer sign-off pending.",
+    timestamp: "1h ago",
+    timestampMs: now - hour,
+    module: "Send Center",
+    moduleRoute: `${routes.sendCenter}?view=pending-review`,
+    icon: "flag",
+    relatedUserId: "pedro-alvarez",
+    relatedUserName: "Pedro",
+    actions: [{ id: "review", label: "Review" }],
+  },
+  {
+    id: "n-warn-3",
+    type: "warning",
+    category: "urgent",
+    priority: "medium",
+    status: "unread",
+    title: "Pending DocuSign over 72h",
+    description: "Greenline Logistics renewal proposal unsigned for 78 hours — follow-up recommended.",
     timestamp: "3h ago",
     timestampMs: now - 3 * hour,
-    module: "Intake Forms",
-    moduleRoute: routes.intakeForms,
-    icon: "clipboard",
+    module: "Send Center",
+    moduleRoute: `${routes.sendCenter}?view=sent`,
+    icon: "send",
+    relatedUserId: "jojo",
+    relatedUserName: "JoJo",
+    actions: [{ id: "open", label: "Open" }, { id: "nudge", label: "Nudge" }],
+  },
+  {
+    id: "n-warn-4",
+    type: "warning",
+    category: "urgent",
+    priority: "medium",
+    status: "read",
+    title: "SLA approaching",
+    description: "CNA has not responded to Greenline Logistics quote request in 48 hours.",
+    timestamp: "4h ago",
+    timestampMs: now - 4 * hour,
+    module: "Commercial Hub",
+    moduleRoute: routes.commercialHub,
+    icon: "flag",
+    relatedUserId: "tracie-wong",
+    relatedUserName: "Tracie",
     actions: [{ id: "open", label: "Open" }],
   },
   {
-    id: "n-bl-4",
-    category: "system",
+    id: "n-warn-5",
+    type: "warning",
+    category: "training",
     priority: "high",
     status: "unread",
-    title: "Payment reminder not localized",
-    description: "Greenline Logistics payment reminder sent in English — billing language is Portuguese.",
+    title: "E&O training due in 2 days",
+    description: "E&O Best Practices module due Jun 23 — 3 team members have not started.",
+    timestamp: "8h ago",
+    timestampMs: now - 8 * hour,
+    module: "Training Hub",
+    moduleRoute: routes.trainingHub,
+    icon: "trophy",
+    relatedUserId: "kyle-nguyen",
+    relatedUserName: "Kyle",
+    actions: [{ id: "open-training", label: "Open Training" }],
+  },
+  {
+    id: "n-succ-1",
+    type: "success",
+    category: "payments",
+    priority: "low",
+    status: "unread",
+    title: "Invoice paid",
+    description: "Greenline Logistics paid invoice #INV-2026-0842 — $26,831 via ACH.",
     timestamp: "5h ago",
     timestampMs: now - 5 * hour,
     module: "ePayPolicy",
     moduleRoute: routes.epayPolicy,
-    icon: "dollar",
+    icon: "check",
+    relatedUserId: "valerie-martinez",
+    relatedUserName: "Valerie",
+    actions: [{ id: "view-invoice", label: "View Invoice" }],
+  },
+  {
+    id: "n-succ-2",
+    type: "success",
+    category: "approvals",
+    priority: "medium",
+    status: "unread",
+    title: "Transfer approved",
+    description: "Jazmín → Sarah personal lead handoff approved and routed to dialer queue.",
+    timestamp: "30m ago",
+    timestampMs: now - 30 * 60 * 1000,
+    module: "VA Operations",
+    moduleRoute: routes.vaOperations,
+    icon: "check",
+    relatedUserId: "sarah-chen",
+    relatedUserName: "Sarah",
     actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-succ-3",
+    type: "success",
+    category: "approvals",
+    priority: "medium",
+    status: "read",
+    title: "Send approved",
+    description: "Martinez Landscaping proposal approved by licensing — ready for client delivery.",
+    timestamp: "2h ago",
+    timestampMs: now - 2 * hour,
+    module: "Send Center",
+    moduleRoute: routes.sendCenter,
+    icon: "check",
+    relatedUserId: "eva-chong",
+    relatedUserName: "Eva",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-succ-4",
+    type: "success",
+    category: "urgent",
+    priority: "low",
+    status: "read",
+    title: "Policy bound",
+    description: "Atlas Roofing GL bound with Travelers — $5,600 annual premium recorded.",
+    timestamp: "6h ago",
+    timestampMs: now - 6 * hour,
+    module: "Commercial Hub",
+    moduleRoute: routes.commercialHub,
+    icon: "check",
+    relatedUserId: "pedro-alvarez",
+    relatedUserName: "Pedro",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-1",
+    type: "info",
+    category: "urgent",
+    priority: "medium",
+    status: "unread",
+    title: "New lead added",
+    description: "Meta commercial lead assigned to research queue — Harbor Logistics expansion.",
+    timestamp: "8m ago",
+    timestampMs: now - 8 * 60 * 1000,
+    module: "VA Operations",
+    moduleRoute: routes.vaOperations,
+    icon: "user-plus",
+    relatedUserId: "jaffer",
+    relatedUserName: "Jaffer",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-2",
+    type: "info",
+    category: "urgent",
+    priority: "low",
+    status: "unread",
+    title: "New task assigned",
+    description: "Pedro assigned COI follow-up for Kim Auto Shop — due today EOD.",
+    timestamp: "25m ago",
+    timestampMs: now - 25 * 60 * 1000,
+    module: "VA Operations",
+    moduleRoute: `${routes.vaOperations}?view=tasks`,
+    icon: "clipboard",
+    relatedUserId: "pedro-va",
+    relatedUserName: "Pedro",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-3",
+    type: "info",
+    category: "system",
+    priority: "low",
+    status: "unread",
+    title: "Pipeline moved",
+    description: "Martinez Landscaping submission advanced to Quoted stage in Commercial Hub.",
+    timestamp: "1h ago",
+    timestampMs: now - hour,
+    module: "Commercial Hub",
+    moduleRoute: routes.commercialHub,
+    icon: "trending-up",
+    relatedUserId: "tracie-wong",
+    relatedUserName: "Tracie",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-4",
+    type: "info",
+    category: "system",
+    priority: "medium",
+    status: "read",
+    title: "Team status updated",
+    description: "Sarah marked available — personal lines queue coverage restored.",
+    timestamp: "2h ago",
+    timestampMs: now - 2 * hour,
+    module: "VA Operations",
+    moduleRoute: routes.vaOperations,
+    icon: "users",
+    relatedUserId: "sarah-chen",
+    relatedUserName: "Sarah",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-5",
+    type: "info",
+    category: "system",
+    priority: "low",
+    status: "read",
+    title: "Carrier market updated",
+    description: "Travelers BOP appetite expanded to landscaping accounts in TX — review Carrier Library.",
+    timestamp: "1d ago",
+    timestampMs: now - day,
+    module: "Carrier Library",
+    moduleRoute: routes.carrierLibrary,
+    icon: "refresh",
+    relatedUserId: "kyle",
+    relatedUserName: "Kyle",
+    actions: [{ id: "open", label: "Open" }],
+  },
+  {
+    id: "n-info-6",
+    type: "info",
+    category: "system",
+    priority: "high",
+    status: "unread",
+    title: "AgencyZoom sync completed",
+    description: "14 records pushed successfully — last sync 6:42 AM PST.",
+    timestamp: "3h ago",
+    timestampMs: now - 3 * hour,
+    module: "VA Operations",
+    moduleRoute: routes.vaOperations,
+    icon: "refresh",
+    relatedUserId: "arminda-ops",
+    relatedUserName: "Arminda",
+    actions: [{ id: "view-logs", label: "View Logs" }],
+  },
+  {
+    id: "n-draft-1",
+    type: "draft",
+    category: "approvals",
+    priority: "medium",
+    status: "unread",
+    title: "Proposal draft awaiting review",
+    description: "Atlas Roofing BOP package saved as draft — licensed review not yet submitted.",
+    timestamp: "45m ago",
+    timestampMs: now - 45 * 60 * 1000,
+    module: "Send Center",
+    moduleRoute: `${routes.sendCenter}?view=draft-queue`,
+    icon: "file-text",
+    relatedUserId: "pedro-alvarez",
+    relatedUserName: "Pedro",
+    actions: [{ id: "open", label: "Open Draft" }],
+  },
+  {
+    id: "n-draft-2",
+    type: "draft",
+    category: "payments",
+    priority: "low",
+    status: "unread",
+    title: "Invoice draft in progress",
+    description: "Rivera Construction installment invoice draft — broker fee pending confirmation.",
+    timestamp: "2h ago",
+    timestampMs: now - 2 * hour,
+    module: "ePayPolicy",
+    moduleRoute: routes.epayPolicy,
+    icon: "file-text",
+    relatedUserId: "valerie-martinez",
+    relatedUserName: "Valerie",
+    actions: [{ id: "open", label: "Resume Draft" }],
   },
 ];
 
@@ -571,17 +524,26 @@ export function isNotificationVisible(n: AppNotification, nowMs = Date.now()): b
   return true;
 }
 
+function compareNotifications(a: AppNotification, b: AppNotification): number {
+  const typeDiff = TYPE_SORT_ORDER[a.type] - TYPE_SORT_ORDER[b.type];
+  if (typeDiff !== 0) return typeDiff;
+
+  const unreadA = a.status === "unread" ? 0 : 1;
+  const unreadB = b.status === "unread" ? 0 : 1;
+  if (unreadA !== unreadB) return unreadA - unreadB;
+
+  return b.timestampMs - a.timestampMs;
+}
+
 export function filterNotifications(
   notifications: AppNotification[],
   tab: NotificationFilterTab,
-  priorityFilter: NotificationPriority | "all",
 ): AppNotification[] {
   const nowMs = Date.now();
   return notifications
     .filter((n) => isNotificationVisible(n, nowMs))
-    .filter((n) => tab === "all" || n.category === tab)
-    .filter((n) => priorityFilter === "all" || n.priority === priorityFilter)
-    .sort((a, b) => b.timestampMs - a.timestampMs);
+    .filter((n) => tab === "all" || n.type === tab)
+    .sort(compareNotifications);
 }
 
 export function countUnread(notifications: AppNotification[]): number {
@@ -590,22 +552,20 @@ export function countUnread(notifications: AppNotification[]): number {
   ).length;
 }
 
-export function hasCriticalUnread(notifications: AppNotification[]): boolean {
+export function hasDangerUnread(notifications: AppNotification[]): boolean {
   return notifications.some(
     (n) =>
       isNotificationVisible(n) &&
       n.status === "unread" &&
-      n.priority === "critical",
+      n.type === "danger",
   );
 }
 
+/** @deprecated Use hasDangerUnread */
+export const hasCriticalUnread = hasDangerUnread;
+
 export function hasUrgentUnread(notifications: AppNotification[]): boolean {
-  return notifications.some(
-    (n) =>
-      isNotificationVisible(n) &&
-      n.status === "unread" &&
-      n.category === "urgent",
-  );
+  return hasDangerUnread(notifications);
 }
 
 export function tabCount(
@@ -616,7 +576,7 @@ export function tabCount(
   return notifications.filter(
     (n) =>
       isNotificationVisible(n, nowMs) &&
-      (tab === "all" || n.category === tab) &&
+      (tab === "all" || n.type === tab) &&
       n.status === "unread",
   ).length;
 }

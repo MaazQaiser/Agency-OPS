@@ -9,6 +9,8 @@ import {
   Flag,
   FolderOpen,
   Globe,
+  HelpCircle,
+  Home,
   MessageSquare,
   Phone,
   Pin,
@@ -32,6 +34,9 @@ import {
   Users,
   X,
   XCircle,
+  Zap,
+  FileText,
+  ArrowRightLeft,
   type LucideIcon,
 } from "lucide-react";
 
@@ -61,6 +66,8 @@ export const appIcons = {
   trophy: Trophy,
   "chevron-down": ChevronDown,
   globe: Globe,
+  home: Home,
+  "help-circle": HelpCircle,
   phone: Phone,
   "message-square": MessageSquare,
   "user-plus": UserPlus,
@@ -69,6 +76,9 @@ export const appIcons = {
   upload: Upload,
   download: Download,
   "trending-up": TrendingUp,
+  zap: Zap,
+  "file-text": FileText,
+  "arrow-right-left": ArrowRightLeft,
 } as const satisfies Record<string, LucideIcon>;
 
 export type AppIconName = keyof typeof appIcons;

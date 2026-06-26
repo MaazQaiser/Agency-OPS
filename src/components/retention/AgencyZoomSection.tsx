@@ -1,37 +1,69 @@
+"use client";
+
 import { AppIcon } from "@/components/ui/AppIcon";
 import { SectionLabel } from "@/components/ui/PageHeader";
-import { agencyZoomPipelines } from "@/data/retentionScorecard";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useRetentionLocale } from "@/components/retention/RetentionLanguageProvider";
+import { useHubDataState } from "@/hooks/useHubDataState";
 
 export function AgencyZoomSection() {
+  const { copy } = useRetentionLocale();
+  const { agencyZoom } = copy;
+
+  const { status, retry, lastSyncedAt, isStale, retrying } = useHubDataState({
+    load: () => agencyZoom.pipelines,
+    errorPreset: "agencyzoom-unavailable",
+  });
+
   return (
     <>
-      <SectionLabel>
-        AgencyZoom Pipelines — Retention Layer (Arminda Manages Data Entry)
-      </SectionLabel>
+      <SectionLabel>{agencyZoom.section}</SectionLabel>
 
       <div className="alert alert-amber">
         <div className="alert-title alert-title-with-icon">
           <AppIcon name="triangle-alert" size={14} strokeWidth={2.25} />
-          Arminda&apos;s Role Clarification
+          {agencyZoom.alertTitle}
         </div>
-        <p>Arminda Sumido is confirmed as <strong>CERT + AgencyZoom data entry only</strong>. She does not own pipeline setup or operational workflows. Her role is to support pipeline maintenance and data accuracy — not to design or modify pipelines. Pipeline ownership = Eva (design) + Kyle (automation). Arminda executes data entry tasks assigned to her via Monday board.</p>
+        <p>{agencyZoom.alertBody}</p>
       </div>
 
-      <table className="retention">
-        <thead>
-          <tr><th>Pipeline</th><th>Owner (AZ)</th><th>Kyle Automation</th><th>Monday Board Owner</th></tr>
-        </thead>
-        <tbody>
-          {agencyZoomPipelines.map((row) => (
-            <tr key={row.pipeline}>
-              <td>{row.pipeline}</td>
-              <td>{row.owner}</td>
-              <td>{row.automation}</td>
-              <td>{row.monday}</td>
+      <DataStateView
+        status={status}
+        lastSyncedAt={lastSyncedAt}
+        isStale={isStale}
+        showFreshness={false}
+        loading={<TableSkeleton rows={4} columns={4} />}
+        empty={<HubEmptyState preset="retention-records" />}
+        error={
+          <HubErrorState
+            preset="agencyzoom-unavailable"
+            onRetry={retry}
+            retrying={retrying}
+            lastSyncedAt={lastSyncedAt}
+          />
+        }
+      >
+        <table className="retention">
+          <thead>
+            <tr>
+              {agencyZoom.headers.map((header) => (
+                <th key={header}>{header}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {agencyZoom.pipelines.map((row) => (
+              <tr key={row.pipeline}>
+                <td>{row.pipeline}</td>
+                <td>{row.owner}</td>
+                <td>{row.automation}</td>
+                <td>{row.monday}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </DataStateView>
     </>
   );
 }

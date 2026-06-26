@@ -11,7 +11,9 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useGlobalSearch } from "@/components/global-search/GlobalSearchProvider";
+import { useEntitlements } from "@/hooks/useEntitlements";
 import { useNotificationCenter } from "@/components/notifications/NotificationCenterProvider";
+import { useAuditLog } from "@/components/audit-log/AuditLogProvider";
 import { useOwnerQuickActions } from "@/components/owner-quick-actions/OwnerQuickActionsProvider";
 import {
   detailShortcuts,
@@ -54,9 +56,11 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
   const router = useRouter();
   const pathname = usePathname();
   const { isOpen: searchOpen, open: openSearch, close: closeSearch, toggle: toggleSearch } = useGlobalSearch();
-  const { isOpen: notificationsOpen, open: openNotifications, close: closeNotifications, clearResolved } =
+  const { isOpen: notificationsOpen, open: openNotifications, close: closeNotifications, clearAll } =
     useNotificationCenter();
   const { isOpen: ownerOpen, toggle: toggleOwner, close: closeOwner, isOwner } = useOwnerQuickActions();
+  const { isOpen: auditOpen, toggle: toggleAuditLog, close: closeAuditLog, canView: canViewAuditLog } = useAuditLog();
+  const { hasFeature, canOpenHref } = useEntitlements();
   const [helpOpen, setHelpOpen] = useState(false);
 
   const openHelp = useCallback(() => setHelpOpen(true), []);
@@ -72,6 +76,10 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
       }
       if (actionId === "owner-quick-actions") {
         if (isOwner) toggleOwner();
+        return;
+      }
+      if (actionId === "open-audit-log") {
+        if (canViewAuditLog) toggleAuditLog();
         return;
       }
       if (actionId === "shortcut-help") {
@@ -92,7 +100,7 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
         return;
       }
       if (actionId === "clear-notifications") {
-        clearResolved();
+        clearAll();
         return;
       }
       if (actionId === "go-back") {
@@ -117,12 +125,14 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
       }
 
       if (shortcut.type === "navigate" && shortcut.route) {
+        if (!canOpenHref(shortcut.route)) return;
         router.push(shortcut.route, { scroll: false });
         return;
       }
 
       if (shortcut.type === "action" && actionId) {
         if (shortcut.route) {
+          if (!canOpenHref(shortcut.route)) return;
           const routePath = shortcut.route.split("?")[0];
           if (pathname !== routePath && !pathname.startsWith(`${routePath}/`)) {
             router.push(shortcut.route, { scroll: false });
@@ -137,14 +147,18 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
       if (actionId) dispatchShortcutAction(actionId);
     },
     [
-      clearResolved,
+      clearAll,
       isOwner,
       openHelp,
       openNotifications,
       toggleSearch,
       toggleOwner,
+      canViewAuditLog,
+      toggleAuditLog,
       pathname,
       router,
+      hasFeature,
+      canOpenHref,
     ],
   );
 
@@ -165,9 +179,13 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
       closeOwner();
       return true;
     }
+    if (auditOpen) {
+      closeAuditLog();
+      return true;
+    }
     dispatchEscapeLayer();
     return false;
-  }, [helpOpen, closeHelp, searchOpen, closeSearch, notificationsOpen, closeNotifications, ownerOpen, closeOwner]);
+  }, [helpOpen, closeHelp, searchOpen, closeSearch, notificationsOpen, closeNotifications, ownerOpen, closeOwner, auditOpen, closeAuditLog]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

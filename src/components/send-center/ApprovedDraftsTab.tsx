@@ -12,18 +12,22 @@ import {
 } from "@/data/sendCenter";
 import { proposalIdByRowId } from "@/data/sendCenterProposals";
 import { routes } from "@/lib/routes";
+import { exportSendCenterHistoryPdf } from "@/lib/export";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { cn } from "@/lib/cn";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { SendCenterBulkBar } from "./SendCenterBulkBar";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 import {
-  SendCenterEmptyState,
   SendCenterFilters,
   SendCenterTableSkeleton,
   useSendCenterFilters,
-  useTabLoading,
 } from "./SendCenterFilters";
+import { ComplianceLockRing } from "./ComplianceLockRing";
 
 type ApprovedDraftsTabProps = {
   onToast: (message: string, variant?: "success" | "error") => void;
@@ -33,10 +37,21 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
   const { can, requirePermission } = usePermissions();
   const canSend = can("action:send-proposals");
   const router = useRouter();
-  const loading = useTabLoading();
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [rows] = useState(approvedDraftRecords);
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => rows,
+    deps: [rows],
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, rows, (d) => d.length === 0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(
@@ -81,7 +96,8 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
       return;
     }
     if (action === "Download PDF") {
-      onToast(`PDF downloaded for ${row.client}`, "success");
+      exportSendCenterHistoryPdf();
+      onToast(`PDF exported for ${row.client}`, "success");
       return;
     }
     if (action === "Add Notes") {
@@ -96,10 +112,13 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
 
   return (
     <div className="va-ops-role-view send-center-tab">
-      <RoleTabHeader
-        title="Approved Drafts"
-        subtitle="Licensed-approved proposals ready to send or schedule."
-      />
+      <div className="export-table-header-export">
+        <RoleTabHeader
+          title="Approved Drafts"
+          subtitle="Licensed-approved proposals ready to send or schedule."
+        />
+        <ExportMenu kind="send-center-history" />
+      </div>
 
       <SendCenterFilters
         search={search}
@@ -118,10 +137,28 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
       />
 
       <section className="va-ops-panel" aria-label="Approved drafts">
-        {loading ? (
-          <SendCenterTableSkeleton />
-        ) : (
-          <div className="commercial-hub-table-wrap">
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<SendCenterTableSkeleton />}
+          empty={
+            <HubEmptyState
+              title="No approved drafts"
+              description="Approved proposals will appear here after licensed review."
+            />
+          }
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table send-center-table">
               <thead>
                 <tr>
@@ -145,9 +182,10 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={7}>
-                      <SendCenterEmptyState
-                        title="No approved drafts"
-                        description="Approved proposals will appear here after licensed review."
+                      <HubEmptyState
+                        title="No matches"
+                        description="No approved drafts match your search or filters. Try clearing filters or broadening your search."
+                        compact
                       />
                     </td>
                   </tr>
@@ -175,8 +213,15 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
                       </td>
                       <td>
                         <div className="send-center-row-actions">
-                          {(["Send Proposal", "Download PDF", "Add Notes"] as const)
-                            .filter((action) => action !== "Send Proposal" || canSend)
+                          {canSend ? (
+                            <ComplianceLockRing
+                              locked={row.status === "On Hold"}
+                              onSend={() => handleAction("Send Proposal", row)}
+                              label="Send Proposal"
+                              className="send-center-compliance-lock"
+                            />
+                          ) : null}
+                          {(["Download PDF", "Add Notes"] as const)
                             .map((action) => (
                             <button
                               key={action}
@@ -195,7 +240,7 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
               </tbody>
             </table>
           </div>
-        )}
+        </DataStateView>
       </section>
     </div>
   );

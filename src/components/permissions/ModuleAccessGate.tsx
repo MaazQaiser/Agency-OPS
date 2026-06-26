@@ -1,7 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { pathnameToModule } from "@/data/rolePermissions";
+import { ModuleUnavailable } from "@/components/subscription/ModuleUnavailable";
+import { useEntitlements } from "@/hooks/useEntitlements";
+import { pathnameToAccessTarget } from "@/lib/subscriptionAccess";
 import { usePermissions } from "./PermissionProvider";
 
 type ModuleAccessGateProps = {
@@ -10,10 +12,11 @@ type ModuleAccessGateProps = {
 
 export function ModuleAccessGate({ children }: ModuleAccessGateProps) {
   const pathname = usePathname();
-  const { canAccessModule } = usePermissions();
-  const module = pathnameToModule(pathname);
+  const { canAccessModule: roleCanAccessModule } = usePermissions();
+  const { canAccessModule, canAccessPath } = useEntitlements();
+  const target = pathnameToAccessTarget(pathname);
 
-  if (module && !canAccessModule(module)) {
+  if (target && !roleCanAccessModule(target)) {
     return (
       <div className="permission-denied-page">
         <div className="permission-denied-icon" aria-hidden="true">
@@ -26,6 +29,14 @@ export function ModuleAccessGate({ children }: ModuleAccessGateProps) {
         <p className="permission-denied-hint">Contact the agency owner to request access.</p>
       </div>
     );
+  }
+
+  if (target && !canAccessModule(target)) {
+    return <ModuleUnavailable />;
+  }
+
+  if (!target && !canAccessPath(pathname)) {
+    return <ModuleUnavailable />;
   }
 
   return <>{children}</>;

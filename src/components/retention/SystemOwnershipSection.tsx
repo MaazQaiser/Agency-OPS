@@ -1,19 +1,28 @@
+"use client";
+
 import { AccordionCard } from "@/components/ui/AccordionCard";
 import { SectionLabel } from "@/components/ui/PageHeader";
-import { futureRoadmap, systemOwnership } from "@/data/retentionScorecard";
+import { useRetentionLocale } from "@/components/retention/RetentionLanguageProvider";
 
 export function SystemOwnershipSection() {
+  const { copy } = useRetentionLocale();
+  const { systemOwnership } = copy;
+
   return (
     <>
-      <SectionLabel>System Ownership — Retention Layer</SectionLabel>
+      <SectionLabel>{systemOwnership.section}</SectionLabel>
 
-      <AccordionCard icon="folder" title="Who Builds What — Retention Module">
+      <AccordionCard icon="folder" title={systemOwnership.title}>
         <table className="retention">
           <thead>
-            <tr><th>System</th><th>Who Builds</th><th>What They Build</th></tr>
+            <tr>
+              {systemOwnership.headers.map((header) => (
+                <th key={header}>{header}</th>
+              ))}
+            </tr>
           </thead>
           <tbody>
-            {systemOwnership.map((row) => (
+            {systemOwnership.rows.map((row) => (
               <tr key={row.system}>
                 <td>{row.system}</td>
                 <td>{row.who}</td>
@@ -28,21 +37,30 @@ export function SystemOwnershipSection() {
 }
 
 export function FutureRoadmapSection() {
+  const { copy } = useRetentionLocale();
+  const { futureRoadmap } = copy;
+
   return (
     <>
-      <SectionLabel>Future Agency OS Features — Retention Layer (Phase 3+)</SectionLabel>
+      <SectionLabel>{futureRoadmap.section}</SectionLabel>
 
-      <AccordionCard icon="rocket" title="Future Development — Retention Intelligence">
+      <AccordionCard icon="rocket" title={futureRoadmap.title}>
         <table className="retention">
           <thead>
-            <tr><th>Feature</th><th>What It Does</th><th>Phase</th></tr>
+            <tr>
+              {futureRoadmap.headers.map((header) => (
+                <th key={header}>{header}</th>
+              ))}
+            </tr>
           </thead>
           <tbody>
-            {futureRoadmap.map((row) => (
+            {futureRoadmap.rows.map((row) => (
               <tr key={row.feature}>
                 <td>{row.feature}</td>
                 <td>{row.description}</td>
-                <td><span className={`pill ${row.pill}`}>{row.phase}</span></td>
+                <td>
+                  <span className={`pill ${row.pill}`}>{row.phase}</span>
+                </td>
               </tr>
             ))}
           </tbody>

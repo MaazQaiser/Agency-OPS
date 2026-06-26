@@ -1,0 +1,406 @@
+/* Intake Forms — hierarchy, density, and workflow refinements (scoped) */
+
+/* ── 1. Compact module header (−35% height) ── */
+.module-intake-forms .va-ops-page-header {
+  padding: 14px 48px;
+  gap: 12px;
+  align-items: center;
+}
+
+.module-intake-forms .va-ops-page-title {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.module-intake-forms .va-ops-page-subtitle {
+  margin: 1px 0 0;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.module-intake-forms .intake-forms-header-actions {
+  gap: 6px;
+}
+
+.module-intake-forms .intake-forms-header-actions .va-ops-role-action-btn {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+
+.module-intake-forms .va-ops-tab-content {
+  padding-top: 24px;
+}
+
+/* ── Workflow shell alignment ── */
+.module-intake-forms .va-ops-role-view {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 20px;
+}
+
+/* ── 2. New Submission layout: 70 / 30 ── */
+.intake-form-builder-main {
+  grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.intake-form-builder-main--solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.intake-form-helper--sticky {
+  position: sticky;
+  top: 12px;
+}
+
+.intake-form-notes-inline {
+  margin-top: 0;
+}
+
+.intake-form-panel {
+  min-height: 320px;
+}
+
+/* ── 3. Stepper: stronger active, larger circles, progress rail ── */
+.intake-form-progress {
+  gap: 10px;
+}
+
+.intake-form-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.intake-form-progress-fill {
+  border-radius: 4px;
+}
+
+.intake-form-stepper {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding-top: 4px;
+}
+
+.intake-form-stepper::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: calc(100% / 12);
+  right: calc(100% / 12);
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  z-index: 0;
+}
+
+.intake-form-step {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.intake-form-step-btn {
+  gap: 6px;
+  padding: 4px 6px;
+}
+
+.intake-form-step-index {
+  width: 36px;
+  height: 36px;
+  font-size: var(--font-size-sm);
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--border-subtle) 80%, transparent);
+}
+
+.intake-form-step.active .intake-form-step-index {
+  background: var(--primary);
+  color: #fff;
+  border-color: color-mix(in srgb, var(--primary) 40%, white);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent),
+    0 2px 8px color-mix(in srgb, var(--primary) 28%, transparent);
+  transform: scale(1.04);
+}
+
+.intake-form-step.complete .intake-form-step-index {
+  background: var(--success);
+  color: #fff;
+  box-shadow: none;
+}
+
+.intake-form-step-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.intake-form-step.active .intake-form-step-label {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.intake-form-step.complete .intake-form-step-label {
+  color: var(--text-secondary);
+}
+
+/* ── 4. Sticky action footer bar ── */
+.intake-form-builder {
+  padding-bottom: 88px;
+}
+
+.intake-form-sticky-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 0;
+  background: linear-gradient(to top, var(--surface-base) 82%, transparent);
+  pointer-events: none;
+}
+
+.intake-form-sticky-inner {
+  pointer-events: auto;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 48px;
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--surface-elevated) 94%, var(--surface-base));
+  box-shadow: 0 -6px 24px color-mix(in srgb, black 10%, transparent);
+}
+
+.intake-form-sticky-left,
+.intake-form-sticky-center,
+.intake-form-sticky-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.intake-form-sticky-left {
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.intake-form-sticky-center {
+  flex: 0;
+  justify-content: center;
+}
+
+.intake-form-sticky-right {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.intake-form-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.intake-form-action-primary {
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: #fff;
+}
+
+.intake-form-action-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.intake-form-action-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.intake-form-action-secondary {
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.intake-form-action-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary-light);
+  background: var(--primary-muted);
+}
+
+.intake-form-action-discard {
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  padding: 0 8px;
+  height: 32px;
+  font-weight: 600;
+}
+
+.intake-form-action-discard:hover {
+  color: #fff;
+  background: var(--danger);
+}
+
+/* ── 5. Submission History section priority ── */
+.intake-submission-history {
+  gap: 20px;
+}
+
+.intake-history-primary.va-ops-panel {
+  padding: 16px;
+  border-color: var(--border-default);
+}
+
+.intake-history-secondary.va-ops-panel {
+  padding: 14px 16px;
+  border-color: var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-elevated) 88%, var(--surface-base));
+}
+
+.intake-history-secondary .va-ops-section-title {
+  font-size: var(--font-size-base-sm);
+}
+
+.intake-history-tertiary.va-ops-panel {
+  padding: 12px 14px;
+  border-color: color-mix(in srgb, var(--border-subtle) 80%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+.intake-history-tertiary .va-ops-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.intake-history-tertiary .va-ops-section-sub {
+  font-size: var(--font-size-xs);
+}
+
+.intake-history-low.va-ops-panel {
+  padding: 10px 14px;
+  border: 1px dashed color-mix(in srgb, var(--border-subtle) 70%, transparent);
+  background: transparent;
+  box-shadow: none;
+  opacity: 0.92;
+}
+
+.intake-history-low .va-ops-section-title {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.intake-history-low .va-ops-section-sub {
+  display: none;
+}
+
+.intake-history-low .outreach-activity-message {
+  font-size: var(--font-size-xs);
+}
+
+.intake-history-low .outreach-activity-time {
+  font-size: 10px;
+}
+
+/* ── 6. Tighter table density (−9%) ── */
+.module-intake-forms .submission-history-table th,
+.module-intake-forms .submission-history-table td,
+.module-intake-forms .intake-submission-history .commercial-hub-table th,
+.module-intake-forms .intake-submission-history .commercial-hub-table td {
+  height: 40px;
+  padding: 0 10px;
+  font-size: var(--font-size-sm);
+}
+
+.module-intake-forms .submission-history-table th {
+  height: 36px;
+}
+
+/* ── 7. Horizontal alignment: filters + panels ── */
+.submission-history-filters,
+.submission-history-kpi-strip,
+.intake-submission-history > .va-ops-panel {
+  width: 100%;
+  min-width: 0;
+}
+
+.submission-history-kpi-grid {
+  gap: 12px;
+}
+
+.submission-history-kpi-grid .va-ops-kpi-card {
+  min-height: 88px;
+  padding: 14px;
+}
+
+@media (max-width: 1024px) {
+  .module-intake-forms .va-ops-page-header {
+    padding: 12px 24px;
+  }
+
+  .intake-form-sticky-inner {
+    padding: 10px 24px;
+  }
+
+  .intake-form-builder-main {
+    grid-template-columns: 1fr;
+  }
+
+  .intake-form-helper--sticky {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .intake-form-stepper {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .intake-form-stepper::before {
+    display: none;
+  }
+
+  .intake-form-step {
+    flex: 0 0 calc(33.333% - 4px);
+  }
+
+  .intake-form-sticky-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .intake-form-sticky-left,
+  .intake-form-sticky-right {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .submission-history-filters {
+    flex-wrap: wrap;
+  }
+}

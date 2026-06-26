@@ -12,11 +12,13 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { getNotificationRoute } from "@/lib/crossModuleLinks";
 import { useToast } from "@/hooks/useToast";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import {
   countUnread,
   filterNotifications,
-  hasCriticalUnread,
+  hasDangerUnread,
   hasUrgentUnread,
+  isNotificationVisible,
   loadNotificationOverrides,
   mergeNotificationsWithOverrides,
   saveNotificationOverrides,
@@ -24,7 +26,6 @@ import {
   type AppNotification,
   type NotificationFilterTab,
   type NotificationOverrides,
-  type NotificationPriority,
 } from "@/data/notifications";
 import { NotificationCenterPanel } from "./NotificationCenterPanel";
 
@@ -34,15 +35,13 @@ type NotificationCenterContextValue = {
   close: () => void;
   toggle: () => void;
   unreadCount: number;
-  hasCritical: boolean;
+  hasDanger: boolean;
   hasUrgentPulse: boolean;
   loading: boolean;
-  clearResolved: () => void;
+  clearAll: () => void;
 };
 
 const NotificationCenterContext = createContext<NotificationCenterContextValue | null>(null);
-
-const SNOOZE_MS = 24 * 60 * 60 * 1000;
 
 export function NotificationCenterProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -51,16 +50,26 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<AppNotification[]>(seedNotifications);
   const [activeTab, setActiveTab] = useState<NotificationFilterTab>("all");
-  const [priorityFilter, setPriorityFilter] = useState<NotificationPriority | "all">("all");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
+  const {
+    status: panelStatus,
+    retry: retryPanel,
+    lastSyncedAt: panelSyncedAt,
+    retrying: panelRetrying,
+  } = useHubDataState({
+    load: () => filterNotifications(notifications, activeTab),
+    isEmpty: () => false,
+    delayMs: 200,
+    deps: [isOpen, activeTab, notifications],
+    errorPreset: "supabase-timeout",
+  });
+
+  const loading = isOpen && panelStatus === "loading";
+  const panelError = isOpen && panelStatus === "error";
+
   const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => {
-    setIsOpen(false);
-    setFilterOpen(false);
-  }, []);
+  const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
   useEffect(() => {
@@ -68,13 +77,6 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
     setNotifications(mergeNotificationsWithOverrides(seedNotifications, overrides));
     setHydrated(true);
   }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
-    const timer = window.setTimeout(() => setLoading(false), 380);
-    return () => window.clearTimeout(timer);
-  }, [isOpen, activeTab]);
 
   useEffect(() => {
     close();
@@ -103,93 +105,40 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
     [persistOverrides],
   );
 
-  const markAsRead = useCallback(
-    (id: string) => {
-      updateNotifications((prev) =>
-        prev.map((n) => (n.id === id && n.status === "unread" ? { ...n, status: "read" as const } : n)),
-      );
-    },
-    [updateNotifications],
-  );
-
-  const markAllRead = useCallback(() => {
-    updateNotifications((prev) =>
-      prev.map((n) => (n.status === "unread" ? { ...n, status: "read" as const } : n)),
-    );
-    toast.success("All notifications marked as read");
-  }, [updateNotifications, toast]);
-
-  const snooze = useCallback(
-    (id: string) => {
-      const until = Date.now() + SNOOZE_MS;
-      updateNotifications((prev) =>
-        prev.map((n) =>
-          n.id === id ? { ...n, status: "snoozed" as const, snoozedUntil: until } : n,
-        ),
-      );
-      toast.success("Notification snoozed for 24 hours");
-    },
-    [updateNotifications, toast],
-  );
-
   const dismiss = useCallback(
     (id: string) => {
       updateNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, status: "dismissed" as const } : n)),
       );
-      toast.success("Notification dismissed");
     },
-    [updateNotifications, toast],
+    [updateNotifications],
   );
 
-  const resolve = useCallback(
-    (id: string) => {
-      updateNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, status: "resolved" as const } : n)),
-      );
-      toast.success("Notification resolved");
-    },
-    [updateNotifications, toast],
-  );
-
-  const clearResolved = useCallback(() => {
+  const clearAll = useCallback(() => {
     updateNotifications((prev) =>
-      prev.map((n) => (n.status === "resolved" ? { ...n, status: "dismissed" as const } : n)),
+      prev.map((n) =>
+        isNotificationVisible(n) ? { ...n, status: "dismissed" as const } : n,
+      ),
     );
-    toast.success("Resolved notifications cleared");
-  }, [updateNotifications, toast]);
+    toast.success("All notifications cleared");
+    close();
+  }, [close, updateNotifications, toast]);
 
   const openNotification = useCallback(
     (notification: AppNotification) => {
-      markAsRead(notification.id);
       close();
       router.push(getNotificationRoute(notification));
     },
-    [markAsRead, close, router],
-  );
-
-  const handleAction = useCallback(
-    (notification: AppNotification, actionLabel: string) => {
-      markAsRead(notification.id);
-      if (actionLabel === "Resolve" || actionLabel === "Mark Complete") {
-        resolve(notification.id);
-      }
-      toast.success(`${actionLabel} — ${notification.title}`);
-      if (actionLabel !== "Dismiss" && actionLabel !== "Snooze") {
-        close();
-        router.push(getNotificationRoute(notification));
-      }
-    },
-    [markAsRead, resolve, toast, close, router],
+    [close, router],
   );
 
   const filtered = useMemo(
-    () => filterNotifications(notifications, activeTab, priorityFilter),
-    [notifications, activeTab, priorityFilter],
+    () => filterNotifications(notifications, activeTab),
+    [notifications, activeTab],
   );
 
   const unreadCount = useMemo(() => countUnread(notifications), [notifications]);
-  const hasCritical = useMemo(() => hasCriticalUnread(notifications), [notifications]);
+  const hasDanger = useMemo(() => hasDangerUnread(notifications), [notifications]);
   const hasUrgentPulse = useMemo(() => hasUrgentUnread(notifications), [notifications]);
 
   const contextValue = useMemo(
@@ -199,12 +148,12 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
       close,
       toggle,
       unreadCount,
-      hasCritical,
+      hasDanger,
       hasUrgentPulse,
       loading,
-      clearResolved,
+      clearAll,
     }),
-    [isOpen, open, close, toggle, unreadCount, hasCritical, hasUrgentPulse, loading, clearResolved],
+    [isOpen, open, close, toggle, unreadCount, hasDanger, hasUrgentPulse, loading, clearAll],
   );
 
   return (
@@ -215,22 +164,17 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
           notifications={filtered}
           allNotifications={notifications}
           activeTab={activeTab}
-          priorityFilter={priorityFilter}
-          filterOpen={filterOpen}
           loading={loading}
+          error={panelError}
+          onRetry={retryPanel}
+          retrying={panelRetrying}
+          lastSyncedAt={panelSyncedAt}
           unreadCount={unreadCount}
           onTabChange={setActiveTab}
-          onPriorityFilterChange={setPriorityFilter}
-          onFilterToggle={() => setFilterOpen((o) => !o)}
           onClose={close}
-          onMarkAllRead={markAllRead}
-          onClearResolved={clearResolved}
+          onClearAll={clearAll}
           onOpenNotification={openNotification}
-          onMarkAsRead={markAsRead}
-          onSnooze={snooze}
           onDismiss={dismiss}
-          onResolve={resolve}
-          onAction={handleAction}
         />
       )}
     </NotificationCenterContext.Provider>

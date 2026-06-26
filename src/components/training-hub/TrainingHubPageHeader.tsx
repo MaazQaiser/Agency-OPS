@@ -2,6 +2,7 @@
 
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { trainingHubHeader } from "@/data/trainingHub";
 import { filterQuickActions, trainingHubQuickActionPermissions } from "@/data/rolePermissions";
 
@@ -27,9 +28,9 @@ export function TrainingHubPageHeader({ showActions = true, onQuickActionClick }
         </div>
       </div>
 
-      {showActions && visibleActions.length > 0 && (
-        <div className="va-ops-page-header-toolbar training-hub-header-actions">
-          {visibleActions.map((action) => {
+      <div className="va-ops-page-header-toolbar training-hub-header-actions">
+        {showActions &&
+          visibleActions.map((action) => {
             const perm = trainingHubQuickActionPermissions[action.id];
             return (
               <QuickActionButton
@@ -47,8 +48,8 @@ export function TrainingHubPageHeader({ showActions = true, onQuickActionClick }
               />
             );
           })}
-        </div>
-      )}
+        <HubHelpTrigger hubId="training-hub" />
+      </div>
     </header>
   );
 }

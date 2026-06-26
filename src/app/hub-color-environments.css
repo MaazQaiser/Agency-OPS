@@ -1,0 +1,722 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Hub Color Environments
+   Default obsidian shell everywhere; hub accent tokens scoped to
+   page headers, tabs, and interactive accents only.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared hub selector — accent tokens only ── */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics,
+  .module-global-search
+) {
+  --hub-primary: var(--hub-accent);
+  --hub-deep: color-mix(in srgb, var(--hub-accent) 68%, var(--obs));
+  --hub-glow: color-mix(in srgb, var(--hub-accent) 14%, transparent);
+  --hub-bg: color-mix(in srgb, var(--hub-accent) 8%, transparent);
+  --hub-primary-muted: color-mix(in srgb, var(--hub-accent) 16%, transparent);
+  --hub-primary-border: color-mix(in srgb, var(--hub-accent) 34%, transparent);
+  --hub-border-soft: color-mix(in srgb, var(--hub-accent) 12%, rgba(255, 255, 255, 0.06));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Hub accent tokens — HTML spec mapping (header + accents only)
+   ═══════════════════════════════════════════════════════════════ */
+.module-va-operations {
+  --hub-accent: #aad0e7;
+  --hub-secondary: #7aafc8;
+}
+
+.module-commercial-hub {
+  --hub-accent: #0d9488;
+  --hub-secondary: #0f766e;
+}
+
+.module-intake-forms {
+  --hub-accent: #d97706;
+  --hub-secondary: #b45309;
+}
+
+.module-training-hub {
+  --hub-accent: #7c3aed;
+  --hub-secondary: #6d28d9;
+}
+
+.module-carrier-library {
+  --hub-accent: #1d4ed8;
+  --hub-secondary: #1e40af;
+}
+
+.module-epay-policy {
+  --hub-accent: #10b981;
+  --hub-secondary: #059669;
+}
+
+.module-send-center {
+  --hub-accent: #e11d48;
+  --hub-secondary: #be123c;
+  --sc-primary: var(--hub-accent);
+  --sc-secondary: var(--hub-secondary);
+  --sc-elevated: #f7fbfd;
+  --sc-deep: var(--ita-base);
+}
+
+.module-farmers-edge {
+  --hub-accent: #059669;
+  --hub-secondary: #047857;
+}
+
+.module-analytics {
+  --hub-accent: #0891b2;
+  --hub-secondary: #06b6d4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. GLOBAL SEARCH — The only light hub. Full contrast reversal.
+   White/frost background, dark text. Signature: white background.
+   ═══════════════════════════════════════════════════════════════ */
+.module-global-search {
+  --hub-base: #f7fbfd;
+  --hub-surface: #ffffff;
+  --hub-accent: #1c2b35;
+  --hub-secondary: #0f1923;
+  --hub-text: #1c2b35;
+  --hub-text-muted: #5a7a95;
+
+  background-color: var(--hub-base);
+  color: var(--hub-text);
+}
+
+.app-content:has(.module-global-search) {
+  background: #f7fbfd;
+}
+
+/* Override dark token surface inside Global Search */
+.module-global-search .card,
+.module-global-search .global-search-result-card,
+.module-global-search .global-search-section,
+.module-global-search [class*="search-result"] {
+  background: #ffffff;
+  border-color: rgba(28, 43, 53, 0.12);
+  color: #1c2b35;
+}
+
+/* Dark text for labels, muted, and mono inside Global Search */
+.module-global-search .text-muted,
+.module-global-search [class*="muted"],
+.module-global-search [class*="secondary-text"] {
+  color: #5a7a95;
+}
+
+/* Active tab underline uses dark navy in light context */
+.module-global-search .tab.active,
+.module-global-search .tab-btn.active {
+  color: #1c2b35;
+  border-bottom-color: #1c2b35;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED — Shell transparency (obsidian body shows through)
+   ═══════════════════════════════════════════════════════════════ */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-tab-content,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-overview,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-kpi-strip,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-role-view {
+  background: transparent;
+}
+
+/* Page header + tab nav — obsidian shell, hub accent on border only */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header {
+  background: color-mix(in srgb, var(--ita-base-mid) 78%, var(--obs));
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--hub-accent) 18%, var(--border-subtle));
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--hub-accent) 12%, transparent);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-nav,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .send-center-tab-nav {
+  background: color-mix(in srgb, var(--ita-base-mid) 78%, var(--obs));
+  backdrop-filter: blur(8px);
+  border-bottom-color: color-mix(in srgb, var(--hub-accent) 18%, var(--border-subtle));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED — Tabs, focus, hover glow, dividers
+   ═══════════════════════════════════════════════════════════════ */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-btn.active {
+  color: var(--hub-accent);
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-btn::after {
+  background: var(--hub-accent);
+  box-shadow: 0 0 10px var(--hub-glow);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-btn:hover {
+  color: color-mix(in srgb, var(--hub-accent) 78%, var(--text-primary));
+  background: color-mix(in srgb, var(--hub-accent) 6%, transparent);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-search:focus-within,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .send-center-filters .va-ops-search:focus-within,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .header-filter-select:focus,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .send-center-select:focus {
+  border-color: var(--hub-accent);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+  outline: none;
+}
+
+/* KPI cards — edge accent + hover glow */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .hub-kpi-grid .va-ops-kpi-card,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-kpi-card.primary {
+  border-top: 2px solid color-mix(in srgb, var(--hub-accent) 55%, transparent);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .hub-kpi-grid .va-ops-kpi-card:hover,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-kpi-card:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--hub-accent) 42%, var(--border-default));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--hub-accent) 16%, transparent),
+    0 6px 20px color-mix(in srgb, var(--obs) 18%, transparent);
+}
+
+/* KPI sparkline — hub accent tint */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .kpi-sparkline-svg path[stroke] {
+  stroke: color-mix(in srgb, var(--hub-accent) 72%, var(--text-secondary)) !important;
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .kpi-sparkline-delta--positive {
+  color: var(--hub-accent);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-role-action-btn:hover,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-action-btn:hover {
+  box-shadow: 0 0 12px var(--hub-glow);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .commercial-hub-table thead th {
+  border-bottom-color: color-mix(in srgb, var(--hub-accent) 22%, var(--border-subtle));
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .commercial-hub-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--hub-accent) 6%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HUB-SPECIFIC — Accent applications
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Commercial — revenue / pipeline / bind motion */
+.module-commercial-hub .commercial-hub-kpi-primary {
+  border-color: color-mix(in srgb, var(--hub-accent) 45%, var(--border-subtle));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hub-accent) 12%, transparent);
+}
+
+.module-commercial-hub .commercial-hub-kpi-primary .va-ops-kpi-value {
+  color: color-mix(in srgb, var(--hub-accent) 88%, var(--text-primary));
+}
+
+.module-commercial-hub .submission-queue-row:hover {
+  border-left-color: var(--hub-accent);
+  box-shadow: inset 3px 0 0 var(--hub-accent);
+}
+
+.module-commercial-hub .quote-ai-recommended-card {
+  border-color: color-mix(in srgb, var(--hub-accent) 35%, var(--border-subtle));
+  background: color-mix(in srgb, var(--hub-accent) 6%, var(--surface-elevated));
+}
+
+.module-commercial-hub .market-readiness--green .market-readiness-ring-fill {
+  stroke: var(--hub-accent);
+}
+
+.module-commercial-hub .commercial-hub-alert-blue {
+  border-left-color: var(--hub-secondary);
+}
+
+/* Intake — stepper, form fields, validation calm */
+.module-intake-forms .intake-form-step.active .intake-form-step-index {
+  background: var(--hub-accent);
+  border-color: var(--hub-accent);
+  box-shadow: 0 0 12px var(--hub-glow);
+}
+
+.module-intake-forms .intake-form-step.complete .intake-form-step-index {
+  background: color-mix(in srgb, var(--hub-secondary) 80%, var(--obs));
+  border-color: var(--hub-secondary);
+}
+
+.module-intake-forms .intake-form-step.active .intake-form-step-label {
+  color: var(--hub-accent);
+}
+
+.module-intake-forms .intake-form-card:hover {
+  border-color: color-mix(in srgb, var(--hub-accent) 40%, var(--border-subtle));
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--hub-accent) 10%, transparent);
+}
+
+.module-intake-forms .intake-form-field input:focus,
+.module-intake-forms .intake-form-field select:focus,
+.module-intake-forms .intake-form-field textarea:focus {
+  border-color: var(--hub-accent);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+/* Training — resource cards, learning paths, violet identity */
+.module-training-hub .training-resource-card:hover {
+  border-color: color-mix(in srgb, var(--hub-accent) 45%, var(--border-subtle));
+  box-shadow: 0 6px 22px color-mix(in srgb, var(--hub-accent) 14%, transparent);
+}
+
+.module-training-hub .training-resource-cta:hover {
+  color: var(--hub-accent);
+  border-color: var(--hub-accent);
+}
+
+.module-training-hub .training-dept-progress-fill {
+  background: var(--hub-accent);
+}
+
+.module-training-hub .training-dept-progress-bar {
+  background: color-mix(in srgb, var(--hub-accent) 12%, var(--surface-inset));
+}
+
+.module-training-hub .training-resource-card--loom {
+  border-top-color: color-mix(in srgb, var(--hub-accent) 50%, transparent);
+}
+
+/* Carrier — market intelligence, recommendations, appetite */
+.module-carrier-library .carrier-market-rec-card {
+  border-color: color-mix(in srgb, var(--hub-accent) 28%, var(--border-subtle));
+}
+
+.module-carrier-library .carrier-market-rec-card:hover {
+  border-color: color-mix(in srgb, var(--hub-accent) 48%, var(--border-subtle));
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--hub-accent) 12%, transparent);
+}
+
+.module-carrier-library .carrier-market-rec-carrier {
+  color: color-mix(in srgb, var(--hub-accent) 85%, var(--text-primary));
+}
+
+.module-carrier-library .carrier-condition-card--blocked {
+  border-left-color: var(--hub-secondary);
+}
+
+/* ePayPolicy — finance desk, totals, trust ledger */
+.module-epay-policy .epay-preview-total dd,
+.module-epay-policy .epay-collection-summary-grid dd.epay-summary-positive {
+  color: color-mix(in srgb, var(--hub-secondary) 90%, var(--text-primary));
+}
+
+.module-epay-policy .epay-preview-total dt,
+.module-epay-policy .epay-preview-total {
+  border-color: color-mix(in srgb, var(--hub-accent) 30%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-trust-ledger-row:hover td {
+  background: color-mix(in srgb, var(--hub-accent) 6%, transparent);
+}
+
+.module-epay-policy .epay-trust-money-card {
+  border-top: 2px solid color-mix(in srgb, var(--hub-accent) 45%, transparent);
+}
+
+.module-epay-policy .epay-broker-fee-trigger-step--active .epay-broker-fee-trigger-node {
+  border-color: var(--hub-accent);
+  box-shadow: 0 0 10px var(--hub-glow);
+}
+
+/* Send Center — communication urgency, draft/sent flow */
+.module-send-center .send-center-tab-nav .va-ops-tab-btn.active {
+  color: var(--hub-accent);
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+.module-send-center .send-center-ai-panel {
+  border-color: color-mix(in srgb, var(--hub-accent) 28%, var(--border-subtle));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--hub-accent) 6%, var(--surface-elevated)) 0%,
+    color-mix(in srgb, var(--obs) 4%, var(--surface-elevated)) 100%
+  );
+}
+
+.module-send-center .send-center-ai-panel-header {
+  color: var(--hub-accent);
+  border-bottom-color: color-mix(in srgb, var(--hub-accent) 22%, var(--border-subtle));
+}
+
+.module-send-center .send-center-ai-item:hover {
+  border-color: color-mix(in srgb, var(--hub-accent) 32%, transparent);
+  background: color-mix(in srgb, var(--hub-accent) 8%, var(--surface-elevated));
+}
+
+.module-send-center .send-center-sla-strip {
+  border-color: color-mix(in srgb, var(--hub-accent) 25%, var(--border-subtle));
+}
+
+.module-send-center .send-center-template-card:hover {
+  border-color: color-mix(in srgb, var(--hub-accent) 42%, var(--border-subtle));
+}
+
+.module-send-center .send-center-workflow-step.current .send-center-workflow-dot {
+  background: var(--hub-accent);
+  box-shadow: 0 0 8px var(--hub-glow);
+}
+
+.module-epay-policy .epay-summary-warning {
+  color: var(--hub-accent);
+}
+
+/* VA Operations — progress bars + control tower accents */
+.module-va-operations .va-ops-workload-segment--completed,
+.module-va-operations .va-ops-workload-segment--open {
+  background: linear-gradient(90deg, var(--hub-secondary), var(--hub-accent));
+}
+
+.module-va-operations .va-ops-filter-btn.active,
+.module-va-operations .va-ops-search-chip.active {
+  border-color: var(--hub-accent);
+  color: var(--hub-accent);
+  background: var(--hub-primary-muted);
+}
+
+/* Eva FAB — hub-tinted on all operational modules */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .eva-fab-trigger {
+  box-shadow:
+    0 4px 20px color-mix(in srgb, var(--hub-accent) 22%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--hub-accent) 18%, transparent);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .eva-fab-trigger:hover {
+  box-shadow:
+    0 6px 28px color-mix(in srgb, var(--hub-accent) 30%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--hub-accent) 28%, transparent);
+}
+
+/* Hub accent tokens on shell — utility strip + top chrome */
+.app-shell:has(.module-va-operations) {
+  --hub-accent: #aad0e7;
+  --hub-secondary: #7aafc8;
+}
+
+.app-shell:has(.module-commercial-hub) {
+  --hub-accent: #0d9488;
+  --hub-secondary: #0f766e;
+}
+
+.app-shell:has(.module-farmers-edge) {
+  --hub-accent: #059669;
+  --hub-secondary: #047857;
+}
+
+.app-shell:has(.module-intake-forms) {
+  --hub-accent: #d97706;
+  --hub-secondary: #b45309;
+}
+
+.app-shell:has(.module-training-hub) {
+  --hub-accent: #7c3aed;
+  --hub-secondary: #6d28d9;
+}
+
+.app-shell:has(.module-carrier-library) {
+  --hub-accent: #1d4ed8;
+  --hub-secondary: #1e40af;
+}
+
+.app-shell:has(.module-epay-policy) {
+  --hub-accent: #10b981;
+  --hub-secondary: #059669;
+}
+
+.app-shell:has(.module-send-center) {
+  --hub-accent: #e11d48;
+  --hub-secondary: #be123c;
+}
+
+.app-shell:has(.module-analytics) {
+  --hub-accent: #0891b2;
+  --hub-secondary: #06b6d4;
+}
+
+.app-shell:has(.module-global-search) {
+  --hub-accent: #1c2b35;
+  --hub-secondary: #0f1923;
+}

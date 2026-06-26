@@ -24,12 +24,13 @@ import {
   getProposalLanguageMeta,
   translationStatusClass,
 } from "@/data/bilingualClient";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import {
-  SendCenterEmptyState,
   SendCenterFilters,
   SendCenterTableSkeleton,
   useSendCenterFilters,
-  useTabLoading,
 } from "./SendCenterFilters";
 
 type DraftQueueTabProps = {
@@ -41,7 +42,18 @@ type DraftQueueTabProps = {
 
 export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQueueTabProps) {
   const router = useRouter();
-  const loading = useTabLoading();
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => rows,
+    deps: [rows],
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, rows, (d) => d.length === 0);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -130,10 +142,23 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
       />
 
       <section className="va-ops-panel" aria-label="Draft queue">
-        {loading ? (
-          <SendCenterTableSkeleton />
-        ) : (
-          <div className="commercial-hub-table-wrap">
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<SendCenterTableSkeleton />}
+          empty={<HubEmptyState preset="send-center-drafts" onAction={onOpenNewDraft} />}
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table send-center-table">
               <thead>
                 <tr>
@@ -160,9 +185,10 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={10}>
-                      <SendCenterEmptyState
-                        title="No drafts in queue"
-                        description="Create a new draft or adjust your search and filters."
+                      <HubEmptyState
+                        title="No matches"
+                        description="No drafts match your search or filters. Try clearing filters or broadening your search."
+                        compact
                       />
                     </td>
                   </tr>
@@ -172,7 +198,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                       key={row.id}
                       className={cn("send-center-clickable-row", selected.has(row.id) && "selected")}
                     >
-                      <td className="send-center-checkbox-col">
+                      <td className="send-center-checkbox-col" data-label="">
                         <input
                           type="checkbox"
                           aria-label={`Select ${row.client}`}
@@ -180,7 +206,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                           onChange={() => toggleSelect(row.id)}
                         />
                       </td>
-                      <td className="commercial-hub-client-cell">
+                      <td className="commercial-hub-client-cell" data-label="Client">
                         <button type="button" className="send-center-row-link" onClick={() => openProposal(row)}>
                           <span className="bilingual-client-cell">
                             {row.client}
@@ -188,7 +214,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                           </span>
                         </button>
                       </td>
-                      <td>
+                      <td data-label="Language">
                         {(() => {
                           const meta = getProposalLanguageMeta(proposalIdByRowId[row.id] ?? row.proposalId);
                           if (!meta) return <span className="badge badge-gray">EN</span>;
@@ -199,17 +225,17 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                           );
                         })()}
                       </td>
-                      <td>{row.policyType}</td>
-                      <td>{row.draftType}</td>
-                      <td><UserChip name={row.assignedProducer} /></td>
-                      <td>{row.createdAt}</td>
-                      <td>
+                      <td data-label="Policy Type">{row.policyType}</td>
+                      <td data-label="Draft Type">{row.draftType}</td>
+                      <td data-label="Producer"><UserChip name={row.assignedProducer} /></td>
+                      <td data-label="Created">{row.createdAt}</td>
+                      <td data-label="Priority">
                         <span className={cn("badge", sendPriorityClass[row.priority])}>{row.priority}</span>
                       </td>
-                      <td>
+                      <td data-label="Status">
                         <span className={cn("badge", draftStatusClass[row.status])}>{row.status}</span>
                       </td>
-                      <td>
+                      <td data-label="" className="ops-responsive-cell--bare">
                         <div className="send-center-row-actions">
                           {(["Edit Draft", "Submit for Review", "Delete Draft"] as const).map((action) => (
                             <button
@@ -229,7 +255,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
               </tbody>
             </table>
           </div>
-        )}
+        </DataStateView>
       </section>
     </div>
   );

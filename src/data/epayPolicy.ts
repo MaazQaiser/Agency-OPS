@@ -43,6 +43,42 @@ export type ComplianceItem = {
   complete: boolean;
 };
 
+export type BillingType = "Agency Bill" | "Direct Bill";
+
+export type BrokerFeeTriggerStepStatus = "pending" | "success" | "failed";
+
+export type BrokerFeeTriggerStepId = "make-webhook" | "epay-invoice" | "az-esign";
+
+export type BrokerFeeTriggerStep = {
+  id: BrokerFeeTriggerStepId;
+  label: string;
+  status: BrokerFeeTriggerStepStatus;
+  updatedAt?: string;
+  detail?: string;
+};
+
+export const brokerFeeTriggerStepOrder: BrokerFeeTriggerStepId[] = [
+  "make-webhook",
+  "epay-invoice",
+  "az-esign",
+];
+
+export const brokerFeeTriggerStepLabels: Record<BrokerFeeTriggerStepId, string> = {
+  "make-webhook": "Make.com webhook fired",
+  "epay-invoice": "ePayPolicy invoice created",
+  "az-esign": "AZ E-sign disclosure sent",
+};
+
+export function isAgencyBillRecord(billingType: BillingType): boolean {
+  return billingType === "Agency Bill";
+}
+
+export function getBrokerFeeTriggerSummary(steps: BrokerFeeTriggerStep[]): BrokerFeeTriggerStepStatus {
+  if (steps.some((s) => s.status === "failed")) return "failed";
+  if (steps.every((s) => s.status === "success")) return "success";
+  return "pending";
+}
+
 export type PaymentActivity = {
   id: string;
   message: string;
@@ -70,6 +106,8 @@ export type InvoiceClient = {
   effectiveDate: string;
   renewalDate: string;
   status: string;
+  billingType: BillingType;
+  brokerFeeTrigger: BrokerFeeTriggerStep[];
   invoice: InvoiceFormData;
   paymentRequest: {
     linkGenerated: boolean;
@@ -125,6 +163,12 @@ const martinezClient: InvoiceClient = {
   effectiveDate: "July 12, 2026",
   renewalDate: "July 12, 2027",
   status: "Ready to Invoice",
+  billingType: "Agency Bill",
+  brokerFeeTrigger: [
+    { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "Today, 11:18 AM", detail: "Scenario #482 — broker_fee_trigger" },
+    { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "Today, 11:20 AM", detail: "INV-2048 synced to ePayPolicy" },
+    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "pending", updatedAt: "Awaiting", detail: "DocuSign envelope queued" },
+  ],
   invoice: {
     invoiceNumber: "INV-2048",
     policyPremium: 4200,
@@ -180,6 +224,12 @@ const kimClient: InvoiceClient = {
   effectiveDate: "August 1, 2026",
   renewalDate: "August 1, 2027",
   status: "Pending Payment",
+  billingType: "Agency Bill",
+  brokerFeeTrigger: [
+    { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "June 18, 9:12 AM" },
+    { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "June 18, 9:14 AM" },
+    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "success", updatedAt: "June 18, 9:16 AM" },
+  ],
   invoice: {
     invoiceNumber: "INV-2045",
     policyPremium: 5200,
@@ -228,6 +278,8 @@ const riveraClient: InvoiceClient = {
   effectiveDate: "June 15, 2026",
   renewalDate: "June 15, 2027",
   status: "Partial Payment",
+  billingType: "Direct Bill",
+  brokerFeeTrigger: [],
   invoice: {
     invoiceNumber: "INV-2046",
     policyPremium: 3600,
@@ -276,6 +328,12 @@ const greenlineClient: InvoiceClient = {
   effectiveDate: "September 1, 2026",
   renewalDate: "September 1, 2027",
   status: "Overdue",
+  billingType: "Agency Bill",
+  brokerFeeTrigger: [
+    { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "June 15, 8:40 AM" },
+    { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "June 15, 8:42 AM" },
+    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "failed", updatedAt: "June 15, 8:45 AM", detail: "DocuSign API timeout — retry required" },
+  ],
   invoice: {
     invoiceNumber: "INV-2042",
     policyPremium: 5500,
@@ -324,6 +382,8 @@ const atlasClient: InvoiceClient = {
   effectiveDate: "July 15, 2026",
   renewalDate: "July 15, 2027",
   status: "Paid",
+  billingType: "Direct Bill",
+  brokerFeeTrigger: [],
   invoice: {
     invoiceNumber: "INV-2041",
     policyPremium: 4900,

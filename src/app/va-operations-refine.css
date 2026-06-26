@@ -1,0 +1,1059 @@
+/* VA Operations — executive typography & panel refinements (scoped) */
+
+/* Shell chrome — transparent so default obsidian body shows through */
+.module-va-operations .va-ops-tab-content,
+.module-va-operations .va-ops-overview,
+.module-va-operations .va-ops-kpi-strip {
+  background: transparent;
+}
+
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel:not(.va-ops-panel--accent)::before,
+html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card::before,
+html[data-theme="obsidian"] .module-va-operations .va-ops-snapshot-card::before,
+html[data-theme="obsidian"] .module-va-operations .va-ops-team-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 38%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.module-va-operations .va-ops-panel > *,
+.module-va-operations .va-ops-kpi-card > *,
+.module-va-operations .va-ops-snapshot-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.module-va-operations .va-ops-panel--accent {
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
+  border-color: var(--hub-border-soft);
+  box-shadow:
+    var(--glass-shadow-sm),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 color-mix(in srgb, var(--obs) 8%, transparent);
+}
+
+html[data-theme="obsidian"] .module-va-operations .va-ops-search {
+  background: var(--glass-surface-deep);
+  border: 1px solid var(--hub-border-soft);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="obsidian"] .module-va-operations .va-ops-search::before {
+  content: none;
+  display: none;
+}
+
+html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--glass-surface-haze) 75%, transparent) 0%,
+    color-mix(in srgb, var(--hub-accent) 20%, transparent) 48%,
+    color-mix(in srgb, var(--hub-accent) 10%, var(--obs) 90%) 100%
+  );
+  border-color: color-mix(in srgb, var(--hub-accent) 28%, var(--hub-border-soft));
+  box-shadow:
+    0 8px 32px color-mix(in srgb, var(--hub-accent) 18%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 0 24px color-mix(in srgb, var(--hub-accent) 8%, transparent);
+}
+
+.module-va-operations .va-ops-search,
+.module-va-operations .va-ops-search-chip,
+.module-va-operations .va-ops-filter-btn,
+.module-va-operations .va-ops-data-source-badge,
+.module-va-operations .owner-intelligence-chip {
+  border-color: var(--hub-border-soft);
+}
+
+.module-va-operations .va-ops-search {
+  background: var(--glass-surface-deep);
+}
+
+.module-va-operations .va-ops-search-chip,
+.module-va-operations .va-ops-filter-btn {
+  background: var(--glass-surface-deep);
+}
+
+.module-va-operations .va-ops-priority-table th,
+.module-va-operations .va-ops-lead-table th {
+  border-bottom-color: var(--hub-border-soft);
+}
+
+.module-va-operations .va-ops-priority-table td,
+.module-va-operations .va-ops-lead-table td {
+  border-bottom-color: var(--hub-border-soft);
+}
+
+.module-va-operations .va-ops-workload-segment-bar {
+  background: var(--surface-inset);
+  border-color: var(--hub-border-soft);
+}
+
+/* Active tabs — single ::after underline only */
+.module-va-operations .va-ops-tab-btn.active {
+  color: var(--hub-primary);
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+.module-va-operations .va-ops-tab-btn::after {
+  background: var(--hub-primary);
+  box-shadow: 0 0 10px var(--hub-glow);
+}
+
+.module-va-operations .va-ops-tab-btn:hover {
+  color: color-mix(in srgb, var(--hub-primary) 80%, var(--text-primary));
+}
+
+/* Search focus */
+.module-va-operations .va-ops-search:focus-within {
+  border-color: var(--hub-primary-border);
+  box-shadow:
+    0 0 0 1px var(--hub-primary-border),
+    0 0 0 4px var(--hub-glow);
+}
+
+.module-va-operations .va-ops-search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.module-va-operations .va-ops-search-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-inset);
+  color: var(--text-muted);
+  font-size: var(--font-size-micro);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.module-va-operations .va-ops-search-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--hub-primary-border);
+}
+
+.module-va-operations .va-ops-search-chip.active {
+  color: #fff;
+  border-color: var(--hub-primary);
+  background: linear-gradient(135deg, var(--hub-primary), var(--hub-deep));
+  box-shadow: 0 0 14px var(--hub-glow);
+}
+
+/* Filter pills */
+.module-va-operations .va-ops-filter-btn.active {
+  color: #fff;
+  border-color: var(--hub-primary);
+  background: linear-gradient(135deg, var(--hub-primary), var(--hub-deep));
+  box-shadow: 0 0 12px var(--hub-glow);
+}
+
+.module-va-operations .va-ops-filter-btn:hover {
+  border-color: var(--hub-primary-border);
+  color: color-mix(in srgb, var(--hub-primary) 75%, var(--text-primary));
+}
+
+/* Card hover glows */
+.module-va-operations .va-ops-panel:hover {
+  border-color: color-mix(in srgb, var(--hub-primary) 22%, var(--hub-border-soft));
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.28),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 8%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.module-va-operations .va-ops-kpi-card:hover {
+  border-color: var(--hub-primary-border);
+  box-shadow:
+    0 12px 32px var(--hub-glow),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 10%, transparent);
+}
+
+.module-va-operations .va-ops-kpi-card.primary {
+  border-color: color-mix(in srgb, var(--hub-primary) 28%, var(--hub-border-soft));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--glass-surface-haze) 75%, transparent) 0%,
+    color-mix(in srgb, var(--hub-primary) 20%, transparent) 48%,
+    color-mix(in srgb, var(--hub-primary) 10%, var(--obs) 90%) 100%
+  );
+  box-shadow:
+    0 8px 32px color-mix(in srgb, var(--hub-primary) 18%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 0 24px color-mix(in srgb, var(--hub-primary) 8%, transparent);
+}
+
+.module-va-operations .va-ops-kpi-card.primary .va-ops-kpi-value {
+  color: var(--hub-primary);
+}
+
+.module-va-operations .va-ops-kpi-card.primary:hover {
+  box-shadow:
+    0 14px 36px var(--hub-glow),
+    inset 0 1px 0 color-mix(in srgb, var(--hub-primary) 14%, transparent);
+}
+
+/* KPI micro-interactions */
+.module-va-operations .va-ops-kpi-card {
+  cursor: default;
+  outline: none;
+}
+
+.module-va-operations .va-ops-kpi-card:hover,
+.module-va-operations .va-ops-kpi-card:focus-visible {
+  transform: translateY(-2px) scale(1.012);
+}
+
+.module-va-operations .va-ops-kpi-card .kpi-sparkline-svg {
+  filter: drop-shadow(0 0 6px var(--hub-glow));
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.module-va-operations .va-ops-kpi-card:hover .kpi-sparkline-svg,
+.module-va-operations .va-ops-kpi-card:focus-visible .kpi-sparkline-svg {
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--hub-primary) 45%, transparent));
+  opacity: 1;
+}
+
+.module-va-operations .va-ops-kpi-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  z-index: 8;
+  max-width: 240px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--hub-primary-border);
+  background: color-mix(in srgb, var(--ita-base) 92%, var(--hub-deep));
+  color: var(--text-secondary);
+  font-size: var(--font-size-micro);
+  font-family: var(--font-family-mono);
+  line-height: 1.35;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+  box-shadow: 0 10px 24px var(--hub-glow);
+}
+
+.module-va-operations .va-ops-kpi-card:hover .va-ops-kpi-tooltip,
+.module-va-operations .va-ops-kpi-card:focus-visible .va-ops-kpi-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Table row hover */
+.module-va-operations .va-ops-priority-table tbody tr:hover,
+.module-va-operations .va-ops-lead-table tbody tr:hover {
+  background: color-mix(in srgb, var(--hub-primary) 8%, var(--surface-card));
+  box-shadow: inset 3px 0 0 var(--hub-primary);
+}
+
+/* CTA hover + approval semantics */
+.module-va-operations .va-ops-action-btn:hover {
+  border-color: var(--hub-primary);
+  color: var(--hub-primary);
+  background: var(--hub-primary-muted);
+}
+
+.module-va-operations .va-ops-action-btn--approve {
+  color: var(--success-green);
+  border-color: color-mix(in srgb, var(--success-green) 40%, transparent);
+  background: color-mix(in srgb, var(--success-green) 12%, transparent);
+}
+
+.module-va-operations .va-ops-action-btn--approve:hover {
+  color: #fff;
+  border-color: var(--success-green);
+  background: var(--success-green);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--success-green) 28%, transparent);
+}
+
+.module-va-operations .va-ops-action-btn--review {
+  color: var(--hub-primary);
+  border-color: var(--hub-primary-border);
+  background: var(--hub-primary-muted);
+}
+
+.module-va-operations .va-ops-action-btn--review:hover {
+  color: #fff;
+  border-color: var(--hub-primary);
+  background: linear-gradient(135deg, var(--hub-primary), var(--hub-deep));
+  box-shadow: 0 0 16px var(--hub-glow);
+}
+
+.module-va-operations .va-ops-action-btn--critical-review {
+  color: var(--critical-rose);
+  border-color: color-mix(in srgb, var(--critical-rose) 40%, transparent);
+  background: color-mix(in srgb, var(--critical-rose) 12%, transparent);
+}
+
+.module-va-operations .va-ops-action-btn--critical-review:hover {
+  color: #fff;
+  border-color: var(--critical-rose);
+  background: linear-gradient(
+    135deg,
+    var(--critical-rose),
+    color-mix(in srgb, var(--warning-amber) 55%, var(--critical-rose))
+  );
+  box-shadow: 0 0 16px color-mix(in srgb, var(--critical-rose) 30%, transparent);
+}
+
+/* Active pills + progress highlights */
+.module-va-operations .va-ops-lead-timer-pill--within {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success-green) 20%, transparent);
+}
+
+.module-va-operations .va-ops-approval-lifecycle-step.is-current {
+  color: var(--hub-primary);
+}
+
+.module-va-operations .va-ops-workload-segment--completed {
+  background: linear-gradient(90deg, var(--hub-deep), var(--hub-primary));
+}
+
+.module-va-operations .va-ops-activity-source-tag {
+  color: var(--hub-primary);
+  background: var(--hub-primary-muted);
+  border-color: var(--hub-primary-border);
+}
+
+/* Avatar outer ring accent */
+.module-va-operations .team-avatar {
+  box-shadow:
+    0 2px 10px rgba(28, 43, 53, 0.32),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 22%, transparent),
+    0 0 14px var(--hub-glow);
+}
+
+/* Section accent dividers */
+.module-va-operations .va-ops-panel--accent {
+  position: relative;
+  overflow: hidden;
+}
+
+.module-va-operations .va-ops-panel--accent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--hub-primary) 70%, transparent) 20%,
+    color-mix(in srgb, var(--hub-primary) 70%, transparent) 80%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.module-va-operations .va-ops-panel--accent::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--hub-primary), var(--hub-deep));
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Panel header meta — freshness + data source */
+.module-va-operations .va-ops-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.module-va-operations .va-ops-panel-header-main {
+  min-width: 0;
+}
+
+.module-va-operations .va-ops-panel-header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.module-va-operations .va-ops-freshness {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-micro);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.module-va-operations .va-ops-data-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-inset);
+  font-size: var(--font-size-micro);
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.module-va-operations .va-ops-data-source-badge-type {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--navy-light);
+  color: var(--text-tertiary);
+}
+
+.module-va-operations .va-ops-data-source-badge--live {
+  border-color: color-mix(in srgb, var(--success-green) 28%, transparent);
+}
+
+.module-va-operations .va-ops-data-source-badge--live .va-ops-data-source-badge-type {
+  color: var(--success-green);
+  background: color-mix(in srgb, var(--success-green) 14%, transparent);
+}
+
+.module-va-operations .va-ops-data-source-badge--sync {
+  border-color: var(--hub-primary-border);
+}
+
+.module-va-operations .va-ops-data-source-badge--sync .va-ops-data-source-badge-type {
+  color: var(--hub-primary);
+  background: var(--hub-primary-muted);
+}
+
+.module-va-operations .va-ops-data-source-badge--config .va-ops-data-source-badge-type {
+  color: var(--warning-amber);
+  background: color-mix(in srgb, var(--warning-amber) 14%, transparent);
+}
+
+/* Eva FAB — VA Operations context */
+.app-shell:has(.module-va-operations) .eva-fab-trigger {
+  border-color: color-mix(in srgb, var(--hub-primary) 55%, transparent);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--hub-primary) 92%, var(--ita-surface)),
+    var(--hub-deep)
+  );
+  box-shadow:
+    0 12px 32px var(--hub-glow),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 20%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--ita-surface) 35%, transparent);
+}
+
+.app-shell:has(.module-va-operations) .eva-fab-trigger-glow {
+  background: radial-gradient(circle, var(--hub-glow), transparent 70%);
+  animation: va-ops-eva-fab-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes va-ops-eva-fab-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.app-shell:has(.module-va-operations) .eva-fab-trigger::after {
+  content: "Eva Quick Actions";
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--hub-primary-border);
+  background: color-mix(in srgb, var(--ita-base) 94%, var(--hub-deep));
+  color: var(--text-primary);
+  font-size: var(--font-size-micro);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  box-shadow: 0 8px 24px var(--hub-glow);
+}
+
+.app-shell:has(.module-va-operations) .eva-fab-trigger:hover::after,
+.app-shell:has(.module-va-operations) .eva-fab-trigger:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+.app-shell:has(.module-va-operations) .eva-fab-trigger--open::after {
+  content: "Close actions";
+}
+
+.module-va-operations .va-ops-page-title {
+  font-family: var(--font-family-display);
+  font-size: 44px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  line-height: 1.08;
+}
+
+.module-va-operations .va-ops-section-title {
+  font-family: var(--font-family-display);
+  font-size: clamp(28px, 2.4vw, 32px);
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.012em;
+  line-height: 1.15;
+}
+
+.module-va-operations .va-ops-kpi-value {
+  font-family: var(--font-family-display);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-kpi);
+  line-height: 1.02;
+}
+
+.module-va-operations .va-ops-snapshot-value {
+  font-family: var(--font-family-display);
+  font-size: 32px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Priority queue — dual avatar assignment */
+.va-task-assignment-stack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.va-task-assignment-avatars {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.va-task-assignment-avatars .team-avatar-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.va-task-assignment-assigner {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  border: 2px solid var(--surface-card);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.va-task-assignment-system-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  background: var(--navy-mid);
+  border: 2px solid var(--surface-card);
+}
+
+.va-task-assignment-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.va-task-assignment-owner {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.va-task-assignment-by {
+  font-size: var(--font-size-micro);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.va-ops-priority-table th,
+.va-ops-priority-table td {
+  padding: 16px 14px;
+}
+
+.va-ops-priority-table .va-ops-priority-title {
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
+  max-width: 220px;
+}
+
+/* Live activity feed */
+.va-ops-activity-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 0;
+}
+
+.va-ops-activity-item--sla-miss {
+  background: color-mix(in srgb, var(--critical-rose) 6%, transparent);
+  margin: 0 -8px;
+  padding: 12px 8px;
+  border-radius: var(--radius);
+}
+
+.va-ops-activity-avatar {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.va-ops-activity-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.va-ops-activity-icon-wrap--call {
+  color: var(--metric-blue);
+  background: color-mix(in srgb, var(--metric-blue) 14%, transparent);
+}
+
+.va-ops-activity-icon-wrap--upload {
+  color: var(--success-green);
+  background: color-mix(in srgb, var(--success-green) 14%, transparent);
+}
+
+.va-ops-activity-icon-wrap--sla-miss {
+  color: var(--critical-rose);
+  background: color-mix(in srgb, var(--critical-rose) 14%, transparent);
+}
+
+.va-ops-activity-icon-wrap--send {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.va-ops-activity-icon-wrap--default {
+  color: var(--text-muted);
+  background: var(--navy-light);
+}
+
+.va-ops-activity-body {
+  min-width: 0;
+}
+
+.va-ops-activity-text {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.va-ops-activity-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.va-ops-activity-source-tag {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: var(--font-size-micro);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--primary-light);
+  background: color-mix(in srgb, var(--metric-blue) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--metric-blue) 20%, transparent);
+}
+
+.va-ops-activity-time {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Lead response tracker */
+.va-ops-lead-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.va-ops-lead-live-dot--within {
+  background: var(--success-green);
+  animation: va-ops-lead-pulse 2s ease-in-out infinite;
+}
+
+.va-ops-lead-live-dot--near {
+  background: var(--warning-amber);
+  animation: va-ops-lead-pulse 1.4s ease-in-out infinite;
+}
+
+.va-ops-lead-live-dot--breached {
+  background: var(--critical-rose);
+  animation: va-ops-lead-alert 1s ease-in-out infinite;
+}
+
+@keyframes va-ops-lead-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 transparent; }
+  50% { opacity: 0.75; box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 20%, transparent); }
+}
+
+@keyframes va-ops-lead-alert {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.va-ops-lead-member-cell {
+  display: flex;
+  align-items: center;
+}
+
+.va-ops-lead-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.va-ops-lead-timer-pill--within {
+  color: var(--success-green);
+  background: color-mix(in srgb, var(--success-green) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success-green) 24%, transparent);
+}
+
+.va-ops-lead-timer-pill--near {
+  color: var(--warning-amber);
+  background: color-mix(in srgb, var(--warning-amber) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warning-amber) 28%, transparent);
+  animation: va-ops-lead-pulse 1.6s ease-in-out infinite;
+}
+
+.va-ops-lead-timer-pill--breached {
+  color: var(--critical-rose);
+  background: color-mix(in srgb, var(--critical-rose) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--critical-rose) 30%, transparent);
+  animation: va-ops-lead-alert 1.2s ease-in-out infinite;
+}
+
+.va-ops-lead-timer-suffix {
+  font-size: var(--font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* Workload segmented bars */
+.va-ops-workload-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1.2fr) minmax(160px, 1.4fr) auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.module-va-operations .va-ops-workload-identity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.va-ops-workload-name {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.va-ops-workload-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.va-ops-workload-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.va-ops-workload-segment-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--navy-light);
+  border: 1px solid var(--border-subtle);
+}
+
+.va-ops-workload-segment {
+  height: 100%;
+  min-width: 2px;
+  transition: width 0.35s ease;
+}
+
+.va-ops-workload-segment--open {
+  background: color-mix(in srgb, var(--text-muted) 55%, var(--navy-mid));
+}
+
+.va-ops-workload-segment--overdue {
+  background: var(--critical-rose);
+}
+
+.va-ops-workload-segment--completed {
+  background: var(--success-green);
+}
+
+.va-ops-workload-segment-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  font-size: var(--font-size-micro);
+  color: var(--text-muted);
+}
+
+.va-ops-workload-segment-legend strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.va-ops-workload-segment-legend .is-overdue strong {
+  color: var(--critical-rose);
+}
+
+.va-ops-workload-segment-legend .is-completed strong {
+  color: var(--success-green);
+}
+
+/* Approval lifecycle */
+.va-ops-approval-lifecycle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.va-ops-approval-lifecycle-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-micro);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.va-ops-approval-lifecycle-step.is-current {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.va-ops-approval-lifecycle-step.is-complete {
+  color: var(--success-green);
+}
+
+.va-ops-approval-lifecycle-arrow {
+  color: var(--text-tertiary);
+  font-size: 10px;
+}
+
+/* Owner intelligence strip */
+.owner-intelligence-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px var(--space-lg);
+  background: var(--obs);
+  border-bottom: 1px solid color-mix(in srgb, var(--ita-secondary) 14%, transparent);
+}
+
+.owner-intelligence-strip-label {
+  font-size: var(--font-size-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.owner-intelligence-strip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.owner-intelligence-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--surface-inset);
+  border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.owner-intelligence-chip strong {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.owner-intelligence-chip--amber {
+  border-color: color-mix(in srgb, var(--warning-amber) 30%, transparent);
+  background: color-mix(in srgb, var(--warning-amber) 8%, transparent);
+}
+
+.owner-intelligence-chip--amber strong {
+  color: var(--warning-amber);
+}
+
+.owner-intelligence-chip--red {
+  border-color: color-mix(in srgb, var(--critical-rose) 30%, transparent);
+  background: color-mix(in srgb, var(--critical-rose) 8%, transparent);
+}
+
+.owner-intelligence-chip--red strong {
+  color: var(--critical-rose);
+}
+
+@media (max-width: 767px) {
+  .module-va-operations .va-ops-page-title {
+    font-size: 32px;
+  }
+
+  .module-va-operations .va-ops-kpi-value {
+    font-size: 36px;
+  }
+
+  .owner-intelligence-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px var(--mobile-page-pad);
+  }
+
+  .va-ops-workload-row {
+    grid-template-columns: 1fr;
+  }
+
+  .module-va-operations .va-ops-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .module-va-operations .va-ops-panel-header-meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-ops-lead-live-dot--within,
+  .va-ops-lead-live-dot--near,
+  .va-ops-lead-live-dot--breached,
+  .va-ops-lead-timer-pill--near,
+  .va-ops-lead-timer-pill--breached {
+    animation: none;
+  }
+
+  .app-shell:has(.module-va-operations) .eva-fab-trigger-glow {
+    animation: none;
+  }
+
+  .module-va-operations .va-ops-kpi-card:hover,
+  .module-va-operations .va-ops-kpi-card:focus-visible {
+    transform: none;
+  }
+}

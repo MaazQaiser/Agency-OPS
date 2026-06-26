@@ -8,6 +8,7 @@ import { PipelineTab } from "./PipelineTab";
 import { SheetsSetupTab } from "./SheetsSetupTab";
 import { VADashboardTab } from "./VADashboardTab";
 import { commercialHeader, commercialTabs } from "@/data/retentionScorecard";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 
 export function CommercialModule() {
   const [active, setActive] = useState("exec");
@@ -31,12 +32,14 @@ export function CommercialModule() {
       </div>
 
       <div className="tab-panel active">
+        <TabTransitionPanel tabKey={active}>
         {active === "exec" && <ExecutiveTab />}
         {active === "va" && <VADashboardTab />}
         {active === "pipeline" && <PipelineTab />}
         {active === "aging" && <AgingReportTab />}
         {active === "daily" && <DailyAccountabilityTab />}
         {active === "formulas" && <SheetsSetupTab />}
+        </TabTransitionPanel>
       </div>
     </>
   );

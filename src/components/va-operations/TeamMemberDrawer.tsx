@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { getTeamMemberStatEntries, type TeamMember } from "@/data/vaOperations";
-import { getNameInitials } from "@/lib/nameInitials";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
+import { teamMemberStatusToAvatar } from "@/lib/teamIdentity";
 import { cn } from "@/lib/cn";
 
 type TeamMemberDrawerProps = {
@@ -49,9 +50,13 @@ export function TeamMemberDrawer({ member, onClose }: TeamMemberDrawerProps) {
       <aside className="va-ops-drawer" role="dialog" aria-modal="true" aria-label={`${member.name} activity`}>
         <div className="va-ops-drawer-header">
           <div className="va-ops-drawer-member">
-            <span className="va-ops-drawer-avatar" aria-hidden="true">
-              {getNameInitials(member.name)}
-            </span>
+            <TeamAvatar
+              userId={member.id}
+              name={member.name}
+              size="lg"
+              status={teamMemberStatusToAvatar(member.status)}
+              preferVa={member.id === "pedro"}
+            />
             <div>
               <div className="va-ops-drawer-name">{member.name}</div>
               <div className="va-ops-drawer-role">{member.role}</div>

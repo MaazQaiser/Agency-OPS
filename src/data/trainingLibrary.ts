@@ -81,6 +81,8 @@ export const trainingLibraryKpis = [
 
 export type ResourceCompletionStatus = "Completed" | "Pending" | "In Progress";
 
+export type ResourceDifficulty = "Beginner" | "Intermediate" | "Advanced";
+
 export type TrainingResource = {
   id: string;
   title: string;
@@ -92,6 +94,7 @@ export type TrainingResource = {
   assignedTo: string;
   completionStatus: ResourceCompletionStatus;
   lastUpdated: string;
+  difficulty: ResourceDifficulty;
   drawer: {
     description: string;
     assignedUsers: string[];
@@ -112,6 +115,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Pedro",
     completionStatus: "Completed",
     lastUpdated: "2 days ago",
+    difficulty: "Intermediate",
     drawer: {
       description: "Step-by-step script for following up on commercial quotes with clients and carriers.",
       assignedUsers: ["Pedro", "JoJo"],
@@ -133,6 +137,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Kat",
     completionStatus: "Pending",
     lastUpdated: "Today",
+    difficulty: "Beginner",
     drawer: {
       description: "Handle common objections on new lead calls including price, timing, and incumbent carrier.",
       assignedUsers: ["Kat", "Hamad"],
@@ -151,6 +156,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Pedro",
     completionStatus: "In Progress",
     lastUpdated: "Yesterday",
+    difficulty: "Advanced",
     drawer: {
       description: "Standard operating procedure for submitting to carriers and tracking responses.",
       assignedUsers: ["Pedro", "JoJo", "Hamad"],
@@ -172,6 +178,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Jaffer",
     completionStatus: "Pending",
     lastUpdated: "2 days ago",
+    difficulty: "Intermediate",
     drawer: {
       description: "Research workflow for qualifying commercial prospects before handoff to producers.",
       assignedUsers: ["Jaffer", "Tracie"],
@@ -190,6 +197,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Eva",
     completionStatus: "Completed",
     lastUpdated: "3 days ago",
+    difficulty: "Intermediate",
     drawer: {
       description: "End-to-end renewal process from review to client presentation and bind.",
       assignedUsers: ["Eva", "Tracie"],
@@ -211,6 +219,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Eva",
     completionStatus: "In Progress",
     lastUpdated: "1 week ago",
+    difficulty: "Advanced",
     drawer: {
       description: "Producer-led closing techniques for commercial and personal lines opportunities.",
       assignedUsers: ["Eva", "Sarah"],
@@ -229,6 +238,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Jaffer",
     completionStatus: "Pending",
     lastUpdated: "Today",
+    difficulty: "Beginner",
     drawer: {
       description: "Qualification criteria and scoring for inbound and outbound leads.",
       assignedUsers: ["Jaffer", "Pedro"],
@@ -247,6 +257,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "All Team",
     completionStatus: "Completed",
     lastUpdated: "1 day ago",
+    difficulty: "Advanced",
     drawer: {
       description: "Required compliance checks before binding and document retention standards.",
       assignedUsers: ["All Team"],
@@ -268,6 +279,7 @@ export const trainingResources: TrainingResource[] = [
     assignedTo: "Kyle",
     completionStatus: "Completed",
     lastUpdated: "Today",
+    difficulty: "Intermediate",
     drawer: {
       description: "Configure Slack webhooks and channel routing for intake and commercial alerts.",
       assignedUsers: ["Kyle", "Hamad"],
@@ -301,16 +313,24 @@ export const libraryAssignedTraining = [
   },
 ];
 
-export const popularTags = [
-  "Lead Qualification",
-  "Objection Handling",
-  "Carrier Follow-Up",
-  "Submission Workflow",
-  "Renewals",
-  "Retention",
-  "Client Communication",
-  "Compliance",
+export type PopularTopic = {
+  tag: string;
+  usageCount: number;
+};
+
+export const popularTopics: PopularTopic[] = [
+  { tag: "Lead Qualification", usageCount: 24 },
+  { tag: "Objection Handling", usageCount: 19 },
+  { tag: "Carrier Follow-Up", usageCount: 16 },
+  { tag: "Submission Workflow", usageCount: 14 },
+  { tag: "Renewals", usageCount: 12 },
+  { tag: "Retention", usageCount: 11 },
+  { tag: "Client Communication", usageCount: 9 },
+  { tag: "Compliance", usageCount: 7 },
 ];
+
+/** @deprecated Use popularTopics */
+export const popularTags = popularTopics.map((t) => t.tag);
 
 export const recentlyViewed = [
   { id: "view-1", title: "Commercial Prospect Research", viewed: "Today" },
@@ -319,16 +339,23 @@ export const recentlyViewed = [
   { id: "view-4", title: "Policy Renewal Workflow", viewed: "2 days ago" },
 ];
 
-export const libraryActivity = [
-  { id: "lib-act-1", message: "Kat completed Renewal Handling Training", timeAgo: "14 min ago" },
-  { id: "lib-act-2", message: "Pedro started Carrier Submission SOP", timeAgo: "28 min ago" },
-  { id: "lib-act-3", message: "Jaffer viewed Prospect Qualification Workflow", timeAgo: "1 hour ago" },
-  { id: "lib-act-4", message: "Eva uploaded Producer Closing Guide", timeAgo: "3 hours ago" },
+export type LibraryActivityItem = {
+  id: string;
+  actor: string;
+  message: string;
+  timeAgo: string;
+};
+
+export const libraryActivity: LibraryActivityItem[] = [
+  { id: "lib-act-1", actor: "Kat", message: "Kat completed Renewal Handling Training", timeAgo: "14 min ago" },
+  { id: "lib-act-2", actor: "Pedro", message: "Pedro started Carrier Submission SOP", timeAgo: "28 min ago" },
+  { id: "lib-act-3", actor: "Jaffer", message: "Jaffer viewed Prospect Qualification Workflow", timeAgo: "1 hr ago" },
+  { id: "lib-act-4", actor: "Eva", message: "Eva uploaded Producer Closing Guide", timeAgo: "3 hr ago" },
 ];
 
 export const resourceCompletionClass: Record<ResourceCompletionStatus, string> = {
   Completed: "badge-green",
-  Pending: "badge-yellow",
+  Pending: "badge-amber",
   "In Progress": "badge-blue",
 };
 

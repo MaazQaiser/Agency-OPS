@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   activeSubmissions,
   carrierPerformance,
@@ -17,9 +17,29 @@ import {
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
 import { ChartSkeleton, KpiSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubErrorState, SectionDegradedState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { SubmissionDrawer } from "./SubmissionDrawer";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
+import {
+  eoRiskFromHubSubmission,
+  sortByEoExposure,
+  type EoExposureSort,
+} from "@/lib/eoRiskScore";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { executiveTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelGrid,
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
+import { PipelineStageBar } from "./PipelineStageBar";
 
 const submissionStatusClass: Record<HubSubmissionStatus, string> = {
   Quoted: "badge-green",
@@ -49,18 +69,63 @@ const quoteVariantClass = {
 
 export function ExecutiveDashboardTab() {
   const router = useRouter();
-  const loading = useTabLoading();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => ({
+      kpis: commercialHubKpis,
+      submissions: activeSubmissions,
+    }),
+    errorPreset: "agencyzoom-unavailable",
+  });
+
+  const carrierState = useHubDataState({
+    load: () => carrierPerformance,
+    delayMs: 520,
+    simulateError: true,
+    errorPreset: "agencyzoom-unavailable",
+  });
+
   const [selectedSubmission, setSelectedSubmission] = useState<HubSubmission | null>(null);
 
-  if (loading) {
+  const highExposureQueue = useMemo(
+    () => sortByEoExposure(activeSubmissions, eoRiskFromHubSubmission, "highest").slice(0, 4),
+    [],
+  );
+
+  const sortedActiveSubmissions = useMemo(
+    () => sortByEoExposure(activeSubmissions, eoRiskFromHubSubmission, "highest"),
+    [],
+  );
+
+  if (status === "loading") {
     return (
-      <div className="va-ops-role-view commercial-hub-executive">
+      <CommercialHubTabShell className="commercial-hub-executive">
         <KpiSkeletonGrid count={4} />
         <ChartSkeleton />
-        <TableSkeleton rows={4} />
-      </div>
+        <TableSkeleton rows={6} columns={5} />
+      </CommercialHubTabShell>
     );
   }
+
+  if (status === "error") {
+    return (
+      <CommercialHubTabShell className="commercial-hub-executive">
+        <HubErrorState
+          preset="agencyzoom-unavailable"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      </CommercialHubTabShell>
+    );
+  }
+
+  const header = commercialHubTabHeaders.executive;
 
   const navigateToAlert = (tab: CommercialHubTabId) => {
     const href = tab === "executive" ? routes.commercialHub : `${routes.commercialHub}?view=${tab}`;
@@ -68,52 +133,87 @@ export function ExecutiveDashboardTab() {
   };
 
   return (
-    <div className="va-ops-role-view commercial-hub-executive">
-      <div className="commercial-hub-dashboard-meta">
-        <span className="commercial-hub-last-updated">Last updated 4 mins ago</span>
-      </div>
+    <CommercialHubTabShell className="commercial-hub-executive">
+      <CommercialHubTabHeader
+        title={header.title}
+        subtitle={header.subtitle}
+        utilities={
+          <>
+            <span className="commercial-hub-last-updated">
+              {isStale ? "Stale data warning · " : ""}
+              Updated 4 mins ago
+            </span>
+            <ExportMenu kind="commercial-pipeline" compact />
+          </>
+        }
+      />
 
-      <section className="va-ops-kpi-strip" aria-label="Commercial hub KPI summary">
-        <div className="commercial-hub-kpi-grid">
-          {commercialHubKpis.map((kpi) => (
-            <article
-              key={kpi.label}
-              className={cn("va-ops-kpi-card", kpi.color, `commercial-hub-kpi-${kpi.tier}`)}
-            >
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
+      <CommercialHubKpiStrip kpis={executiveTabKpis()} columns={6} />
+
+      <CommercialHubWorkspace
+        ariaLabel="Active submissions"
+        title="Active Submissions"
+        subtitle="Main working pipeline — click a row for full details."
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <table className="commercial-hub-table">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Producer</th>
+                <th>VA</th>
+                <th>Days Open</th>
+                <th>E&O Risk</th>
+                <th>Client</th>
+                <th>Coverage</th>
+                <th>Markets Submitted</th>
+                <th>Quotes Received</th>
+                <th>Premium</th>
+                <th>Next Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedActiveSubmissions.map((row) => {
+                const risk = eoRiskFromHubSubmission(row);
+                return (
+                <tr key={row.id} className="commercial-hub-table-row-clickable">
+                  <td>
+                    <span className={cn("badge", submissionStatusClass[row.status])}>{row.status}</span>
+                  </td>
+                  <td><UserChip name={row.producer} /></td>
+                  <td>{row.va}</td>
+                  <td>{row.daysOpen}</td>
+                  <td>
+                    <EoRiskBadge score={risk} />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="commercial-hub-client-link"
+                      onClick={() => setSelectedSubmission(row)}
+                    >
+                      {row.client}
+                    </button>
+                  </td>
+                  <td>{row.coverage}</td>
+                  <td>{row.marketsSubmitted}</td>
+                  <td>{row.quotesReceived}</td>
+                  <td className="commercial-hub-premium">{row.premium}</td>
+                  <td className="commercial-hub-next-action">{row.nextAction}</td>
+                </tr>
+              );
+              })}
+            </tbody>
+          </table>
         </div>
-      </section>
+      </CommercialHubWorkspace>
 
-      <div className="commercial-hub-top-grid">
-        <section className="va-ops-panel commercial-hub-funnel-panel" aria-label="Pipeline stage breakdown">
-          <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Pipeline Stage Breakdown</h3>
-            <p className="va-ops-section-sub">Horizontal view of pipeline volume and premium by stage.</p>
-          </div>
-          <div className="commercial-hub-pipeline-horizontal">
-            {pipelineStages.map((stage, index) => (
-              <div key={stage.id} className="commercial-hub-pipeline-stage-h">
-                <div className="commercial-hub-pipeline-stage-h-name">{stage.name}</div>
-                <div className="commercial-hub-pipeline-stage-h-count">{stage.count}</div>
-                <div className="commercial-hub-pipeline-stage-h-premium">{stage.premium}</div>
-                {index < pipelineStages.length - 1 && (
-                  <div className="commercial-hub-pipeline-stage-h-arrow" aria-hidden="true">→</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="commercial-hub-alerts-panel" aria-label="Operational alerts">
-          <div className="commercial-hub-alerts-header">
-            <h3 className="va-ops-section-title">Operational Alerts</h3>
-            <p className="va-ops-section-sub">Submissions requiring immediate attention.</p>
-          </div>
+      <CommercialHubIntelGrid>
+        <CommercialHubIntelPanel
+          title="Operational Alerts"
+          subtitle="Submissions requiring immediate attention."
+          className="commercial-hub-intel-tall"
+        >
           <ul className="commercial-hub-alerts-list">
             {operationalAlerts.map((alert) => (
               <li key={alert.id}>
@@ -132,95 +232,83 @@ export function ExecutiveDashboardTab() {
               </li>
             ))}
           </ul>
-        </section>
-      </div>
+        </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel commercial-hub-submissions-panel" aria-label="Active submissions">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Active Submissions</h3>
-          <p className="va-ops-section-sub">Main working pipeline — click a row for full details.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
-          <table className="commercial-hub-table">
-            <thead>
-              <tr>
-                <th>Client</th>
-                <th>Producer</th>
-                <th>VA</th>
-                <th>Coverage</th>
-                <th>Markets Submitted</th>
-                <th>Quotes Received</th>
-                <th>Premium</th>
-                <th>Days Open</th>
-                <th>Status</th>
-                <th>Next Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activeSubmissions.map((row) => (
-                <tr key={row.id} className="commercial-hub-table-row-clickable">
-                  <td>
-                    <button
-                      type="button"
-                      className="commercial-hub-client-link"
-                      onClick={() => setSelectedSubmission(row)}
-                    >
-                      {row.client}
-                    </button>
-                  </td>
-                  <td><UserChip name={row.producer} /></td>
-                  <td>{row.va}</td>
-                  <td>{row.coverage}</td>
-                  <td>{row.marketsSubmitted}</td>
-                  <td>{row.quotesReceived}</td>
-                  <td className="commercial-hub-premium">{row.premium}</td>
-                  <td>{row.daysOpen}</td>
-                  <td>
-                    <span className={cn("badge", submissionStatusClass[row.status])}>{row.status}</span>
-                  </td>
-                  <td className="commercial-hub-next-action">{row.nextAction}</td>
+        <CommercialHubIntelPanel
+          title="High Exposure Queue"
+          subtitle="E&O risk intelligence — highest exposure submissions first."
+          className="commercial-hub-intel-tall"
+        >
+          <ul className="eo-high-exposure-list">
+            {highExposureQueue.map((row) => {
+              const risk = eoRiskFromHubSubmission(row);
+              return (
+                <li key={row.id}>
+                  <button
+                    type="button"
+                    className={cn("eo-high-exposure-card", `eo-high-exposure-card--${risk.level}`)}
+                    onClick={() => setSelectedSubmission(row)}
+                  >
+                    <div className="eo-high-exposure-card-top">
+                      <span className="eo-high-exposure-client">{row.client}</span>
+                      <EoRiskBadge score={risk} compact className="eo-high-exposure-badge" />
+                    </div>
+                    <p className="eo-high-exposure-meta">
+                      {row.coverage} · {row.daysOpen} days open · {row.producer}
+                    </p>
+                    <p className="eo-high-exposure-action">{row.nextAction}</p>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </CommercialHubIntelPanel>
+
+        <CommercialHubIntelPanel title="Pipeline Stage Breakdown" subtitle="Volume and premium by stage.">
+          <PipelineStageBar />
+        </CommercialHubIntelPanel>
+
+        <CommercialHubIntelPanel
+          title="Carrier Performance Snapshot"
+          subtitle="Strongest carriers by response and bind wins."
+          actions={<ExportMenu kind="carrier-performance" compact />}
+          className="commercial-hub-intel-tall"
+        >
+          {carrierState.status === "error" ? (
+            <SectionDegradedState
+              preset="agencyzoom-unavailable"
+              onRetry={carrierState.retry}
+              retrying={carrierState.retrying}
+            />
+          ) : carrierState.status === "loading" ? (
+            <TableSkeleton rows={4} columns={5} />
+          ) : (
+            <table className="commercial-hub-table commercial-hub-carrier-table">
+              <thead>
+                <tr>
+                  <th>Carrier</th>
+                  <th>Submissions</th>
+                  <th>Quotes Returned</th>
+                  <th>Avg Response Time</th>
+                  <th>Bind Wins</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </thead>
+              <tbody>
+                {carrierPerformance.map((row) => (
+                  <tr key={row.id}>
+                    <td className="commercial-hub-carrier-name">{row.carrier}</td>
+                    <td>{row.submissions}</td>
+                    <td>{row.quotesReturned}</td>
+                    <td>{row.avgResponseTime}</td>
+                    <td className="commercial-hub-bind-wins">{row.bindWins}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </CommercialHubIntelPanel>
 
-      <div className="commercial-hub-mid-grid">
-        <section className="commercial-hub-carrier-panel" aria-label="Carrier performance snapshot">
-          <div className="commercial-hub-mid-panel-header">
-            <h3 className="va-ops-section-title">Carrier Performance Snapshot</h3>
-            <p className="va-ops-section-sub">Strongest carriers by response and bind wins.</p>
-          </div>
-          <table className="commercial-hub-table commercial-hub-carrier-table">
-            <thead>
-              <tr>
-                <th>Carrier</th>
-                <th>Submissions</th>
-                <th>Quotes Returned</th>
-                <th>Avg Response Time</th>
-                <th>Bind Wins</th>
-              </tr>
-            </thead>
-            <tbody>
-              {carrierPerformance.map((row) => (
-                <tr key={row.id}>
-                  <td className="commercial-hub-carrier-name">{row.carrier}</td>
-                  <td>{row.submissions}</td>
-                  <td>{row.quotesReturned}</td>
-                  <td>{row.avgResponseTime}</td>
-                  <td className="commercial-hub-bind-wins">{row.bindWins}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-
-        <section className="commercial-hub-quote-activity-panel" aria-label="Recent quote activity">
-          <div className="commercial-hub-mid-panel-header">
-            <h3 className="va-ops-section-title">Recent Quote Activity</h3>
-            <p className="va-ops-section-sub">Track carrier movement across the pipeline.</p>
-          </div>
+        <CommercialHubIntelPanel title="Recent Quote Activity" subtitle="Track carrier movement across the pipeline." className="commercial-hub-intel-tall">
           <ul className="va-ops-exec-history">
             {quoteActivity.map((item) => (
               <li
@@ -235,43 +323,42 @@ export function ExecutiveDashboardTab() {
               </li>
             ))}
           </ul>
-        </section>
-      </div>
+        </CommercialHubIntelPanel>
+      </CommercialHubIntelGrid>
 
-      <section className="va-ops-panel commercial-hub-follow-ups-panel" aria-label="Follow-ups due">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Follow-Ups Due</h3>
-          <p className="va-ops-section-sub">Broker discipline and carrier chase queue.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubTabFooter
+        title="Follow-Ups Due"
+        subtitle="Broker discipline and carrier chase queue."
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
+                <th>Status</th>
+                <th>Assigned VA</th>
+                <th>Due Date</th>
                 <th>Client</th>
                 <th>Carrier</th>
-                <th>Due Date</th>
-                <th>Assigned VA</th>
-                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {followUpQueue.map((row) => (
                 <tr key={row.id}>
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td>{row.carrier}</td>
-                  <td>{row.dueDate}</td>
-                  <td>{row.assignedVa}</td>
                   <td>
                     <span className={cn("badge", followUpStatusClass[row.status])}>{row.statusLabel}</span>
                   </td>
+                  <td>{row.assignedVa}</td>
+                  <td>{row.dueDate}</td>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>{row.carrier}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubTabFooter>
 
       <SubmissionDrawer submission={selectedSubmission} onClose={() => setSelectedSubmission(null)} />
-    </div>
+    </CommercialHubTabShell>
   );
 }

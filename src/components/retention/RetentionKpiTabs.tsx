@@ -1,16 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { DataTable } from "@/components/ui/DataTable";
 import { KpiCard, KpiGrid } from "@/components/ui/KpiCard";
-import { Tabs } from "@/components/ui/Tabs";
-import {
-  combinedExecutiveTable,
-  retentionTabs,
-  tracieKpis,
-  valerieKpis,
-} from "@/data/retentionScorecard";
+import { ExportMenu } from "@/components/export/ExportMenu";
+import { useRetentionLocale } from "@/components/retention/RetentionLanguageProvider";
+import type { RetentionKpi } from "@/types";
 
-function RetentionKpiGrid({ kpis, footnote }: { kpis: typeof valerieKpis; footnote: string }) {
+function RetentionKpiGrid({ kpis, footnote }: { kpis: RetentionKpi[]; footnote: string }) {
   return (
     <>
       <KpiGrid variant="retention">
@@ -31,48 +28,65 @@ function RetentionKpiGrid({ kpis, footnote }: { kpis: typeof valerieKpis; footno
 }
 
 export function RetentionKpiTabs() {
+  const { copy } = useRetentionLocale();
+  const [activeTab, setActiveTab] = useState("valerie");
+
   return (
-    <Tabs tabs={retentionTabs} defaultTab="valerie" variant="retention">
-      {(active) => (
-        <div className={`tab-content retention${active ? " active" : ""}`} style={{ display: "block" }}>
-          {active === "valerie" && (
-            <RetentionKpiGrid
-              kpis={valerieKpis}
-              footnote="Data populates from Kyle's Google Sheets retention tab. Folio period dates — not calendar month."
-            />
-          )}
-          {active === "tracie" && (
-            <RetentionKpiGrid
-              kpis={tracieKpis}
-              footnote="Korean dept only. Tracie's renewals never route to Valerie. Separate board, separate scorecard."
-            />
-          )}
-          {active === "combined" && (
-            <DataTable variant="retention">
-              <thead>
-                <tr>
-                  <th>KPI</th>
-                  <th>Valerie (English)</th>
-                  <th>Tracie (Korean)</th>
-                  <th>Combined</th>
-                  <th>Goal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {combinedExecutiveTable.map((row) => (
-                  <tr key={row.kpi}>
-                    <td>{row.kpi}</td>
-                    <td style={row.valerieColor ? { color: `var(--${row.valerieColor})` } : undefined}>{row.valerie}</td>
-                    <td style={row.tracieColor ? { color: `var(--${row.tracieColor})` } : undefined}>{row.tracie}</td>
-                    <td>{row.combined}</td>
-                    <td>{row.goal}</td>
-                  </tr>
+    <>
+      <div className="export-table-header-export" style={{ marginBottom: 16 }}>
+        <span className="sh-label" style={{ fontSize: "var(--font-size-12)", fontWeight: 600 }}>
+          {copy.scorecardHeader}
+        </span>
+        <ExportMenu kind="retention-scorecard" />
+      </div>
+
+      <div className="tab-bar">
+        {copy.tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`tab retention${activeTab === tab.id ? " active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="tab-content retention active" style={{ display: "block" }}>
+        {activeTab === "valerie" && (
+          <RetentionKpiGrid kpis={copy.valerieKpis} footnote={copy.valerieFootnote} />
+        )}
+        {activeTab === "tracie" && (
+          <RetentionKpiGrid kpis={copy.tracieKpis} footnote={copy.tracieFootnote} />
+        )}
+        {activeTab === "combined" && (
+          <DataTable variant="retention">
+            <thead>
+              <tr>
+                {copy.combinedTable.headers.map((header) => (
+                  <th key={header}>{header}</th>
                 ))}
-              </tbody>
-            </DataTable>
-          )}
-        </div>
-      )}
-    </Tabs>
+              </tr>
+            </thead>
+            <tbody>
+              {copy.combinedTable.rows.map((row) => (
+                <tr key={row.kpi}>
+                  <td>{row.kpi}</td>
+                  <td style={row.valerieColor ? { color: `var(--${row.valerieColor})` } : undefined}>
+                    {row.valerie}
+                  </td>
+                  <td style={row.tracieColor ? { color: `var(--${row.tracieColor})` } : undefined}>
+                    {row.tracie}
+                  </td>
+                  <td>{row.combined}</td>
+                  <td>{row.goal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </DataTable>
+        )}
+      </div>
+    </>
   );
 }

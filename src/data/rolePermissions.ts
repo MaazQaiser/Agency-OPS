@@ -15,12 +15,14 @@ export type AgencyRole =
 export type Permission =
   | "access:va-operations"
   | "access:commercial-hub"
+  | "access:farmers-edge"
   | "access:intake-forms"
   | "access:training-hub"
   | "access:carrier-library"
   | "access:epay-policy"
   | "access:send-center"
   | "access:global-search"
+  | "access:analytics"
   | "access:system-health"
   | "action:approve-proposals"
   | "action:approve-drafts"
@@ -84,12 +86,14 @@ export const AUDIT_STORAGE_KEY = "agency-ops-permission-audit";
 const modulePermissionMap: Record<AppModule | "system-health", Permission> = {
   "va-operations": "access:va-operations",
   commercial: "access:commercial-hub",
+  "farmers-edge": "access:farmers-edge",
   "intake-forms": "access:intake-forms",
   "training-hub": "access:training-hub",
   "carrier-library": "access:carrier-library",
   "epay-policy": "access:epay-policy",
   "send-center": "access:send-center",
   "global-search": "access:global-search",
+  analytics: "access:analytics",
   producer: "access:commercial-hub",
   retention: "access:commercial-hub",
   "prime-agency": "access:commercial-hub",
@@ -100,10 +104,12 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
   owner: [],
   producer: [
     "access:commercial-hub",
+    "access:farmers-edge",
     "access:send-center",
     "access:carrier-library",
     "access:intake-forms",
     "access:global-search",
+    "access:analytics",
     "action:review-quotes",
     "action:approve-drafts",
     "action:send-proposals",
@@ -119,6 +125,7 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
     "access:intake-forms",
     "access:training-hub",
     "access:commercial-hub",
+    "access:farmers-edge",
     "access:send-center",
     "access:global-search",
     "action:create-drafts",
@@ -129,6 +136,7 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
   ],
   finance: [
     "access:epay-policy",
+    "access:analytics",
     "action:create-invoices",
     "action:reconcile-trust",
     "action:export-ledger",
@@ -142,8 +150,10 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
   "operations-manager": [
     "access:va-operations",
     "access:commercial-hub",
+    "access:farmers-edge",
     "access:send-center",
     "access:global-search",
+    "access:analytics",
     "action:reassign-tasks",
     "action:escalate-queues",
     "action:manage-workloads",
@@ -288,6 +298,9 @@ export function pathnameToModule(pathname: string): AppModule | "system-health" 
   if (pathname.startsWith("/epay-policy")) return "epay-policy";
   if (pathname.startsWith("/send-center")) return "send-center";
   if (pathname.startsWith("/global-search")) return "global-search";
+  if (pathname.startsWith("/retention")) return "retention";
+  if (pathname.startsWith("/producer") || pathname.startsWith("/production")) return "producer";
+  if (pathname.startsWith("/prime-agency")) return "prime-agency";
   if (pathname.startsWith("/system-health")) return "system-health";
   if (pathname === "/dashboard" || pathname === "/") return "va-operations";
   return null;

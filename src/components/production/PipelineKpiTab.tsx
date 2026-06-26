@@ -1,12 +1,30 @@
-import { pipelineKpi, pipelineKpiTotals } from "@/data/producerScorecard";
+import { DataTable } from "@/components/ui/DataTable";
+import { KpiGrid } from "@/components/ui/KpiCard";
+import { pipelineKpi, pipelineKpiTotals, pipelineSummaryKpis } from "@/data/producerScorecard";
+import { PipelineKpiBlock } from "./PipelineKpiBlock";
 
 export function PipelineKpiTab() {
   return (
     <>
-      <div className="section-hdr">
-        <div className="sh-label">Pipeline KPI — All Lines + All Pipelines</div>
+      <div className="pipeline-kpi-section">
+        <div className="section-hdr">
+          <div className="sh-label">Pipeline Summary — Folio Period</div>
+        </div>
+        <p className="pipeline-kpi-section-desc">
+          Modular KPI blocks sourced from Kyle&apos;s Sales_Scorecard · All lines + all pipelines
+        </p>
+
+        <KpiGrid variant="production" className="pipeline-kpi-blocks">
+          {pipelineSummaryKpis.map((kpi) => (
+            <PipelineKpiBlock key={kpi.id} kpi={kpi} />
+          ))}
+        </KpiGrid>
       </div>
-      <table className="production">
+
+      <div className="section-hdr">
+        <div className="sh-label">Pipeline Breakdown — By Source</div>
+      </div>
+      <DataTable variant="production">
         <thead>
           <tr>
             <th>Pipeline</th>
@@ -24,7 +42,9 @@ export function PipelineKpiTab() {
           {pipelineKpi.map((row) => (
             <tr key={row.pipeline}>
               <td>{row.pipeline}</td>
-              <td><span className={`lob-tag lob-${row.lineType}`}>{row.line}</span></td>
+              <td>
+                <span className={`lob-tag lob-${row.lineType}`}>{row.line}</span>
+              </td>
               <td>{row.newLeads}</td>
               <td>{row.contacted}</td>
               <td>{row.quoted}</td>
@@ -34,7 +54,7 @@ export function PipelineKpiTab() {
               <td>{row.cpa}</td>
             </tr>
           ))}
-          <tr style={{ fontWeight: 700, background: "var(--primary-muted)" }}>
+          <tr className="pipeline-kpi-totals-row">
             <td colSpan={2}>TOTALS</td>
             <td>{pipelineKpiTotals.newLeads}</td>
             <td>{pipelineKpiTotals.contacted}</td>
@@ -45,7 +65,7 @@ export function PipelineKpiTab() {
             <td>{pipelineKpiTotals.cpa}</td>
           </tr>
         </tbody>
-      </table>
+      </DataTable>
     </>
   );
 }

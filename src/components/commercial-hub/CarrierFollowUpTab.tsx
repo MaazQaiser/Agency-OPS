@@ -1,13 +1,29 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { formatCarrierAging, trackerFollowUpQueue } from "@/data/submissionTracker";
+import {
+  formatCarrierAging,
+  trackerFollowUpQueue,
+  formatCarrierResponseSla,
+  carrierSlaStatusClass,
+} from "@/data/submissionTracker";
 import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
-import { useTabLoading } from "@/hooks/useTabLoading";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
-import { CommercialHubEmptyState } from "./CommercialHubEmptyState";
+import { ExportMenu } from "@/components/export/ExportMenu";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { carrierFollowUpTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 
 const followUpStatusClass: Record<string, string> = {
   "Due Today": "badge-red",
@@ -17,9 +33,20 @@ const followUpStatusClass: Record<string, string> = {
 };
 
 export function CarrierFollowUpTab() {
-  const loading = useTabLoading();
   const toast = useToast();
   const [highlightCarrier, setHighlightCarrier] = useState<string | null>(null);
+  const header = commercialHubTabHeaders["follow-ups"];
+
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => trackerFollowUpQueue,
+    errorPreset: "agencyzoom-unavailable",
+  });
 
   const onCarrierHandoff = useCallback((payload: Record<string, string | undefined>) => {
     const carrierName = payload.carrierName ?? "";
@@ -31,76 +58,121 @@ export function CarrierFollowUpTab() {
 
   useCrossModuleHandoff("carrier-to-followup", onCarrierHandoff);
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view submission-ops-queue">
-        <TableSkeleton rows={5} />
-      </div>
-    );
-  }
+  const breached = trackerFollowUpQueue.filter((item) => item.slaStatus === "Breached");
 
   return (
-    <div className="va-ops-role-view submission-ops-queue">
-      <section className="submission-follow-up-panel" aria-label="Carrier follow-up queue">
-        <div className="submission-queue-header">
-          <h3 className="va-ops-section-title">Carrier Follow-Up Queue</h3>
-          <p className="va-ops-section-sub">
-            Track stale markets and carrier response discipline.
-          </p>
-        </div>
-        <div className="commercial-hub-table-wrap">
-          <table className="commercial-hub-table">
-            <thead>
-              <tr>
-                <th>Carrier</th>
-                <th>Client</th>
-                <th>Aging</th>
-                <th>Follow-Up Due</th>
-                <th>Assigned VA</th>
-                <th>Status</th>
-                <th aria-label="Action" />
-              </tr>
-            </thead>
-            <tbody>
-              {trackerFollowUpQueue.length === 0 ? (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <CommercialHubTabShell className="submission-ops-queue">
+          <TableSkeleton rows={5} />
+        </CommercialHubTabShell>
+      }
+      empty={<HubEmptyState preset="commercial-follow-ups" />}
+      error={
+        <HubErrorState
+          preset="agencyzoom-unavailable"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+      <CommercialHubTabShell className="submission-ops-queue">
+        <CommercialHubTabHeader
+          title={header.title}
+          subtitle={header.subtitle}
+          utilities={<ExportMenu kind="carrier-response" compact />}
+        />
+
+        <CommercialHubKpiStrip kpis={carrierFollowUpTabKpis()} columns={5} />
+
+        <CommercialHubWorkspace
+          ariaLabel="Carrier follow-up queue"
+          title="Carrier Follow-Up Queue"
+          subtitle="Status, owner, SLA timing, and next action for every open market."
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+            <table className="commercial-hub-table">
+              <thead>
                 <tr>
-                  <td colSpan={7}>
-                    <CommercialHubEmptyState
-                      title="No carrier follow-ups due"
-                      description="All markets are within response SLA — nothing to chase right now."
-                    />
-                  </td>
+                  <th>Status</th>
+                  <th>Assigned VA</th>
+                  <th>Follow-Up Due</th>
+                  <th>Response SLA</th>
+                  <th>Carrier</th>
+                  <th>Client</th>
+                  <th>Aging</th>
+                  <th aria-label="Action" />
                 </tr>
-              ) : (
-                trackerFollowUpQueue.map((item) => (
-                <tr
-                  key={item.id}
-                  className={cn(
-                    highlightCarrier && item.carrier === highlightCarrier && "submission-tracker-row-expanded",
-                  )}
-                >
-                  <td>{item.carrier}</td>
-                  <td className="commercial-hub-client-cell">{item.client}</td>
-                  <td className="submission-carrier-aging">
-                    {formatCarrierAging(item.daysSinceSent, item.followUpCount)}
-                  </td>
-                  <td>{item.due}</td>
-                  <td>{item.assigned}</td>
-                  <td>
-                    <span className={cn("badge", followUpStatusClass[item.status] ?? "badge-yellow")}>
-                      {item.status}
-                    </span>
-                  </td>
-                  <td>
-                    <button type="button" className="va-ops-action-btn">{item.action}</button>
-                  </td>
-                </tr>
-              ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
+              </thead>
+              <tbody>
+                {trackerFollowUpQueue.map((item) => (
+                  <tr
+                    key={item.id}
+                    className={cn(
+                      highlightCarrier && item.carrier === highlightCarrier && "submission-tracker-row-expanded",
+                    )}
+                  >
+                    <td>
+                      <span className={cn("badge", followUpStatusClass[item.status] ?? "badge-yellow")}>
+                        {item.status}
+                      </span>
+                    </td>
+                    <td>{item.assigned}</td>
+                    <td>{item.due}</td>
+                    <td>
+                      <div className="carrier-sla-cell">
+                        <span className={cn("badge", carrierSlaStatusClass[item.slaStatus])}>
+                          {item.slaStatus}
+                        </span>
+                        <span className="carrier-sla-timing">{formatCarrierResponseSla(item)}</span>
+                      </div>
+                    </td>
+                    <td>{item.carrier}</td>
+                    <td className="commercial-hub-client-cell">{item.client}</td>
+                    <td className="submission-carrier-aging">
+                      {formatCarrierAging(item.daysSinceSent, item.followUpCount)}
+                    </td>
+                    <td>
+                      <button type="button" className="va-ops-action-btn primary">{item.action}</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CommercialHubWorkspace>
+
+        <CommercialHubIntelPanel
+          title="SLA Breaches"
+          subtitle="Markets past carrier response target — escalate immediately."
+        >
+          {breached.length === 0 ? (
+            <p className="va-ops-section-sub">No active SLA breaches.</p>
+          ) : (
+            <ul className="va-ops-gap-list">
+              {breached.map((item) => (
+                <li key={item.id}>
+                  <strong>{item.carrier}</strong> · {item.client} · {formatCarrierResponseSla(item)} · {item.assigned}
+                </li>
+              ))}
+            </ul>
+          )}
+        </CommercialHubIntelPanel>
+
+        <CommercialHubTabFooter
+          title="Follow-Up Cadence"
+          subtitle="Carrier response discipline and broker accountability."
+        >
+          <p className="va-ops-section-sub">
+            48h standard response target · Escalate after two follow-ups with no carrier movement.
+          </p>
+        </CommercialHubTabFooter>
+      </CommercialHubTabShell>
+    </DataStateView>
   );
 }

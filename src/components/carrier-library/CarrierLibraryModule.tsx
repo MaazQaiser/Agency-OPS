@@ -11,6 +11,7 @@ import {
 } from "@/data/carrierLibrary";
 import { routes } from "@/lib/routes";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
@@ -98,11 +99,13 @@ export function CarrierLibraryModule() {
       )}
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={showingProfile ? "profile" : active}>
         {showingProfile && <CarrierProfileTab />}
         {!showingProfile && active === "search" && (
           <CarrierSearchTab addedCarriers={addedCarriers} />
         )}
         {!showingProfile && active === "rules" && <SubmissionRulesTab />}
+        </TabTransitionPanel>
       </div>
 
       <AddCarrierDrawer

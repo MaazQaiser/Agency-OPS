@@ -1,4 +1,7 @@
+"use client";
+
 import { AppIcon } from "@/components/ui/AppIcon";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { vaOperationsHeader } from "@/data/vaOperations";
 
 export function VAOperationsPageHeader() {
@@ -20,13 +23,7 @@ export function VAOperationsPageHeader() {
             placeholder={vaOperationsHeader.searchPlaceholder}
           />
         </label>
-
-        <div className="va-ops-page-header-right">
-          <button type="button" className="va-ops-utility va-ops-folio">
-            <AppIcon name="folder" size={15} strokeWidth={2} />
-            <span>{vaOperationsHeader.folioTracker}</span>
-          </button>
-        </div>
+        <HubHelpTrigger hubId="va-operations" />
       </div>
     </header>
   );

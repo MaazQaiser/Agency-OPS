@@ -6,7 +6,8 @@ import {
   KpiSkeletonGrid,
   TimelineSkeleton,
 } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { VaOpsPanels } from "./VaOpsPanels";
 
 type OverviewTabProps = {
@@ -14,27 +15,43 @@ type OverviewTabProps = {
 };
 
 export function OverviewTab({ role }: OverviewTabProps) {
-  const loading = useTabLoading();
-
-  if (loading) {
-    return (
-      <div className="va-ops-overview">
-        <KpiSkeletonGrid count={5} />
-        <CardSkeletonGrid count={3} />
-        <TimelineSkeleton />
-      </div>
-    );
-  }
+  const { status, retry, lastSyncedAt, isStale, retrying } = useHubDataState({
+    load: () => true,
+    isEmpty: () => false,
+    errorPreset: "generic-fetch",
+  });
 
   return (
-    <div className="va-ops-overview">
-      <VaOpsPanels
-        role={role}
-        showOperationalSnapshot
-        contentStacked
-        priorityLimit={3}
-        activityLimit={5}
-      />
-    </div>
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-overview">
+          <KpiSkeletonGrid count={5} />
+          <CardSkeletonGrid count={3} />
+          <TimelineSkeleton />
+        </div>
+      }
+      error={
+        <HubErrorState
+          preset="generic-fetch"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+      <div className="va-ops-overview">
+        <VaOpsPanels
+          role={role}
+          showOperationalSnapshot
+          contentStacked
+          priorityLimit={3}
+          activityLimit={5}
+        />
+      </div>
+    </DataStateView>
   );
 }

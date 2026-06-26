@@ -7,13 +7,12 @@ import {
   matchesSendCenterSearch,
   type CommLogEventType,
 } from "@/data/sendCenter";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { cn } from "@/lib/cn";
-import {
-  SendCenterEmptyState,
-  SendCenterTableSkeleton,
-  useTabLoading,
-} from "./SendCenterFilters";
+import { SendCenterTableSkeleton } from "./SendCenterFilters";
 import { AppIcon } from "@/components/ui/AppIcon";
 
 type CommunicationLogTabProps = {
@@ -21,9 +20,19 @@ type CommunicationLogTabProps = {
 };
 
 export function CommunicationLogTab({ onToast: _onToast }: CommunicationLogTabProps) {
-  const loading = useTabLoading();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All Events");
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => communicationLogEntries,
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, communicationLogEntries, (d) => d.length === 0);
 
   const filtered = useMemo(
     () =>
@@ -71,16 +80,36 @@ export function CommunicationLogTab({ onToast: _onToast }: CommunicationLogTabPr
       </div>
 
       <section className="va-ops-panel" aria-label="Communication timeline">
-        {loading ? (
-          <SendCenterTableSkeleton rows={5} />
-        ) : filtered.length === 0 ? (
-          <SendCenterEmptyState
-            title="No communication events"
-            description="Proposal activity will be logged here as clients engage."
-          />
-        ) : (
-          <ol className="send-center-timeline">
-            {filtered.map((entry) => (
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<SendCenterTableSkeleton rows={5} />}
+          empty={
+            <HubEmptyState
+              title="No communication events"
+              description="Proposal activity will be logged here as clients engage."
+            />
+          }
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          {filtered.length === 0 ? (
+            <HubEmptyState
+              title="No matches"
+              description="No events match your search or event type filter. Try clearing filters or broadening your search."
+              compact
+            />
+          ) : (
+            <ol className="send-center-timeline">
+              {filtered.map((entry) => (
               <li key={entry.id} className="send-center-timeline-item">
                 <div className="send-center-timeline-dot" aria-hidden="true" />
                 <div className="send-center-timeline-content">
@@ -96,7 +125,8 @@ export function CommunicationLogTab({ onToast: _onToast }: CommunicationLogTabPr
               </li>
             ))}
           </ol>
-        )}
+          )}
+        </DataStateView>
       </section>
     </div>
   );

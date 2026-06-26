@@ -2,6 +2,7 @@
 
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { epayPolicyHeader } from "@/data/epayPolicy";
 import { epayQuickActionPermissions, filterQuickActions } from "@/data/rolePermissions";
 
@@ -22,28 +23,27 @@ export function EPayPolicyPageHeader({ onQuickActionClick }: EPayPolicyPageHeade
         </div>
       </div>
 
-      {visibleActions.length > 0 && (
-        <div className="va-ops-page-header-toolbar epay-policy-header-actions">
-          {visibleActions.map((action) => {
-            const perm = epayQuickActionPermissions[action.id];
-            return (
-              <QuickActionButton
-                key={action.id}
-                actionId={action.id}
-                label={action.label}
-                icon={action.icon}
-                onClick={() => {
-                  if (perm) {
-                    requirePermission(perm, () => onQuickActionClick?.(action.id));
-                  } else {
-                    onQuickActionClick?.(action.id);
-                  }
-                }}
-              />
-            );
-          })}
-        </div>
-      )}
+      <div className="va-ops-page-header-toolbar epay-policy-header-actions">
+        {visibleActions.map((action) => {
+          const perm = epayQuickActionPermissions[action.id];
+          return (
+            <QuickActionButton
+              key={action.id}
+              actionId={action.id}
+              label={action.label}
+              icon={action.icon}
+              onClick={() => {
+                if (perm) {
+                  requirePermission(perm, () => onQuickActionClick?.(action.id));
+                } else {
+                  onQuickActionClick?.(action.id);
+                }
+              }}
+            />
+          );
+        })}
+        <HubHelpTrigger hubId="epay-policy" />
+      </div>
     </header>
   );
 }

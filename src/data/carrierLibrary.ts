@@ -400,21 +400,62 @@ export function getAllCarrierRecords(): CarrierRecord[] {
   return [...carrierRecords, ...extraCarrierRecords];
 }
 
-export const recommendedMarkets = [
+export type MarketRecommendation = {
+  id: string;
+  vertical: string;
+  product: string;
+  state: string;
+  bestCarrier: string;
+  alternateCarriers: string[];
+  reason: string;
+  appetiteFit: string;
+  verticalFit: string;
+  turnaround: string;
+  restrictions?: string;
+  riskLevel: "Open" | "Conditional" | "Restricted" | "High Risk";
+};
+
+export const recommendedMarkets: MarketRecommendation[] = [
   {
     id: "rec-contractor-wc-ca",
-    label: "Contractor + Workers Comp + California",
-    carriers: ["Markel", "Travelers", "CNA", "AmTrust"],
+    vertical: "Contractors",
+    product: "Workers Comp",
+    state: "California",
+    bestCarrier: "Markel",
+    alternateCarriers: ["Travelers", "Employers"],
+    reason: "Preferred class appetite for landscaping & light trade; 2.4-day avg response on clean 5-yr loss history.",
+    appetiteFit: "Strong — landscaping & light trade classes",
+    verticalFit: "Contractors · WC payroll up to $750K",
+    turnaround: "2.4 days avg quote",
+    restrictions: "Roofing class restricted",
+    riskLevel: "Open",
   },
   {
     id: "rec-restaurant-bop-tx",
-    label: "Restaurant + BOP + Texas",
-    carriers: ["Nationwide", "Guard", "Liberty Mutual"],
+    vertical: "Restaurants",
+    product: "BOP",
+    state: "Texas",
+    bestCarrier: "Nationwide",
+    alternateCarriers: ["Guard", "Liberty Mutual"],
+    reason: "Open restaurant BOP appetite with competitive liquor liability; avoid Travelers (TX pause in effect).",
+    appetiteFit: "Open — full-service & fast casual",
+    verticalFit: "Restaurants · liquor liability included",
+    turnaround: "3.1 days avg quote",
+    restrictions: "Travelers paused in TX",
+    riskLevel: "Conditional",
   },
   {
     id: "rec-auto-repair-ca",
-    label: "Auto Repair + Commercial Auto + California",
-    carriers: ["Travelers", "Markel", "CNA"],
+    vertical: "Auto Repair",
+    product: "Commercial Auto",
+    state: "California",
+    bestCarrier: "Travelers",
+    alternateCarriers: ["Markel", "CNA"],
+    reason: "Strong garagekeepers options and 1.8-day quote turnaround for service & repair shops.",
+    appetiteFit: "Preferred — service & repair shops",
+    verticalFit: "Auto Repair · garagekeepers available",
+    turnaround: "1.8 days avg quote",
+    riskLevel: "Open",
   },
 ];
 

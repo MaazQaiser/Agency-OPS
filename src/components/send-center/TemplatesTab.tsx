@@ -9,13 +9,14 @@ import {
   templateRecords,
   type TemplateRecord,
 } from "@/data/sendCenter";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
 import {
-  SendCenterEmptyState,
   SendCenterFilters,
   useSendCenterFilters,
-  useTabLoading,
 } from "./SendCenterFilters";
 
 type TemplatesTabProps = {
@@ -23,9 +24,19 @@ type TemplatesTabProps = {
 };
 
 export function TemplatesTab({ onToast }: TemplatesTabProps) {
-  const loading = useTabLoading();
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => templateRecords,
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, templateRecords, (d) => d.length === 0);
 
   const filtered = useMemo(
     () =>
@@ -87,20 +98,44 @@ export function TemplatesTab({ onToast }: TemplatesTabProps) {
       />
 
       <section className="va-ops-panel" aria-label="Proposal templates">
-        {loading ? (
-          <div className="send-center-template-skeleton-grid">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="send-center-template-skeleton-card" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <SendCenterEmptyState
-            title="No templates found"
-            description="Create a template or adjust your search."
-          />
-        ) : (
-          <div className="send-center-template-grid">
-            {filtered.map((tpl) => (
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={
+            <div className="send-center-template-skeleton-grid">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="send-center-template-skeleton-card" />
+              ))}
+            </div>
+          }
+          empty={
+            <HubEmptyState
+              preset="generic-list"
+              title="No templates found"
+              description="Create a template or adjust your search."
+              onAction={() => onToast("Template builder opened")}
+            />
+          }
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          {filtered.length === 0 ? (
+            <HubEmptyState
+              title="No matches"
+              description="No templates match your search. Try clearing filters or broadening your search."
+              compact
+            />
+          ) : (
+            <div className="send-center-template-grid">
+              {filtered.map((tpl) => (
               <article key={tpl.id} className="send-center-template-card">
                 <div className="send-center-template-card-header">
                   <AppIcon name="folder" size={20} strokeWidth={2} className="send-center-template-icon" />
@@ -146,7 +181,8 @@ export function TemplatesTab({ onToast }: TemplatesTabProps) {
               </article>
             ))}
           </div>
-        )}
+          )}
+        </DataStateView>
       </section>
     </div>
   );

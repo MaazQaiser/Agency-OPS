@@ -18,23 +18,55 @@ import {
   trustReferenceHeader,
   trustReferenceKpis,
   type CarrierRelease,
+  type LedgerEntryType,
   type TrustLedgerEntry,
 } from "@/data/trustReference";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
+import { AppIcon } from "@/components/ui/AppIcon";
+import type { AppIconName } from "@/components/ui/AppIcon";
 import { KpiSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import { EPayAccordion } from "./EPayAccordion";
 import { EPayConfirmModal } from "./EPayConfirmModal";
 import { TrustLedgerDrawer } from "./TrustLedgerDrawer";
+
+const trustActivityIcon: Record<LedgerEntryType, AppIconName> = {
+  Deposit: "dollar",
+  "Carrier Release": "send",
+  "Broker Fee Hold": "shield",
+  Adjustment: "refresh",
+  Refund: "x",
+};
+
+const trustActivityIconClass: Record<LedgerEntryType, string> = {
+  Deposit: "epay-trust-activity-icon--deposit",
+  "Carrier Release": "epay-trust-activity-icon--release",
+  "Broker Fee Hold": "epay-trust-activity-icon--broker",
+  Adjustment: "epay-trust-activity-icon--adjustment",
+  Refund: "epay-trust-activity-icon--refund",
+};
+
+const heldBrokerFees = brokerFeeLedger.filter((row) => row.status === "Held").length;
 
 type TrustReferenceTabProps = {
   onToast?: (message: string, variant?: "success" | "error") => void;
 };
 
 export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
-  const loading = useTabLoading();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => trustLedgerEntries,
+    errorPreset: "supabase-timeout",
+  });
   const [selectedEntry, setSelectedEntry] = useState<TrustLedgerEntry | null>(null);
   const [releaseTarget, setReleaseTarget] = useState<CarrierRelease | null>(null);
 
@@ -49,16 +81,28 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
     enabled: Boolean(selectedEntry),
   });
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view epay-trust-reference">
-        <KpiSkeletonGrid count={3} />
-        <TableSkeleton rows={5} />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view epay-trust-reference">
+          <KpiSkeletonGrid count={3} />
+          <TableSkeleton rows={5} />
+        </div>
+      }
+      empty={<HubEmptyState preset="generic-list" />}
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view epay-trust-reference">
       <RoleTabHeader
         title={trustReferenceHeader.title}
@@ -69,17 +113,31 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
       <div className="epay-trust-updated">{trustLastUpdated}</div>
 
       <section className="va-ops-kpi-strip" aria-label="Trust account KPI summary">
-        <div className="commercial-hub-kpi-grid epay-trust-kpi-grid">
+        <div className="commercial-hub-kpi-grid hub-kpi-grid epay-trust-kpi-grid">
           {trustReferenceKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
+            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
           ))}
         </div>
       </section>
+
+      <dl className="epay-trust-money-strip" aria-label="Trust money summary">
+        <div className="epay-trust-money-card">
+          <dt>Deposits Today</dt>
+          <dd>{dailyReconciliation.depositsCleared}</dd>
+        </div>
+        <div className="epay-trust-money-card epay-trust-money-card--releases">
+          <dt>Carrier Releases</dt>
+          <dd>{dailyReconciliation.carrierPaymentsSent}</dd>
+        </div>
+        <div className="epay-trust-money-card epay-trust-money-card--holds">
+          <dt>Pending Holds</dt>
+          <dd>{dailyReconciliation.pendingAdjustments}</dd>
+        </div>
+        <div className="epay-trust-money-card">
+          <dt>Reconciliation</dt>
+          <dd>{dailyReconciliation.difference}</dd>
+        </div>
+      </dl>
 
       <div className="epay-trust-main">
         <section className="va-ops-panel" aria-label="Trust ledger activity">
@@ -126,7 +184,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
             <h3 className="va-ops-section-title">Pending Deposits</h3>
             <p className="va-ops-section-sub">Incoming money visibility.</p>
           </div>
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr><th>Client</th><th>Amount</th><th>Method</th><th>ETA</th><th>Status</th><th aria-label="Action" /></tr>
@@ -157,7 +215,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
           <h3 className="va-ops-section-title">Carrier Releases</h3>
           <p className="va-ops-section-sub">Outgoing carrier payment queue.</p>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr><th>Client</th><th>Carrier</th><th>Amount</th><th>Due</th><th>Status</th><th aria-label="Action" /></tr>
@@ -189,8 +247,24 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         </div>
       </section>
 
-      <EPayAccordion title="Broker Fee Holds" subtitle="Separate compliance tracking — broker fees held apart from premiums." className="epay-broker-fee-accordion">
-        <div className="commercial-hub-table-wrap">
+      <EPayAccordion
+        title="Broker Fee Holds"
+        subtitle="Separate compliance tracking — broker fees held apart from premiums."
+        className="epay-broker-fee-accordion"
+        countBadge={brokerFeeLedger.length}
+        statusSummary={`${heldBrokerFees} held · ${brokerFeeLedger.length} total`}
+        preview={
+          <ul className="epay-accordion-preview-list">
+            {brokerFeeLedger.slice(0, 2).map((row) => (
+              <li key={row.id} className="epay-accordion-preview-item">
+                <span className="epay-accordion-preview-label">{row.client}</span>
+                <span className="epay-accordion-preview-meta">{row.brokerFee} · {row.status}</span>
+              </li>
+            ))}
+          </ul>
+        }
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr><th>Client</th><th>Broker Fee</th><th>Status</th><th>Collected</th></tr>
@@ -224,19 +298,25 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         </dl>
       </section>
 
-      <section className="va-ops-panel" aria-label="Trust activity">
+      <section className="va-ops-panel epay-trust-activity-panel" aria-label="Trust activity">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Trust Activity</h3>
-          <p className="va-ops-section-sub">Financial audit trail.</p>
+          <p className="va-ops-section-sub">Financial audit trail with amounts and status.</p>
         </div>
-        <ol className="outreach-activity-timeline">
+        <ol className="epay-trust-activity-timeline">
           {trustActivity.map((item) => (
-            <li key={item.id} className="outreach-activity-item">
-              <div className="outreach-activity-dot" aria-hidden="true" />
-              <div className="outreach-activity-content">
-                <div className="outreach-activity-message">{item.message}</div>
-                <div className="outreach-activity-time">{item.timeAgo}</div>
+            <li key={item.id} className="epay-trust-activity-item">
+              <span className={cn("epay-trust-activity-icon", trustActivityIconClass[item.type])}>
+                <AppIcon name={trustActivityIcon[item.type]} size={13} strokeWidth={2.25} />
+              </span>
+              <div className="epay-trust-activity-body">
+                <div className="epay-trust-activity-message">{item.message}</div>
+                {item.amount && (
+                  <span className="epay-trust-activity-amount">{item.amount}</span>
+                )}
+                <time className="epay-trust-activity-time">{item.timeAgo}</time>
               </div>
+              <span className={cn("badge", ledgerStatusClass[item.status])}>{item.status}</span>
             </li>
           ))}
         </ol>
@@ -254,5 +334,6 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
 
       <TrustLedgerDrawer entry={selectedEntry} onClose={() => setSelectedEntry(null)} />
     </div>
+    </DataStateView>
   );
 }

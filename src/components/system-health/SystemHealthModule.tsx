@@ -34,6 +34,7 @@ import {
   type SystemHealthOverrides,
 } from "@/data/systemHealth";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
+import { useAuditLog } from "@/components/audit-log/AuditLogProvider";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
 import { formatTimeLabel } from "@/lib/formatting";
@@ -54,6 +55,7 @@ function HealthScoreBar({ score }: { score: number }) {
 export function SystemHealthModule() {
   const searchParams = useSearchParams();
   const { can, requirePermission } = usePermissions();
+  const { open: openAuditLog, canView: canViewAuditLog } = useAuditLog();
   const toast = useToast();
   const hasAccess = can("access:system-health");
   const canManage = can("action:retry-systems");
@@ -179,7 +181,10 @@ export function SystemHealthModule() {
           toast.success(toastMessages.systemHealth.queueCleared);
           break;
         case "View audit logs":
-          toast.success(`Audit logs opened — ${system.name}`);
+          if (canViewAuditLog) {
+            openAuditLog();
+            toast.success(`Audit log opened — ${system.name}`);
+          }
           break;
         case "Escalate incident":
           if (!canManage) return;
@@ -189,7 +194,7 @@ export function SystemHealthModule() {
           toast.success(`${action} — ${system.name}`);
       }
     },
-    [canManage, persistSystem, toast],
+    [canManage, canViewAuditLog, openAuditLog, persistSystem, toast],
   );
 
   useShortcutAction(
@@ -323,7 +328,7 @@ export function SystemHealthModule() {
             <p className="commercial-hub-empty-state-desc">Try adjusting your search or summary filters.</p>
           </div>
         ) : (
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table system-health-table">
               <thead>
                 <tr>
@@ -413,7 +418,7 @@ export function SystemHealthModule() {
             <p className="commercial-hub-empty-state-desc">Try adjusting your search or log filters.</p>
           </div>
         ) : (
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table system-health-log-table">
               <thead>
                 <tr>

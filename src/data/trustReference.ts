@@ -366,12 +366,56 @@ export const dailyReconciliation = {
   status: "Balanced" as const,
 };
 
-export const trustActivity = [
-  { id: "ta-1", message: "Martinez Landscaping deposit initiated", timeAgo: "Today" },
-  { id: "ta-2", message: "Kim Auto Shop carrier payment released", timeAgo: "Today" },
-  { id: "ta-3", message: "Greenline Logistics broker fee logged", timeAgo: "Yesterday" },
-  { id: "ta-4", message: "Kim Auto Shop deposit pending", timeAgo: "Yesterday" },
-  { id: "ta-5", message: "Rivera Construction adjustment recorded", timeAgo: "2 days ago" },
+export type TrustActivityItem = {
+  id: string;
+  message: string;
+  timeAgo: string;
+  amount?: string;
+  status: LedgerEntryStatus;
+  type: LedgerEntryType;
+};
+
+export const trustActivity: TrustActivityItem[] = [
+  {
+    id: "ta-1",
+    message: "Martinez Landscaping deposit initiated",
+    timeAgo: "Today, 9:14 AM",
+    amount: "$4,820",
+    status: "Processing",
+    type: "Deposit",
+  },
+  {
+    id: "ta-2",
+    message: "Kim Auto Shop carrier payment released",
+    timeAgo: "Today, 8:42 AM",
+    amount: "$5,200",
+    status: "Completed",
+    type: "Carrier Release",
+  },
+  {
+    id: "ta-3",
+    message: "Greenline Logistics broker fee logged",
+    timeAgo: "Yesterday, 4:30 PM",
+    amount: "$550",
+    status: "Completed",
+    type: "Broker Fee Hold",
+  },
+  {
+    id: "ta-4",
+    message: "Kim Auto Shop deposit pending clearance",
+    timeAgo: "Yesterday, 11:05 AM",
+    amount: "$5,800",
+    status: "Pending",
+    type: "Deposit",
+  },
+  {
+    id: "ta-5",
+    message: "Rivera Construction adjustment recorded",
+    timeAgo: "2 days ago",
+    amount: "$150",
+    status: "Completed",
+    type: "Adjustment",
+  },
 ];
 
 export const ledgerStatusClass: Record<LedgerEntryStatus, string> = {

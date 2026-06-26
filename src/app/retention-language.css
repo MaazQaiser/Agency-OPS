@@ -1,0 +1,119 @@
+/* ═══════════════════════════════════════════════════════════════
+   Retention Hub — Language Toggle (EN | KR)
+   ═══════════════════════════════════════════════════════════════ */
+
+.retention-locale-root[data-retention-locale="en"] .retention-locale-surface {
+  font-family: var(--font-retention-en), var(--font-family), system-ui, sans-serif;
+}
+
+.retention-locale-root[data-retention-locale="kr"] .retention-locale-surface {
+  font-family: var(--font-retention-kr), var(--font-family), system-ui, sans-serif;
+}
+
+.retention-locale-surface {
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.retention-locale-root[data-retention-switching="true"] .retention-locale-surface {
+  opacity: 0.88;
+  transform: translateY(2px);
+}
+
+.retention-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-default);
+  background: var(--surface-card);
+  gap: 2px;
+}
+
+.retention-lang-toggle-btn {
+  min-width: 40px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.retention-lang-toggle-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--ita-primary) 10%, transparent);
+}
+
+.retention-lang-toggle-btn.active {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--ita-primary) 18%, var(--surface-elevated));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.retention-lang-toggle-btn--dim {
+  opacity: 0.55;
+}
+
+.retention-dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-card);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.retention-dept-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ita-primary);
+}
+
+.retention-locale-root[data-retention-locale="kr"] .retention-dept-badge-dot {
+  background: var(--draft-violet);
+}
+
+.retention-page-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.retention-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .retention-lang-toggle-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retention-locale-surface,
+  .retention-lang-toggle-btn {
+    transition: none !important;
+  }
+
+  .retention-locale-root[data-retention-switching="true"] .retention-locale-surface {
+    transform: none;
+  }
+}

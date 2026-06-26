@@ -199,6 +199,7 @@ export type IntakeDraft = {
   lastEdited: string;
   progress: number;
   status: IntakeDraftStatus;
+  assignedOwner: string;
 };
 
 export const savedDrafts: IntakeDraft[] = [
@@ -206,28 +207,31 @@ export const savedDrafts: IntakeDraft[] = [
     id: "draft-rivera",
     client: "Rivera Construction",
     form: "Contractors",
-    lastEdited: "Today",
+    lastEdited: "Today, 2:14 PM",
     progress: 60,
     formType: "contractors",
     status: "In Progress",
+    assignedOwner: "JoJo",
   },
   {
     id: "draft-greenline",
     client: "Greenline Logistics",
     form: "Contractors",
-    lastEdited: "Yesterday",
+    lastEdited: "Yesterday, 4:30 PM",
     progress: 40,
     formType: "contractors",
     status: "Draft",
+    assignedOwner: "Pedro",
   },
   {
     id: "draft-kim",
     client: "Kim Auto Shop",
     form: "Contractors",
-    lastEdited: "Yesterday",
+    lastEdited: "Yesterday, 11:05 AM",
     progress: 25,
     formType: "contractors",
     status: "Draft",
+    assignedOwner: "Tracie",
   },
   {
     id: "draft-atlas",
@@ -237,5 +241,6 @@ export const savedDrafts: IntakeDraft[] = [
     progress: 15,
     formType: "contractors",
     status: "Draft",
+    assignedOwner: "Valerie",
   },
 ];

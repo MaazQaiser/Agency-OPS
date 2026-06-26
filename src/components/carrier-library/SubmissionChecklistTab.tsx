@@ -16,6 +16,7 @@ import {
 import { routes } from "@/lib/routes";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { cn } from "@/lib/cn";
+import { HubEmptyState } from "@/components/state";
 import { SubmissionDocumentDrawer } from "./SubmissionDocumentDrawer";
 
 export function SubmissionChecklistTab() {
@@ -35,10 +36,13 @@ export function SubmissionChecklistTab() {
     return (
       <div className="va-ops-role-view submission-checklist">
         <section className="va-ops-panel">
-          <p>Submission checklist not found.</p>
-          <button type="button" className="va-ops-role-action-btn" onClick={goToProfile}>
-            Back to Carrier Profile
-          </button>
+          <HubEmptyState
+            preset="generic-list"
+            title="Submission checklist not found"
+            description="This submission may have been archived or the link is outdated."
+            ctaLabel="Back to Carrier Profile"
+            onAction={goToProfile}
+          />
         </section>
       </div>
     );
@@ -181,7 +185,7 @@ export function SubmissionChecklistTab() {
           <h3 className="va-ops-section-title">Coverage Validation</h3>
           <p className="va-ops-section-sub">Confirm coverage lines before sending to market.</p>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table submission-coverage-table">
             <thead>
               <tr>
@@ -264,7 +268,7 @@ export function SubmissionChecklistTab() {
             {approvalStatus}
           </span>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table submission-approval-table">
             <thead>
               <tr>

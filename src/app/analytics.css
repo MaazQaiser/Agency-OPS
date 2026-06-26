@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════════════════════
+   Analytics Hub — Component Styles
+   Cyan identity (#0891B2). Signature element: 7-point KPI sparkline.
+   ═══════════════════════════════════════════════════════════════ */
+
+.analytics-folio-badge {
+  font-size: 9px;
+  font-family: var(--font-mono), monospace;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(8, 145, 178, 0.1);
+  border: 1px solid rgba(8, 145, 178, 0.25);
+  color: #0891b2;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* ── KPI Grid — 3-column ── */
+.analytics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.analytics-kpi-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid rgba(8, 145, 178, 0.45);
+  border-radius: 10px;
+  padding: 16px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.analytics-kpi-card:hover {
+  border-color: rgba(8, 145, 178, 0.35);
+  box-shadow: 0 4px 18px rgba(8, 145, 178, 0.08);
+}
+
+.analytics-kpi-card--negative {
+  border-top-color: rgba(244, 63, 94, 0.45);
+}
+
+.analytics-kpi-card--negative:hover {
+  border-color: rgba(244, 63, 94, 0.28);
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.06);
+}
+
+.analytics-kpi-label {
+  font-size: 9.5px;
+  font-family: var(--font-mono), monospace;
+  color: var(--text-muted, #5a7a95);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.analytics-kpi-value {
+  font-family: var(--font-display), serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary, #f0f6ff);
+  line-height: 1.1;
+  font-feature-settings: "lnum" 1;
+  margin-bottom: 8px;
+}
+
+.analytics-kpi-sparkline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.analytics-sparkline path {
+  stroke: #0891b2;
+}
+
+.analytics-sparkline--negative path {
+  stroke: #f43f5e;
+}
+
+.analytics-sparkline--neutral path {
+  stroke: rgba(170, 208, 231, 0.6);
+}
+
+.analytics-kpi-delta {
+  font-size: 10.5px;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+}
+
+.analytics-kpi-delta--positive {
+  color: #10b981;
+}
+
+.analytics-kpi-delta--negative {
+  color: #f43f5e;
+}
+
+.analytics-kpi-delta--neutral {
+  color: var(--text-muted, #5a7a95);
+}
+
+.analytics-kpi-sub {
+  font-size: 11px;
+  color: var(--text-muted, #5a7a95);
+}
+
+.analytics-content {
+  padding: 20px 0 40px;
+}
+
+@media (max-width: 700px) {
+  .analytics-kpi-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .analytics-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

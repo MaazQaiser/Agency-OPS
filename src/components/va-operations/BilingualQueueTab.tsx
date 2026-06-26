@@ -234,7 +234,7 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
             <p className="commercial-hub-empty-state-desc">Try adjusting your search or language filters.</p>
           </div>
         ) : (
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table bilingual-queue-table">
               <thead>
                 <tr>

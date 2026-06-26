@@ -1,23 +1,19 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { getNameInitials } from "@/lib/nameInitials";
+import { TeamAvatar, type TeamAvatarSize } from "./TeamAvatar";
 import { useAvatarProfile } from "./AvatarProfileProvider";
+import type { TeamAvatarStatus } from "@/lib/teamIdentity";
 
 type ClickableAvatarProps = {
   userId?: string;
   name?: string;
-  size?: "sm" | "md" | "lg";
+  size?: TeamAvatarSize;
   className?: string;
   imageSrc?: string;
-  imageAlt?: string;
-  onImageError?: () => void;
-};
-
-const sizeClass = {
-  sm: "clickable-avatar-sm",
-  md: "clickable-avatar-md",
-  lg: "clickable-avatar-lg",
+  status?: TeamAvatarStatus;
+  showStatus?: boolean;
+  preferVa?: boolean;
 };
 
 export function ClickableAvatar({
@@ -26,36 +22,30 @@ export function ClickableAvatar({
   size = "md",
   className,
   imageSrc,
-  imageAlt,
-  onImageError,
+  status,
+  showStatus = true,
+  preferVa = false,
 }: ClickableAvatarProps) {
   const { openProfile } = useAvatarProfile();
   const label = name ?? userId ?? "User";
-  const initials = getNameInitials(label);
 
   return (
-    <button
-      type="button"
-      className={cn("clickable-avatar", sizeClass[size], className)}
-      aria-label={`View profile for ${label}`}
+    <TeamAvatar
+      userId={userId}
+      name={name}
+      size={size}
+      status={status}
+      showStatus={showStatus}
+      preferVa={preferVa}
+      imageSrc={imageSrc}
+      interactive
+      className={className}
       onClick={(e) => {
         e.stopPropagation();
         openProfile(userId ?? name ?? "");
       }}
-    >
-      {imageSrc ? (
-        <img
-          src={imageSrc}
-          alt={imageAlt ?? label}
-          className="clickable-avatar-img"
-          onError={onImageError}
-        />
-      ) : (
-        <span className="clickable-avatar-initials" aria-hidden="true">
-          {initials}
-        </span>
-      )}
-    </button>
+      aria-label={`View profile for ${label}`}
+    />
   );
 }
 
@@ -64,9 +54,18 @@ type UserChipProps = {
   name: string;
   className?: string;
   showAvatar?: boolean;
+  status?: TeamAvatarStatus;
+  preferVa?: boolean;
 };
 
-export function UserChip({ userId, name, className, showAvatar = true }: UserChipProps) {
+export function UserChip({
+  userId,
+  name,
+  className,
+  showAvatar = true,
+  status,
+  preferVa = false,
+}: UserChipProps) {
   const { openProfile } = useAvatarProfile();
 
   return (
@@ -79,9 +78,14 @@ export function UserChip({ userId, name, className, showAvatar = true }: UserChi
       }}
     >
       {showAvatar && (
-        <span className="user-chip-avatar" aria-hidden="true">
-          {getNameInitials(name)}
-        </span>
+        <TeamAvatar
+          userId={userId}
+          name={name}
+          size="sm"
+          status={status}
+          preferVa={preferVa}
+          showTooltip={false}
+        />
       )}
       <span className="user-chip-label">{name}</span>
     </button>

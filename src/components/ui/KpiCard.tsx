@@ -1,6 +1,8 @@
 import type { KpiColor } from "@/types";
 import { cn } from "@/lib/cn";
 import { emphasizeKpiSub } from "@/lib/emphasizeKpiSub";
+import { KpiSparklineIntelligence } from "@/components/kpi/KpiSparklineIntelligence";
+import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
 
 export type KpiCardVariant = "default" | "production" | "retention" | "commercial";
 
@@ -14,6 +16,9 @@ export type KpiCardProps = {
   progress?: { width: string; color: KpiColor };
   valueStyle?: React.CSSProperties;
   className?: string;
+  trend?: KpiTrendData;
+  polarity?: KpiPolarity;
+  sparkline?: boolean;
 };
 
 export function KpiCard({
@@ -26,6 +31,9 @@ export function KpiCard({
   progress,
   valueStyle,
   className,
+  trend,
+  polarity,
+  sparkline = true,
 }: KpiCardProps) {
   const moduleClass = variant !== "default" ? variant : "";
   const borderVariant =
@@ -77,6 +85,9 @@ export function KpiCard({
       >
         {value}
       </div>
+      {sparkline && (
+        <KpiSparklineIntelligence label={label} trend={trend} polarity={polarity} />
+      )}
       {sub && <div className={subClassName}>{emphasizeKpiSub(sub)}</div>}
       {progress && variant === "production" && (
         <div className="progress-bar production">

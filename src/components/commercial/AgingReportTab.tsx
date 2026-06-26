@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { KpiCard } from "@/components/ui/KpiCard";
 import { agingBuckets, agingKpis, chartAgingData } from "@/data/commercialSubmissions";
 import { colors } from "@/lib/colors";
 
@@ -35,11 +36,14 @@ export function AgingReportTab() {
 
       <div className="kpi-grid">
         {agingKpis.map((kpi) => (
-          <div key={kpi.label} className={`kpi-card${kpi.variant !== "default" ? ` ${kpi.variant}` : ""}`}>
-            <div className="kpi-label">{kpi.label}</div>
-            <div className="kpi-value">{kpi.value}</div>
-            <div className="kpi-sub">{kpi.sub}</div>
-          </div>
+          <KpiCard
+            key={kpi.label}
+            label={kpi.label}
+            value={kpi.value}
+            sub={kpi.sub}
+            color={kpi.variant !== "default" ? (kpi.variant as "yellow" | "red" | "green" | "primary") : undefined}
+            polarity={kpi.label.toLowerCase().includes("overdue") || kpi.label.toLowerCase().includes("stalled") ? "lower-better" : undefined}
+          />
         ))}
       </div>
 

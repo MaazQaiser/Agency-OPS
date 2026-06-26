@@ -13,6 +13,7 @@ import {
   type HandoffPriority,
   type ResearchProspect,
 } from "@/data/researchVA";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import { ProspectDrawer } from "./ProspectDrawer";
 import { RoleTabHeader } from "./RoleTabHeader";
@@ -62,12 +63,7 @@ export function ResearchVATab({ embedded = false }: { embedded?: boolean } = {})
         <section className="va-ops-kpi-strip" aria-label="Research performance summary">
           <div className="va-ops-kpi-grid">
             {researchKpis.map((kpi) => (
-              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-                <div className="va-ops-kpi-label">{kpi.label}</div>
-                <div className="va-ops-kpi-value">{kpi.value}</div>
-                <div className="va-ops-kpi-sub">{kpi.sub}</div>
-                <div className="va-ops-kpi-helper">{kpi.helper}</div>
-              </article>
+              <VaOpsKpiCard key={kpi.label} {...kpi} />
             ))}
           </div>
         </section>

@@ -1,5 +1,5 @@
 import { dailyAccountability, priorityQueue } from "@/data/commercialSubmissions";
-import { getNameInitials } from "@/lib/nameInitials";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
 
 export function DailyAccountabilityTab() {
   return (
@@ -13,9 +13,7 @@ export function DailyAccountabilityTab() {
         {dailyAccountability.map((card) => (
           <div key={card.name} className="acc-card">
             <div className="acc-name">
-              <span className="acc-avatar" aria-hidden="true">
-                {getNameInitials(card.name)}
-              </span>
+              <TeamAvatar name={card.name} size="sm" preferVa={card.name === "Pedro"} />
               {card.name}
             </div>
             <div className="acc-row"><span className="acc-metric">Subs touched</span><span className="acc-val">{card.subsTouched}</span></div>

@@ -3,12 +3,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { submissions } from "@/data/commercialSubmissions";
+import { trackerSubmissions } from "@/data/submissionTracker";
+import { CoverageChecklistProgress } from "@/components/commercial/CoverageChecklistProgress";
+import {
+  findTrackerProgressByClient,
+  progressFromMissingDocsField,
+} from "@/lib/coverageChecklistProgress";
 import {
   filterSubmissions,
   getRowClass,
   getStatusBadgeClass,
   needsMarketWarning,
 } from "@/lib/commercialHelpers";
+import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
+import {
+  eoRiskFromSubmission,
+  sortByEoExposure,
+  type EoExposureSort,
+} from "@/lib/eoRiskScore";
 
 const PAGE_SIZE = 5;
 
@@ -16,12 +28,13 @@ export function PipelineTab() {
   const [lobFilter, setLobFilter] = useState("all");
   const [producerFilter, setProducerFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [exposureSort, setExposureSort] = useState<EoExposureSort>("highest");
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(
-    () => filterSubmissions(submissions, { lob: lobFilter, producer: producerFilter, status: statusFilter }),
-    [lobFilter, producerFilter, statusFilter]
-  );
+  const filtered = useMemo(() => {
+    const base = filterSubmissions(submissions, { lob: lobFilter, producer: producerFilter, status: statusFilter });
+    return sortByEoExposure(base, eoRiskFromSubmission, exposureSort);
+  }, [lobFilter, producerFilter, statusFilter, exposureSort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -32,7 +45,7 @@ export function PipelineTab() {
 
   useEffect(() => {
     setPage(1);
-  }, [lobFilter, producerFilter, statusFilter]);
+  }, [lobFilter, producerFilter, statusFilter, exposureSort]);
 
   return (
     <div className="pipeline-tab">
@@ -77,6 +90,17 @@ export function PipelineTab() {
             <option value="Declined">Declined</option>
             <option value="Bound">Bound</option>
           </select>
+          <select
+            className="header-filter-select"
+            value={exposureSort}
+            onChange={(e) => setExposureSort(e.target.value as EoExposureSort)}
+            aria-label="Sort by E&O exposure"
+          >
+            <option value="highest">Highest exposure</option>
+            <option value="lowest">Lowest exposure</option>
+            <option value="oldest">Oldest</option>
+            <option value="newest">Newest</option>
+          </select>
         </div>
       </div>
 
@@ -97,6 +121,8 @@ export function PipelineTab() {
                 <th>Premium</th>
                 <th>Follow-Up</th>
                 <th>Days</th>
+                <th>E&O Risk</th>
+                <th>Checklist</th>
                 <th>Status</th>
                 <th>Missing Docs</th>
                 <th>UW</th>
@@ -104,7 +130,12 @@ export function PipelineTab() {
               </tr>
             </thead>
             <tbody>
-              {pageItems.map((s) => (
+              {pageItems.map((s) => {
+                const risk = eoRiskFromSubmission(s);
+                const checklistProgress =
+                  findTrackerProgressByClient(s.client, trackerSubmissions)
+                  ?? progressFromMissingDocsField(s.missingDocs);
+                return (
                 <tr key={s.id} className={getRowClass(s.status, s.daysOpen)}>
                   <td style={{ fontSize: "var(--font-size-12)", color: "var(--text-muted)" }}>{s.id}</td>
                   <td><strong>{s.client}</strong></td>
@@ -118,12 +149,17 @@ export function PipelineTab() {
                   <td>{s.premium ? `$${s.premium.toLocaleString()}` : "—"}</td>
                   <td style={{ fontSize: "var(--font-size-12)" }}>{s.followUp || "—"}</td>
                   <td style={{ color: s.daysOpen > 10 ? "var(--red)" : s.daysOpen > 5 ? "var(--yellow)" : "var(--text-main)" }}>{s.daysOpen}</td>
+                  <td><EoRiskBadge score={risk} /></td>
+                  <td>
+                    <CoverageChecklistProgress progress={checklistProgress} variant="compact" />
+                  </td>
                   <td><span className={`badge ${getStatusBadgeClass(s.status, s.daysOpen)}`}>{s.status}</span></td>
                   <td style={{ fontSize: "var(--font-size-12)", color: s.missingDocs !== "None" && s.missingDocs !== "N/A" ? "var(--red)" : "var(--text-muted)" }}>{s.missingDocs}</td>
                   <td style={{ fontSize: "var(--font-size-12)", color: "var(--text-muted)" }}>{s.uw}</td>
                   <td style={{ fontSize: "var(--font-size-12)" }}>{s.binding || "—"}</td>
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
           </table>
         </div>

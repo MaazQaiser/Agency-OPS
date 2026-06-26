@@ -1,4 +1,5 @@
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { carrierLibraryHeader } from "@/data/carrierLibrary";
 
 type CarrierLibraryPageHeaderProps = {
@@ -25,6 +26,7 @@ export function CarrierLibraryPageHeader({ onQuickActionClick }: CarrierLibraryP
             onClick={() => onQuickActionClick?.(action.id)}
           />
         ))}
+        <HubHelpTrigger hubId="carrier-library" />
       </div>
     </header>
   );

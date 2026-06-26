@@ -28,7 +28,9 @@ import {
   type WorkflowStatus,
 } from "@/data/automationBuilder";
 import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { DataStateView, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import { AddTriggerDrawer } from "./AddTriggerDrawer";
 import { CreateWorkflowModal } from "./CreateWorkflowModal";
@@ -74,7 +76,17 @@ type ActiveModal = "create" | "logs" | "test" | null;
 export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean } = {}) {
   const toast = useToast();
   const testToastIdRef = useRef<string | null>(null);
-  const loading = useTabLoading();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => true,
+    isEmpty: () => false,
+    errorPreset: "supabase-timeout",
+  });
   const [workflows, setWorkflows] = useState(initialWorkflows);
   const [triggers, setTriggers] = useState(initialTriggerActivity);
   const [execLogs, setExecLogs] = useState(initialExecutionHistory);
@@ -226,16 +238,7 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
     setFailedRuns((prev) => [failedEntry, ...prev]);
   }, [toast]);
 
-  if (loading) {
-    return (
-      <div className={cn("va-ops-role-view va-ops-automation", embedded && "embedded")}>
-        <KpiSkeletonGrid count={4} />
-        <CardSkeletonGrid count={3} tall />
-      </div>
-    );
-  }
-
-  return (
+  const content = (
     <div className={cn("va-ops-role-view va-ops-automation", embedded && "embedded")}>
       {!embedded && (
         <RoleTabHeader
@@ -250,12 +253,7 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
         <section className="va-ops-kpi-strip" aria-label="Automation KPI summary">
           <div className="va-ops-kpi-grid">
             {displayKpis.map((kpi) => (
-              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-                <div className="va-ops-kpi-label">{kpi.label}</div>
-                <div className="va-ops-kpi-value">{kpi.value}</div>
-                <div className="va-ops-kpi-sub">{kpi.sub}</div>
-                <div className="va-ops-kpi-helper">{kpi.helper}</div>
-              </article>
+              <VaOpsKpiCard key={kpi.label} {...kpi} />
             ))}
           </div>
         </section>
@@ -477,5 +475,32 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
         onRun={handleRunTest}
       />
     </div>
+  );
+
+  if (embedded) return content;
+
+  return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view va-ops-automation">
+          <KpiSkeletonGrid count={4} />
+          <CardSkeletonGrid count={3} tall />
+        </div>
+      }
+      error={
+        <HubErrorState
+          preset="supabase-timeout"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+      {content}
+    </DataStateView>
   );
 }

@@ -1,0 +1,627 @@
+/* ── Agency OS — Interaction Polish Layer ── */
+
+:root {
+  --motion-fast: 120ms;
+  --motion-standard: 180ms;
+  --motion-primary: 200ms;
+  --motion-complex: 240ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-in-out: ease-in-out;
+  --motion-ease-out: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-standard: 0ms;
+    --motion-primary: 0ms;
+    --motion-complex: 0ms;
+  }
+
+  .motion-hub-page,
+  .motion-tab-panel,
+  .notification-card,
+  .pipeline-hover-actions,
+  .commercial-hub-empty-state-icon,
+  .motion-empty-cta {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── 1. Hub & tab transitions ── */
+@keyframes motion-hub-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.motion-hub-page,
+.motion-tab-panel {
+  animation: motion-hub-enter var(--motion-primary) var(--motion-ease) both;
+}
+
+.va-ops-tab-content {
+  position: relative;
+  min-height: 0;
+}
+
+.tab-panel.active {
+  animation: motion-hub-enter var(--motion-primary) var(--motion-ease) both;
+}
+
+/* ── 2. Top nav active state ── */
+.top-header-nav-link {
+  position: relative;
+  isolation: isolate;
+  border-bottom-color: transparent !important;
+  transition:
+    color var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease);
+}
+
+.top-header-nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 4px 6px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  opacity: 0;
+  transition: opacity var(--motion-standard) var(--motion-ease);
+  z-index: -1;
+}
+
+.top-header-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--primary) 42%, transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--motion-primary) var(--motion-ease);
+}
+
+.top-header-nav-link:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.top-header-nav-link:hover::before {
+  opacity: 1;
+}
+
+.top-header-nav-link:hover::after {
+  transform: scaleX(0.55);
+  opacity: 0.65;
+}
+
+.top-header-nav-link.active {
+  color: var(--primary-light);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  box-shadow: inset 0 -12px 24px -18px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.top-header-nav-link.active::before {
+  opacity: 1;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.top-header-nav-link.active::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Hub tab buttons */
+.va-ops-tab-btn {
+  position: relative;
+  transition:
+    color var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease-in-out);
+}
+
+.va-ops-tab-btn::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transition: transform var(--motion-primary) var(--motion-ease);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+.va-ops-tab-btn:hover::after {
+  transform: scaleX(0.5);
+}
+
+.va-ops-tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+.va-ops-tab-btn.active {
+  box-shadow: inset 0 -10px 20px -16px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* ── 3. KPI card hover system ── */
+.kpi-card,
+.va-ops-kpi-card {
+  transition:
+    transform var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease);
+  will-change: transform;
+}
+
+.kpi-card:hover,
+.va-ops-kpi-card:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.kpi-card.primary:hover,
+.va-ops-kpi-card.primary:hover {
+  border-color: var(--metric-blue-border);
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--metric-blue) 18%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--metric-blue) 12%, transparent);
+}
+
+.kpi-card.green:hover,
+.va-ops-kpi-card.green:hover {
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--success-green) 18%, transparent);
+}
+
+.kpi-card.yellow:hover,
+.va-ops-kpi-card.yellow:hover,
+.va-ops-kpi-card.orange:hover {
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--warning-amber) 18%, transparent);
+}
+
+.kpi-card.red:hover,
+.va-ops-kpi-card.red:hover {
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--critical-rose) 18%, transparent);
+}
+
+/* ── 4. Button interaction system ── */
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):not(.cmd-palette-clear) {
+  transition:
+    transform 150ms var(--motion-ease-in-out),
+    filter 150ms var(--motion-ease-in-out),
+    background 150ms var(--motion-ease-in-out),
+    border-color 150ms var(--motion-ease-in-out),
+    box-shadow 150ms var(--motion-ease-in-out),
+    color 150ms var(--motion-ease-in-out);
+}
+
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):hover {
+  filter: brightness(1.05);
+}
+
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):active {
+  transform: scale(0.98);
+  filter: brightness(0.98);
+}
+
+.va-ops-action-btn:hover,
+.top-header-btn:hover,
+.top-header-search-trigger:hover,
+.va-ops-tab-btn:hover {
+  transform: scale(1.02);
+}
+
+.va-ops-action-btn:active,
+.top-header-btn:active,
+.top-header-search-trigger:active,
+.va-ops-tab-btn:active {
+  transform: scale(0.98);
+}
+
+/* ── 5. Table row states ── */
+tbody tr,
+.commercial-hub-table tbody tr,
+.va-ops-priority-table tbody tr,
+.va-ops-lead-table tbody tr {
+  transition:
+    background var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-fast) var(--motion-ease-out),
+    transform var(--motion-fast) var(--motion-ease-out);
+}
+
+tbody tr:hover,
+.commercial-hub-table tbody tr:hover {
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface-card));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.commercial-hub-table tbody tr.commercial-hub-table-row-clickable {
+  cursor: pointer;
+}
+
+.commercial-hub-table tbody tr.commercial-hub-table-row-clickable:hover {
+  transform: translateY(-1px);
+}
+
+.commercial-hub-table tbody tr.commercial-hub-table-row-selected,
+tbody tr.row-selected,
+tbody tr[aria-selected="true"] {
+  background: color-mix(in srgb, var(--metric-blue) 12%, var(--surface-card));
+  box-shadow: inset 3px 0 0 var(--metric-blue);
+}
+
+tbody tr.row-unread {
+  background: color-mix(in srgb, var(--ita-primary) 8%, var(--surface-card));
+}
+
+tbody tr.row-critical {
+  box-shadow: inset 3px 0 0 var(--critical-rose);
+}
+
+/* ── 6. Pipeline card hover ── */
+.submission-queue-row,
+.va-ops-pipeline-row,
+.commercial-hub-pipeline-stage-h {
+  position: relative;
+  transition:
+    transform var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease);
+}
+
+.submission-queue-row {
+  border: 1px solid transparent;
+}
+
+.submission-queue-row:hover,
+.va-ops-pipeline-row:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--metric-blue) 22%, transparent);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  background: color-mix(in srgb, var(--metric-blue) 5%, var(--surface-card));
+}
+
+.submission-queue-row.submission-doc-blocker:hover {
+  border-color: color-mix(in srgb, var(--warning-amber) 30%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--warning-amber) 12%, transparent);
+}
+
+.submission-queue-row.submission-doc-blocker.critical:hover,
+.submission-queue-row.row-critical:hover {
+  border-color: color-mix(in srgb, var(--critical-rose) 35%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--critical-rose) 14%, transparent);
+}
+
+.commercial-hub-pipeline-stage-h:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--draft-violet) 14%, transparent);
+}
+
+.pipeline-hover-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity var(--motion-standard) var(--motion-ease),
+    transform var(--motion-standard) var(--motion-ease);
+}
+
+.submission-queue-row:hover .pipeline-hover-actions,
+.va-ops-pipeline-row:hover .pipeline-hover-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pipeline-hover-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--glass-surface-dim);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pipeline-hover-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-card));
+}
+
+/* ── 7. Notification card motion ── */
+@keyframes motion-notification-enter {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes motion-notification-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 200px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(8px);
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@keyframes motion-badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.notification-card {
+  animation: motion-notification-enter var(--motion-primary) var(--motion-ease) both;
+}
+
+.notification-card--dismissing {
+  animation: motion-notification-exit var(--motion-standard) var(--motion-ease) forwards;
+  overflow: hidden;
+}
+
+.notification-card.read,
+.notification-card.resolved {
+  transition: opacity var(--motion-standard) var(--motion-ease);
+}
+
+.notification-card.unread {
+  transition:
+    background var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    opacity var(--motion-standard) var(--motion-ease);
+}
+
+.top-header-badge {
+  animation: motion-badge-pulse 2.4s var(--motion-ease-in-out) infinite;
+}
+
+.top-header-btn-notifications-pulse .top-header-badge {
+  animation: motion-badge-pulse 1.2s var(--motion-ease-in-out) infinite;
+}
+
+/* ── 8. Modal & drawer polish ── */
+@keyframes motion-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes motion-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.va-ops-drawer-backdrop,
+.cmd-palette-backdrop {
+  animation: motion-backdrop-in var(--motion-primary) var(--motion-ease-out) both;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.va-ops-drawer {
+  animation: va-ops-drawer-in var(--motion-complex) var(--motion-ease) both;
+}
+
+.va-ops-modal-root .va-ops-modal,
+.eva-action-modal {
+  animation: va-ops-modal-in var(--motion-primary) var(--motion-ease) both;
+}
+
+/* ── 9. Dropdowns & filters ── */
+@keyframes motion-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.top-header-profile-dropdown,
+.notification-card-menu,
+.cmd-palette-category,
+.header-filter-select option {
+  animation: motion-dropdown-in var(--motion-standard) var(--motion-ease) both;
+}
+
+.top-header-profile-dropdown-item {
+  transition:
+    background var(--motion-fast) var(--motion-ease-out),
+    color var(--motion-fast) var(--motion-ease-out),
+    padding-left var(--motion-fast) var(--motion-ease-out);
+}
+
+.top-header-profile-dropdown-item:hover {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  padding-left: 14px;
+}
+
+.top-header-profile-dropdown-item.active {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary-light);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.header-filter-select {
+  transition:
+    border-color var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease);
+}
+
+.header-filter-select:hover {
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--border-default));
+}
+
+.header-filter-select:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* ── 10. Command palette motion ── */
+.cmd-palette {
+  transition:
+    opacity var(--motion-primary) var(--motion-ease),
+    transform var(--motion-primary) var(--motion-ease);
+}
+
+.cmd-palette-row {
+  transition:
+    background var(--motion-fast) var(--motion-ease-out),
+    transform var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-fast) var(--motion-ease-out);
+}
+
+.cmd-palette-row.active {
+  transform: translateX(2px);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.cmd-palette-row:hover,
+.cmd-palette-row.active {
+  transition-duration: var(--motion-fast);
+}
+
+/* ── 11. Avatar interaction ── */
+.team-avatar-btn:hover .team-avatar,
+.team-avatar-btn:focus-visible .team-avatar,
+.team-avatar.interactive:hover,
+.team-avatar.interactive:focus-visible {
+  transform: scale(1.05);
+  box-shadow:
+    0 4px 16px rgba(28, 43, 53, 0.38),
+    0 0 0 1px color-mix(in srgb, var(--ita-surface) 12%, transparent),
+    0 0 20px color-mix(in srgb, var(--ita-primary) 28%, transparent);
+}
+
+.team-avatar-tooltip {
+  animation: motion-dropdown-in var(--motion-standard) var(--motion-ease) both;
+}
+
+.avatar-profile-panel,
+.va-ops-drawer {
+  transition: transform var(--motion-complex) var(--motion-ease);
+}
+
+/* ── 12. Empty state motion ── */
+@keyframes motion-empty-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes motion-cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+}
+
+.commercial-hub-empty-state-icon,
+.epay-empty-state svg,
+.cmd-palette-empty .app-icon,
+.motion-empty-icon {
+  animation: motion-empty-float 4s var(--motion-ease-in-out) infinite;
+}
+
+.commercial-hub-empty-state .va-ops-action-btn,
+.epay-empty-state .va-ops-action-btn,
+.motion-empty-cta {
+  animation: motion-cta-pulse 3s var(--motion-ease-in-out) infinite;
+}
+
+/* Module nav (legacy) */
+.module-nav-link {
+  position: relative;
+  transition: color var(--motion-standard) var(--motion-ease), background var(--motion-standard) var(--motion-ease);
+}
+
+.module-nav-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform var(--motion-primary) var(--motion-ease);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.module-nav-link:hover::before {
+  transform: scaleY(0.5);
+  opacity: 0.6;
+}
+
+.module-nav-link.active::before {
+  transform: scaleY(1);
+}
+
+.module-nav-link.active {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+/* Producer cards */
+.producer-card {
+  transition:
+    transform var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease);
+}
+
+.producer-card:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.producer-card.active {
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 16%, transparent);
+}
+
+/* Panel cards */
+.va-ops-panel {
+  transition:
+    box-shadow var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease);
+}
+
+.va-ops-panel:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}

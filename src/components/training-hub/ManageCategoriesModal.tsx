@@ -143,7 +143,7 @@ export function ManageCategoriesModal({ open, onClose, onSave }: ManageCategorie
             </button>
           </div>
 
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr>

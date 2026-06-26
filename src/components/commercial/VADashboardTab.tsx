@@ -10,6 +10,9 @@ import {
   getStatusBadgeClass,
   needsMarketWarning,
 } from "@/lib/commercialHelpers";
+import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
+import { KpiCard } from "@/components/ui/KpiCard";
+import { eoRiskFromSubmission, sortByEoExposure } from "@/lib/eoRiskScore";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 
 const vaTeam = [
@@ -23,8 +26,13 @@ export function VADashboardTab() {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const filtered = useMemo(
-    () => filterSubmissions(submissions, { va: vaFilter, status: statusFilter }),
-    [vaFilter, statusFilter]
+    () =>
+      sortByEoExposure(
+        filterSubmissions(submissions, { va: vaFilter, status: statusFilter }),
+        eoRiskFromSubmission,
+        "highest",
+      ),
+    [vaFilter, statusFilter],
   );
 
   return (
@@ -68,26 +76,10 @@ export function VADashboardTab() {
       </div>
 
       <div className="kpi-grid">
-        <div className="kpi-card">
-          <div className="kpi-label">My Open Subs</div>
-          <div className="kpi-value">{vaKpis.open}</div>
-          <div className="kpi-sub">assigned to you</div>
-        </div>
-        <div className="kpi-card yellow">
-          <div className="kpi-label">Due Today</div>
-          <div className="kpi-value">{vaKpis.due}</div>
-          <div className="kpi-sub">follow-ups</div>
-        </div>
-        <div className="kpi-card red">
-          <div className="kpi-label">Overdue</div>
-          <div className="kpi-value">{vaKpis.overdue}</div>
-          <div className="kpi-sub">needs escalation</div>
-        </div>
-        <div className="kpi-card green">
-          <div className="kpi-label">Quoted</div>
-          <div className="kpi-value">{vaKpis.quoted}</div>
-          <div className="kpi-sub">awaiting bind decision</div>
-        </div>
+        <KpiCard label="My Open Subs" value={String(vaKpis.open)} sub="assigned to you" />
+        <KpiCard label="Due Today" value={String(vaKpis.due)} sub="follow-ups" color="yellow" />
+        <KpiCard label="Overdue" value={String(vaKpis.overdue)} sub="48h+ no activity" color="red" polarity="lower-better" />
+        <KpiCard label="Quoted This Week" value={String(vaKpis.quoted)} sub="awaiting bind decision" color="green" />
       </div>
 
       <hr className="divider" />
@@ -116,6 +108,7 @@ export function VADashboardTab() {
               <th>VA</th>
               <th>LOB</th>
               <th>Days Open</th>
+              <th>E&O Risk</th>
               <th>Markets</th>
               <th>Quotes</th>
               <th>Status</th>
@@ -125,12 +118,15 @@ export function VADashboardTab() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((s) => (
+            {filtered.map((s) => {
+              const risk = eoRiskFromSubmission(s);
+              return (
               <tr key={s.id} className={getRowClass(s.status, s.daysOpen)}>
                 <td><strong>{s.client}</strong></td>
                 <td>{s.va}</td>
                 <td>{s.lob}</td>
                 <td>{s.daysOpen}</td>
+                <td><EoRiskBadge score={risk} /></td>
                 <td>{s.markets} {needsMarketWarning(s) && <span className="mkt-warn"><AppIcon name="triangle-alert" size={12} strokeWidth={2.5} /> &lt;3</span>}</td>
                 <td>{s.quotes}</td>
                 <td><span className={`badge ${getStatusBadgeClass(s.status, s.daysOpen)}`}>{s.status === "Overdue" || (s.daysOpen > 10 && s.status !== "Bound" && s.status !== "Quoted") ? "Overdue" : s.status}</span></td>
@@ -144,7 +140,8 @@ export function VADashboardTab() {
                   </div>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>

@@ -2,6 +2,8 @@
 
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { commercialHubHeader } from "@/data/commercialHub";
 import { commercialHubQuickActionPermissions, filterQuickActions } from "@/data/rolePermissions";
 
@@ -26,28 +28,28 @@ export function CommercialHubPageHeader({ onQuickActionClick }: CommercialHubPag
         </div>
       </div>
 
-      {visibleActions.length > 0 && (
-        <div className="va-ops-page-header-toolbar commercial-hub-header-actions">
-          {visibleActions.map((action) => {
-            const perm = commercialHubQuickActionPermissions[action.id];
-            return (
-              <QuickActionButton
-                key={action.id}
-                actionId={action.id}
-                label={action.label}
-                icon={action.icon}
-                onClick={() => {
-                  if (perm) {
-                    requirePermission(perm, () => onQuickActionClick?.(action.id));
-                  } else {
-                    onQuickActionClick?.(action.id);
-                  }
-                }}
-              />
-            );
-          })}
-        </div>
-      )}
+      <div className="va-ops-page-header-toolbar commercial-hub-header-actions">
+        {visibleActions.map((action) => {
+          const perm = commercialHubQuickActionPermissions[action.id];
+          return (
+            <QuickActionButton
+              key={action.id}
+              actionId={action.id}
+              label={action.label}
+              icon={action.icon}
+              onClick={() => {
+                if (perm) {
+                  requirePermission(perm, () => onQuickActionClick?.(action.id));
+                } else {
+                  onQuickActionClick?.(action.id);
+                }
+              }}
+            />
+          );
+        })}
+        <ExportMenu kind="commercial-pipeline" />
+        <HubHelpTrigger hubId="commercial-hub" />
+      </div>
     </header>
   );
 }

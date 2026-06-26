@@ -1,6 +1,7 @@
 "use client";
 
 import { AppIcon } from "@/components/ui/AppIcon";
+import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { globalSearchHeader } from "@/data/globalSearch";
 import { useGlobalSearch } from "./GlobalSearchProvider";
 
@@ -42,6 +43,7 @@ export function GlobalSearchPageHeader() {
             {action.label}
           </button>
         ))}
+        <HubHelpTrigger hubId="global-search" />
       </div>
     </header>
   );

@@ -458,9 +458,9 @@ export function computeEngagementScore(engagement: ProposalEngagement): Engageme
 }
 
 export const engagementScoreClass: Record<EngagementScore, string> = {
-  Hot: "badge-red",
-  Warm: "badge-yellow",
-  Cold: "badge-gray",
+  Hot: "badge-green",
+  Warm: "badge-amber",
+  Cold: "badge-blue",
 };
 
 export function getWorkflowStepState(

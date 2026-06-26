@@ -1,16 +1,21 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
-import { CardSkeletonGrid, KpiSkeletonGrid } from "@/components/shared/loading";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import { crossModuleRoutes, navigateWithHandoff } from "@/lib/crossModuleLinks";
 import { routes } from "@/lib/routes";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import {
   bindingRules,
+  carrierConditionCardClass,
+  carrierConditionStatusClass,
   declineTriggers,
   requiredDocumentsByProduct,
   ruleStatusClass,
@@ -21,9 +26,29 @@ import {
 } from "@/data/submissionRules";
 
 export function SubmissionRulesTab() {
-  const loading = useTabLoading();
   const router = useRouter();
   const toast = useToast();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => requiredDocumentsByProduct,
+    errorPreset: "sheets-cache-failed",
+  });
+
+  const matrixByProduct = useMemo(() => {
+    const groups = new Map<string, typeof submissionMethodMatrix>();
+    for (const row of submissionMethodMatrix) {
+      const key = row.product.split("/")[0]?.trim() ?? row.product;
+      const list = groups.get(key) ?? [];
+      list.push(row);
+      groups.set(key, list);
+    }
+    return Array.from(groups.entries());
+  }, []);
 
   const applyRules = (product: string, documents: string[]) => {
     toast.success(toastMessages.carrierLibrary.rulesSaved, {
@@ -53,16 +78,27 @@ export function SubmissionRulesTab() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view submission-rules">
-        <KpiSkeletonGrid count={4} />
-        <CardSkeletonGrid count={3} />
-      </div>
-    );
-  }
-
   return (
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view submission-rules">
+          <TableSkeleton rows={6} />
+        </div>
+      }
+      empty={<HubEmptyState preset="generic-list" />}
+      error={
+        <HubErrorState
+          preset="sheets-cache-failed"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
     <div className="va-ops-role-view submission-rules">
       <RoleTabHeader
         title={submissionRulesHeader.title}
@@ -70,24 +106,19 @@ export function SubmissionRulesTab() {
       />
 
       <section className="va-ops-kpi-strip" aria-label="Submission rules KPI summary">
-        <div className="commercial-hub-kpi-grid carrier-kpi-grid">
+        <div className="commercial-hub-kpi-grid hub-kpi-grid carrier-kpi-grid">
           {submissionRulesKpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
+            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
           ))}
         </div>
       </section>
 
-      <section className="va-ops-panel" aria-label="Required documents by product">
+      <section className="va-ops-panel carrier-rules-primary" aria-label="Required documents by product">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Required Documents by Product</h3>
           <p className="va-ops-section-sub">Standard document requirements before carrier submission.</p>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
@@ -123,12 +154,12 @@ export function SubmissionRulesTab() {
         </div>
       </section>
 
-      <section className="va-ops-panel" aria-label="Binding rules">
+      <section className="va-ops-panel carrier-rules-secondary" aria-label="Binding rules">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Binding Rules</h3>
           <p className="va-ops-section-sub">Agency binding requirements and approval gates.</p>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
@@ -154,90 +185,107 @@ export function SubmissionRulesTab() {
         </div>
       </section>
 
-      <div className="commercial-hub-mid-grid">
-        <section className="va-ops-panel" aria-label="Decline triggers">
-          <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Decline Triggers</h3>
-            <p className="va-ops-section-sub">Conditions that block or restrict submission.</p>
-          </div>
-          <div className="commercial-hub-table-wrap">
-            <table className="commercial-hub-table">
-              <thead>
-                <tr>
-                  <th>Trigger</th>
-                  <th>Severity</th>
-                  <th>Action</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {declineTriggers.map((row) => (
-                  <tr key={row.id}>
-                    <td className="commercial-hub-client-cell">{row.trigger}</td>
-                    <td>{row.severity}</td>
-                    <td>{row.action}</td>
-                    <td>
-                      <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>
-                    </td>
+      <section className="va-ops-panel carrier-rules-tertiary" aria-label="Submission method matrix">
+        <div className="va-ops-panel-header">
+          <h3 className="va-ops-section-title">Submission Method Matrix</h3>
+          <p className="va-ops-section-sub">Preferred submission channels by carrier and product.</p>
+        </div>
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          {matrixByProduct.map(([productGroup, rows]) => (
+            <div key={productGroup} className="carrier-rules-product-group">
+              <h4 className="carrier-rules-product-label">{productGroup}</h4>
+              <table className="commercial-hub-table">
+                <thead>
+                  <tr>
+                    <th>Carrier</th>
+                    <th>Product</th>
+                    <th>Method</th>
+                    <th>Turnaround</th>
+                    <th>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.id}>
+                      <td className="commercial-hub-carrier-name">{row.carrier}</td>
+                      <td>{row.product}</td>
+                      <td>{row.method}</td>
+                      <td>{row.turnaround}</td>
+                      <td>
+                        <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        <section className="va-ops-panel" aria-label="Submission method matrix">
-          <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Submission Method Matrix</h3>
-            <p className="va-ops-section-sub">Preferred submission channels by carrier and product.</p>
-          </div>
-          <div className="commercial-hub-table-wrap">
-            <table className="commercial-hub-table">
-              <thead>
-                <tr>
-                  <th>Carrier</th>
-                  <th>Product</th>
-                  <th>Method</th>
-                  <th>Turnaround</th>
-                  <th>Status</th>
+      <section className="va-ops-panel carrier-rules-decline" aria-label="Decline triggers">
+        <div className="va-ops-panel-header">
+          <h3 className="va-ops-section-title">Decline Triggers</h3>
+          <p className="va-ops-section-sub">Conditions that block or restrict submission.</p>
+        </div>
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <table className="commercial-hub-table">
+            <thead>
+              <tr>
+                <th>Trigger</th>
+                <th>Severity</th>
+                <th>Action</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {declineTriggers.map((row) => (
+                <tr key={row.id}>
+                  <td className="commercial-hub-client-cell">{row.trigger}</td>
+                  <td>{row.severity}</td>
+                  <td>{row.action}</td>
+                  <td>
+                    <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {submissionMethodMatrix.map((row) => (
-                  <tr key={row.id}>
-                    <td className="commercial-hub-carrier-name">{row.carrier}</td>
-                    <td>{row.product}</td>
-                    <td>{row.method}</td>
-                    <td>{row.turnaround}</td>
-                    <td>
-                      <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section className="va-ops-panel" aria-label="Special carrier conditions">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Special Carrier Conditions</h3>
           <p className="va-ops-section-sub">Carrier-specific overrides and market exceptions.</p>
         </div>
-        <div className="carrier-recommended-grid">
+        <div className="carrier-condition-grid">
           {specialCarrierConditions.map((item) => (
-            <article key={item.id} className="carrier-recommended-card">
-              <div className="submission-rules-card-top">
-                <h4 className="carrier-recommended-label">{item.carrier}</h4>
-                <span className={cn("badge", ruleStatusClass[item.status])}>{item.status}</span>
+            <article
+              key={item.id}
+              className={cn(
+                "carrier-condition-card",
+                carrierConditionCardClass[item.status],
+              )}
+            >
+              <div className="carrier-condition-card-top">
+                <h4 className="carrier-condition-carrier">{item.carrier}</h4>
+                <span
+                  className={cn(
+                    "carrier-condition-status",
+                    carrierConditionStatusClass[item.status],
+                  )}
+                >
+                  {item.status}
+                </span>
               </div>
-              <p className="carrier-recommended-sub">{item.condition}</p>
-              <div className="submission-rules-card-meta">Effective: {item.effective}</div>
+              <p className="carrier-condition-text">{item.condition}</p>
+              <div className="carrier-condition-meta">Effective: {item.effective}</div>
             </article>
           ))}
         </div>
       </section>
     </div>
+    </DataStateView>
   );
 }

@@ -2,6 +2,7 @@ import type { AppIconName } from "@/components/ui/AppIcon";
 import { routes } from "@/lib/routes";
 import {
   searchResults,
+  findSearchResultById,
   type GlobalSearchFilterState,
   type GlobalSearchResult,
   type SearchResultType,
@@ -37,14 +38,62 @@ export type QuickAction = {
 };
 
 export const quickActions: QuickAction[] = [
-  { id: "new-submission", label: "New Submission", href: `${routes.intakeForms}?view=new-submission`, icon: "plus", keywords: ["intake", "form", "submit"] },
-  { id: "new-invoice", label: "New Invoice", href: `${routes.epayPolicy}?view=builder`, icon: "plus", keywords: ["invoice", "payment", "epay"] },
-  { id: "add-carrier", label: "Add Carrier", href: routes.carrierLibrary, icon: "plus", keywords: ["carrier", "market"] },
+  { id: "open-commercial", label: "Open Commercial Hub", href: routes.commercialHub, icon: "bar-chart", keywords: ["commercial", "hub", "pipeline", "submissions"] },
+  { id: "open-send", label: "Open Send Center", href: routes.sendCenter, icon: "send", keywords: ["send", "proposal", "draft"] },
+  { id: "open-retention", label: "Open Retention", href: routes.retention, icon: "users", keywords: ["retention", "renewal", "churn"] },
+  { id: "open-va-ops", label: "Open VA Operations", href: routes.vaOperations, icon: "users", keywords: ["va", "operations", "tasks"] },
+  { id: "review-approvals", label: "Review Pending Approvals", href: `${routes.vaOperations}?view=approvals`, icon: "shield", keywords: ["approve", "approval", "pending", "review"] },
+  { id: "high-risk", label: "Show High Risk Submissions", href: `${routes.commercialHub}?view=executive`, icon: "triangle-alert", keywords: ["e&o", "exposure", "risk", "critical", "high risk"] },
+  { id: "create-note", label: "Create AZ Note", href: `${routes.commercialHub}?view=submissions`, icon: "file-text", keywords: ["create", "note", "az", "internal"] },
+  { id: "ping-pedro", label: "Ping Pedro", href: `${routes.vaOperations}?view=activity`, icon: "bell", keywords: ["ping", "pedro", "notify", "va"] },
+  { id: "flag-followup", label: "Flag Follow-Up", href: `${routes.commercialHub}?view=follow-ups`, icon: "flag", keywords: ["flag", "follow", "follow-up", "urgent"] },
+  { id: "new-submission", label: "New Submission", href: `${routes.intakeForms}?view=new-submission`, icon: "plus", keywords: ["intake", "form", "submit", "create"] },
+  { id: "new-invoice", label: "New Invoice", href: `${routes.epayPolicy}?view=builder`, icon: "dollar", keywords: ["invoice", "payment", "epay", "new"] },
+  { id: "add-carrier", label: "Add Carrier", href: routes.carrierLibrary, icon: "shield", keywords: ["carrier", "market"] },
   { id: "upload-training", label: "Upload Training", href: routes.trainingHub, icon: "upload", keywords: ["training", "resource"] },
   { id: "review-quotes", label: "Review Quotes", href: `${routes.commercialHub}?view=quote-review`, icon: "clipboard", keywords: ["quote", "review"] },
   { id: "missing-docs", label: "Open Missing Docs", href: `${routes.commercialHub}?view=missing-docs`, icon: "folder", keywords: ["documents", "missing"] },
   { id: "reconcile", label: "Reconcile Funds", href: `${routes.epayPolicy}?view=trust`, icon: "check", keywords: ["trust", "reconcile"] },
   { id: "pending-binds", label: "View Pending Binds", href: `${routes.commercialHub}?view=ready-to-bind`, icon: "check", keywords: ["bind", "pending"] },
+];
+
+export type CommandAlert = {
+  id: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  level: "critical" | "warning";
+};
+
+export const commandCriticalAlerts: CommandAlert[] = [
+  {
+    id: "alert-eo",
+    title: "E&O exposure critical",
+    subtitle: "Martinez Landscaping · score 6",
+    href: `${routes.commercialHub}?view=executive`,
+    level: "critical",
+  },
+  {
+    id: "alert-approval",
+    title: "Approval missed",
+    subtitle: "Harbor Logistics GL + Umbrella",
+    href: routes.commercialHub,
+    level: "critical",
+  },
+  {
+    id: "alert-folio",
+    title: "Folio nearing close",
+    subtitle: "61% pace · 7 days left",
+    href: routes.vaOperations,
+    level: "warning",
+  },
+];
+
+export const suggestedRecords: { id: string; resultId: string }[] = [
+  { id: "sug-1", resultId: "sr-martinez-client" },
+  { id: "sug-2", resultId: "sr-user-pedro" },
+  { id: "sug-3", resultId: "sr-markel-carrier" },
+  { id: "sug-4", resultId: "sr-martinez-proposal" },
 ];
 
 export type AiInsight = {
@@ -119,6 +168,17 @@ export function groupResultsByCategory(results: GlobalSearchResult[], limitPerGr
     const key = result.group;
     if (!groups[key]) groups[key] = [];
     if (groups[key].length < limitPerGroup) groups[key].push(result);
+  }
+  return groups;
+}
+
+/** Group search hits by originating hub for the command palette. */
+export function groupResultsByHub(results: GlobalSearchResult[], limitPerHub = 5) {
+  const groups: Record<string, GlobalSearchResult[]> = {};
+  for (const result of results) {
+    const key = result.hub;
+    if (!groups[key]) groups[key] = [];
+    if (groups[key].length < limitPerHub) groups[key].push(result);
   }
   return groups;
 }
@@ -281,6 +341,15 @@ export function filterQuickActions(query: string): QuickAction[] {
   return quickActions.filter(
     (action) =>
       action.label.toLowerCase().includes(q) ||
-      action.keywords.some((kw) => kw.includes(q) || q.includes(kw)),
+      action.keywords.some((kw) => kw.includes(q) || q.includes(kw) || q.split(/\s+/).every((t) => kw.includes(t) || action.label.toLowerCase().includes(t))),
   );
+}
+
+/** @deprecated Prefer filterPaletteActions from commandPalette.ts */
+export { filterPaletteActions as filterCommandPaletteActions } from "./commandPalette";
+
+export function getSuggestedSearchResults(): GlobalSearchResult[] {
+  return suggestedRecords
+    .map((s) => findSearchResultById(s.resultId))
+    .filter((r): r is GlobalSearchResult => Boolean(r));
 }

@@ -29,7 +29,7 @@ export function SubmissionQuotePanel({
   return (
     <div className="submission-quote-panel">
       <div className="submission-tracker-detail-label">Quote Comparison</div>
-      <div className="commercial-hub-table-wrap">
+      <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
         <table className="commercial-hub-table submission-quote-table">
           <thead>
             <tr>

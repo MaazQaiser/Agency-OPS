@@ -9,13 +9,20 @@ import {
   sarahKpis,
   sarahLobTable,
 } from "@/data/producerScorecard";
-import { getNameInitials } from "@/lib/nameInitials";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
+import { ExportMenu } from "@/components/export/ExportMenu";
 
 export function ProducerScorecardTab() {
   const [activeProducer, setActiveProducer] = useState("sarah");
 
   return (
     <>
+      <div className="export-table-header-export" style={{ marginBottom: 16 }}>
+        <div className="section-hdr" style={{ margin: 0 }}>
+          <div className="sh-label">Producer Performance</div>
+        </div>
+        <ExportMenu kind="producer-scorecard" />
+      </div>
       <div className="producer-cards">
         {producers.map((p) => (
           <div
@@ -27,9 +34,12 @@ export function ProducerScorecardTab() {
             onKeyDown={(e) => e.key === "Enter" && setActiveProducer(p.id)}
           >
             <div className="producer-card-head">
-              <span className="producer-avatar" aria-hidden="true">
-                {getNameInitials(p.name)}
-              </span>
+              <TeamAvatar
+                userId={p.id === "pedro" ? "pedro-va" : p.id === "sarah" ? "sarah-chen" : p.id}
+                name={p.name}
+                size="md"
+                showStatus={false}
+              />
               <div>
                 <div className="pc-name">{p.name}</div>
                 <div className="pc-role">{p.role}</div>

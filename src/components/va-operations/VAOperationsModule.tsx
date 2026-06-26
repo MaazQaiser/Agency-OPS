@@ -10,6 +10,7 @@ import {
 } from "@/data/vaOperations";
 import { getVisibleVaOpsTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
+import { useEntitlements } from "@/hooks/useEntitlements";
 import { routes } from "@/lib/routes";
 import { ActivityTab } from "./ActivityTab";
 import { ApprovalsTab } from "./ApprovalsTab";
@@ -17,6 +18,7 @@ import { AutomationBuilderTab } from "./AutomationBuilderTab";
 import { DNCLogTab } from "./DNCLogTab";
 import { BilingualQueueTab } from "./BilingualQueueTab";
 import { OverviewTab } from "./OverviewTab";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { TasksTab } from "./TasksTab";
 import { VAOperationsPageHeader } from "./VAOperationsPageHeader";
 
@@ -45,7 +47,8 @@ export function VAOperationsModule() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { role } = usePermissions();
-  const visibleTabs = getVisibleVaOpsTabs(role);
+  const { canAccessVaOpsTab } = useEntitlements();
+  const visibleTabs = getVisibleVaOpsTabs(role).filter((tab) => canAccessVaOpsTab(tab.id));
   const validVisibleIds = new Set(visibleTabs.map((t) => t.id));
   const activeTab = resolveTab(searchParams.get("view"));
   const safeActiveTab = validVisibleIds.has(activeTab) ? activeTab : (visibleTabs[0]?.id ?? "overview");
@@ -76,6 +79,7 @@ export function VAOperationsModule() {
       </nav>
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={`${safeActiveTab}-${activeRole}`}>
         {safeActiveTab === "overview" && <OverviewTab role={activeRole} />}
         {safeActiveTab === "tasks" && <TasksTab role={activeRole} />}
         {safeActiveTab === "activity" && <ActivityTab role={activeRole} />}
@@ -85,6 +89,7 @@ export function VAOperationsModule() {
           <DNCLogTab role={activeRole} initialDncId={searchParams.get("dnc")} />
         )}
         {safeActiveTab === "bilingual-queue" && <BilingualQueueTab role={activeRole} />}
+        </TabTransitionPanel>
       </div>
     </>
   );

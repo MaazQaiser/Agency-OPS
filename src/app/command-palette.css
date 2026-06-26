@@ -1,0 +1,193 @@
+/* Agency OS command palette — full-screen overlay */
+
+.cmd-palette-backdrop {
+  background: rgba(4, 8, 18, 0.78);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  transition: opacity 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cmd-palette {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-height: 100vh;
+  max-height: 100dvh;
+  transform: translateY(8px);
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 14, 28, 0.97) 0%,
+    rgba(6, 10, 22, 0.99) 100%
+  );
+  transition:
+    opacity 0.14s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cmd-palette-visible {
+  transform: translateY(0);
+}
+
+.cmd-palette::before {
+  display: none;
+}
+
+.cmd-palette-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(20px, 5vh, 56px) clamp(16px, 4vw, 32px) 20px;
+}
+
+.cmd-palette-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cmd-palette-brand kbd {
+  margin-left: auto;
+}
+
+.cmd-palette-search {
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 12px;
+}
+
+.cmd-palette-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  padding: 4px 0 12px;
+}
+
+.cmd-palette-hub-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cmd-hub-tag-va {
+  color: var(--metric-blue);
+  background: var(--metric-blue-bg);
+  border-color: var(--metric-blue-border);
+}
+
+.cmd-hub-tag-commercial {
+  color: var(--draft-violet);
+  background: var(--draft-violet-bg);
+  border-color: var(--draft-violet-border);
+}
+
+.cmd-hub-tag-send {
+  color: var(--data-teal);
+  background: var(--data-teal-bg);
+  border-color: var(--data-teal-border);
+}
+
+.cmd-hub-tag-retention {
+  color: var(--warning-amber);
+  background: var(--warning-amber-bg);
+  border-color: var(--warning-amber-border);
+}
+
+.cmd-hub-tag-carrier {
+  color: var(--success-green);
+  background: var(--success-green-bg);
+  border-color: var(--success-green-border);
+}
+
+.cmd-hub-tag-epay {
+  color: var(--ita-secondary);
+  background: color-mix(in srgb, var(--ita-secondary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--ita-secondary) 35%, transparent);
+}
+
+.cmd-hub-tag-training {
+  color: var(--critical-rose);
+  background: var(--critical-rose-bg);
+  border-color: var(--critical-rose-border);
+}
+
+.cmd-hub-tag-intake {
+  color: var(--draft-violet);
+  background: var(--draft-violet-bg);
+  border-color: var(--draft-violet-border);
+}
+
+.cmd-hub-tag-default {
+  color: var(--text-secondary);
+  background: var(--glass-surface-dim);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.cmd-palette-action-row {
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.cmd-palette-action-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-weight: 600;
+}
+
+.cmd-palette-result-row .cmd-palette-hub-tag {
+  margin-left: auto;
+}
+
+.cmd-palette-section--pinned .cmd-palette-section-title {
+  color: var(--primary);
+}
+
+.cmd-palette-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  background: transparent;
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .cmd-palette-shell {
+    padding: 16px 12px 12px;
+  }
+
+  .cmd-palette-brand {
+    display: none;
+  }
+
+  .cmd-palette-result-badges {
+    display: none;
+  }
+
+  .cmd-palette-hub-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+}

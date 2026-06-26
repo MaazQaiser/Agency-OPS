@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { intakeFormsTabs, type IntakeFormsTabId } from "@/data/intakeForms";
 import { routes } from "@/lib/routes";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { DraftsTab } from "./DraftsTab";
 import { FormBuilderTab } from "./FormBuilderTab";
 import { SubmissionHistoryTab } from "./SubmissionHistoryTab";
@@ -54,10 +55,12 @@ export function IntakeFormsModule() {
       </nav>
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={active}>
         {active === "selector" && <FormSelectorTab />}
         {active === "new-submission" && <FormBuilderTab />}
         {active === "drafts" && <DraftsTab />}
         {active === "history" && <SubmissionHistoryTab />}
+        </TabTransitionPanel>
       </div>
     </>
   );

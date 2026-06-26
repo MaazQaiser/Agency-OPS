@@ -22,13 +22,14 @@ import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import { cn } from "@/lib/cn";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
 import {
-  SendCenterEmptyState,
   SendCenterFilters,
   SendCenterTableSkeleton,
   useSendCenterFilters,
-  useTabLoading,
 } from "./SendCenterFilters";
 
 type PendingReviewTabProps = {
@@ -39,10 +40,21 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
   const toast = useToast();
   const { can, requirePermission, logAudit } = usePermissions();
   const canApprove = can("action:approve-drafts");
-  const loading = useTabLoading();
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [rows, setRows] = useState(pendingReviewRecords);
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => rows,
+    deps: [rows],
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, rows, (d) => d.length === 0);
 
   const filtered = useMemo(
     () =>
@@ -100,12 +112,12 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
         <div className="send-center-sla-item">
           <span>Producer alert</span>
           <strong>{SLA_PRODUCER_MINUTES} min</strong>
-          <span className={cn("badge", "badge-yellow")}>{slaCounts.producer} active</span>
+          <span className={cn("badge", "badge-amber")}>{slaCounts.producer} active</span>
         </div>
         <div className="send-center-sla-item">
           <span>Owner escalation</span>
           <strong>{SLA_OWNER_MINUTES} min</strong>
-          <span className={cn("badge", "badge-red")}>{slaCounts.owner} breached</span>
+          <span className={cn("badge", "badge-rose")}>{slaCounts.owner} breached</span>
         </div>
         <div className="send-center-sla-item">
           <span>On track</span>
@@ -124,10 +136,28 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
       />
 
       <section className="va-ops-panel" aria-label="Pending licensed review">
-        {loading ? (
-          <SendCenterTableSkeleton />
-        ) : (
-          <div className="commercial-hub-table-wrap">
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<SendCenterTableSkeleton />}
+          empty={
+            <HubEmptyState
+              title="No drafts pending review"
+              description="All licensed reviews are current. New submissions will appear here."
+            />
+          }
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table send-center-table">
               <thead>
                 <tr>
@@ -145,9 +175,10 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={8}>
-                      <SendCenterEmptyState
-                        title="No drafts pending review"
-                        description="All licensed reviews are current. New submissions will appear here."
+                      <HubEmptyState
+                        title="No matches"
+                        description="No pending reviews match your search or filters. Try clearing filters or broadening your search."
+                        compact
                       />
                     </td>
                   </tr>
@@ -205,7 +236,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
               </tbody>
             </table>
           </div>
-        )}
+        </DataStateView>
       </section>
     </div>
   );

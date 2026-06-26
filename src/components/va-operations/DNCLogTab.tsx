@@ -327,7 +327,7 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
             </p>
           </div>
         ) : (
-          <div className="commercial-hub-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table dnc-log-table">
               <thead>
                 <tr>

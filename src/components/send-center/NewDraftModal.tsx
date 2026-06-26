@@ -28,6 +28,7 @@ import {
 } from "@/data/newDraftForm";
 import type { SendPriority } from "@/data/sendCenter";
 import { cn } from "@/lib/cn";
+import { useIsMobile } from "@/lib/useBreakpoint";
 
 type NewDraftModalProps = {
   open: boolean;
@@ -50,7 +51,16 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
   const initialLoadRef = useRef(false);
   const modalLoading = useDrawerLoading(open);
   const [submitting, setSubmitting] = useState(false);
+  const [mobileStep, setMobileStep] = useState(0);
+  const isMobile = useIsMobile();
   const toast = useToast();
+
+  const mobileSteps = [
+    { id: "client", label: "Client" },
+    { id: "template", label: "Template" },
+    { id: "draft", label: "Draft" },
+    { id: "submit", label: "Submit" },
+  ] as const;
 
   const totalCost = useMemo(() => computeDraftTotal(form), [form]);
 
@@ -91,6 +101,7 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
   useEffect(() => {
     if (!open) {
       initialLoadRef.current = false;
+      setMobileStep(0);
       return;
     }
 
@@ -204,13 +215,34 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
           </button>
         </div>
 
-        <div className="send-center-new-draft-body">
+        {isMobile && (
+          <nav className="send-center-mobile-stepper" aria-label="Draft creation steps">
+            {mobileSteps.map((step, index) => (
+              <button
+                key={step.id}
+                type="button"
+                className={cn(
+                  "send-center-mobile-step",
+                  mobileStep === index && "active",
+                  mobileStep > index && "done",
+                )}
+                onClick={() => setMobileStep(index)}
+                aria-current={mobileStep === index ? "step" : undefined}
+              >
+                <span className="send-center-mobile-step-num">{mobileStep > index ? "✓" : index + 1}</span>
+                <span>{step.label}</span>
+              </button>
+            ))}
+          </nav>
+        )}
+
+        <div className={cn("send-center-new-draft-body", isMobile && "send-center-new-draft-body--stepper")}>
           {modalLoading ? (
             <FormSkeleton fields={8} label="Loading draft form" />
           ) : (
           <>
           <div className="send-center-new-draft-form">
-            <section className="send-center-new-draft-section">
+            <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 0 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Client Information</h3>
               <div className="intake-form-grid">
                 <label className="intake-form-field">
@@ -289,7 +321,7 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
               </div>
             </section>
 
-            <section className="send-center-new-draft-section">
+            <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 1 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Coverage Setup</h3>
               <div className="intake-form-grid">
                 <label className="intake-form-field">
@@ -376,7 +408,7 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
               </div>
             </section>
 
-            <section className="send-center-new-draft-section">
+            <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 2 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Submission Info</h3>
               <div className="intake-form-grid">
                 <label className="intake-form-field">
@@ -440,7 +472,7 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
               </div>
             </section>
 
-            <section className="send-center-new-draft-section">
+            <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 2 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Notes</h3>
               <div className="intake-form-grid">
                 <label className="intake-form-field intake-form-field-full">
@@ -474,7 +506,13 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             </section>
           </div>
 
-          <aside className="send-center-new-draft-preview" aria-label="Live draft summary">
+          <aside
+            className={cn(
+              "send-center-new-draft-preview",
+              isMobile && mobileStep === 3 && "active-step",
+            )}
+            aria-label="Live draft summary"
+          >
             <h3 className="send-center-new-draft-preview-title">Draft Summary</h3>
             <dl className="send-center-new-draft-preview-list">
               <div><dt>Client</dt><dd>{form.clientName || "—"}</dd></div>
@@ -490,7 +528,27 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
           )}
         </div>
 
-        <div className="va-ops-modal-footer send-center-new-draft-footer">
+        <div className={cn("va-ops-modal-footer send-center-new-draft-footer", isMobile && "send-center-new-draft-footer--stepper")}>
+          {isMobile && mobileStep < 3 ? (
+            <>
+              <button
+                type="button"
+                className="va-ops-role-action-btn"
+                onClick={mobileStep === 0 ? handleClose : () => setMobileStep((s) => s - 1)}
+                disabled={submitting}
+              >
+                {mobileStep === 0 ? "Cancel" : "Back"}
+              </button>
+              <button
+                type="button"
+                className="va-ops-role-action-btn intake-form-continue-btn"
+                onClick={() => setMobileStep((s) => Math.min(s + 1, 3))}
+              >
+                Continue
+              </button>
+            </>
+          ) : (
+            <>
           <button type="button" className="va-ops-role-action-btn" onClick={handleClose} disabled={submitting}>
             Cancel
           </button>
@@ -512,6 +570,8 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
               Save Draft
             </LoadingButton>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>

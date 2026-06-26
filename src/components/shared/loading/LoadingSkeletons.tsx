@@ -7,11 +7,29 @@ type SkeletonProps = {
   label?: string;
 };
 
-export function TableSkeleton({ rows = 5, className, label = "Loading table" }: SkeletonProps & { rows?: number }) {
+export function TableSkeleton({
+  rows = 6,
+  columns = 5,
+  className,
+  label = "Loading table",
+}: SkeletonProps & { rows?: number; columns?: number }) {
   return (
     <div className={cn("ops-skeleton-table", className)} aria-busy="true" aria-label={label}>
+      <div className="ops-skeleton-table-head">
+        {Array.from({ length: columns }).map((_, i) => (
+          <div key={i} className="ops-skeleton-table-head-cell ops-skeleton-shimmer" />
+        ))}
+      </div>
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="ops-skeleton-row" />
+        <div key={i} className="ops-skeleton-table-row">
+          {Array.from({ length: columns }).map((_, j) => (
+            <div
+              key={j}
+              className="ops-skeleton-table-cell ops-skeleton-shimmer"
+              style={{ flex: j === 0 ? 1.4 : 1 }}
+            />
+          ))}
+        </div>
       ))}
     </div>
   );
@@ -22,7 +40,12 @@ export function KpiSkeletonGrid({ count = 4, className, label = "Loading KPIs" }
     <section className={cn("va-ops-kpi-strip", className)} aria-busy="true" aria-label={label}>
       <div className={cn("ops-skeleton-kpi-grid", count === 5 && "cols-5", count === 3 && "cols-3")}>
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="ops-skeleton-kpi-card" />
+          <div key={i} className="ops-skeleton-kpi-card">
+            <div className="ops-skeleton-line short ops-skeleton-shimmer" />
+            <div className="ops-skeleton-kpi-value ops-skeleton-shimmer" />
+            <div className="ops-skeleton-kpi-sparkline ops-skeleton-shimmer" />
+            <div className="ops-skeleton-line ops-skeleton-shimmer" />
+          </div>
         ))}
       </div>
     </section>
@@ -153,3 +176,52 @@ export function SearchingIndicator({ className }: { className?: string }) {
 
 /** Backward-compatible aliases */
 export const SendCenterTableSkeleton = TableSkeleton;
+
+export function PipelineCardSkeleton({ count = 3, className, label = "Loading pipeline" }: SkeletonProps & { count?: number }) {
+  return (
+    <div className={cn("ops-skeleton-pipeline-list", className)} aria-busy="true" aria-label={label}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="ops-skeleton-pipeline-card">
+          <div className="ops-skeleton-pipeline-main">
+            <div className="ops-skeleton-line wide ops-skeleton-shimmer" />
+            <div className="ops-skeleton-line ops-skeleton-shimmer" />
+          </div>
+          <div className="ops-skeleton-pipeline-badge ops-skeleton-shimmer" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function NotificationListSkeleton({ count = 5, className, label = "Loading notifications" }: SkeletonProps & { count?: number }) {
+  return (
+    <div className={cn("ops-skeleton-notification-list", className)} aria-busy="true" aria-label={label}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="ops-skeleton-notification-card">
+          <div className="ops-skeleton-notification-icon ops-skeleton-shimmer" />
+          <div className="ops-skeleton-notification-body">
+            <div className="ops-skeleton-line wide ops-skeleton-shimmer" />
+            <div className="ops-skeleton-line ops-skeleton-shimmer" />
+            <div className="ops-skeleton-line short ops-skeleton-shimmer" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function AvatarListSkeleton({ count = 4, className, label = "Loading team" }: SkeletonProps & { count?: number }) {
+  return (
+    <div className={cn("ops-skeleton-avatar-list", className)} aria-busy="true" aria-label={label}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="ops-skeleton-avatar-list-row">
+          <div className="ops-skeleton-avatar ops-skeleton-shimmer" />
+          <div className="ops-skeleton-avatar-list-text">
+            <div className="ops-skeleton-line wide ops-skeleton-shimmer" />
+            <div className="ops-skeleton-line short ops-skeleton-shimmer" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

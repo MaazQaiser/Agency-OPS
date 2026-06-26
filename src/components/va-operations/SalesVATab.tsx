@@ -14,6 +14,8 @@ import {
   type BindStatus,
   type SalesApproval,
 } from "@/data/salesVA";
+import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
+import { PipelineHoverActions } from "@/components/motion/PipelineHoverActions";
 import { cn } from "@/lib/cn";
 import { ApprovalDrawer } from "./ApprovalDrawer";
 import { RoleTabHeader } from "./RoleTabHeader";
@@ -61,12 +63,7 @@ export function SalesVATab({ embedded = false }: { embedded?: boolean } = {}) {
         <section className="va-ops-kpi-strip" aria-label="Sales KPI summary">
           <div className="va-ops-kpi-grid">
             {salesKpis.map((kpi) => (
-              <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-                <div className="va-ops-kpi-label">{kpi.label}</div>
-                <div className="va-ops-kpi-value">{kpi.value}</div>
-                <div className="va-ops-kpi-sub">{kpi.sub}</div>
-                <div className="va-ops-kpi-helper">{kpi.helper}</div>
-              </article>
+              <VaOpsKpiCard key={kpi.label} {...kpi} />
             ))}
           </div>
         </section>
@@ -193,6 +190,7 @@ export function SalesVATab({ embedded = false }: { embedded?: boolean } = {}) {
                 </div>
               </div>
               <span className={cn("badge", stageClass[item.stage])}>{item.stageLabel}</span>
+              <PipelineHoverActions />
             </li>
           ))}
         </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { resolveSubmissionId } from "@/lib/crossModuleLinks";
 import { AppIcon } from "@/components/ui/AppIcon";
@@ -8,11 +8,6 @@ import { setTrackerSubmissions } from "@/data/commercialHubStore";
 import {
   agingBuckets,
   applyAddMarket,
-  computeCarrierSla,
-  computeClientSla,
-  computeHealthScore,
-  getHealthClass,
-  getSubmissionTimeline,
   requiredMarketCount,
   submissionTrackerSearchPlaceholder,
   trackerFilterOptions,
@@ -22,18 +17,40 @@ import {
   type TrackerSubmission,
 } from "@/data/submissionTracker";
 import { TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { ExportMenu } from "@/components/export/ExportMenu";
+import { getCommercialHubSnapshot } from "@/data/commercialHubStore";
 import { useCommercialHubStore } from "@/hooks/useCommercialHubStore";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
 import { toastMessages } from "@/lib/toastMessages";
 import { AddMarketModal } from "./AddMarketModal";
 import { QuoteDetailsModal } from "./QuoteDetailsModal";
-import { SubmissionQuotePanel } from "./SubmissionQuotePanel";
+import { SubmissionTrackerDrawer } from "./SubmissionTrackerDrawer";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
+import {
+  eoRiskFromTrackerSubmission,
+  sortByEoExposure,
+  type EoExposureSort,
+} from "@/lib/eoRiskScore";
 import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
 import { getClientLanguage } from "@/data/bilingualClient";
+import { CoverageChecklistProgress } from "@/components/commercial/CoverageChecklistProgress";
+import { progressFromTrackerSubmission } from "@/lib/coverageChecklistProgress";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { submissionTrackerTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 
 const statusClass: Record<TrackerStatus, string> = {
   "New Intake": "badge-blue",
@@ -47,12 +64,6 @@ const statusClass: Record<TrackerStatus, string> = {
   Bound: "badge-green",
   Declined: "badge-red",
 };
-
-const docStatusIcon = {
-  complete: "check",
-  pending: "refresh",
-  missing: "x",
-} as const;
 
 type FilterState = {
   coverage: string;
@@ -142,10 +153,6 @@ function matchesQuickChip(row: TrackerSubmission, chip: QuickChip) {
   return true;
 }
 
-function getLastAction(row: TrackerSubmission) {
-  return row.brokerNotes[row.brokerNotes.length - 1] ?? row.nextAction;
-}
-
 type SubmissionTrackerTabProps = {
   addMarketOpen?: boolean;
   onAddMarketOpenChange?: (open: boolean) => void;
@@ -157,22 +164,33 @@ export function SubmissionTrackerTab({
   onAddMarketOpenChange,
   initialSubmissionId,
 }: SubmissionTrackerTabProps) {
-  const loading = useTabLoading();
   const toast = useToast();
   const { trackerSubmissions: submissions } = useCommercialHubStore();
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => getCommercialHubSnapshot().trackerSubmissions,
+    errorPreset: "agencyzoom-unavailable",
+  });
+  const status = resolveDisplayStatus(loadStatus, submissions, (d) => d.length === 0);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState(defaultFilters);
   const [quickChip, setQuickChip] = useState<QuickChip>("all");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [drawerSubmissionId, setDrawerSubmissionId] = useState<string | null>(null);
   const [quoteModalClient, setQuoteModalClient] = useState<string | null>(null);
   const [quoteModalQuotes, setQuoteModalQuotes] = useState<QuoteOption[]>([]);
   const [quoteModalSubmissionId, setQuoteModalSubmissionId] = useState<string | null>(null);
   const [addMarketSubmissionId, setAddMarketSubmissionId] = useState<string | null>(null);
   const [activeSubmissionId, setActiveSubmissionId] = useState<string | null>(null);
+  const [exposureSort, setExposureSort] = useState<EoExposureSort>("highest");
 
   useEffect(() => {
     if (!initialSubmissionId) return;
-    setExpandedId(initialSubmissionId);
+    setDrawerSubmissionId(initialSubmissionId);
     setActiveSubmissionId(initialSubmissionId);
   }, [initialSubmissionId]);
 
@@ -182,7 +200,7 @@ export function SubmissionTrackerTab({
         ? payload.submissionId
         : resolveSubmissionId(payload.client ?? "");
     if (submissionId) {
-      setExpandedId(submissionId);
+      setDrawerSubmissionId(submissionId);
       setActiveSubmissionId(submissionId);
     }
     toast.success(toastMessages.commercialHub.submissionCreated);
@@ -191,8 +209,8 @@ export function SubmissionTrackerTab({
   useCrossModuleHandoff("intake-to-submission", onIntakeHandoff);
 
   const activeSubmission = useMemo(
-    () => submissions.find((row) => row.id === (activeSubmissionId ?? expandedId)) ?? null,
-    [submissions, activeSubmissionId, expandedId],
+    () => submissions.find((row) => row.id === (activeSubmissionId ?? drawerSubmissionId)) ?? null,
+    [submissions, activeSubmissionId, drawerSubmissionId],
   );
 
   useSyncBreadcrumbDetail(activeSubmission?.client ?? null, {
@@ -203,18 +221,28 @@ export function SubmissionTrackerTab({
 
   const filteredRows = useMemo(
     () =>
-      submissions.filter(
-        (row) => matchesFilters(row, search, filters) && matchesQuickChip(row, quickChip),
+      sortByEoExposure(
+        submissions.filter(
+          (row) => matchesFilters(row, search, filters) && matchesQuickChip(row, quickChip),
+        ),
+        eoRiskFromTrackerSubmission,
+        exposureSort,
       ),
-    [submissions, search, filters, quickChip],
+    [submissions, search, filters, quickChip, exposureSort],
   );
 
-  const toggleExpand = (rowId: string) => {
-    setExpandedId((current) => {
-      const nextId = current === rowId ? null : rowId;
-      if (nextId) setActiveSubmissionId(nextId);
-      return nextId;
-    });
+  const drawerSubmission = useMemo(
+    () => submissions.find((row) => row.id === drawerSubmissionId) ?? null,
+    [submissions, drawerSubmissionId],
+  );
+
+  const openDrawer = (rowId: string) => {
+    setDrawerSubmissionId(rowId);
+    setActiveSubmissionId(rowId);
+  };
+
+  const closeDrawer = () => {
+    setDrawerSubmissionId(null);
   };
 
   const addMarketSubmission = useMemo(
@@ -234,7 +262,7 @@ export function SubmissionTrackerTab({
   };
 
   const openAddMarket = (submissionId?: string) => {
-    const resolvedId = submissionId ?? activeSubmissionId ?? expandedId ?? null;
+    const resolvedId = submissionId ?? activeSubmissionId ?? drawerSubmissionId ?? null;
     setAddMarketSubmissionId(resolvedId);
     onAddMarketOpenChange?.(true);
   };
@@ -257,7 +285,7 @@ export function SubmissionTrackerTab({
           : row,
       ),
     );
-    setExpandedId(addMarketSubmissionId);
+    setDrawerSubmissionId(addMarketSubmissionId);
     setActiveSubmissionId(addMarketSubmissionId);
   };
 
@@ -327,325 +355,252 @@ export function SubmissionTrackerTab({
     );
   };
 
-  const tableColSpan = 10;
-
-  if (loading) {
-    return (
-      <div className="va-ops-role-view submission-tracker">
-        <TableSkeleton rows={8} />
-      </div>
-    );
-  }
+  const tableColSpan = 12;
+  const header = commercialHubTabHeaders.submissions;
+  const urgentRows = filteredRows.filter((row) => row.daysOpen >= 6 || row.status === "Pending Docs").slice(0, 4);
 
   return (
-    <div className="va-ops-role-view submission-tracker">
-      <section className="submission-aging-panel" aria-label="Submission aging">
-        {agingBuckets.map((bucket) => (
-          <article
-            key={bucket.id}
-            className={cn("submission-aging-bucket", `submission-aging-${bucket.tone}`)}
-          >
-            <div className="submission-aging-label">{bucket.label}</div>
-            <div className="submission-aging-count">{bucket.count}</div>
-          </article>
-        ))}
-      </section>
+    <CommercialHubTabShell className="submission-tracker">
+      <CommercialHubTabHeader title={header.title} subtitle={header.subtitle} />
 
-      <div className="submission-tracker-filters">
-        <label className="va-ops-search submission-tracker-search" aria-label="Search submissions">
-          <AppIcon name="search" size={16} strokeWidth={2} className="va-ops-search-icon" />
-          <input
-            type="search"
-            className="va-ops-search-input"
-            placeholder={submissionTrackerSearchPlaceholder}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </label>
+      <CommercialHubKpiStrip kpis={submissionTrackerTabKpis()} columns={6} />
 
-        {(Object.keys(trackerFilterOptions) as (keyof FilterState)[]).map((key) => (
-          <label key={key} className="submission-tracker-filter">
-            <select
-              className="header-filter-select submission-tracker-select"
-              aria-label={filterAriaLabels[key]}
-              value={filters[key]}
-              onChange={(e) => updateFilter(key, e.target.value)}
-            >
-              {trackerFilterOptions[key].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
+      <CommercialHubWorkspace
+        ariaLabel="Active submissions"
+        title="Active Submissions"
+        subtitle={`${filteredRows.length} submission${filteredRows.length === 1 ? "" : "s"} — click a row to inspect in the drawer.`}
+        actions={
+          <>
+            <ExportMenu kind="submission-log" />
+            <label className="eo-exposure-sort">
+              <span className="eo-exposure-sort-label">Sort</span>
+              <select
+                className="header-filter-select eo-exposure-sort-select"
+                value={exposureSort}
+                onChange={(e) => setExposureSort(e.target.value as EoExposureSort)}
+                aria-label="Sort by E&O exposure"
+              >
+                <option value="highest">Highest exposure</option>
+                <option value="lowest">Lowest exposure</option>
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+              </select>
+            </label>
+          </>
+        }
+        toolbar={
+          <>
+            <div className="submission-tracker-filters">
+              <label className="va-ops-search submission-tracker-search" aria-label="Search submissions">
+                <AppIcon name="search" size={16} strokeWidth={2} className="va-ops-search-icon" />
+                <input
+                  type="search"
+                  className="va-ops-search-input"
+                  placeholder={submissionTrackerSearchPlaceholder}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </label>
+
+              {(Object.keys(trackerFilterOptions) as (keyof FilterState)[]).map((key) => (
+                <label key={key} className="submission-tracker-filter">
+                  <select
+                    className="header-filter-select submission-tracker-select"
+                    aria-label={filterAriaLabels[key]}
+                    value={filters[key]}
+                    onChange={(e) => updateFilter(key, e.target.value)}
+                  >
+                    {trackerFilterOptions[key].map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               ))}
-            </select>
-          </label>
-        ))}
-      </div>
+            </div>
 
-      <div className="submission-tracker-quick-chips" role="group" aria-label="Quick filters">
-        {quickChipOptions.map((chip) => (
-          <button
-            key={chip.id}
-            type="button"
-            className={cn("submission-quick-chip", quickChip === chip.id && "active")}
-            onClick={() => setQuickChip(chip.id)}
-          >
-            {chip.label}
-          </button>
-        ))}
-      </div>
-
-      <section className="submission-tracker-table-panel" aria-label="Active submissions">
-        <div className="submission-tracker-table-header">
-          <div className="submission-tracker-table-header-left">
-            <h3 className="va-ops-section-title">Active Submissions</h3>
-            <p className="va-ops-section-sub">
-              {filteredRows.length} submission{filteredRows.length === 1 ? "" : "s"} — click a row to expand details.
-            </p>
-          </div>
-        </div>
-        <div className="submission-tracker-table-scroll">
+            <div className="submission-tracker-quick-chips" role="group" aria-label="Quick filters">
+              {quickChipOptions.map((chip) => (
+                <button
+                  key={chip.id}
+                  type="button"
+                  className={cn("submission-quick-chip", quickChip === chip.id && "active")}
+                  onClick={() => setQuickChip(chip.id)}
+                >
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          </>
+        }
+      >
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<TableSkeleton rows={6} columns={11} />}
+          empty={
+            <HubEmptyState
+              preset="commercial-submissions"
+              onAction={() => openAddMarket()}
+            />
+          }
+          error={
+            <HubErrorState
+              preset="agencyzoom-unavailable"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+        <div className="submission-tracker-table-scroll ops-responsive-table-wrap">
           <table className="commercial-hub-table submission-tracker-table">
             <thead>
               <tr>
                 <th aria-label="Expand" />
-                <th>Client</th>
-                <th>Coverage</th>
+                <th>Status</th>
                 <th>Assigned VA</th>
                 <th>Producer</th>
+                <th>Days Open</th>
+                <th>E&O Risk</th>
+                <th>Client</th>
+                <th>Coverage</th>
                 <th>Markets</th>
                 <th>Quotes</th>
-                <th>Missing Docs</th>
-                <th>Days Open</th>
-                <th className="submission-tracker-status-col">Status</th>
+                <th>Checklist</th>
               </tr>
             </thead>
             <tbody>
               {filteredRows.length === 0 ? (
                 <tr>
                   <td colSpan={tableColSpan}>
-                    <div className="commercial-hub-empty-state" role="status">
-                      <div className="commercial-hub-empty-state-title">No submissions match</div>
-                      <p className="commercial-hub-empty-state-desc">
-                        Adjust filters or quick chips to see active submissions.
-                      </p>
-                    </div>
+                    <HubEmptyState
+                      title="No matches"
+                      description="No submissions match your search or filters. Adjust filters or quick chips to see active submissions."
+                      compact
+                    />
                   </td>
                 </tr>
               ) : (
                 filteredRows.map((row) => {
-                const isExpanded = expandedId === row.id;
-                const missingDocCount = row.documents.filter((d) => d.status === "missing").length;
-                const healthScore = computeHealthScore(row);
-                const carrierSla = computeCarrierSla(row);
-                const clientSla = computeClientSla(row);
-                const timeline = getSubmissionTimeline(row);
-                const lastAction = getLastAction(row);
+                const isOpen = drawerSubmissionId === row.id;
+                const checklistProgress = progressFromTrackerSubmission(row);
+                const eoRisk = eoRiskFromTrackerSubmission(row);
                 return (
-                  <Fragment key={row.id}>
-                    <tr
-                      className={cn(
-                        "submission-tracker-row submission-tracker-row-clickable",
-                        isExpanded && "expanded",
-                        activeSubmissionId === row.id && "selected",
-                      )}
-                      onClick={(event) => {
-                        const target = event.target as HTMLElement;
-                        if (target.closest("button")) return;
-                        toggleExpand(row.id);
-                      }}
+                  <tr
+                    key={row.id}
+                    className={cn(
+                      "submission-tracker-row submission-tracker-row-clickable",
+                      isOpen && "expanded selected",
+                      activeSubmissionId === row.id && "selected",
+                    )}
+                    onClick={(event) => {
+                      const target = event.target as HTMLElement;
+                      if (target.closest("button")) return;
+                      openDrawer(row.id);
+                    }}
+                  >
+                    <td>
+                      <button
+                        type="button"
+                        className="submission-tracker-expand-btn"
+                        aria-expanded={isOpen}
+                        aria-label={`${isOpen ? "Close" : "Inspect"} ${row.client}`}
+                        onClick={() => (isOpen ? closeDrawer() : openDrawer(row.id))}
+                      >
+                        <AppIcon name="chevron-down" size={14} strokeWidth={2.5} className={cn(isOpen && "rotated")} />
+                      </button>
+                    </td>
+                    <td className="submission-tracker-status-col">
+                      <span className={cn("badge", statusClass[row.status])}>{row.status}</span>
+                    </td>
+                    <td>{row.va}</td>
+                    <td><UserChip name={row.producer} /></td>
+                    <td>{row.daysOpen} days</td>
+                    <td>
+                      <EoRiskBadge score={eoRisk} />
+                    </td>
+                    <td
+                      className="commercial-hub-client-cell submission-tracker-client-cell"
+                      onClick={() => setActiveSubmissionId(row.id)}
                     >
-                      <td>
+                      <span className="bilingual-client-cell">
+                        {row.client}
+                        <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
+                      </span>
+                      <EoRiskBadge
+                        score={eoRisk}
+                        compact
+                        className="submission-tracker-card-risk"
+                        onClick={() => openDrawer(row.id)}
+                      />
+                    </td>
+                    <td>{row.coverage}</td>
+                    <td>{row.marketsSubmitted}</td>
+                    <td>
+                      {row.quotesReceived > 0 ? (
                         <button
                           type="button"
-                          className="submission-tracker-expand-btn"
-                          aria-expanded={isExpanded}
-                          aria-label={`${isExpanded ? "Collapse" : "Expand"} ${row.client}`}
-                          onClick={() => toggleExpand(row.id)}
+                          className="submission-tracker-quote-link"
+                          onClick={() => openQuoteModal(row)}
                         >
-                          <AppIcon name="chevron-down" size={14} strokeWidth={2.5} className={cn(isExpanded && "rotated")} />
+                          {row.quotesReceived}
                         </button>
-                      </td>
-                      <td
-                        className="commercial-hub-client-cell"
-                        onClick={() => setActiveSubmissionId(row.id)}
-                      >
-                        <span className="bilingual-client-cell">
-                          {row.client}
-                          <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
-                        </span>
-                      </td>
-                      <td>{row.coverage}</td>
-                      <td>{row.va}</td>
-                      <td><UserChip name={row.producer} /></td>
-                      <td>{row.marketsSubmitted}</td>
-                      <td>
-                        {row.quotesReceived > 0 ? (
-                          <button
-                            type="button"
-                            className="submission-tracker-quote-link"
-                            onClick={() => openQuoteModal(row)}
-                          >
-                            {row.quotesReceived}
-                          </button>
-                        ) : (
-                          row.quotesReceived
-                        )}
-                      </td>
-                      <td className={missingDocCount > 0 ? "submission-missing-docs" : ""}>
-                        {missingDocCount > 0 ? missingDocCount : "None"}
-                      </td>
-                      <td>{row.daysOpen} days</td>
-                      <td className="submission-tracker-status-col">
-                        <span className={cn("badge", statusClass[row.status])}>{row.status}</span>
-                      </td>
-                    </tr>
-                    {isExpanded && (
-                      <tr className="submission-tracker-detail-row">
-                        <td colSpan={tableColSpan}>
-                          <div className="submission-tracker-detail">
-                            <div className="submission-tracker-sla-strip">
-                              <div className="submission-tracker-sla-item">
-                                <span className="submission-tracker-detail-label">Health</span>
-                                <span className={cn("submission-health-score", getHealthClass(healthScore))}>
-                                  {healthScore}%
-                                </span>
-                              </div>
-                              <div className="submission-tracker-sla-item">
-                                <span className="submission-tracker-detail-label">Carrier SLA</span>
-                                <span className={cn("submission-sla", carrierSla.overdue && "submission-sla-blocked")}>
-                                  {carrierSla.label}
-                                </span>
-                              </div>
-                              <div className="submission-tracker-sla-item">
-                                <span className="submission-tracker-detail-label">Client SLA</span>
-                                <span className={cn("submission-sla", clientSla.overdue && "submission-sla-blocked")}>
-                                  {clientSla.label}
-                                </span>
-                              </div>
-                              <div className="submission-tracker-sla-item">
-                                <span className="submission-tracker-detail-label">Last Action</span>
-                                <span className="commercial-hub-next-action">{lastAction}</span>
-                              </div>
-                              <div className="submission-tracker-sla-item submission-tracker-sla-item-notes">
-                                <span className="submission-tracker-detail-label">Notes</span>
-                                <span className="submission-tracker-notes-preview">
-                                  {row.brokerNotes[0] ?? "No notes yet"}
-                                </span>
-                              </div>
-                            </div>
-
-                            {row.marketsSubmitted < requiredMarketCount && (
-                              <div className="submission-market-warning" role="status">
-                                <AppIcon name="triangle-alert" size={16} strokeWidth={2} />
-                                <span>Minimum market requirement not met</span>
-                                <button
-                                  type="button"
-                                  className="va-ops-action-btn"
-                                  onClick={() => openAddMarket(row.id)}
-                                >
-                                  Add Market
-                                </button>
-                              </div>
-                            )}
-
-                            <div className="submission-tracker-detail-grid">
-                              <div className="submission-tracker-detail-col">
-                                <div className="submission-tracker-detail-label">Markets</div>
-                                <ul className="submission-carrier-list submission-market-stack">
-                                  {row.carriers.map((c) => (
-                                    <li key={`${c.carrier}-${c.status}`}>
-                                      {c.carrier} — {c.status}
-                                    </li>
-                                  ))}
-                                </ul>
-                                <button
-                                  type="button"
-                                  className="va-ops-action-btn submission-add-market-btn"
-                                  onClick={() => openAddMarket(row.id)}
-                                >
-                                  Add Market
-                                </button>
-                              </div>
-
-                              <div className="submission-tracker-detail-col">
-                                <div className="submission-tracker-detail-label">Document Checklist</div>
-                                <ul className="submission-doc-checklist">
-                                  {row.documents.map((item) => (
-                                    <li key={item.label} className={item.status}>
-                                      <AppIcon
-                                        name={docStatusIcon[item.status]}
-                                        size={14}
-                                        strokeWidth={2.5}
-                                      />
-                                      {item.label}
-                                      {item.status === "complete" && " ✓"}
-                                      {item.status === "pending" && " Pending"}
-                                      {item.status === "missing" && " Missing"}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div className="submission-tracker-detail-col">
-                                <div className="submission-tracker-detail-label">Broker Notes</div>
-                                <ul className="va-ops-gap-list">
-                                  {row.brokerNotes.map((note) => (
-                                    <li key={note}>{note}</li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div className="submission-tracker-detail-col">
-                                <div className="submission-tracker-detail-label">Producer Notes</div>
-                                <ul className="va-ops-gap-list">
-                                  {row.producerNotes.map((note) => (
-                                    <li key={note}>{note}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-
-                            <div className="submission-timeline-panel">
-                              <div className="submission-tracker-detail-label">Submission Timeline</div>
-                              <ol className="submission-timeline">
-                                {timeline.map((step, index) => (
-                                  <li
-                                    key={step.label}
-                                    className={cn("submission-timeline-step", step.complete && "complete")}
-                                  >
-                                    <div className="submission-timeline-marker" aria-hidden="true" />
-                                    <div className="submission-timeline-content">
-                                      <div className="submission-timeline-label">{step.label}</div>
-                                      {step.timestamp && (
-                                        <div className="submission-timeline-time">{step.timestamp}</div>
-                                      )}
-                                    </div>
-                                    {index < timeline.length - 1 && (
-                                      <div className="submission-timeline-connector" aria-hidden="true" />
-                                    )}
-                                  </li>
-                                ))}
-                              </ol>
-                            </div>
-
-                            <SubmissionQuotePanel
-                              submission={row}
-                              selectedQuoteId={row.selectedQuoteId}
-                              onSelectQuote={(quote) => handleSelectQuote(row.id, quote)}
-                              onSendToProducer={(quote) => handleSendToProducer(row.id, quote)}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
+                      ) : (
+                        row.quotesReceived
+                      )}
+                    </td>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <CoverageChecklistProgress progress={checklistProgress} variant="compact" />
+                    </td>
+                  </tr>
                 );
               })
               )}
             </tbody>
           </table>
         </div>
-      </section>
+        </DataStateView>
+      </CommercialHubWorkspace>
+
+      <CommercialHubIntelPanel
+        title="Needs Attention"
+        subtitle="Urgent submissions and document blockers."
+      >
+        {urgentRows.length === 0 ? (
+          <p className="va-ops-section-sub">No urgent submissions in current filter.</p>
+        ) : (
+          <ul className="va-ops-gap-list">
+            {urgentRows.map((row) => (
+              <li key={row.id}>
+                <strong>{row.client}</strong> · {row.status} · {row.daysOpen} days · {row.producer}
+              </li>
+            ))}
+          </ul>
+        )}
+      </CommercialHubIntelPanel>
+
+      <CommercialHubTabFooter
+        title="Submission Aging"
+        subtitle="Distribution of open submissions by days in pipeline."
+      >
+        <div className="submission-aging-panel submission-aging-panel-compact">
+          {agingBuckets.map((bucket) => (
+            <article
+              key={bucket.id}
+              className={cn("submission-aging-bucket", `submission-aging-${bucket.tone}`)}
+            >
+              <div className="submission-aging-label">{bucket.label}</div>
+              <div className="submission-aging-count">{bucket.count}</div>
+            </article>
+          ))}
+        </div>
+      </CommercialHubTabFooter>
+
+      <SubmissionTrackerDrawer submission={drawerSubmission} onClose={closeDrawer} />
 
       <QuoteDetailsModal
         open={Boolean(quoteModalClient)}
@@ -672,6 +627,6 @@ export function SubmissionTrackerTab({
         }}
         onSubmit={handleAddMarket}
       />
-    </div>
+    </CommercialHubTabShell>
   );
 }

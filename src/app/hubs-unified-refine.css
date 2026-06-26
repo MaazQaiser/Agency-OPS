@@ -1,0 +1,388 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Unified hub refinement (4 modules)
+   Benchmark: Commercial Hub structure, density, hierarchy
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Typography system ── */
+.module-intake-forms,
+.module-training-hub,
+.module-carrier-library,
+.module-epay-policy {
+  font-family: var(--font-family);
+}
+
+.module-intake-forms .va-ops-page-title,
+.module-training-hub .va-ops-page-title,
+.module-carrier-library .va-ops-page-title,
+.module-epay-policy .va-ops-page-title,
+.module-intake-forms .va-ops-section-title,
+.module-training-hub .va-ops-section-title,
+.module-carrier-library .va-ops-section-title,
+.module-epay-policy .va-ops-section-title {
+  font-family: var(--font-family-display);
+}
+
+/* KPI values + financial totals → Cormorant */
+.module-intake-forms .va-ops-kpi-value,
+.module-training-hub .va-ops-kpi-value,
+.module-carrier-library .va-ops-kpi-value,
+.module-epay-policy .va-ops-kpi-value,
+.epay-preview-total dd,
+.epay-collection-summary-grid dd,
+.epay-summary-positive,
+.epay-summary-warning,
+.epay-summary-danger,
+.carrier-market-rec-carrier {
+  font-family: var(--font-family-display);
+  letter-spacing: var(--letter-spacing-kpi, -0.025em);
+}
+
+/* Labels, tables, buttons, metadata → Inter (inherit body) */
+.module-intake-forms .commercial-hub-table,
+.module-training-hub .commercial-hub-table,
+.module-carrier-library .commercial-hub-table,
+.module-epay-policy .commercial-hub-table,
+.module-intake-forms .va-ops-kpi-label,
+.module-training-hub .va-ops-kpi-label,
+.module-carrier-library .va-ops-kpi-label,
+.module-epay-policy .va-ops-kpi-label {
+  font-family: var(--font-family);
+}
+
+/* ── 2. ITA semantic badge aliases ── */
+.badge-violet,
+.badge-purple {
+  background: var(--draft-violet);
+  border-color: var(--draft-violet);
+  color: #fff;
+}
+
+.badge-amber {
+  background: var(--warning-amber);
+  border-color: var(--warning-amber);
+  color: #fff;
+}
+
+.badge-rose {
+  background: var(--critical-rose);
+  border-color: var(--critical-rose);
+  color: #fff;
+}
+
+/* Hub-scoped compact badges in tables */
+.module-intake-forms .badge,
+.module-training-hub .badge,
+.module-carrier-library .badge,
+.module-epay-policy .badge {
+  padding: 3px 8px;
+  font-size: 10px;
+}
+
+/* ── 3. KPI card uniformity (Commercial Hub benchmark) ── */
+.module-intake-forms .hub-kpi-grid .va-ops-kpi-card,
+.module-training-hub .hub-kpi-grid .va-ops-kpi-card,
+.module-carrier-library .hub-kpi-grid .va-ops-kpi-card,
+.module-epay-policy .hub-kpi-grid .va-ops-kpi-card,
+.hub-kpi-grid .commercial-hub-kpi-uniform.va-ops-kpi-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 96px;
+  max-height: 96px;
+  padding: 14px 16px;
+  overflow: hidden;
+}
+
+.hub-kpi-grid .va-ops-kpi-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+
+.hub-kpi-grid .va-ops-kpi-value {
+  font-size: 1.35rem;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.hub-kpi-grid .va-ops-kpi-sub {
+  margin-top: auto;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.hub-kpi-grid .va-ops-kpi-helper {
+  display: none;
+}
+
+/* ── 4. Eva FAB — visible label on hub modules ── */
+.module-intake-forms .eva-fab-cluster,
+.module-training-hub .eva-fab-cluster,
+.module-carrier-library .eva-fab-cluster,
+.module-epay-policy .eva-fab-cluster {
+  z-index: 45;
+}
+
+.eva-fab-trigger-label {
+  display: none;
+}
+
+.module-intake-forms .eva-fab-trigger-label,
+.module-training-hub .eva-fab-trigger-label,
+.module-carrier-library .eva-fab-trigger-label,
+.module-epay-policy .eva-fab-trigger-label {
+  display: inline;
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 769px) {
+  .module-intake-forms .eva-fab-trigger,
+  .module-training-hub .eva-fab-trigger,
+  .module-carrier-library .eva-fab-trigger,
+  .module-epay-policy .eva-fab-trigger {
+    width: auto;
+    padding: 0 14px 0 12px;
+    border-radius: 999px;
+  }
+}
+
+/* ── INTAKE FORMS ── */
+.module-intake-forms .intake-submission-history .va-ops-kpi-strip {
+  margin-bottom: -4px;
+}
+
+.module-intake-forms .intake-history-primary {
+  box-shadow: none;
+}
+
+.module-intake-forms .intake-history-low,
+.module-intake-forms .intake-history-tertiary {
+  opacity: 0.9;
+}
+
+.module-intake-forms .intake-submission-history .submission-history-table-wrap {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.module-intake-forms .intake-drafts .commercial-hub-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+
+.module-intake-forms .intake-draft-owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ── TRAINING HUB ── */
+.training-resource-card--loom {
+  border-top: 3px solid var(--metric-blue);
+}
+
+.training-resource-card--doc {
+  border-top: 3px solid var(--draft-violet);
+}
+
+.training-resource-card--scribe {
+  border-top: 3px solid var(--data-teal);
+}
+
+.training-resource-type-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+}
+
+.training-resource-type-icon--loom {
+  color: var(--metric-blue);
+  background: color-mix(in srgb, var(--metric-blue) 14%, transparent);
+}
+
+.training-resource-type-icon--doc {
+  color: var(--draft-violet);
+  background: color-mix(in srgb, var(--draft-violet) 14%, transparent);
+}
+
+.training-resource-type-icon--scribe {
+  color: var(--data-teal);
+  background: color-mix(in srgb, var(--data-teal) 14%, transparent);
+}
+
+.training-resource-meta-row--category {
+  font-size: 10px;
+}
+
+.training-resource-meta-row--category dd {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.training-library-primary .commercial-hub-table th:first-child,
+.training-library-primary .commercial-hub-table td:first-child {
+  font-weight: 700;
+}
+
+.training-popular-tag.active {
+  transform: translateY(-1px);
+}
+
+/* ── CARRIER LIBRARY ── */
+.carrier-intel-primary.va-ops-panel {
+  padding: 16px;
+  border-color: var(--border-default);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--metric-blue) 5%, var(--surface-elevated)) 0%,
+    var(--surface-elevated) 50%
+  );
+}
+
+.carrier-intel-primary .va-ops-section-title {
+  font-size: var(--font-size-base-lg);
+  font-weight: 800;
+}
+
+.carrier-market-rec-intel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  margin: 4px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--border-subtle) 70%, transparent);
+}
+
+.carrier-market-rec-intel dt {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.carrier-market-rec-intel dd {
+  margin: 0 0 4px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.carrier-search-row--high-risk td {
+  background: color-mix(in srgb, var(--critical-rose) 4%, transparent);
+}
+
+.carrier-search-row--restricted td {
+  background: color-mix(in srgb, var(--warning-amber) 4%, transparent);
+}
+
+.carrier-rules-product-group {
+  margin-bottom: 12px;
+}
+
+.carrier-rules-product-group:last-child {
+  margin-bottom: 0;
+}
+
+.carrier-rules-product-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 6px 0 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0;
+}
+
+/* ── ePayPolicy ── */
+.epay-builder-split {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-elevated);
+}
+
+.epay-builder-split .epay-builder-sidebar {
+  border-left: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-base) 40%, var(--surface-elevated));
+}
+
+.epay-builder-split > section.va-ops-panel,
+.epay-builder-split > aside .va-ops-panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.epay-tracker-overdue-panel .commercial-hub-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--critical-rose) 6%, transparent);
+}
+
+.epay-trust-money-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.epay-trust-money-card {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-elevated);
+}
+
+.epay-trust-money-card dt {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.epay-trust-money-card dd {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base-lg);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.epay-trust-money-card--holds dd {
+  color: var(--warning-amber);
+}
+
+.epay-trust-money-card--releases dd {
+  color: var(--metric-blue);
+}
+
+@media (max-width: 1200px) {
+  .epay-trust-money-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .carrier-market-rec-intel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .epay-builder-split {
+    border: none;
+  }
+
+  .epay-builder-split .epay-builder-sidebar {
+    border-left: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+}

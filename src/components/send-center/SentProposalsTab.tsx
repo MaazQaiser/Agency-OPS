@@ -16,20 +16,22 @@ import {
 } from "@/data/sendCenter";
 import { routes } from "@/lib/routes";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import { cn } from "@/lib/cn";
 import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
 import { getClientLanguage, getProposalLanguageMeta, translationStatusClass } from "@/data/bilingualClient";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { useHubDataState } from "@/hooks/useHubDataState";
+import { resolveDisplayStatus } from "@/lib/dataState";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
 import { SendCenterBulkBar } from "./SendCenterBulkBar";
 import { ProposalWorkflowStepper } from "./ProposalWorkflowStepper";
 import {
-  SendCenterEmptyState,
   SendCenterFilters,
   SendCenterTableSkeleton,
   useSendCenterFilters,
-  useTabLoading,
 } from "./SendCenterFilters";
 
 type SentProposalsTabProps = {
@@ -52,10 +54,21 @@ function getEngagement(row: SentProposalRecord) {
 export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
   const toast = useToast();
   const router = useRouter();
-  const loading = useTabLoading();
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [rows, setRows] = useState(sentProposalRecords);
+  const {
+    status: loadStatus,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => rows,
+    deps: [rows],
+    errorPreset: "supabase-timeout",
+  });
+  const status = resolveDisplayStatus(loadStatus, rows, (d) => d.length === 0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const filtered = useMemo(
@@ -122,10 +135,13 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
 
   return (
     <div className="va-ops-role-view send-center-tab">
-      <RoleTabHeader
-        title="Sent Proposals"
-        subtitle="Track delivery, engagement, acceptance, and expiration."
-      />
+      <div className="export-table-header-export">
+        <RoleTabHeader
+          title="Sent Proposals"
+          subtitle="Track delivery, engagement, acceptance, and expiration."
+        />
+        <ExportMenu kind="send-center-history" />
+      </div>
 
       <SendCenterAiInsight insights={sendCenterAiInsights.sentProposals} />
 
@@ -146,10 +162,23 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
       />
 
       <section className="va-ops-panel" aria-label="Sent proposals">
-        {loading ? (
-          <SendCenterTableSkeleton />
-        ) : (
-          <div className="commercial-hub-table-wrap">
+        <DataStateView
+          status={status}
+          lastSyncedAt={lastSyncedAt}
+          isStale={isStale}
+          showFreshness={false}
+          loading={<SendCenterTableSkeleton />}
+          empty={<HubEmptyState preset="send-center-sent" />}
+          error={
+            <HubErrorState
+              preset="supabase-timeout"
+              onRetry={retry}
+              retrying={retrying}
+              lastSyncedAt={lastSyncedAt}
+            />
+          }
+        >
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table send-center-table send-center-sent-table">
               <thead>
                 <tr>
@@ -173,9 +202,10 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={7}>
-                      <SendCenterEmptyState
-                        title="No sent proposals"
-                        description="Sent proposals and their engagement status will appear here."
+                      <HubEmptyState
+                        title="No matches"
+                        description="No sent proposals match your search. Try clearing filters or broadening your search."
+                        compact
                       />
                     </td>
                   </tr>
@@ -252,7 +282,7 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
               </tbody>
             </table>
           </div>
-        )}
+        </DataStateView>
       </section>
     </div>
   );

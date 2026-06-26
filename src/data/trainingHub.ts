@@ -284,12 +284,30 @@ export const trainingActivity = [
 
 export const resourceTypeClass: Record<ResourceType, string> = {
   Loom: "badge-blue",
-  Doc: "badge-green",
-  Scribe: "badge-yellow",
+  Doc: "badge-violet",
+  Scribe: "badge-teal",
+};
+
+export const resourceTypeCardClass: Record<ResourceType, string> = {
+  Loom: "training-resource-card--loom",
+  Doc: "training-resource-card--doc",
+  Scribe: "training-resource-card--scribe",
+};
+
+export const resourceTypeIconClass: Record<ResourceType, string> = {
+  Loom: "training-resource-type-icon--loom",
+  Doc: "training-resource-type-icon--doc",
+  Scribe: "training-resource-type-icon--scribe",
+};
+
+export const resourceTypeLabel: Record<ResourceType, string> = {
+  Loom: "Video",
+  Doc: "SOP / Policy",
+  Scribe: "Checklist / Script",
 };
 
 export const assignmentStatusClass: Record<AssignmentStatus, string> = {
-  Pending: "badge-yellow",
+  Pending: "badge-amber",
   "In Progress": "badge-blue",
   Completed: "badge-green",
 };

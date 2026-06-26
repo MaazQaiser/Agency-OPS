@@ -7,7 +7,9 @@ import { commercialHubTabs, type CommercialHubTabId } from "@/data/commercialHub
 import { getVisibleCommercialHubTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
+import { exportCommercialPipelinePdf } from "@/lib/export";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { CommercialHubPageHeader } from "./CommercialHubPageHeader";
 import { ExecutiveDashboardTab } from "./ExecutiveDashboardTab";
 import { CoverageChecklistTab } from "./CoverageChecklistTab";
@@ -59,6 +61,10 @@ export function CommercialHubModule() {
           setActive("submissions");
         }
         setAddMarketOpen(true);
+        return;
+      }
+      if (actionId === "export-pipeline") {
+        exportCommercialPipelinePdf();
       }
     },
     [active, router, setActive],
@@ -85,6 +91,7 @@ export function CommercialHubModule() {
       </nav>
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={safeActive}>
         {safeActive === "executive" && <ExecutiveDashboardTab />}
         {safeActive === "submissions" && (
           <SubmissionTrackerTab
@@ -101,6 +108,7 @@ export function CommercialHubModule() {
         {safeActive === "outreach" && <OutreachQueueTab />}
         {safeActive === "submission-clock" && <SubmissionClockTab />}
         {safeActive === "lead-velocity" && <LeadVelocityTab />}
+        </TabTransitionPanel>
       </div>
     </>
   );

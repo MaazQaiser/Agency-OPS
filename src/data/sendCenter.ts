@@ -171,35 +171,35 @@ export const templateRecords: TemplateRecord[] = [
 ];
 
 export const sendPriorityClass: Record<SendPriority, string> = {
-  High: "badge-red",
-  Medium: "badge-yellow",
+  High: "badge-rose",
+  Medium: "badge-amber",
   Low: "badge-blue",
 };
 
 export const draftStatusClass: Record<DraftQueueStatus, string> = {
-  Draft: "badge-gray",
-  "In Progress": "badge-yellow",
+  Draft: "badge-violet",
+  "In Progress": "badge-amber",
   "Ready for Review": "badge-green",
 };
 
 export const escalationStatusClass: Record<EscalationStatus, string> = {
   "On Track": "badge-green",
-  "Producer Alert": "badge-yellow",
-  "Owner Escalation": "badge-red",
+  "Producer Alert": "badge-amber",
+  "Owner Escalation": "badge-rose",
 };
 
 export const approvedStatusClass: Record<ApprovedDraftRecord["status"], string> = {
   "Ready to Send": "badge-green",
   Scheduled: "badge-blue",
-  "On Hold": "badge-yellow",
+  "On Hold": "badge-amber",
 };
 
 export const commLogTypeClass: Record<CommLogEventType, string> = {
   Sent: "badge-blue",
   Viewed: "badge-green",
-  Replied: "badge-yellow",
-  Escalated: "badge-red",
-  "Follow-up": "badge-yellow",
+  Replied: "badge-amber",
+  Escalated: "badge-rose",
+  "Follow-up": "badge-amber",
 };
 
 export const SLA_PRODUCER_MINUTES = 15;
@@ -224,9 +224,9 @@ export function getEscalationRiskBadge(waitingMinutes: number): { label: string;
   const tier = getSlaUrgencyTier(waitingMinutes);
   const map: Record<SlaUrgencyTier, { label: string; className: string }> = {
     blue: { label: "Low risk", className: "badge-blue" },
-    amber: { label: "Moderate risk", className: "badge-yellow" },
-    orange: { label: "High risk", className: "badge-yellow" },
-    red: { label: "Escalation risk", className: "badge-red" },
+    amber: { label: "Moderate risk", className: "badge-amber" },
+    orange: { label: "High risk", className: "badge-amber" },
+    red: { label: "Escalation risk", className: "badge-rose" },
   };
   return map[tier];
 }

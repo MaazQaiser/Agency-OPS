@@ -249,6 +249,18 @@ export const teamMembers: TeamMember[] = [
 
 export type PriorityTaskStatus = "urgent" | "pending" | "critical";
 
+export type TaskPriorityLevel = "low" | "medium" | "high" | "critical";
+
+export type DueDateRisk = "on-track" | "due-soon" | "at-risk" | "overdue";
+
+export type TaskBlockerState =
+  | "clear"
+  | "awaiting-client"
+  | "awaiting-carrier"
+  | "awaiting-docs"
+  | "awaiting-approval"
+  | "internal-handoff";
+
 export type PriorityType =
   | "lead-callback"
   | "missing-docs"
@@ -262,11 +274,15 @@ export type PriorityTask = {
   id: string;
   title: string;
   assignedTo: string;
+  assignedBy: string;
   due: string;
+  dueDateRisk: DueDateRisk;
+  priority: TaskPriorityLevel;
   priorityType: PriorityType;
   source: TaskSource;
   roleType: VaRoleType;
   status: PriorityTaskStatus;
+  blocker: TaskBlockerState;
 };
 
 export function getTaskCta(priorityType: PriorityType): string {
@@ -287,72 +303,207 @@ export const priorityQueue: PriorityTask[] = [
     id: "task-1",
     title: "Follow up with Martinez Landscaping",
     assignedTo: "JoJo",
+    assignedBy: "Eva",
     due: "11:30 AM",
+    dueDateRisk: "at-risk",
+    priority: "high",
     priorityType: "quote-follow-up",
     source: "commercial",
     roleType: "brokerage",
     status: "urgent",
+    blocker: "awaiting-client",
   },
   {
     id: "task-2",
     title: "Collect missing loss runs",
     assignedTo: "Pedro",
+    assignedBy: "JoJo",
     due: "2:00 PM",
+    dueDateRisk: "on-track",
+    priority: "medium",
     priorityType: "missing-docs",
     source: "intake",
     roleType: "brokerage",
     status: "pending",
+    blocker: "awaiting-docs",
   },
   {
     id: "task-3",
     title: "Return inbound lead callback",
     assignedTo: "Kat",
+    assignedBy: "Ricochet",
     due: "In 10 minutes",
+    dueDateRisk: "due-soon",
+    priority: "critical",
     priorityType: "lead-callback",
     source: "intake",
     roleType: "dialer",
     status: "critical",
+    blocker: "clear",
   },
   {
     id: "task-4",
     title: "Producer approval — BOP quote draft",
     assignedTo: "Pedro",
+    assignedBy: "Sarah",
     due: "3:00 PM",
+    dueDateRisk: "on-track",
+    priority: "high",
     priorityType: "producer-approval",
     source: "send-center",
     roleType: "brokerage",
     status: "urgent",
+    blocker: "awaiting-approval",
   },
   {
     id: "task-5",
     title: "Retention save — Lopez Family Auto",
     assignedTo: "Sara",
+    assignedBy: "Eva",
     due: "4:30 PM",
+    dueDateRisk: "at-risk",
+    priority: "critical",
     priorityType: "retention-save",
     source: "retention",
     roleType: "retention",
     status: "critical",
+    blocker: "awaiting-client",
+  },
+  {
+    id: "task-6",
+    title: "Carrier follow-up — Greenline GL quote",
+    assignedTo: "Pedro",
+    assignedBy: "Jaffer",
+    due: "Yesterday 5:00 PM",
+    dueDateRisk: "overdue",
+    priority: "high",
+    priorityType: "quote-follow-up",
+    source: "commercial",
+    roleType: "brokerage",
+    status: "urgent",
+    blocker: "awaiting-carrier",
+  },
+  {
+    id: "task-7",
+    title: "Handoff bilingual intake — Kim Auto Shop",
+    assignedTo: "Kat",
+    assignedBy: "Pedro",
+    due: "1:15 PM",
+    dueDateRisk: "due-soon",
+    priority: "medium",
+    priorityType: "lead-callback",
+    source: "intake",
+    roleType: "dialer",
+    status: "pending",
+    blocker: "internal-handoff",
   },
 ];
 
 export type ActivityCategory = "calls" | "commercial" | "approvals" | "retention";
 
+export type ActivityEventType = "call" | "upload" | "sla-miss" | "send" | "add" | "complete";
+
 export type ActivityItem = {
   id: string;
   text: string;
+  summary: string;
+  actor: string;
+  eventType: ActivityEventType;
+  source: string;
   time: string;
   category: ActivityCategory;
   roleType: VaRoleType;
 };
 
 export const liveActivity: ActivityItem[] = [
-  { id: "act-1", text: "Kat called new inbound lead", time: "2 minutes ago", category: "calls", roleType: "dialer" },
-  { id: "act-2", text: "Jaffer added 4 new commercial prospects", time: "5 minutes ago", category: "commercial", roleType: "research" },
-  { id: "act-3", text: "Pedro submitted BOP quote request", time: "8 minutes ago", category: "commercial", roleType: "brokerage" },
-  { id: "act-4", text: "JoJo uploaded carrier documents", time: "11 minutes ago", category: "commercial", roleType: "brokerage" },
-  { id: "act-5", text: "Sara completed retention save call", time: "14 minutes ago", category: "retention", roleType: "retention" },
-  { id: "act-6", text: "Pedro submitted quote draft for producer approval", time: "16 minutes ago", category: "approvals", roleType: "brokerage" },
-  { id: "act-7", text: "Kyle updated automation workflow", time: "18 minutes ago", category: "commercial", roleType: "automation" },
+  {
+    id: "act-1",
+    text: "Kat called new inbound lead",
+    summary: "Called lead",
+    actor: "Kat",
+    eventType: "call",
+    source: "Ricochet",
+    time: "2 minutes ago",
+    category: "calls",
+    roleType: "dialer",
+  },
+  {
+    id: "act-2",
+    text: "Jaffer added 4 new commercial prospects",
+    summary: "Added prospects",
+    actor: "Jaffer",
+    eventType: "add",
+    source: "Commercial",
+    time: "5 minutes ago",
+    category: "commercial",
+    roleType: "research",
+  },
+  {
+    id: "act-3",
+    text: "Pedro submitted BOP quote request",
+    summary: "Uploaded quote",
+    actor: "Pedro",
+    eventType: "upload",
+    source: "Commercial Hub",
+    time: "8 minutes ago",
+    category: "commercial",
+    roleType: "brokerage",
+  },
+  {
+    id: "act-4",
+    text: "JoJo uploaded carrier documents",
+    summary: "Uploaded documents",
+    actor: "JoJo",
+    eventType: "upload",
+    source: "Intake",
+    time: "11 minutes ago",
+    category: "commercial",
+    roleType: "brokerage",
+  },
+  {
+    id: "act-5",
+    text: "Sara completed retention save call",
+    summary: "Completed save call",
+    actor: "Sara",
+    eventType: "complete",
+    source: "Retention",
+    time: "14 minutes ago",
+    category: "retention",
+    roleType: "retention",
+  },
+  {
+    id: "act-6",
+    text: "Pedro submitted quote draft for producer approval",
+    summary: "Sent proposal",
+    actor: "Pedro",
+    eventType: "send",
+    source: "Send Center",
+    time: "16 minutes ago",
+    category: "approvals",
+    roleType: "brokerage",
+  },
+  {
+    id: "act-7",
+    text: "JoJo missed 5-min SLA on Meta commercial lead",
+    summary: "Missed SLA",
+    actor: "JoJo",
+    eventType: "sla-miss",
+    source: "Meta Leads",
+    time: "18 minutes ago",
+    category: "commercial",
+    roleType: "brokerage",
+  },
+  {
+    id: "act-8",
+    text: "Kyle updated automation workflow",
+    summary: "Updated workflow",
+    actor: "Kyle",
+    eventType: "add",
+    source: "Automation",
+    time: "22 minutes ago",
+    category: "commercial",
+    roleType: "automation",
+  },
 ];
 
 export type SlaStatus = "within" | "near" | "breached";
@@ -400,6 +551,8 @@ export type ApprovalHub = "commercial" | "send-center" | "retention";
 
 export type ApprovalPriority = "low" | "medium" | "high" | "critical";
 
+export type ApprovalLifecycleStage = "draft" | "review" | "approved" | "sent";
+
 export type ApprovalDraft = {
   id: string;
   title: string;
@@ -410,7 +563,15 @@ export type ApprovalDraft = {
   hub: ApprovalHub;
   roleType: VaRoleType;
   priority: ApprovalPriority;
+  lifecycleStage: ApprovalLifecycleStage;
   cta: string;
+};
+
+export const approvalLifecycleLabels: Record<ApprovalLifecycleStage, string> = {
+  draft: "Draft",
+  review: "Review",
+  approved: "Approved",
+  sent: "Sent",
 };
 
 export const approvalQueue: ApprovalDraft[] = [
@@ -424,6 +585,7 @@ export const approvalQueue: ApprovalDraft[] = [
     hub: "commercial",
     roleType: "brokerage",
     priority: "high",
+    lifecycleStage: "review",
     cta: "Approve Draft",
   },
   {
@@ -436,6 +598,7 @@ export const approvalQueue: ApprovalDraft[] = [
     hub: "retention",
     roleType: "brokerage",
     priority: "medium",
+    lifecycleStage: "draft",
     cta: "Review Draft",
   },
   {
@@ -448,6 +611,7 @@ export const approvalQueue: ApprovalDraft[] = [
     hub: "send-center",
     roleType: "brokerage",
     priority: "high",
+    lifecycleStage: "review",
     cta: "Review Draft",
   },
   {
@@ -460,8 +624,22 @@ export const approvalQueue: ApprovalDraft[] = [
     hub: "retention",
     roleType: "retention",
     priority: "critical",
+    lifecycleStage: "draft",
     cta: "Review Request",
   },
+];
+
+export type OwnerIntelligenceStat = {
+  id: string;
+  value: number;
+  label: string;
+  tone: "amber" | "red";
+};
+
+export const ownerIntelligenceStats: OwnerIntelligenceStat[] = [
+  { id: "approvals", value: 3, label: "approvals overdue", tone: "amber" },
+  { id: "sla", value: 2, label: "SLA breaches", tone: "red" },
+  { id: "policy", value: 1, label: "policy at risk", tone: "red" },
 ];
 
 const roleToMemberTypes: Record<VaOperationsRoleId, VaRoleType[] | "all"> = {
@@ -515,6 +693,24 @@ export const approvalPriorityLabels: Record<ApprovalPriority, string> = {
   medium: "Medium",
   high: "High",
   critical: "Critical",
+};
+
+export const taskPriorityLabels: Record<TaskPriorityLevel, string> = approvalPriorityLabels;
+
+export const dueDateRiskLabels: Record<DueDateRisk, string> = {
+  "on-track": "On Track",
+  "due-soon": "Due Soon",
+  "at-risk": "At Risk",
+  overdue: "Overdue",
+};
+
+export const taskBlockerLabels: Record<TaskBlockerState, string> = {
+  clear: "Clear",
+  "awaiting-client": "Awaiting Client",
+  "awaiting-carrier": "Awaiting Carrier",
+  "awaiting-docs": "Awaiting Docs",
+  "awaiting-approval": "Awaiting Approval",
+  "internal-handoff": "Internal Handoff",
 };
 
 export function filterOperationalSnapshot(role: VaOperationsRoleId): OperationalSnapshotItem[] {

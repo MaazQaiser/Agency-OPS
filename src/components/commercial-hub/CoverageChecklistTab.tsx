@@ -26,19 +26,31 @@ import {
   uploadDocument,
 } from "@/data/coverageChecklistActions";
 import { KpiSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { getCommercialHubSnapshot } from "@/data/commercialHubStore";
 import { useCommercialHubStore } from "@/hooks/useCommercialHubStore";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useToast } from "@/hooks/useToast";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { routes } from "@/lib/routes";
 import { toastMessages } from "@/lib/toastMessages";
-import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { cn } from "@/lib/cn";
 import { AddCoverageModal } from "./AddCoverageModal";
 import { CoverageDetailDrawer } from "./CoverageDetailDrawer";
 import { SendToProducerModal } from "./SendToProducerModal";
 import { UploadDocumentModal } from "./UploadDocumentModal";
+import { MarketReadinessScore } from "./MarketReadinessScore";
+import { computeMarketReadiness } from "@/lib/marketReadiness";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { coverageChecklistTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 
 const coverageStatusClass: Record<CoverageItemStatus, string> = {
   Completed: "badge-green",
@@ -78,10 +90,10 @@ function CoverageReviewRows({
         }
       }}
     >
-      <td className="commercial-hub-client-cell">{item.name}</td>
       <td>
         <span className={cn("badge", coverageStatusClass[item.status])}>{item.status}</span>
       </td>
+      <td className="commercial-hub-client-cell">{item.name}</td>
       <td>{cell(item.carrier)}</td>
       <td>{cell(item.limit)}</td>
       <td>{cell(item.payroll)}</td>
@@ -99,8 +111,17 @@ export function CoverageChecklistTab() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const toast = useToast();
-  const loading = useTabLoading();
   const { checklistClients } = useCommercialHubStore();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => getCommercialHubSnapshot().checklistClients,
+    errorPreset: "agencyzoom-unavailable",
+  });
   const initialClient = searchParams.get("client");
   const [clientId, setClientId] = useState(
     initialClient && checklistClients.some((c) => c.id === initialClient)
@@ -111,7 +132,7 @@ export function CoverageChecklistTab() {
   const [addCoverageOpen, setAddCoverageOpen] = useState(false);
   const [uploadDocOpen, setUploadDocOpen] = useState(false);
   const [sendProducerOpen, setSendProducerOpen] = useState(false);
-  const reviewPanelRef = useRef<HTMLElement>(null);
+  const reviewPanelRef = useRef<HTMLDivElement>(null);
 
   const onRulesHandoff = useCallback((payload: Record<string, string | undefined>) => {
     toast.success(
@@ -132,17 +153,35 @@ export function CoverageChecklistTab() {
     paramValue: client?.id,
   });
 
-  if (loading) {
+  if (!client) {
     return (
-      <div className="va-ops-role-view coverage-checklist">
-        <KpiSkeletonGrid count={3} />
-        <TableSkeleton rows={5} />
-      </div>
+      <DataStateView
+        status={status}
+        lastSyncedAt={lastSyncedAt}
+        isStale={isStale}
+        showFreshness={false}
+        loading={
+          <div className="va-ops-role-view coverage-checklist">
+            <KpiSkeletonGrid count={3} />
+            <TableSkeleton rows={5} />
+          </div>
+        }
+        empty={<HubEmptyState preset="commercial-submissions" />}
+        error={
+          <HubErrorState
+            preset="agencyzoom-unavailable"
+            onRetry={retry}
+            retrying={retrying}
+            lastSyncedAt={lastSyncedAt}
+          />
+        }
+      >
+        {null}
+      </DataStateView>
     );
   }
 
-  if (!client) return null;
-
+  const marketReadiness = computeMarketReadiness(client);
   const completion = getCoverageCompletion(client);
   const blockers = getBindBlockers(client);
   const documentsStatus = getDocumentsStatus(client);
@@ -205,13 +244,39 @@ export function CoverageChecklistTab() {
   };
 
   return (
-    <div className="va-ops-role-view coverage-checklist">
-      <RoleTabHeader
-        title={coverageChecklistHeader.title}
-        subtitle={coverageChecklistHeader.subtitle}
-        quickActions={coverageChecklistHeader.quickActions}
-        onQuickActionClick={handleQuickAction}
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <div className="va-ops-role-view coverage-checklist">
+          <KpiSkeletonGrid count={3} />
+          <TableSkeleton rows={5} />
+        </div>
+      }
+      empty={<HubEmptyState preset="commercial-submissions" />}
+      error={
+        <HubErrorState
+          preset="agencyzoom-unavailable"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+    <CommercialHubTabShell className="coverage-checklist">
+      <CommercialHubTabHeader
+        title={commercialHubTabHeaders.checklist.title}
+        subtitle={commercialHubTabHeaders.checklist.subtitle}
+        actions={coverageChecklistHeader.quickActions.map((action, index) => ({
+          ...action,
+          variant: index === 0 ? "primary" as const : "secondary" as const,
+        }))}
+        onActionClick={handleQuickAction}
       />
+
+      <CommercialHubKpiStrip kpis={coverageChecklistTabKpis(client)} columns={6} />
 
       <section className="va-ops-panel coverage-client-summary" aria-label="Client summary">
         <div className="coverage-client-summary-top">
@@ -219,7 +284,9 @@ export function CoverageChecklistTab() {
             <h3 className="coverage-client-name">{client.clientName}</h3>
             <p className="coverage-client-type">{client.businessType}</p>
           </div>
-          <label className="coverage-client-switcher">
+          <div className="coverage-client-summary-actions">
+            <MarketReadinessScore score={marketReadiness} />
+            <label className="coverage-client-switcher">
             <span className="coverage-client-switcher-label">Switch client</span>
             <select
               className="header-filter-select"
@@ -233,31 +300,32 @@ export function CoverageChecklistTab() {
               ))}
             </select>
           </label>
+          </div>
         </div>
-        <div className="commercial-hub-table-wrap">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table coverage-summary-table">
             <thead>
               <tr>
-                <th>Industry</th>
+                <th>Current Stage</th>
                 <th>Assigned VA</th>
                 <th>Assigned Producer</th>
                 <th>Renewal Date</th>
                 <th>Estimated Premium</th>
-                <th>Current Stage</th>
+                <th>Industry</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{client.businessType}</td>
-                <td>{client.assignedVa}</td>
-                <td>{client.assignedProducer}</td>
-                <td>{client.renewalDate}</td>
-                <td className="commercial-hub-premium">{client.estimatedPremium}</td>
                 <td>
                   <span className={cn("badge", getStageBadgeClass(client.currentStage))}>
                     {client.currentStage}
                   </span>
                 </td>
+                <td>{client.assignedVa}</td>
+                <td>{client.assignedProducer}</td>
+                <td>{client.renewalDate}</td>
+                <td className="commercial-hub-premium">{client.estimatedPremium}</td>
+                <td>{client.businessType}</td>
               </tr>
             </tbody>
           </table>
@@ -351,42 +419,17 @@ export function CoverageChecklistTab() {
         </div>
       </section>
 
-      <section className="va-ops-panel coverage-blockers-panel" aria-label="Bind blockers">
-        <div className="coverage-blockers-header">
-          <h3 className="va-ops-section-title">Bind Blockers</h3>
-          <p className="va-ops-section-sub">Items blocking market submission.</p>
-        </div>
-        {blockers.length === 0 ? (
-          <p className="coverage-blockers-empty">No blockers — account is market ready.</p>
-        ) : (
-          <ul className="coverage-blockers-list">
-            {blockers.map((blocker) => (
-              <li key={blocker} className="coverage-blockers-item">
-                <AppIcon name="triangle-alert" size={14} strokeWidth={2} />
-                {blocker}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section
-        ref={reviewPanelRef}
-        className="va-ops-panel coverage-review-panel"
-        aria-label="Coverage review"
+      <CommercialHubWorkspace
+        ariaLabel="Coverage review"
+        title="Coverage Review"
+        subtitle="Validate required coverage before sending to market — click a row for details."
       >
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Coverage Review</h3>
-          <p className="va-ops-section-sub">
-            Validate required coverage before sending to market — click a row for details.
-          </p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+        <div ref={reviewPanelRef} className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table coverage-review-table">
             <thead>
               <tr>
-                <th>Coverage</th>
                 <th>Status</th>
+                <th>Coverage</th>
                 <th>Carrier</th>
                 <th>Limit</th>
                 <th>Payroll</th>
@@ -412,7 +455,22 @@ export function CoverageChecklistTab() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubWorkspace>
+
+      <CommercialHubTabFooter title="Bind Blockers" subtitle="Items blocking market submission.">
+        {blockers.length === 0 ? (
+          <p className="coverage-blockers-empty">No blockers — account is market ready.</p>
+        ) : (
+          <ul className="coverage-blockers-list">
+            {blockers.map((blocker) => (
+              <li key={blocker} className="coverage-blockers-item">
+                <AppIcon name="triangle-alert" size={14} strokeWidth={2} />
+                {blocker}
+              </li>
+            ))}
+          </ul>
+        )}
+      </CommercialHubTabFooter>
 
       <AddCoverageModal
         open={addCoverageOpen}
@@ -444,6 +502,7 @@ export function CoverageChecklistTab() {
         clientName={client.clientName}
         onClose={() => setSelectedCoverage(null)}
       />
-    </div>
+    </CommercialHubTabShell>
+    </DataStateView>
   );
 }

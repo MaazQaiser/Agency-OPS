@@ -14,6 +14,22 @@ export const ruleStatusClass: Record<RuleStatus, string> = {
   Blocked: "badge-red",
 };
 
+export const carrierConditionCardClass: Partial<Record<RuleStatus, string>> = {
+  Active: "carrier-condition-card--active",
+  Restricted: "carrier-condition-card--restricted",
+  Blocked: "carrier-condition-card--blocked",
+  Required: "carrier-condition-card--required",
+  Conditional: "carrier-condition-card--conditional",
+};
+
+export const carrierConditionStatusClass: Partial<Record<RuleStatus, string>> = {
+  Active: "carrier-condition-status--active",
+  Restricted: "carrier-condition-status--restricted",
+  Blocked: "carrier-condition-status--blocked",
+  Required: "carrier-condition-status--required",
+  Conditional: "carrier-condition-status--conditional",
+};
+
 export const requiredDocumentsByProduct = [
   {
     id: "doc-bop",

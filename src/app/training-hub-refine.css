@@ -1,0 +1,420 @@
+/* Training Hub — content hierarchy and learning workflow refinements (scoped) */
+
+/* ── Workflow shell alignment ── */
+.module-training-hub .va-ops-role-view.training-library {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 18px;
+}
+
+/* ── 1. Compact KPI strip (−12% card width, tighter internals) ── */
+.module-training-hub .training-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+  max-width: 88%;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-card {
+  padding: 11px 12px;
+  min-height: 0;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-value {
+  font-size: var(--font-size-kpi-md);
+  line-height: 1.1;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-sub {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-helper {
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+/* ── 7. Tighter resource card grid (−8% gap) ── */
+.training-resource-grid {
+  gap: 14px;
+}
+
+/* ── 2. Resource card hierarchy ── */
+.training-resource-card-body {
+  padding: 12px 14px 10px;
+  gap: 0;
+}
+
+.training-resource-title {
+  font-size: var(--font-size-base-lg);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.training-resource-priority-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.training-resource-priority-row .badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.training-resource-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 8px;
+  width: 100%;
+}
+
+.training-resource-meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.training-resource-meta-row dt {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  min-width: 72px;
+}
+
+.training-resource-meta-row dd {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.training-resource-meta-row--secondary dd {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.training-resource-meta-row--tertiary dt,
+.training-resource-meta-row--tertiary dd {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.training-resource-meta-muted {
+  display: none;
+}
+
+.training-resource-tags {
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.training-resource-tag {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: color-mix(in srgb, var(--border-subtle) 60%, transparent);
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── 3. Open Resource action strip ── */
+.training-resource-action-strip {
+  border-top: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--primary) 5%, var(--surface-elevated));
+}
+
+.training-resource-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.training-resource-action-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.training-resource-action-btn::after {
+  content: "→";
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.85;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.training-resource-action-btn:hover::after {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+/* ── 4. Lower sections: Assigned primary, Recently Viewed compact ── */
+.training-library-lower-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(220px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.training-library-primary.va-ops-panel {
+  padding: 16px;
+  border-color: var(--border-default);
+}
+
+.training-library-primary .va-ops-section-title {
+  font-size: var(--font-size-base-lg);
+  font-weight: 800;
+}
+
+.training-library-secondary-compact.va-ops-panel {
+  padding: 12px 14px;
+  border-color: var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-elevated) 88%, var(--surface-base));
+}
+
+.training-library-secondary-compact .va-ops-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.training-library-secondary-compact .va-ops-section-sub {
+  display: none;
+}
+
+.training-recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.training-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-family);
+  transition: background 0.12s;
+}
+
+.training-recent-item:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+.training-recent-title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.training-recent-time {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ── 5. Compressed training activity timeline ── */
+.training-activity-panel.va-ops-panel {
+  padding: 12px 14px;
+}
+
+.training-activity-panel .va-ops-section-sub {
+  font-size: var(--font-size-xs);
+}
+
+.training-activity-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.training-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 70%, transparent);
+  transition: background 0.12s;
+}
+
+.training-activity-item:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+
+.training-activity-item.training-hub-clickable-row:hover {
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  margin: 0 -4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: var(--radius);
+}
+
+.training-activity-avatar {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.training-activity-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.training-activity-message {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.training-activity-time {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 6. Popular topics with usage counts ── */
+.training-topics-panel.va-ops-panel {
+  padding: 12px 14px;
+}
+
+.training-popular-tags {
+  gap: 8px;
+}
+
+.training-popular-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius);
+  background: var(--surface-elevated);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.training-popular-tag-label {
+  color: var(--text-primary);
+}
+
+.training-popular-tag-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border-subtle) 70%, transparent);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.training-popular-tag:hover,
+.training-popular-tag.active {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-elevated));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.training-popular-tag:hover .training-popular-tag-label,
+.training-popular-tag.active .training-popular-tag-label {
+  color: var(--primary);
+}
+
+.training-popular-tag:hover .training-popular-tag-count,
+.training-popular-tag.active .training-popular-tag-count {
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--primary);
+}
+
+/* ── Alignment: filters + resources ── */
+.training-library-filters {
+  gap: 10px;
+}
+
+.training-library-resources-header {
+  margin-bottom: -4px;
+}
+
+@media (max-width: 1200px) {
+  .module-training-hub .training-kpi-grid {
+    max-width: 100%;
+  }
+
+  .training-library-lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .module-training-hub .training-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .training-activity-body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}

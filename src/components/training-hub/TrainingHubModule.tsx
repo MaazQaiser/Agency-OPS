@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { trainingHubTabs, type TrainingHubTabId } from "@/data/trainingHub";
 import { routes } from "@/lib/routes";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { AddNewResourceModal } from "./AddNewResourceModal";
 import { DepartmentOverviewTab } from "./DepartmentOverviewTab";
@@ -90,9 +91,11 @@ export function TrainingHubModule() {
       )}
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={showingDetail ? "detail" : active}>
         {showingDetail && <TrainingDetailTab />}
         {!showingDetail && active === "departments" && <DepartmentOverviewTab />}
         {!showingDetail && active === "library" && <TrainingLibraryTab />}
+        </TabTransitionPanel>
       </div>
 
       <UploadTrainingModal

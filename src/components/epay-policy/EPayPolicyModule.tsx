@@ -8,6 +8,7 @@ import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
 import { useToast, createLegacyToastHandler } from "@/hooks/useToast";
 import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
+import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { EPayPolicyPageHeader } from "./EPayPolicyPageHeader";
 import { InvoiceBuilderTab } from "./InvoiceBuilderTab";
@@ -73,6 +74,7 @@ export function EPayPolicyModule() {
       </nav>
 
       <div className="va-ops-tab-content">
+        <TabTransitionPanel tabKey={safeActive}>
         {safeActive === "builder" && <InvoiceBuilderTab onToast={showToast} />}
         {safeActive === "tracker" && (
           <PaymentTrackerTab
@@ -81,6 +83,7 @@ export function EPayPolicyModule() {
           />
         )}
         {safeActive === "trust" && <TrustReferenceTab onToast={showToast} />}
+        </TabTransitionPanel>
       </div>
     </>
   );

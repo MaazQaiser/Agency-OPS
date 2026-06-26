@@ -9,28 +9,38 @@ import {
   sendQuoteReminder,
 } from "@/data/outreachQueueActions";
 import {
-  computeOutreachKpis,
   getOutreachClientOptions,
   outreachQueueHeader,
   type ActiveFollowUp,
   type OutreachClientProfile,
 } from "@/data/outreachQueue";
-import { TableSkeleton, TimelineSkeleton } from "@/components/shared/loading";
+import { PipelineCardSkeleton } from "@/components/shared/loading";
+import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
+import { getOutreachSnapshot } from "@/data/outreachHubStore";
 import { useOutreachHubStore } from "@/hooks/useOutreachHubStore";
-import { useTabLoading } from "@/hooks/useTabLoading";
+import { useHubDataState } from "@/hooks/useHubDataState";
 import { useToast } from "@/hooks/useToast";
 import { crossModuleRoutes, navigateWithHandoff } from "@/lib/crossModuleLinks";
 import { routes } from "@/lib/routes";
 import { toastMessages } from "@/lib/toastMessages";
-import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { cn } from "@/lib/cn";
+import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
+import { outreachTabKpis } from "@/lib/commercialHubTabKpis";
+import {
+  CommercialHubIntelPanel,
+  CommercialHubKpiStrip,
+  CommercialHubTabFooter,
+  CommercialHubTabHeader,
+  CommercialHubTabShell,
+  CommercialHubWorkspace,
+} from "./CommercialHubTabLayout";
 import { AddFollowUpModal } from "./AddFollowUpModal";
 import { AssignProducerModal } from "./AssignProducerModal";
 import { CreateReminderModal } from "./CreateReminderModal";
 import { OutreachClientDrawer } from "./OutreachClientDrawer";
 import { SendQuoteReminderModal } from "./SendQuoteReminderModal";
-import { CommercialHubEmptyState } from "./CommercialHubEmptyState";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { CommercialHubEmptyState } from "./CommercialHubEmptyState";
 
 const quoteStatusClass: Record<string, string> = {
   Waiting: "badge-yellow",
@@ -57,8 +67,18 @@ type DrawerState = { client: string; profile: OutreachClientProfile } | null;
 export function OutreachQueueTab() {
   const router = useRouter();
   const toast = useToast();
-  const loading = useTabLoading();
   const snapshot = useOutreachHubStore();
+  const {
+    status,
+    retry,
+    lastSyncedAt,
+    isStale,
+    retrying,
+  } = useHubDataState({
+    load: () => getOutreachSnapshot(),
+    isEmpty: () => false,
+    errorPreset: "agencyzoom-unavailable",
+  });
   const [addFollowUpOpen, setAddFollowUpOpen] = useState(false);
   const [createReminderOpen, setCreateReminderOpen] = useState(false);
   const [sendQuoteOpen, setSendQuoteOpen] = useState(false);
@@ -66,7 +86,7 @@ export function OutreachQueueTab() {
   const [drawer, setDrawer] = useState<DrawerState>(null);
 
   const clientOptions = useMemo(() => getOutreachClientOptions(snapshot), [snapshot]);
-  const kpis = useMemo(() => computeOutreachKpis(snapshot), [snapshot]);
+  const kpis = useMemo(() => outreachTabKpis(snapshot), [snapshot]);
   const upcomingReminder = snapshot.reminders[0] ?? null;
   const followUpCount = snapshot.activeFollowUps.length + snapshot.quoteFollowUps.length;
 
@@ -110,22 +130,36 @@ export function OutreachQueueTab() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="va-ops-role-view outreach-queue">
-        <TimelineSkeleton items={5} />
-        <TableSkeleton rows={4} />
-      </div>
-    );
-  }
-
   return (
-    <div className="va-ops-role-view outreach-queue">
-      <RoleTabHeader
-        title={outreachQueueHeader.title}
-        subtitle={outreachQueueHeader.subtitle}
-        quickActions={outreachQueueHeader.quickActions}
-        onQuickActionClick={handleQuickAction}
+    <DataStateView
+      status={status}
+      lastSyncedAt={lastSyncedAt}
+      isStale={isStale}
+      showFreshness={false}
+      loading={
+        <CommercialHubTabShell className="outreach-queue">
+          <PipelineCardSkeleton count={4} />
+        </CommercialHubTabShell>
+      }
+      empty={<HubEmptyState preset="commercial-outreach" />}
+      error={
+        <HubErrorState
+          preset="agencyzoom-unavailable"
+          onRetry={retry}
+          retrying={retrying}
+          lastSyncedAt={lastSyncedAt}
+        />
+      }
+    >
+    <CommercialHubTabShell className="outreach-queue">
+      <CommercialHubTabHeader
+        title={commercialHubTabHeaders.outreach.title}
+        subtitle={commercialHubTabHeaders.outreach.subtitle}
+        actions={outreachQueueHeader.quickActions.map((action, index) => ({
+          ...action,
+          variant: index === 0 ? "primary" as const : "secondary" as const,
+        }))}
+        onActionClick={handleQuickAction}
       />
 
       {upcomingReminder && (
@@ -137,34 +171,23 @@ export function OutreachQueueTab() {
         </div>
       )}
 
-      <section className="va-ops-kpi-strip" aria-label="Outreach queue KPI summary">
-        <div className="commercial-hub-kpi-grid outreach-kpi-grid">
-          {kpis.map((kpi) => (
-            <article key={kpi.label} className={cn("va-ops-kpi-card", kpi.color)}>
-              <div className="va-ops-kpi-label">{kpi.label}</div>
-              <div className="va-ops-kpi-value">{kpi.value}</div>
-              <div className="va-ops-kpi-sub">{kpi.sub}</div>
-              <div className="va-ops-kpi-helper">{kpi.helper}</div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <CommercialHubKpiStrip kpis={kpis} columns={4} />
 
-      <section className="va-ops-panel" aria-label="Follow-up queue">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Follow-up Queue</h3>
-          <p className="va-ops-section-sub">Active tasks and quote follow-ups driving client momentum.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubWorkspace
+        ariaLabel="Follow-up queue"
+        title="Follow-up Queue"
+        subtitle="Active tasks and quote follow-ups driving client momentum."
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table outreach-follow-ups-table">
             <thead>
               <tr>
+                <th>Priority / Status</th>
+                <th>Assigned</th>
+                <th>Due / Sent</th>
                 <th>Client</th>
                 <th>Type</th>
                 <th>Carrier / Coverage</th>
-                <th>Assigned</th>
-                <th>Due / Sent</th>
-                <th>Priority / Status</th>
                 <th>Next Action</th>
                 <th aria-label="Action" />
               </tr>
@@ -195,14 +218,14 @@ export function OutreachQueueTab() {
                     }
                   }}
                 >
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td>{row.type}</td>
-                  <td>{row.coverage}</td>
-                  <td>{row.assigned}</td>
-                  <td>{row.due}</td>
                   <td>
                     <span className={cn("badge", priorityClass[row.priority])}>{row.priority}</span>
                   </td>
+                  <td>{row.assigned}</td>
+                  <td>{row.due}</td>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>{row.type}</td>
+                  <td>{row.coverage}</td>
                   <td className="commercial-hub-next-action">{row.nextAction}</td>
                   <td>
                     <button
@@ -220,16 +243,16 @@ export function OutreachQueueTab() {
               ))}
               {snapshot.quoteFollowUps.map((row) => (
                 <tr key={`qf-${row.id}`}>
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td>Quote Follow-Up</td>
-                  <td>{row.carrier}</td>
-                  <td>—</td>
-                  <td>{row.sent}</td>
                   <td>
                     <span className={cn("badge", quoteStatusClass[row.status] ?? "badge-gray")}>
                       {row.status}
                     </span>
                   </td>
+                  <td>—</td>
+                  <td>{row.sent}</td>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>Quote Follow-Up</td>
+                  <td>{row.carrier}</td>
                   <td className="commercial-hub-next-action">{row.nextStep}</td>
                   <td>
                     <button type="button" className="va-ops-action-btn" onClick={() => reviseProposal(row.client)}>
@@ -243,82 +266,72 @@ export function OutreachQueueTab() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubWorkspace>
 
-      {snapshot.producerQueue.length > 0 && (
-        <section className="va-ops-panel" aria-label="Producer queue">
-          <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Producer Queue</h3>
-            <p className="va-ops-section-sub">Accounts assigned to producers for closing.</p>
-          </div>
-          <div className="commercial-hub-table-wrap">
+      <CommercialHubIntelPanel title="Producer Queue" subtitle="Accounts assigned to producers for closing." className="commercial-hub-intel-tall">
+        {snapshot.producerQueue.length === 0 ? (
+          <p className="va-ops-section-sub">No producer assignments pending.</p>
+        ) : (
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
                 <tr>
-                  <th>Client</th>
-                  <th>Producer</th>
                   <th>Priority</th>
+                  <th>Producer</th>
                   <th>Assigned</th>
+                  <th>Client</th>
                   <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
                 {snapshot.producerQueue.map((row) => (
                   <tr key={row.id}>
-                    <td className="commercial-hub-client-cell">{row.client}</td>
-                    <td><UserChip name={row.producer} /></td>
                     <td>
                       <span className={cn("badge", priorityClass[row.priority])}>{row.priority}</span>
                     </td>
+                    <td><UserChip name={row.producer} /></td>
                     <td>{row.assignedAt}</td>
+                    <td className="commercial-hub-client-cell">{row.client}</td>
                     <td>{row.notes}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </section>
-      )}
+        )}
+      </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel" aria-label="Decision queue">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Decision Queue</h3>
-          <p className="va-ops-section-sub">Quotes sent to clients awaiting a decision.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubIntelPanel title="Decision Queue" subtitle="Quotes sent to clients awaiting a decision." className="commercial-hub-intel-tall">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
+                <th>Decision Status</th>
                 <th>Client</th>
                 <th>Sent Date</th>
                 <th>Last Contact</th>
-                <th>Decision Status</th>
               </tr>
             </thead>
             <tbody>
               {snapshot.clientDecisionQueue.map((row) => (
                 <tr key={row.id}>
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td>{row.sentDate}</td>
-                  <td>{row.lastContact}</td>
                   <td>
                     <span className={cn("badge", decisionStatusClass[row.decisionStatus])}>
                       {row.decisionStatus}
                     </span>
                   </td>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>{row.sentDate}</td>
+                  <td>{row.lastContact}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel" aria-label="Objections queue">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Objections Queue</h3>
-          <p className="va-ops-section-sub">Commercial objection handling during quote negotiation.</p>
-        </div>
-        <div className="commercial-hub-table-wrap">
+      <CommercialHubIntelPanel title="Objections Queue" subtitle="Commercial objection handling during quote negotiation." className="commercial-hub-intel-tall">
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
             <thead>
               <tr>
@@ -338,13 +351,9 @@ export function OutreachQueueTab() {
             </tbody>
           </table>
         </div>
-      </section>
+      </CommercialHubIntelPanel>
 
-      <section className="va-ops-panel" aria-label="Recent outreach activity">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Outreach Activity</h3>
-          <p className="va-ops-section-sub">Follow-up history and client communication log.</p>
-        </div>
+      <CommercialHubTabFooter title="Outreach Activity" subtitle="Follow-up history and client communication log.">
         <ol className="outreach-activity-timeline">
           {snapshot.outreachActivity.map((item) => (
             <li key={item.id} className="outreach-activity-item">
@@ -356,7 +365,7 @@ export function OutreachQueueTab() {
             </li>
           ))}
         </ol>
-      </section>
+      </CommercialHubTabFooter>
 
       <AddFollowUpModal
         open={addFollowUpOpen}
@@ -403,6 +412,7 @@ export function OutreachQueueTab() {
         onClose={() => setDrawer(null)}
         onReviseProposal={reviseProposal}
       />
-    </div>
+    </CommercialHubTabShell>
+    </DataStateView>
   );
 }
