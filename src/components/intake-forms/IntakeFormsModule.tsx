@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { intakeFormsTabs, type IntakeFormsTabId } from "@/data/intakeForms";
 import { routes } from "@/lib/routes";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { DraftsTab } from "./DraftsTab";
 import { FormBuilderTab } from "./FormBuilderTab";
@@ -39,7 +38,6 @@ export function IntakeFormsModule() {
   return (
     <>
       <IntakeFormsPageHeader />
-      <ModuleBreadcrumbBar />
 
       <nav className="va-ops-tab-nav" aria-label="Intake Forms views">
         {intakeFormsTabs.map((tab) => (

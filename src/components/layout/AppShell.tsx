@@ -13,8 +13,6 @@ import { KeyboardShortcutsProvider } from "@/components/keyboard/KeyboardShortcu
 import { PermissionProvider } from "@/components/permissions/PermissionProvider";
 import { SubscriptionProvider } from "@/components/subscription/SubscriptionProvider";
 import { ModuleAccessGate } from "@/components/permissions/ModuleAccessGate";
-import { FolioProgressBar } from "./FolioProgressBar";
-import { OwnerIntelligenceStrip } from "./OwnerIntelligenceStrip";
 import { HubPageTransition } from "@/components/motion/HubPageTransition";
 import { ContextualHelpProvider } from "@/components/help/ContextualHelpProvider";
 import { TopHeader } from "./TopHeader";
@@ -45,8 +43,6 @@ export function AppShell({ children }: AppShellProps) {
                     <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
                       <TopHeader />
                     </Suspense>
-                    <FolioProgressBar />
-                    <OwnerIntelligenceStrip />
                   </div>
                   <main className="app-content">
                     <ModuleAccessGate>

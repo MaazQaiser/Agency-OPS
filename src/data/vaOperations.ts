@@ -24,7 +24,7 @@ export type VaOperationsTabId = (typeof vaOperationsTabs)[number]["id"];
 
 export const vaOperationsHeader = {
   title: "VA Operations",
-  subtitle: "Manage team activity, workload, and daily priorities",
+  subtitle: "Team command center · All VA activity in one view",
   searchPlaceholder: "Search tasks, clients, VAs, notes, or leads",
   folioTracker: "12 days left in current folio",
 };

@@ -154,47 +154,49 @@ export function UniversalSearchTab() {
 
   return (
     <div className="va-ops-role-view global-search">
-      <section className="global-search-hero global-search-hero-sticky" aria-label="Universal search">
-        <label className="global-search-input-wrap">
-          <AppIcon name="search" size={22} strokeWidth={2} className="global-search-hero-icon" />
-          <input
-            type="search"
-            className="global-search-hero-input"
-            placeholder={globalSearchPlaceholder}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            autoFocus
-          />
-          <button
-            type="button"
-            className="global-search-kbd global-search-kbd-btn"
-            onClick={() => openPalette(search)}
-            aria-label="Open command palette"
-          >
-            ⌘K
-          </button>
-        </label>
-        <p className="global-search-helper">{globalSearchHelper}</p>
-      </section>
+      <div className="global-search-toolbar global-search-toolbar-sticky">
+        <section className="global-search-hero" aria-label="Universal search">
+          <label className="global-search-input-wrap">
+            <AppIcon name="search" size={22} strokeWidth={2} className="global-search-hero-icon" />
+            <input
+              type="search"
+              className="global-search-hero-input"
+              placeholder={globalSearchPlaceholder}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
+            />
+            <button
+              type="button"
+              className="global-search-kbd global-search-kbd-btn"
+              onClick={() => openPalette(search)}
+              aria-label="Open command palette"
+            >
+              ⌘K
+            </button>
+          </label>
+          <p className="global-search-helper">{globalSearchHelper}</p>
+        </section>
 
-      <div className="global-search-filters global-search-filters-sticky">
-        <div className="global-search-filter-row">
-          {(Object.keys(globalSearchFilterOptions) as (keyof GlobalSearchFilterState)[]).map((key) => (
-            <label key={key} className="global-search-filter">
-              <span className="global-search-filter-label">{filterLabels[key]}</span>
-              <select
-                className="header-filter-select global-search-select"
-                value={filters[key]}
-                onChange={(e) => updateFilter(key, e.target.value)}
-              >
-                {globalSearchFilterOptions[key].map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ))}
+        <div className="global-search-filters">
+          <div className="global-search-filter-row">
+            {(Object.keys(globalSearchFilterOptions) as (keyof GlobalSearchFilterState)[]).map((key) => (
+              <label key={key} className="global-search-filter">
+                <span className="global-search-filter-label">{filterLabels[key]}</span>
+                <select
+                  className="header-filter-select global-search-select"
+                  value={filters[key]}
+                  onChange={(e) => updateFilter(key, e.target.value)}
+                >
+                  {globalSearchFilterOptions[key].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -235,10 +237,6 @@ export function UniversalSearchTab() {
 
         {loading && debouncedSearch.trim() && (
           <SearchResultsSkeleton rows={4} label="Searching results" />
-        )}
-
-        {!loading && !debouncedSearch.trim() && (
-          <HubEmptyState preset="global-search" onAction={() => openPalette()} />
         )}
 
         {!loading &&

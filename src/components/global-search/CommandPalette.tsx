@@ -581,7 +581,7 @@ export function CommandPalette({
                         (item) => item.kind === "action" && item.action.id === action.id,
                       );
                       return (
-                        <li key={action.id}>
+                        <li key={`pinned-${action.id}`}>
                           <ActionRow
                             action={action}
                             query=""
@@ -606,7 +606,7 @@ export function CommandPalette({
                         (item) => item.kind === "action" && item.action.id === action.id,
                       );
                       return (
-                        <li key={action.id}>
+                        <li key={`jump-${action.id}`}>
                           <ActionRow
                             action={action}
                             query=""
@@ -671,7 +671,7 @@ export function CommandPalette({
                           (item) => item.kind === "action" && item.action.id === action.id,
                         );
                         return (
-                          <li key={action.id}>
+                          <li key={`match-${action.id}`}>
                             <ActionRow
                               action={action}
                               query={debouncedQuery}

@@ -4,9 +4,8 @@ import { getCarrierProfileHref } from "./carrierLibrary";
 
 export const globalSearchHeader = {
   title: "Global Search",
-  subtitle: "Deep operational search across all hubs. Press ⌘K for instant access anywhere.",
+  subtitle: "Cross-hub search · Client lookup · Real-time results",
   quickActions: [
-    { id: "palette", label: "Command Palette", icon: "search" as const },
     { id: "saved", label: "Saved Searches", icon: "star" as const },
     { id: "filters", label: "Advanced Filters", icon: "telescope" as const },
   ],

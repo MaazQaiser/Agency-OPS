@@ -9,17 +9,10 @@ type SyncBreadcrumbDetailOptions = {
   enabled?: boolean;
 };
 
-function buildDetailUrl(
-  pathname: string,
-  detailLabel: string,
-  paramKey?: string,
-  paramValue?: string,
-): string {
+function buildParamUrl(pathname: string, paramKey: string, paramValue: string): string {
   const params = new URLSearchParams(window.location.search);
-  params.set("detail", detailLabel);
-  if (paramKey && paramValue) {
-    params.set(paramKey, paramValue);
-  }
+  params.delete("detail");
+  params.set(paramKey, paramValue);
   const qs = params.toString();
   return qs ? `${pathname}?${qs}` : pathname;
 }
@@ -48,7 +41,7 @@ export function useSyncBreadcrumbDetail(
   const syncedRef = useRef(false);
 
   useEffect(() => {
-    if (!enabled || !detailLabel) {
+    if (!enabled || !detailLabel || !paramKey || !paramValue) {
       if (!syncedRef.current) return;
 
       const cleared = buildClearedUrl(pathname, paramKey);
@@ -59,7 +52,7 @@ export function useSyncBreadcrumbDetail(
       return;
     }
 
-    const next = buildDetailUrl(pathname, detailLabel, paramKey, paramValue);
+    const next = buildParamUrl(pathname, paramKey, paramValue);
     if (currentPathWithSearch(pathname) === next) {
       syncedRef.current = true;
       return;

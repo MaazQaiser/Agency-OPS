@@ -304,7 +304,7 @@ export const verticalContent: Record<string, VerticalContent> = {
 
 export const farmersEdgeHeader = {
   title: "Farmers Edge",
-  subtitle: "Commercial intelligence hub — live call reference, coverage gaps, scripts, and our edge over competitors.",
+  subtitle: "Commercial intelligence · Live call reference · Our edge",
   helpId: "farmers-edge" as const,
   freshnessLabel: "Updated 4 min ago · Sheets",
   scopeTag: "Commercial Only",

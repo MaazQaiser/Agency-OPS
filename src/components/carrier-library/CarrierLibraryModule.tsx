@@ -10,7 +10,6 @@ import {
   type CarrierRecord,
 } from "@/data/carrierLibrary";
 import { routes } from "@/lib/routes";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { useToast } from "@/hooks/useToast";
@@ -81,7 +80,6 @@ export function CarrierLibraryModule() {
   return (
     <>
       <CarrierLibraryPageHeader onQuickActionClick={handlePageQuickAction} />
-      <ModuleBreadcrumbBar />
 
       {!showingProfile && (
         <nav className="va-ops-tab-nav" aria-label="Carrier Library views">

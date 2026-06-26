@@ -161,7 +161,10 @@
 
 .audit-log-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: var(--space-md);
 }
 
@@ -172,19 +175,20 @@
 }
 
 .audit-log-group-label {
-  margin: 0 0 var(--space-sm);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0 calc(-1 * var(--space-md)) var(--space-sm);
+  padding: 10px var(--space-md);
   font-family: var(--font-family-mono, var(--font-mono), monospace);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding: 4px 0;
-  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
-  backdrop-filter: blur(4px);
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--obs) 72%, transparent);
 }
 
 .audit-log-list {
@@ -373,6 +377,14 @@
   .audit-log-skeleton-row {
     animation: none !important;
   }
+}
+
+html[data-theme="obsidian"] .audit-log-group-label {
+  background: var(--glass-header-gradient);
+  border-bottom-color: var(--border-subtle);
+  box-shadow:
+    0 8px 20px color-mix(in srgb, var(--obs) 80%, transparent),
+    inset 0 -1px 0 var(--border-subtle);
 }
 
 @media print {

@@ -15,13 +15,13 @@ import {
 } from "@/data/sendCenter";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { useToast, createLegacyToastHandler } from "@/hooks/useToast";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { getVisibleSendCenterTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
 import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { SendCenterPageHeader } from "./SendCenterPageHeader";
 import { DraftQueueTab } from "./DraftQueueTab";
 import { PendingReviewTab } from "./PendingReviewTab";
@@ -138,7 +138,21 @@ export function SendCenterModule() {
       />
 
       <SendCenterPageHeader onQuickActionClick={handlePageQuickAction} />
-      <ModuleBreadcrumbBar />
+
+      <nav className="va-ops-tab-nav send-center-tab-nav" aria-label="Send Center views">
+        {visibleTabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`va-ops-tab-btn${safeActive === tab.id ? " active" : ""}`}
+            onClick={() => setActive(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
+      <HubOperationalStrips />
 
       <section className="va-ops-kpi-strip send-center-kpi-strip" aria-label="Send Center summary">
         <DataStateView
@@ -164,19 +178,6 @@ export function SendCenterModule() {
           </div>
         </DataStateView>
       </section>
-
-      <nav className="va-ops-tab-nav send-center-tab-nav" aria-label="Send Center views">
-        {visibleTabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            className={`va-ops-tab-btn${safeActive === tab.id ? " active" : ""}`}
-            onClick={() => setActive(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={safeActive}>

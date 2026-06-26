@@ -1,31 +1,117 @@
 /* Intake Forms — hierarchy, density, and workflow refinements (scoped) */
 
-/* ── 1. Compact module header (−35% height) ── */
-.module-intake-forms .va-ops-page-header {
-  padding: 14px 48px;
-  gap: 12px;
-  align-items: center;
-}
-
-.module-intake-forms .va-ops-page-title {
-  font-size: 1.35rem;
-  line-height: 1.2;
-}
-
-.module-intake-forms .va-ops-page-subtitle {
-  margin: 1px 0 0;
-  font-size: 11px;
-  line-height: 1.35;
-}
-
+/* Page header toolbar — uniform height + hub tab accent */
 .module-intake-forms .intake-forms-header-actions {
-  gap: 6px;
+  align-items: center;
+  min-height: 40px;
+  max-width: none;
+  gap: 8px;
 }
 
 .module-intake-forms .intake-forms-header-actions .va-ops-role-action-btn {
-  height: 32px;
-  padding: 0 12px;
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--hub-accent) 32%, var(--border-default));
+  background: color-mix(in srgb, var(--hub-accent) 10%, var(--glass-surface-deep));
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 14%, transparent);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.module-intake-forms .intake-forms-header-actions .va-ops-role-action-btn:hover {
+  border-color: var(--hub-accent);
+  background: color-mix(in srgb, var(--hub-accent) 18%, var(--glass-surface-deep));
+  color: color-mix(in srgb, var(--hub-secondary) 88%, var(--text-primary));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 18%, transparent),
+    0 0 12px var(--hub-glow);
+}
+
+.module-intake-forms .intake-forms-header-actions .hub-help-trigger {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  margin-left: 0;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--hub-accent) 32%, var(--border-default));
+  background: color-mix(in srgb, var(--hub-accent) 10%, var(--glass-surface-deep));
+  color: color-mix(in srgb, var(--hub-secondary) 72%, var(--text-muted));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 14%, transparent);
+}
+
+.module-intake-forms .intake-forms-header-actions .hub-help-trigger:hover {
+  border-color: var(--hub-accent);
+  background: color-mix(in srgb, var(--hub-accent) 18%, var(--glass-surface-deep));
+  color: color-mix(in srgb, var(--hub-secondary) 88%, var(--text-primary));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 18%, transparent),
+    0 0 12px var(--hub-glow);
+}
+
+/* Form selector KPI strip — 2×2 grid, compact uniform cards */
+.module-intake-forms .intake-form-selector .va-ops-kpi-strip {
+  padding: 0;
+  margin: 0;
+}
+
+.module-intake-forms .intake-kpi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 72px;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-card,
+.module-intake-forms .intake-kpi-grid .commercial-hub-kpi-uniform.va-ops-kpi-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 72px;
+  min-height: 72px;
+  max-height: 72px;
+  padding: 10px 14px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-tooltip {
+  display: none;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-label {
+  margin-bottom: 2px;
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-value {
+  font-size: 1.2rem;
+  line-height: 1.05;
+  margin-bottom: 0;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-sub {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-helper,
+.module-intake-forms .intake-kpi-grid .kpi-sparkline-wrap {
+  display: none;
 }
 
 .module-intake-forms .va-ops-tab-content {
@@ -182,8 +268,7 @@
 }
 
 .intake-form-sticky-left,
-.intake-form-sticky-center,
-.intake-form-sticky-right {
+.intake-form-sticky-center {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -199,9 +284,16 @@
   justify-content: center;
 }
 
-.intake-form-sticky-right {
-  flex: 1;
-  justify-content: flex-end;
+.intake-form-sticky-back {
+  margin-left: auto;
+}
+
+.intake-form-sticky-primary {
+  margin-left: auto;
+}
+
+.intake-form-sticky-back + .intake-form-sticky-primary {
+  margin-left: 0;
 }
 
 .intake-form-action-btn {
@@ -358,10 +450,6 @@
 }
 
 @media (max-width: 1024px) {
-  .module-intake-forms .va-ops-page-header {
-    padding: 12px 24px;
-  }
-
   .intake-form-sticky-inner {
     padding: 10px 24px;
   }
@@ -394,10 +482,14 @@
     justify-content: center;
   }
 
-  .intake-form-sticky-left,
-  .intake-form-sticky-right {
+  .intake-form-sticky-left {
     flex: 1 1 100%;
     justify-content: center;
+  }
+
+  .intake-form-sticky-back,
+  .intake-form-sticky-primary {
+    margin-left: 0;
   }
 
   .submission-history-filters {

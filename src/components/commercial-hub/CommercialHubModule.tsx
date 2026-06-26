@@ -8,8 +8,8 @@ import { getVisibleCommercialHubTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
 import { exportCommercialPipelinePdf } from "@/lib/export";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { CommercialHubPageHeader } from "./CommercialHubPageHeader";
 import { ExecutiveDashboardTab } from "./ExecutiveDashboardTab";
 import { CoverageChecklistTab } from "./CoverageChecklistTab";
@@ -75,7 +75,6 @@ export function CommercialHubModule() {
   return (
     <>
       <CommercialHubPageHeader onQuickActionClick={handleQuickAction} />
-      <ModuleBreadcrumbBar />
 
       <nav className="va-ops-tab-nav" aria-label="Commercial Hub views">
         {visibleTabs.map((tab) => (
@@ -89,6 +88,8 @@ export function CommercialHubModule() {
           </button>
         ))}
       </nav>
+
+      <HubOperationalStrips />
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={safeActive}>

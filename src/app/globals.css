@@ -2,19 +2,23 @@
 
 :root,
 html[data-theme="obsidian"] {
-  /* ── Insurance Town — Brand Foundation ── */
-  --obs: #080c12;
-  --ita-base: #1C2B35;
-  --ita-surface: #F7FBFD;
-  --ita-primary: #AAD0E7;
-  --ita-secondary: #7AAFC8;
+  /* ── Dark Obsidian shell + ITA alias compat for branch CSS ── */
+  --obsidian: #0A0C10;
+  --obs: #0A0C10;
+  --navy: #10151F;
+  --navy-mid: #1A2233;
+  --navy-card: #222B42;
+  --navy-border: #2E3A52;
 
-  /* Derived surfaces */
-  --ita-inset: #1A2A33;
-  --ita-base-mid: #243844;
-  --ita-base-light: #2A4554;
-  --ita-base-lighter: #324F5E;
-  --ita-modal: #3A5A6B;
+  --ita-base: #0A0C10;
+  --ita-surface: #F0F4FF;
+  --ita-primary: #3B82F6;
+  --ita-secondary: #93C5FD;
+  --ita-inset: #10151F;
+  --ita-base-mid: #10151F;
+  --ita-base-light: #222B42;
+  --ita-base-lighter: #283350;
+  --ita-modal: #1A2233;
 
   /* Semantic colors */
   --data-teal: #14B8A6;
@@ -25,92 +29,92 @@ html[data-theme="obsidian"] {
   --draft-violet: #8B5CF6;
 
   /* Semantic tints */
-  --data-teal-bg: color-mix(in srgb, var(--data-teal) 12%, transparent);
-  --warning-amber-bg: color-mix(in srgb, var(--warning-amber) 12%, transparent);
-  --critical-rose-bg: color-mix(in srgb, var(--critical-rose) 12%, transparent);
-  --success-green-bg: color-mix(in srgb, var(--success-green) 12%, transparent);
-  --metric-blue-bg: color-mix(in srgb, var(--metric-blue) 12%, transparent);
-  --draft-violet-bg: color-mix(in srgb, var(--draft-violet) 12%, transparent);
+  --data-teal-bg: rgba(20, 184, 166, 0.08);
+  --warning-amber-bg: rgba(245, 158, 11, 0.08);
+  --critical-rose-bg: rgba(244, 63, 94, 0.08);
+  --success-green-bg: rgba(16, 185, 129, 0.08);
+  --metric-blue-bg: rgba(59, 130, 246, 0.08);
+  --draft-violet-bg: rgba(139, 92, 246, 0.08);
 
-  --data-teal-border: color-mix(in srgb, var(--data-teal) 35%, transparent);
-  --warning-amber-border: color-mix(in srgb, var(--warning-amber) 35%, transparent);
-  --critical-rose-border: color-mix(in srgb, var(--critical-rose) 35%, transparent);
-  --success-green-border: color-mix(in srgb, var(--success-green) 35%, transparent);
-  --metric-blue-border: color-mix(in srgb, var(--metric-blue) 35%, transparent);
-  --draft-violet-border: color-mix(in srgb, var(--draft-violet) 35%, transparent);
+  --data-teal-border: rgba(20, 184, 166, 0.3);
+  --warning-amber-border: rgba(245, 158, 11, 0.3);
+  --critical-rose-border: rgba(244, 63, 94, 0.3);
+  --success-green-border: rgba(16, 185, 129, 0.3);
+  --metric-blue-border: rgba(59, 130, 246, 0.3);
+  --draft-violet-border: rgba(139, 92, 246, 0.3);
 
   /* App surfaces */
-  --surface-canvas: var(--ita-base);
-  --surface-header: var(--ita-base-mid);
-  --surface-card: var(--ita-base-light);
-  --surface-card-hover: var(--ita-base-lighter);
-  --surface-inset: var(--ita-inset);
-  --surface-elevated: var(--ita-base-lighter);
-  --surface-modal: var(--ita-modal);
+  --surface-canvas: var(--obsidian);
+  --surface-header: var(--navy);
+  --surface-card: var(--navy-card);
+  --surface-card-hover: #283350;
+  --surface-inset: var(--navy);
+  --surface-elevated: var(--navy-mid);
+  --surface-modal: var(--navy-mid);
 
   /* Glass */
   --glass-blur: 20px;
   --glass-blur-sm: 12px;
   --glass-blur-lg: 28px;
-  --glass-shadow: 0 8px 32px rgba(28, 43, 53, 0.32);
-  --glass-shadow-sm: 0 4px 16px rgba(28, 43, 53, 0.2);
-  --glass-highlight: color-mix(in srgb, var(--ita-surface) 22%, transparent);
-  --glass-highlight-soft: color-mix(in srgb, var(--ita-surface) 10%, transparent);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.22);
+  --glass-highlight-soft: rgba(255, 255, 255, 0.10);
 
-  /* Glass surface overlays (ITA-base derived) */
-  --glass-surface-deep: rgba(28, 43, 53, 0.62);
-  --glass-surface-strong: rgba(28, 43, 53, 0.75);
-  --glass-surface-mid: rgba(28, 43, 53, 0.55);
-  --glass-surface-dim: rgba(28, 43, 53, 0.45);
-  --glass-surface-haze: rgba(28, 43, 53, 0.28);
-  --glass-surface-soft: rgba(28, 43, 53, 0.32);
-  --glass-surface-veil: rgba(28, 43, 53, 0.24);
-  --glass-surface-low: rgba(28, 43, 53, 0.2);
-  --glass-surface-faint: rgba(28, 43, 53, 0.18);
+  /* Glass surface overlays (obsidian derived) */
+  --glass-surface-deep: rgba(22, 27, 34, 0.62);
+  --glass-surface-strong: rgba(22, 27, 34, 0.75);
+  --glass-surface-mid: rgba(34, 43, 66, 0.55);
+  --glass-surface-dim: rgba(34, 43, 66, 0.45);
+  --glass-surface-haze: rgba(22, 27, 34, 0.28);
+  --glass-surface-soft: rgba(22, 27, 34, 0.32);
+  --glass-surface-veil: rgba(22, 27, 34, 0.24);
+  --glass-surface-low: rgba(22, 27, 34, 0.2);
+  --glass-surface-faint: rgba(22, 27, 34, 0.18);
 
   --glass-card-gradient: linear-gradient(
     145deg,
-    var(--glass-surface-mid) 0%,
-    color-mix(in srgb, var(--ita-primary) 10%, transparent) 55%,
-    color-mix(in srgb, var(--ita-secondary) 6%, transparent) 100%
+    rgba(34, 43, 66, 0.55) 0%,
+    rgba(59, 130, 246, 0.08) 55%,
+    rgba(96, 165, 250, 0.05) 100%
   );
   --glass-header-gradient: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--ita-surface) 4%, transparent) 0%,
-    color-mix(in srgb, var(--ita-base-mid) 92%, transparent) 100%
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(16, 21, 31, 0.92) 100%
   );
   --glass-modal-gradient: linear-gradient(
     145deg,
-    var(--glass-surface-haze) 0%,
-    color-mix(in srgb, var(--ita-primary) 14%, transparent) 52%,
-    color-mix(in srgb, var(--ita-surface) 6%, transparent) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(59, 130, 246, 0.14) 52%,
+    rgba(255, 255, 255, 0.06) 100%
   );
 
   /* Borders */
-  --border-subtle: color-mix(in srgb, var(--ita-secondary) 18%, transparent);
-  --border-default: color-mix(in srgb, var(--ita-secondary) 32%, transparent);
-  --border-strong: color-mix(in srgb, var(--ita-secondary) 48%, transparent);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: var(--navy-border);
+  --border-strong: #3B4A63;
 
   /* Text */
-  --text-primary: var(--ita-surface);
-  --text-secondary: color-mix(in srgb, var(--ita-surface) 72%, var(--ita-base));
-  --text-tertiary: color-mix(in srgb, var(--ita-surface) 48%, var(--ita-base));
+  --text-primary: #F0F4FF;
+  --text-secondary: #A8B8CC;
+  --text-tertiary: #7B8FA6;
   --text-1: var(--text-primary);
   --text-2: var(--text-secondary);
   --text-3: var(--text-tertiary);
 
   /* Brand interactive */
-  --primary: var(--ita-primary);
-  --primary-light: var(--ita-surface);
-  --primary-dim: var(--ita-secondary);
-  --primary-on: var(--ita-base);
-  --primary-glow: color-mix(in srgb, var(--ita-primary) 22%, transparent);
-  --primary-muted: color-mix(in srgb, var(--ita-primary) 12%, transparent);
+  --primary: #3B82F6;
+  --primary-light: #93C5FD;
+  --primary-dim: #3B82F6;
+  --primary-on: #0A0C10;
+  --primary-glow: rgba(59, 130, 246, 0.12);
+  --primary-muted: rgba(59, 130, 246, 0.08);
 
   /* Legacy accent aliases → semantic */
   --blue: var(--metric-blue);
   --violet: var(--draft-violet);
-  --indigo: var(--metric-blue);
+  --indigo: #6366F1;
   --green: var(--success-green);
   --rose: var(--critical-rose);
   --red: var(--critical-rose);
@@ -127,17 +131,12 @@ html[data-theme="obsidian"] {
   --blue-bg: var(--metric-blue-bg);
   --violet-bg: var(--draft-violet-bg);
   --purple-bg: var(--draft-violet-bg);
-  --violet-muted: color-mix(in srgb, var(--draft-violet) 18%, transparent);
-  --gray: color-mix(in srgb, var(--ita-secondary) 60%, var(--ita-base));
-  --gray-bg: color-mix(in srgb, var(--ita-secondary) 14%, transparent);
+  --violet-muted: rgba(139, 92, 246, 0.15);
+  --gray: #6C7A89;
+  --gray-bg: rgba(108, 122, 137, 0.12);
 
-  /* Legacy navy → ITA */
-  --obsidian: var(--obs);
-  --navy: var(--ita-base-mid);
-  --navy-mid: var(--ita-base-mid);
-  --navy-card: var(--ita-base-light);
-  --navy-border: var(--border-default);
-  --navy-light: var(--ita-base-lighter);
+  /* Legacy navy → obsidian */
+  --navy-light: var(--navy-mid);
 
   /* Legacy aliases */
   --text-main: var(--text-primary);
@@ -149,16 +148,16 @@ html[data-theme="obsidian"] {
   --border-mid: var(--border-strong);
 
   /* Buttons */
-  --btn-primary-bg: var(--ita-primary);
-  --btn-primary-text: var(--ita-base);
-  --btn-primary-hover: color-mix(in srgb, var(--ita-primary) 86%, var(--ita-surface));
-  --btn-secondary-border: var(--ita-secondary);
+  --btn-primary-bg: #3B82F6;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #2563EB;
+  --btn-secondary-border: var(--border-default);
   --btn-danger-bg: var(--critical-rose);
   --btn-success-bg: var(--success-green);
 
   /* Inputs */
   --input-border: var(--border-default);
-  --input-focus-ring: color-mix(in srgb, var(--ita-primary) 40%, transparent);
+  --input-focus-ring: rgba(59, 130, 246, 0.4);
   --radius: 8px;
   --radius-lg: var(--radius);
 
@@ -219,12 +218,12 @@ html[data-theme="obsidian"] {
   --letter-spacing-kpi: -0.025em;
 
   /* Canvas glow */
-  --bg-glow-a: color-mix(in srgb, var(--ita-primary) 26%, transparent);
-  --bg-glow-b: color-mix(in srgb, var(--ita-secondary) 22%, transparent);
-  --bg-glow-c: color-mix(in srgb, var(--data-teal) 16%, transparent);
-  --bg-glow-d: color-mix(in srgb, var(--metric-blue) 18%, transparent);
-  --bg-glow-e: color-mix(in srgb, var(--draft-violet) 12%, transparent);
-  --bg-spotlight: color-mix(in srgb, var(--ita-surface) 8%, transparent);
+  --bg-glow-a: rgba(59, 130, 246, 0.32);
+  --bg-glow-b: rgba(37, 99, 235, 0.26);
+  --bg-glow-c: rgba(59, 130, 246, 0.22);
+  --bg-glow-d: rgba(96, 165, 250, 0.24);
+  --bg-glow-e: rgba(139, 92, 246, 0.14);
+  --bg-spotlight: rgba(255, 255, 255, 0.08);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -389,10 +388,10 @@ textarea:focus-visible {
 }
 
 html[data-theme="obsidian"] body {
-  background-color: var(--obs);
+  background-color: #0B0E15;
   background-image:
     radial-gradient(ellipse 110% 65% at 50% -12%, var(--bg-spotlight), transparent 58%),
-    radial-gradient(ellipse 80% 55% at 50% 45%, color-mix(in srgb, var(--ita-primary) 8%, transparent), transparent 72%),
+    radial-gradient(ellipse 80% 55% at 50% 45%, rgba(59, 130, 246, 0.14), transparent 72%),
     radial-gradient(ellipse 120% 80% at 8% -15%, var(--bg-glow-a), transparent 58%),
     radial-gradient(ellipse 100% 70% at 100% 0%, var(--bg-glow-b), transparent 55%),
     radial-gradient(ellipse 90% 60% at 50% 100%, var(--bg-glow-c), transparent 52%),
@@ -516,14 +515,122 @@ html[data-theme="obsidian"] .top-header-nav-link {
 
 html[data-theme="obsidian"] .top-header-nav-link:hover {
   color: var(--text-primary);
-  background: transparent;
+  background: color-mix(in srgb, var(--hub-accent, var(--primary)) 6%, transparent);
 }
 
 html[data-theme="obsidian"] .top-header-nav-link.active {
-  color: var(--ita-primary);
+  color: var(--hub-secondary, var(--primary-light));
   border-bottom-color: transparent;
-  background: var(--primary-muted);
+  background: transparent;
   box-shadow: none;
+}
+
+html[data-theme="obsidian"] .top-header-nav-link.active::after {
+  background: linear-gradient(
+    90deg,
+    var(--hub-accent, var(--primary)),
+    var(--hub-secondary, var(--primary-light))
+  );
+  box-shadow:
+    0 0 14px color-mix(in srgb, var(--hub-accent, var(--primary)) 48%, transparent),
+    0 0 28px color-mix(in srgb, var(--hub-accent, var(--primary)) 22%, transparent);
+}
+
+html[data-theme="obsidian"] .top-header-nav-link:hover::after {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--hub-accent, var(--primary)) 32%, transparent);
+}
+
+html[data-theme="obsidian"] .top-header-nav {
+  background: var(--glass-header-gradient);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow:
+    inset 0 -1px 0 color-mix(in srgb, var(--hub-accent, var(--primary)) 14%, transparent),
+    0 4px 20px color-mix(in srgb, var(--hub-accent, var(--primary)) 8%, transparent);
+}
+
+html[data-theme="obsidian"] .folio-progress-bar,
+html[data-theme="obsidian"] .folio-progress-bar--critical,
+html[data-theme="obsidian"] .folio-progress-bar--watch,
+html[data-theme="obsidian"] .folio-progress-bar--safe {
+  background: var(--glass-header-gradient);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="obsidian"] .folio-progress-accent {
+  height: 2px;
+  opacity: 0.9;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--primary) 38%, transparent) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+html[data-theme="obsidian"] .folio-progress-track-wrap--critical .folio-progress-track,
+html[data-theme="obsidian"] .folio-progress-track-wrap--watch .folio-progress-track {
+  box-shadow:
+    inset 0 1px 2px color-mix(in srgb, var(--ita-base) 55%, transparent),
+    0 0 8px color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+html[data-theme="obsidian"] .folio-progress-fill--critical {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+html[data-theme="obsidian"] .owner-intelligence-strip {
+  background: var(--glass-header-gradient);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    inset 0 -1px 0 color-mix(in srgb, var(--primary) 8%, transparent),
+    0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="obsidian"] .owner-intelligence-chip {
+  background: var(--glass-surface-veil);
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
+  border-color: var(--glass-highlight-soft);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="obsidian"] .owner-intelligence-chip--amber {
+  border-color: color-mix(in srgb, var(--warning-amber) 34%, var(--glass-highlight-soft));
+  background: color-mix(in srgb, var(--warning-amber) 16%, var(--glass-surface-veil));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--warning-amber) 28%, transparent),
+    0 2px 14px color-mix(in srgb, var(--warning-amber) 12%, transparent);
+  color: color-mix(in srgb, var(--warning-amber) 72%, var(--text-secondary));
+}
+
+html[data-theme="obsidian"] .owner-intelligence-chip--red {
+  border-color: color-mix(in srgb, var(--critical-rose) 34%, var(--glass-highlight-soft));
+  background: color-mix(in srgb, var(--critical-rose) 16%, var(--glass-surface-veil));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--critical-rose) 28%, transparent),
+    0 2px 14px color-mix(in srgb, var(--critical-rose) 12%, transparent);
+  color: color-mix(in srgb, var(--critical-rose) 72%, var(--text-secondary));
+}
+
+html[data-theme="obsidian"] .owner-intelligence-chip--amber strong {
+  color: var(--warning-amber);
+}
+
+html[data-theme="obsidian"] .owner-intelligence-chip--red strong {
+  color: var(--critical-rose);
 }
 
 /* Obsidian — lighter header chrome */
@@ -534,8 +641,8 @@ html[data-theme="obsidian"] .tab-bar {
 }
 
 html[data-theme="obsidian"] .app-top-header {
-  background: var(--obs);
-  border-bottom-color: var(--border-subtle);
+  background: var(--glass-header-gradient);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Obsidian — underline tabs */
@@ -1408,12 +1515,12 @@ html[data-theme="obsidian"] .badge-gray {
 /* Obsidian — glass surfaces (panels, cards, list rows — platform-wide) */
 html[data-theme="obsidian"] .va-ops-panel,
 html[data-theme="obsidian"] .va-ops-kpi-card,
+html[data-theme="obsidian"] .va-ops-snapshot-card,
 html[data-theme="obsidian"] .submission-aging-bucket,
 html[data-theme="obsidian"] .submission-queue-row,
 html[data-theme="obsidian"] .commercial-hub-carrier-panel .commercial-hub-table,
 html[data-theme="obsidian"] .commercial-hub-quote-activity-panel .va-ops-exec-history-item,
 html[data-theme="obsidian"] .global-search-input-wrap,
-html[data-theme="obsidian"] .cmd-palette,
 html[data-theme="obsidian"] .send-center-sla-strip,
 html[data-theme="obsidian"] .send-center-template-card,
 html[data-theme="obsidian"] .send-center-filters .va-ops-search {
@@ -1467,6 +1574,7 @@ html[data-theme="obsidian"] .commercial-hub-carrier-panel .commercial-hub-table 
 }
 
 html[data-theme="obsidian"] .va-ops-panel::before,
+html[data-theme="obsidian"] .va-ops-snapshot-card::before,
 html[data-theme="obsidian"] .va-ops-kpi-card::before,
 html[data-theme="obsidian"] .submission-aging-bucket::before,
 html[data-theme="obsidian"] .submission-queue-row::before,
@@ -1493,50 +1601,79 @@ html[data-theme="obsidian"] .send-center-filters .va-ops-search::before {
 html[data-theme="obsidian"] .va-ops-kpi-card.yellow {
   background: linear-gradient(
     145deg,
-    var(--glass-surface-haze) 0%,
-    color-mix(in srgb, var(--warning-amber) 16%, transparent) 48%,
-    color-mix(in srgb, var(--warning-amber) 8%, transparent) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(161, 98, 7, 0.16) 48%,
+    rgba(241, 196, 15, 0.08) 100%
   );
-  border-color: var(--warning-amber-border);
+  border-color: rgba(241, 196, 15, 0.24);
+  box-shadow:
+    0 8px 28px rgba(245, 158, 11, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="obsidian"] .va-ops-kpi-card.red {
   background: linear-gradient(
     145deg,
-    var(--glass-surface-haze) 0%,
-    color-mix(in srgb, var(--critical-rose) 16%, transparent) 48%,
-    color-mix(in srgb, var(--critical-rose) 8%, transparent) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(153, 27, 27, 0.16) 48%,
+    rgba(231, 76, 60, 0.08) 100%
   );
-  border-color: var(--critical-rose-border);
+  border-color: rgba(231, 76, 60, 0.24);
+  box-shadow:
+    0 8px 28px rgba(244, 63, 94, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="obsidian"] .va-ops-kpi-card.green {
   background: linear-gradient(
     145deg,
-    var(--glass-surface-haze) 0%,
-    color-mix(in srgb, var(--success-green) 16%, transparent) 48%,
-    color-mix(in srgb, var(--success-green) 8%, transparent) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(21, 128, 61, 0.16) 48%,
+    rgba(46, 204, 113, 0.08) 100%
   );
-  border-color: var(--success-green-border);
+  border-color: rgba(46, 204, 113, 0.24);
+  box-shadow:
+    0 8px 28px rgba(16, 185, 129, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="obsidian"] .va-ops-kpi-card.orange {
+  background: linear-gradient(
+    145deg,
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(59, 130, 246, 0.14) 48%,
+    rgba(96, 165, 250, 0.08) 100%
+  );
+  border-color: rgba(96, 165, 250, 0.24);
+  box-shadow:
+    0 8px 28px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="obsidian"] .va-ops-kpi-card.primary {
   background: linear-gradient(
     145deg,
-    var(--glass-surface-haze) 0%,
-    color-mix(in srgb, var(--metric-blue) 18%, transparent) 48%,
-    color-mix(in srgb, var(--metric-blue) 10%, transparent) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(59, 130, 246, 0.18) 48%,
+    rgba(96, 165, 250, 0.1) 100%
   );
-  border-color: var(--metric-blue-border);
+  border-color: rgba(96, 165, 250, 0.28);
   box-shadow:
-    0 8px 32px color-mix(in srgb, var(--metric-blue) 18%, transparent),
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 0 24px color-mix(in srgb, var(--metric-blue) 8%, transparent);
+    0 8px 32px rgba(37, 99, 235, 0.22),
+    0 0 40px rgba(59, 130, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 24px rgba(59, 130, 246, 0.1);
 }
 
 html[data-theme="obsidian"] .va-ops-kpi-card.primary .va-ops-kpi-value {
-  color: var(--metric-blue);
-  text-shadow: 0 0 24px color-mix(in srgb, var(--metric-blue) 35%, transparent);
+  color: var(--primary-light);
+  text-shadow:
+    0 0 20px rgba(96, 165, 250, 0.55),
+    0 0 40px rgba(59, 130, 246, 0.35);
 }
 
 html[data-theme="obsidian"] .submission-queue-row.submission-doc-blocker {
@@ -3711,10 +3848,16 @@ tbody tr:last-child td { border-bottom: none; }
 .app-content {
   flex: 1;
   min-width: 0;
-  background: var(--obs);
+  background: transparent;
 }
 
 /* FOLIO PROGRESS BAR */
+.hub-operational-strips {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .folio-progress-bar {
   position: relative;
   display: grid;
@@ -4997,7 +5140,8 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 }
 
 .va-ops-kpi-card.primary .va-ops-kpi-value {
-  color: var(--metric-blue);
+  color: var(--primary-light);
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.28);
 }
 
 .va-ops-kpi-sub {
@@ -5079,24 +5223,38 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   opacity: 1;
 }
 
+.kpi-sparkline-wrap--open {
+  z-index: 500;
+}
+
+.kpi-card:has(.kpi-sparkline-wrap--open),
+.va-ops-kpi-card:has(.kpi-sparkline-wrap--open),
+.folio-progress-stat--sparkline:has(.kpi-sparkline-wrap--open) {
+  z-index: 500;
+  overflow: visible;
+}
+
+html[data-theme="obsidian"] .kpi-card:has(.kpi-sparkline-wrap--open),
+html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
+  overflow: visible;
+}
+
 .kpi-sparkline-tooltip {
   position: absolute;
   left: 0;
   right: 0;
   top: calc(100% + 8px);
-  z-index: 20;
+  z-index: 501;
   padding: 10px 12px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(
-    145deg,
-    var(--glass-surface-haze) 0%,
-    rgba(15, 23, 42, 0.92) 100%
-  );
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--navy-border);
+  background-color: #1a2233;
+  background: #1a2233;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
+  isolation: isolate;
   animation: kpi-sparkline-tooltip-in 0.14s ease;
 }
 
@@ -10651,7 +10809,7 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 }
 
 .intake-kpi-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .intake-form-card-grid {
@@ -10797,7 +10955,7 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 
 @media (max-width: 768px) {
   .intake-kpi-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -11211,11 +11369,16 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   justify-content: center;
 }
 
-.intake-form-sticky-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-sm);
+.intake-form-sticky-back {
+  margin-left: auto;
+}
+
+.intake-form-sticky-primary {
+  margin-left: auto;
+}
+
+.intake-form-sticky-back + .intake-form-sticky-primary {
+  margin-left: 0;
 }
 
 .va-ops-role-action-btn.intake-form-discard-btn {
@@ -11422,11 +11585,11 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: min(720px, 55vw);
   margin-left: auto;
 }
 
@@ -11457,7 +11620,7 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 }
 
 .training-kpi-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .training-dept-card-grid {
@@ -11665,7 +11828,7 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   }
 
   .training-kpi-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .training-dept-card-stats {
@@ -12297,11 +12460,11 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: min(720px, 55vw);
   margin-left: auto;
 }
 
@@ -13178,11 +13341,11 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: min(720px, 55vw);
   margin-left: auto;
 }
 
@@ -14155,11 +14318,11 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: min(720px, 55vw);
   margin-left: auto;
 }
 
@@ -14277,8 +14440,8 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 }
 
 .global-search-filter-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--space-sm);
 }
 
@@ -14594,9 +14757,16 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 
 html[data-theme="obsidian"] .cmd-palette {
   position: fixed;
+  overflow: hidden;
+  isolation: isolate;
   background: var(--glass-modal-gradient);
+  border-color: var(--border-default);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0.94px 0 0 rgba(0, 0, 0, 0.15);
 }
 
 .cmd-palette::before {
@@ -15149,25 +15319,25 @@ html[data-theme="obsidian"] .cmd-palette {
 }
 
 /* ── Global search workspace enhancements ── */
-.global-search-hero-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  background: var(--glass-surface-strong);
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
-  padding-bottom: var(--space-sm);
+.global-search-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
-.global-search-filters-sticky {
+.global-search-toolbar-sticky {
   position: sticky;
-  top: 72px;
-  z-index: 4;
-  background: var(--glass-surface-strong);
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(170%);
-  padding-bottom: var(--space-sm);
+  top: var(--app-header-stack-height);
+  z-index: 5;
+  margin-inline: -64px;
+  padding: 0 64px var(--space-sm);
+  background: var(--hub-base, var(--glass-surface-strong));
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.module-global-search .global-search-toolbar-sticky {
+  background: var(--hub-base);
+  border-bottom-color: rgba(28, 43, 53, 0.1);
 }
 
 .global-search-kbd-btn {
@@ -15360,11 +15530,11 @@ html[data-theme="obsidian"] .cmd-palette {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   flex: 1;
   min-width: 0;
-  max-width: none;
+  max-width: min(720px, 55vw);
   margin-left: auto;
 }
 
@@ -15376,7 +15546,7 @@ html[data-theme="obsidian"] .cmd-palette {
 
 .send-center-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-md);
   width: 100%;
 }
@@ -18036,31 +18206,39 @@ html[data-theme="obsidian"] .cmd-palette {
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--ita-primary) 45%, transparent);
+  border: 1px solid var(--glass-highlight-soft);
   background: linear-gradient(
     145deg,
-    color-mix(in srgb, var(--ita-primary) 92%, var(--ita-surface)),
-    var(--ita-primary)
+    color-mix(in srgb, var(--ita-primary) 26%, var(--glass-surface-mid)),
+    color-mix(in srgb, var(--ita-primary) 12%, var(--glass-surface-deep))
   );
-  color: var(--ita-base);
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(165%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(165%);
+  color: color-mix(in srgb, var(--ita-primary) 82%, #fff);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   box-shadow:
-    0 12px 32px color-mix(in srgb, var(--ita-primary) 35%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--ita-surface) 12%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--ita-surface) 35%, transparent);
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 12px 32px rgba(0, 0, 0, 0.22),
+    0 0 0 1px color-mix(in srgb, var(--ita-primary) 16%, transparent);
   transition:
     transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .eva-fab-trigger-glow {
   position: absolute;
   inset: -6px;
   border-radius: inherit;
-  background: radial-gradient(circle, color-mix(in srgb, var(--ita-primary) 28%, transparent), transparent 70%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ita-primary) 24%, transparent),
+    transparent 70%
+  );
   opacity: 0.85;
   pointer-events: none;
   animation: eva-fab-glow 2.8s ease-in-out infinite;
@@ -18073,10 +18251,16 @@ html[data-theme="obsidian"] .cmd-palette {
 
 .eva-fab-trigger:hover {
   transform: scale(1.06);
+  border-color: color-mix(in srgb, var(--ita-primary) 36%, var(--glass-highlight-soft));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--ita-primary) 34%, var(--glass-surface-mid)),
+    color-mix(in srgb, var(--ita-primary) 18%, var(--glass-surface-deep))
+  );
   box-shadow:
-    0 16px 40px color-mix(in srgb, var(--ita-primary) 42%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--ita-surface) 18%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--ita-surface) 40%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--ita-primary) 22%, transparent),
+    0 16px 40px color-mix(in srgb, var(--ita-primary) 28%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ita-primary) 24%, transparent);
 }
 
 .eva-fab-trigger:active {
@@ -21836,11 +22020,9 @@ html[data-theme="obsidian"] .system-health-alert-item.high {
 @keyframes motion-hub-enter {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -23069,6 +23251,7 @@ tbody tr.row-critical {
 
 @media print {
   .app-top-header-stack,
+  .hub-operational-strips,
   .mobile-bottom-nav,
   .va-ops-tab-nav,
   .va-ops-page-header,

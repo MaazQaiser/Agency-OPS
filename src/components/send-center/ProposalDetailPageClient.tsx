@@ -2,7 +2,6 @@
 
 import { useCallback } from "react";
 import { useToast, createLegacyToastHandler } from "@/hooks/useToast";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { SendCenterPageHeader } from "./SendCenterPageHeader";
 import { ProposalDetailView } from "./ProposalDetailView";
 
@@ -17,7 +16,6 @@ export function ProposalDetailPageClient({ proposalId }: ProposalDetailPageClien
   return (
     <>
       <SendCenterPageHeader />
-      <ModuleBreadcrumbBar proposalId={proposalId} />
       <div className="va-ops-tab-content">
         <ProposalDetailView proposalId={proposalId} onToast={showToast} />
       </div>

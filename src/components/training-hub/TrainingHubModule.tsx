@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { trainingHubTabs, type TrainingHubTabId } from "@/data/trainingHub";
 import { routes } from "@/lib/routes";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { AddNewResourceModal } from "./AddNewResourceModal";
@@ -73,7 +72,6 @@ export function TrainingHubModule() {
         showActions={showPageActions}
         onQuickActionClick={handlePageQuickAction}
       />
-      <ModuleBreadcrumbBar />
 
       {!showingDetail && (
         <nav className="va-ops-tab-nav" aria-label="Training Hub views">

@@ -28,7 +28,6 @@ export function AnalyticsModule() {
           </div>
         </div>
         <div className="va-ops-page-header-toolbar">
-          <span className="analytics-folio-badge">Folio 2026-Q2</span>
           <HubHelpTrigger hubId="analytics" />
         </div>
       </header>

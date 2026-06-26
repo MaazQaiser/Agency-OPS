@@ -9,7 +9,7 @@ export type TrainingDetailFrom = "departments" | "library";
 
 export const trainingHubHeader = {
   title: "Training Hub",
-  subtitle: "Access department-specific training resources and SOPs.",
+  subtitle: "PL knowledge · Farmers benefits · 6 departments",
   quickActions: [
     { id: "upload", label: "Upload Training", icon: "upload" as const },
     { id: "add-resource", label: "Add New Resource", icon: "plus" as const },

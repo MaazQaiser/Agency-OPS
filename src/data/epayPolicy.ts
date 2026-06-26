@@ -8,7 +8,7 @@ export type EPayPolicyTabId = (typeof epayPolicyTabs)[number]["id"];
 
 export const epayPolicyHeader = {
   title: "ePayPolicy",
-  subtitle: "Generate invoices, collect payments, and manage broker fees.",
+  subtitle: "Invoice tracking · Broker fees · Payment confirmation",
   quickActions: [
     { id: "new-invoice", label: "New Invoice", icon: "plus" as const },
     { id: "export", label: "Export Ledger", icon: "download" as const },

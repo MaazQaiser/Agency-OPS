@@ -663,28 +663,30 @@ export function FormBuilderTab() {
               Save Draft
             </button>
           </div>
-          <div className="intake-form-sticky-right">
-            {currentStep > 1 && (
-              <button type="button" className="intake-form-action-btn intake-form-action-secondary" onClick={goBack}>
-                Back
-              </button>
-            )}
-            {currentStep < 6 ? (
-              <button type="button" className="intake-form-action-btn intake-form-action-primary" onClick={validateAndContinue}>
-                {continueLabel}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="intake-form-action-btn intake-form-action-primary"
-                disabled={allErrors.length > 0}
-                onClick={() => setReviewOpen(true)}
-              >
-                <AppIcon name="send" size={15} strokeWidth={2} />
-                Submit Intake
-              </button>
-            )}
-          </div>
+          {currentStep > 1 && (
+            <button type="button" className="intake-form-action-btn intake-form-action-secondary intake-form-sticky-back" onClick={goBack}>
+              Back
+            </button>
+          )}
+          {currentStep < 6 ? (
+            <button
+              type="button"
+              className="intake-form-action-btn intake-form-action-primary intake-form-sticky-primary"
+              onClick={validateAndContinue}
+            >
+              {continueLabel}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="intake-form-action-btn intake-form-action-primary intake-form-sticky-primary"
+              disabled={allErrors.length > 0}
+              onClick={() => setReviewOpen(true)}
+            >
+              <AppIcon name="send" size={15} strokeWidth={2} />
+              Submit Intake
+            </button>
+          )}
         </div>
       </div>
 

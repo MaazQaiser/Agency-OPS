@@ -43,12 +43,54 @@
   gap: 16px;
 }
 
+/* Page header toolbar — uniform controls on signature header */
+.module-send-center .send-center-header-actions {
+  align-items: center;
+  min-height: 40px;
+  gap: 8px;
+}
+
+.module-send-center .va-ops-page-header .send-center-header-actions .va-ops-role-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transform: none;
+}
+
+.module-send-center .va-ops-page-header .send-center-header-actions .hub-help-trigger {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.module-send-center .va-ops-page-header .send-center-header-actions .ops-shortcut-hint {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.module-send-center .va-ops-page-header .send-center-header-actions .va-ops-role-action-btn:hover {
+  transform: none;
+  filter: none;
+}
+
 .module-send-center .send-center-kpi-strip {
-  padding: 0 48px 14px;
+  padding: 12px 48px 16px;
 }
 
 /* ── 3. Unified KPI cards (Commercial Hub benchmark) ── */
 .module-send-center .send-center-kpi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -56,11 +98,16 @@
 .module-send-center .hub-kpi-grid .commercial-hub-kpi-uniform.va-ops-kpi-card {
   display: flex;
   flex-direction: column;
-  min-height: 96px;
-  max-height: 96px;
-  padding: 14px 16px;
+  height: 88px;
+  min-height: 88px;
+  max-height: 88px;
+  padding: 12px 16px;
   overflow: hidden;
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.module-send-center .send-center-kpi-grid .va-ops-kpi-tooltip {
+  display: none;
 }
 
 .module-send-center .send-center-kpi-grid .va-ops-kpi-card:hover {
@@ -378,7 +425,7 @@
 
 @media (max-width: 768px) {
   .module-send-center .send-center-kpi-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .module-send-center .send-center-tab .commercial-hub-table-wrap {

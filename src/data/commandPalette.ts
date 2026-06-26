@@ -60,15 +60,7 @@ export const pinnedPaletteActions: CommandPaletteAction[] = [
   },
 ];
 
-export const moduleJumpActions: CommandPaletteAction[] = [
-  ...navItems.map((item) => ({
-    id: `jump-${item.key}`,
-    label: `Go to ${item.label}`,
-    href: item.href,
-    icon: moduleIcon(item.key),
-    hub: item.label,
-    keywords: [item.label, item.key, "jump", "open", "module", "hub", "go"],
-  })),
+const extraModuleJumpActions: CommandPaletteAction[] = [
   {
     id: "jump-producer",
     label: "Go to Producer Scorecard",
@@ -85,17 +77,30 @@ export const moduleJumpActions: CommandPaletteAction[] = [
     hub: "Retention",
     keywords: ["retention", "renewal", "jump", "go"],
   },
-  {
-    id: "jump-global-search",
-    label: "Go to Global Search Workspace",
-    href: routes.globalSearch,
-    icon: "search",
-    hub: "Analytics",
-    keywords: ["search", "workspace", "analytics", "global"],
-  },
 ];
 
-export const allPaletteActions: CommandPaletteAction[] = [
+function dedupePaletteActions(actions: CommandPaletteAction[]): CommandPaletteAction[] {
+  const seen = new Set<string>();
+  return actions.filter((action) => {
+    if (seen.has(action.id)) return false;
+    seen.add(action.id);
+    return true;
+  });
+}
+
+export const moduleJumpActions: CommandPaletteAction[] = dedupePaletteActions([
+  ...navItems.map((item) => ({
+    id: `jump-${item.key}`,
+    label: `Go to ${item.label}`,
+    href: item.href,
+    icon: moduleIcon(item.key),
+    hub: item.label,
+    keywords: [item.label, item.key, "jump", "open", "module", "hub", "go"],
+  })),
+  ...extraModuleJumpActions,
+]);
+
+export const allPaletteActions: CommandPaletteAction[] = dedupePaletteActions([
   ...pinnedPaletteActions,
   ...moduleJumpActions,
   {
@@ -130,7 +135,7 @@ export const allPaletteActions: CommandPaletteAction[] = [
     hub: "Commercial Hub",
     keywords: ["documents", "missing"],
   },
-];
+]);
 
 export const hubGroupOrder: string[] = [
   "Commercial Hub",

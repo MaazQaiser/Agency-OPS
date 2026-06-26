@@ -3,18 +3,11 @@
 import { AppIcon } from "@/components/ui/AppIcon";
 import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { globalSearchHeader } from "@/data/globalSearch";
-import { useGlobalSearch } from "./GlobalSearchProvider";
 
 export function GlobalSearchPageHeader() {
-  const { open: openPalette } = useGlobalSearch();
-
   const handleAction = (id: string) => {
-    if (id === "palette") {
-      openPalette();
-      return;
-    }
     if (id === "filters") {
-      document.querySelector(".global-search-filters-sticky")?.scrollIntoView({ behavior: "smooth" });
+      document.querySelector(".global-search-toolbar-sticky")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
     if (id === "saved") {

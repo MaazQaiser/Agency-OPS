@@ -6,7 +6,7 @@
 
 export const analyticsHeader = {
   title: "Analytics",
-  subtitle: "Agency-wide performance metrics by folio period — premium pace, retention, conversion, and velocity.",
+  subtitle: "Pipeline trends · Producer performance · Monthly reporting",
   helpId: "analytics" as const,
 };
 

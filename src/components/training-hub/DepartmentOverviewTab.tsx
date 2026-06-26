@@ -98,9 +98,14 @@ export function DepartmentOverviewTab() {
     >
     <div className="va-ops-role-view training-department-overview">
       <section className="va-ops-kpi-strip" aria-label="Training hub KPI summary">
-        <div className="commercial-hub-kpi-grid training-kpi-grid">
+        <div className="commercial-hub-kpi-grid training-kpi-grid hub-kpi-grid">
           {trainingHubKpis.map((kpi) => (
-            <VaOpsKpiCard key={kpi.label} {...kpi} />
+            <VaOpsKpiCard
+              key={kpi.label}
+              {...kpi}
+              className="commercial-hub-kpi-uniform"
+              sparkline={false}
+            />
           ))}
         </div>
       </section>

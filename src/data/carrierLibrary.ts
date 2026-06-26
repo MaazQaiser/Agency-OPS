@@ -11,7 +11,7 @@ export type CarrierProfileFrom = "search";
 
 export const carrierLibraryHeader = {
   title: "Carrier Library",
-  subtitle: "Search carriers, products, and underwriting appetite.",
+  subtitle: "Appetite notes · MGA contacts · Submission checklists",
   quickActions: [
     { id: "add-carrier", label: "Add Carrier", icon: "plus" as const },
     { id: "update-market", label: "Update Market Info", icon: "refresh" as const },

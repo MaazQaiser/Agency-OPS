@@ -1,5 +1,46 @@
 /* ePayPolicy — financial hierarchy and operational actionability (scoped) */
 
+/* Page header toolbar — uniform controls on signature header */
+.module-epay-policy .epay-policy-header-actions {
+  align-items: center;
+  min-height: 40px;
+  gap: 8px;
+}
+
+.module-epay-policy .va-ops-page-header .epay-policy-header-actions .va-ops-role-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transform: none;
+}
+
+.module-epay-policy .va-ops-page-header .epay-policy-header-actions .hub-help-trigger {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.module-epay-policy .va-ops-page-header .epay-policy-header-actions .ops-shortcut-hint {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.module-epay-policy .va-ops-page-header .epay-policy-header-actions .va-ops-role-action-btn:hover {
+  transform: none;
+  filter: none;
+}
+
 .module-epay-policy .va-ops-role-view {
   max-width: 1400px;
   margin: 0 auto;

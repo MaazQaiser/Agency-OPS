@@ -3,19 +3,6 @@
    Cyan identity (#0891B2). Signature element: 7-point KPI sparkline.
    ═══════════════════════════════════════════════════════════════ */
 
-.analytics-folio-badge {
-  font-size: 9px;
-  font-family: var(--font-mono), monospace;
-  padding: 2px 8px;
-  border-radius: 3px;
-  background: rgba(8, 145, 178, 0.1);
-  border: 1px solid rgba(8, 145, 178, 0.25);
-  color: #0891b2;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
 /* ── KPI Grid — 3-column ── */
 .analytics-kpi-grid {
   display: grid;
@@ -109,7 +96,7 @@
 }
 
 .analytics-content {
-  padding: 20px 0 40px;
+  padding: 20px 48px 40px;
 }
 
 @media (max-width: 700px) {

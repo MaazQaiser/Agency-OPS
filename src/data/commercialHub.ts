@@ -15,7 +15,7 @@ export type CommercialHubTabId = (typeof commercialHubTabs)[number]["id"];
 
 export const commercialHubHeader = {
   title: "Commercial Hub",
-  subtitle: "Track commercial submissions, quote progress, and pipeline performance.",
+  subtitle: "Pipeline intelligence · Quote tracking · Stage flow",
   quickActions: [
     { id: "new-submission", label: "New Submission", icon: "plus" as const },
     { id: "add-market", label: "Add Market", icon: "target" as const },

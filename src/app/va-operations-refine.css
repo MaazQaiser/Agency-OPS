@@ -10,7 +10,8 @@
 html[data-theme="obsidian"] .module-va-operations .va-ops-panel:not(.va-ops-panel--accent)::before,
 html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card::before,
 html[data-theme="obsidian"] .module-va-operations .va-ops-snapshot-card::before,
-html[data-theme="obsidian"] .module-va-operations .va-ops-team-card::before {
+html[data-theme="obsidian"] .module-va-operations .va-ops-team-card::before,
+html[data-theme="obsidian"] .module-va-operations .dnc-summary-card::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -27,9 +28,38 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-team-card::before {
 
 .module-va-operations .va-ops-panel > *,
 .module-va-operations .va-ops-kpi-card > *,
-.module-va-operations .va-ops-snapshot-card > * {
+.module-va-operations .va-ops-snapshot-card > *,
+.module-va-operations .dnc-summary-card > * {
   position: relative;
   z-index: 1;
+}
+
+html[data-theme="obsidian"] .module-va-operations .dnc-summary-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--glass-card-gradient);
+  border: 1px solid var(--border-default);
+  backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+  box-shadow:
+    var(--glass-shadow-sm),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 color-mix(in srgb, var(--obs) 8%, transparent);
+}
+
+html[data-theme="obsidian"] .module-va-operations .dnc-summary-card:hover,
+html[data-theme="obsidian"] .module-va-operations .dnc-summary-card.active {
+  background: linear-gradient(
+    145deg,
+    rgba(34, 43, 66, 0.58) 0%,
+    color-mix(in srgb, var(--hub-accent, var(--primary)) 10%, transparent) 100%
+  );
+  border-color: color-mix(in srgb, var(--hub-accent, var(--primary)) 34%, var(--border-default));
+  box-shadow:
+    var(--glass-shadow-sm),
+    0 0 0 1px color-mix(in srgb, var(--hub-accent, var(--primary)) 12%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
 }
 
 .module-va-operations .va-ops-panel--accent {
@@ -60,22 +90,22 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-search::before {
 html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
   background: linear-gradient(
     145deg,
-    color-mix(in srgb, var(--glass-surface-haze) 75%, transparent) 0%,
-    color-mix(in srgb, var(--hub-accent) 20%, transparent) 48%,
-    color-mix(in srgb, var(--hub-accent) 10%, var(--obs) 90%) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(59, 130, 246, 0.18) 48%,
+    rgba(96, 165, 250, 0.1) 100%
   );
-  border-color: color-mix(in srgb, var(--hub-accent) 28%, var(--hub-border-soft));
+  border-color: rgba(96, 165, 250, 0.28);
   box-shadow:
-    0 8px 32px color-mix(in srgb, var(--hub-accent) 18%, transparent),
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 0 24px color-mix(in srgb, var(--hub-accent) 8%, transparent);
+    0 8px 32px rgba(37, 99, 235, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 24px rgba(59, 130, 246, 0.08);
 }
 
 .module-va-operations .va-ops-search,
 .module-va-operations .va-ops-search-chip,
 .module-va-operations .va-ops-filter-btn,
 .module-va-operations .va-ops-data-source-badge,
-.module-va-operations .owner-intelligence-chip {
+.module-va-operations .owner-intelligence-chip:not(.owner-intelligence-chip--amber):not(.owner-intelligence-chip--red) {
   border-color: var(--hub-border-soft);
 }
 
@@ -196,21 +226,25 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .module-va-operations .va-ops-kpi-card.primary {
-  border-color: color-mix(in srgb, var(--hub-primary) 28%, var(--hub-border-soft));
+  border-color: rgba(96, 165, 250, 0.28);
   background: linear-gradient(
     145deg,
-    color-mix(in srgb, var(--glass-surface-haze) 75%, transparent) 0%,
-    color-mix(in srgb, var(--hub-primary) 20%, transparent) 48%,
-    color-mix(in srgb, var(--hub-primary) 10%, var(--obs) 90%) 100%
+    rgba(22, 27, 34, 0.28) 0%,
+    rgba(59, 130, 246, 0.18) 48%,
+    rgba(96, 165, 250, 0.1) 100%
   );
   box-shadow:
-    0 8px 32px color-mix(in srgb, var(--hub-primary) 18%, transparent),
-    inset 0 1px 0 var(--glass-highlight),
-    inset 0 0 24px color-mix(in srgb, var(--hub-primary) 8%, transparent);
+    0 8px 32px rgba(37, 99, 235, 0.22),
+    0 0 40px rgba(59, 130, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 24px rgba(59, 130, 246, 0.1);
 }
 
 .module-va-operations .va-ops-kpi-card.primary .va-ops-kpi-value {
-  color: var(--hub-primary);
+  color: var(--primary-light);
+  text-shadow:
+    0 0 20px rgba(96, 165, 250, 0.55),
+    0 0 40px rgba(59, 130, 246, 0.35);
 }
 
 .module-va-operations .va-ops-kpi-card.primary:hover {
@@ -471,16 +505,32 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 
 /* Eva FAB — VA Operations context */
 .app-shell:has(.module-va-operations) .eva-fab-trigger {
-  border-color: color-mix(in srgb, var(--hub-primary) 55%, transparent);
+  border-color: color-mix(in srgb, var(--hub-primary) 32%, var(--glass-highlight-soft));
   background: linear-gradient(
     145deg,
-    color-mix(in srgb, var(--hub-primary) 92%, var(--ita-surface)),
-    var(--hub-deep)
+    color-mix(in srgb, var(--hub-primary) 26%, var(--glass-surface-mid)),
+    color-mix(in srgb, var(--hub-deep) 48%, var(--glass-surface-deep))
+  );
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(165%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(165%);
+  color: color-mix(in srgb, var(--hub-primary) 80%, #fff);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 12px 32px var(--hub-glow),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 20%, transparent);
+}
+
+.app-shell:has(.module-va-operations) .eva-fab-trigger:hover {
+  border-color: color-mix(in srgb, var(--hub-primary) 42%, var(--glass-highlight-soft));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--hub-primary) 34%, var(--glass-surface-mid)),
+    color-mix(in srgb, var(--hub-deep) 56%, var(--glass-surface-deep))
   );
   box-shadow:
-    0 12px 32px var(--hub-glow),
-    0 0 0 1px color-mix(in srgb, var(--hub-primary) 20%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--ita-surface) 35%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--hub-primary) 24%, transparent),
+    0 16px 40px var(--hub-glow),
+    0 0 0 1px color-mix(in srgb, var(--hub-primary) 28%, transparent);
 }
 
 .app-shell:has(.module-va-operations) .eva-fab-trigger-glow {
@@ -530,15 +580,6 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 
 .app-shell:has(.module-va-operations) .eva-fab-trigger--open::after {
   content: "Close actions";
-}
-
-.module-va-operations .va-ops-page-title {
-  font-family: var(--font-family-display);
-  font-size: 44px;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: 0.01em;
-  line-height: 1.08;
 }
 
 .module-va-operations .va-ops-section-title {
@@ -947,8 +988,13 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
   align-items: center;
   gap: 12px;
   padding: 8px var(--space-lg);
-  background: var(--obs);
+  background: var(--glass-header-gradient);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border-bottom: 1px solid color-mix(in srgb, var(--ita-secondary) 14%, transparent);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .owner-intelligence-strip-label {
@@ -964,21 +1010,27 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 .owner-intelligence-strip-chips {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   min-width: 0;
 }
 
 .owner-intelligence-chip {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 5px;
   padding: 5px 12px;
   border-radius: 999px;
   font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--text-secondary);
-  background: var(--surface-inset);
-  border: 1px solid var(--border-subtle);
+  background: var(--glass-surface-veil);
+  border: 1px solid var(--glass-highlight-soft);
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight-soft),
+    0 2px 10px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
 }
 
@@ -990,8 +1042,12 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .owner-intelligence-chip--amber {
-  border-color: color-mix(in srgb, var(--warning-amber) 30%, transparent);
-  background: color-mix(in srgb, var(--warning-amber) 8%, transparent);
+  border-color: color-mix(in srgb, var(--warning-amber) 32%, var(--glass-highlight-soft));
+  background: color-mix(in srgb, var(--warning-amber) 14%, var(--glass-surface-veil));
+  color: color-mix(in srgb, var(--warning-amber) 68%, var(--text-secondary));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--warning-amber) 24%, transparent),
+    0 2px 12px color-mix(in srgb, var(--warning-amber) 10%, transparent);
 }
 
 .owner-intelligence-chip--amber strong {
@@ -999,8 +1055,12 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .owner-intelligence-chip--red {
-  border-color: color-mix(in srgb, var(--critical-rose) 30%, transparent);
-  background: color-mix(in srgb, var(--critical-rose) 8%, transparent);
+  border-color: color-mix(in srgb, var(--critical-rose) 32%, var(--glass-highlight-soft));
+  background: color-mix(in srgb, var(--critical-rose) 14%, var(--glass-surface-veil));
+  color: color-mix(in srgb, var(--critical-rose) 68%, var(--text-secondary));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--critical-rose) 24%, transparent),
+    0 2px 12px color-mix(in srgb, var(--critical-rose) 10%, transparent);
 }
 
 .owner-intelligence-chip--red strong {
@@ -1008,10 +1068,6 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 @media (max-width: 767px) {
-  .module-va-operations .va-ops-page-title {
-    font-size: 32px;
-  }
-
   .module-va-operations .va-ops-kpi-value {
     font-size: 36px;
   }

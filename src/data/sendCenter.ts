@@ -10,7 +10,7 @@ export type SendCenterTabId = (typeof sendCenterTabs)[number]["id"];
 
 export const sendCenterHeader = {
   title: "Send Center",
-  subtitle: "Draft, review, approve, and send client proposals with full communication tracking.",
+  subtitle: "Outbound communication · Tone selection · Compliance gate",
   quickActions: [
     { id: "new-draft", label: "New Draft", icon: "plus" as const },
     { id: "export-log", label: "Export Log", icon: "download" as const },

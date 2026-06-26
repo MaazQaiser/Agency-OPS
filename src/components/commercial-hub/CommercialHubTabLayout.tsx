@@ -104,7 +104,7 @@ export function CommercialHubKpiStrip({ kpis, columns = 4, className }: Commerci
             key={kpi.label}
             {...kpi}
             className={cn("commercial-hub-kpi-uniform", kpi.className)}
-            sparkline={false}
+            sparkline={kpi.sparkline ?? true}
           />
         ))}
       </div>

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppIcon } from "@/components/ui/AppIcon";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
 import {
@@ -248,8 +247,6 @@ export function SystemHealthModule() {
           </button>
         </div>
       </header>
-
-      <ModuleBreadcrumbBar />
 
       <section className="system-health-summary-strip" aria-label="System health summary">
         {summaryCards.map((card) => (

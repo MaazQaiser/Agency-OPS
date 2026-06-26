@@ -67,9 +67,14 @@ export function FormSelectorTab() {
     >
       <div className="va-ops-role-view intake-form-selector">
         <section className="va-ops-kpi-strip" aria-label="Intake forms KPI summary">
-          <div className="commercial-hub-kpi-grid intake-kpi-grid">
+          <div className="commercial-hub-kpi-grid intake-kpi-grid hub-kpi-grid">
             {intakeFormsKpis.map((kpi) => (
-              <VaOpsKpiCard key={kpi.label} {...kpi} />
+              <VaOpsKpiCard
+                key={kpi.label}
+                {...kpi}
+                className="commercial-hub-kpi-uniform"
+                sparkline={false}
+              />
             ))}
           </div>
         </section>

@@ -5,7 +5,7 @@
 
 /* ── Page header ── */
 .module-farmers-edge .fe-page-header {
-  gap: 12px;
+  gap: 16px;
 }
 
 .fe-hub-identity {
@@ -17,7 +17,8 @@
 .fe-hub-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--hub-secondary), var(--hub-accent));
+  box-shadow: 0 0 12px var(--hub-glow);
   border-radius: 9px;
   display: flex;
   align-items: center;
@@ -56,99 +57,39 @@
   color: #7aafc8;
 }
 
-.fe-freshness {
-  font-size: 10px;
-  font-family: var(--font-mono), monospace;
-  color: var(--text-secondary, #7aafc8);
-  white-space: nowrap;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   Vertical Chip Selector — HERO ELEMENT
-   ═══════════════════════════════════════════════════════════════ */
-.fe-vertical-hero {
-  padding: 18px 24px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: color-mix(in srgb, var(--hub-surface, #182e22) 82%, var(--hub-base, #0f1e18));
-}
-
-.fe-vertical-hero-label {
-  font-size: 10px;
-  font-family: var(--font-mono), monospace;
-  color: var(--text-muted, #5a7a95);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  margin-bottom: 12px;
-}
-
-.fe-vertical-chips {
-  display: flex;
-  gap: 8px;
+/* Header toolbar — vertical dropdown + search */
+.module-farmers-edge .fe-page-header-toolbar {
   flex-wrap: wrap;
-}
-
-.fe-v-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-secondary, #7aafc8);
-  transition: all 150ms ease;
-  white-space: nowrap;
-  min-width: 120px;
-  justify-content: center;
-}
-
-.fe-v-chip:hover {
-  border-color: rgba(16, 185, 129, 0.4);
-  color: var(--text-primary, #f0f6ff);
-  background: rgba(16, 185, 129, 0.06);
-}
-
-.fe-v-chip.active {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.5);
-  color: #10b981;
-  font-weight: 600;
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
-}
-
-.fe-v-chip--all.active {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.14);
-  color: var(--text-primary, #f0f6ff);
-  box-shadow: none;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   Search Bar
-   ═══════════════════════════════════════════════════════════════ */
-.fe-hub-search {
-  padding: 10px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: color-mix(in srgb, var(--hub-base, #0f1e18) 60%, var(--hub-surface, #182e22));
-}
-
-.fe-search-inner {
-  display: flex;
-  align-items: center;
+  max-width: min(720px, 58vw);
   gap: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 7px;
-  padding: 8px 14px;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-.fe-search-inner:focus-within {
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+.fe-vertical-select {
+  min-width: 200px;
+  max-width: 240px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.module-farmers-edge .fe-page-header-toolbar .fe-header-search {
+  flex: 1;
+  min-width: 180px;
+  height: 40px;
+}
+
+.module-farmers-edge .fe-page-header-toolbar .fe-search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #5a7a95);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.module-farmers-edge .fe-page-header-toolbar .fe-search-clear:hover {
+  color: var(--text-primary, #f0f6ff);
 }
 
 .fe-search-icon {
@@ -157,33 +98,7 @@
 }
 
 .fe-search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-primary, #f0f6ff);
-  font-size: 13px;
-  font-family: inherit;
   min-width: 0;
-}
-
-.fe-search-input::placeholder {
-  color: var(--text-muted, #5a7a95);
-}
-
-.fe-search-clear {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted, #5a7a95);
-  font-size: 16px;
-  line-height: 1;
-  padding: 0 2px;
-  transition: color 150ms ease;
-}
-
-.fe-search-clear:hover {
-  color: var(--text-primary, #f0f6ff);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -494,14 +409,6 @@
 
   .fe-content-area {
     padding: 14px 16px 40px;
-  }
-
-  .fe-vertical-hero {
-    padding: 14px 16px 12px;
-  }
-
-  .fe-hub-search {
-    padding: 8px 16px;
   }
 }
 

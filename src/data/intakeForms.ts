@@ -9,7 +9,7 @@ export type IntakeFormsTabId = (typeof intakeFormsTabs)[number]["id"];
 
 export const intakeFormsHeader = {
   title: "Intake Forms",
-  subtitle: "Start and manage insurance intake submissions.",
+  subtitle: "Lead capture · Form submissions · AZ routing",
   quickActions: [
     { id: "import", label: "Import Submission", icon: "upload" as const },
   ],

@@ -20,6 +20,7 @@ import { BilingualQueueTab } from "./BilingualQueueTab";
 import { OverviewTab } from "./OverviewTab";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { TasksTab } from "./TasksTab";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { VAOperationsPageHeader } from "./VAOperationsPageHeader";
 
 const validTabIds = new Set<string>(vaOperationsTabs.map((tab) => tab.id));
@@ -77,6 +78,8 @@ export function VAOperationsModule() {
           </button>
         ))}
       </nav>
+
+      <HubOperationalStrips />
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={`${safeActiveTab}-${activeRole}`}>

@@ -7,9 +7,9 @@ import { getVisibleEpayTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
 import { useToast, createLegacyToastHandler } from "@/hooks/useToast";
-import { ModuleBreadcrumbBar } from "@/components/shared/ModuleBreadcrumbBar";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { useShortcutAction } from "@/hooks/useShortcutAction";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { EPayPolicyPageHeader } from "./EPayPolicyPageHeader";
 import { InvoiceBuilderTab } from "./InvoiceBuilderTab";
 import { PaymentTrackerTab } from "./PaymentTrackerTab";
@@ -58,7 +58,6 @@ export function EPayPolicyModule() {
   return (
     <>
       <EPayPolicyPageHeader onQuickActionClick={handlePageQuickAction} />
-      <ModuleBreadcrumbBar />
 
       <nav className="va-ops-tab-nav" aria-label="ePayPolicy views">
         {visibleTabs.map((tab) => (
@@ -72,6 +71,8 @@ export function EPayPolicyModule() {
           </button>
         ))}
       </nav>
+
+      <HubOperationalStrips />
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={safeActive}>

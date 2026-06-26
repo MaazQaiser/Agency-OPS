@@ -3,7 +3,6 @@
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
 import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
-import { ExportMenu } from "@/components/export/ExportMenu";
 import { commercialHubHeader } from "@/data/commercialHub";
 import { commercialHubQuickActionPermissions, filterQuickActions } from "@/data/rolePermissions";
 
@@ -47,7 +46,6 @@ export function CommercialHubPageHeader({ onQuickActionClick }: CommercialHubPag
             />
           );
         })}
-        <ExportMenu kind="commercial-pipeline" />
         <HubHelpTrigger hubId="commercial-hub" />
       </div>
     </header>

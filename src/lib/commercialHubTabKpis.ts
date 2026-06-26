@@ -24,8 +24,11 @@ export function executiveTabKpis(): VaOpsKpiCardProps[] {
     value: kpi.value,
     sub: kpi.sub,
     helper: kpi.helper,
-    className: `commercial-hub-kpi-${kpi.tier}`,
-    sparkline: false,
+    color: kpi.color,
+    polarity:
+      kpi.label === "Stalled Submissions" || kpi.label === "Missing Documents"
+        ? ("lower-better" as const)
+        : ("higher-better" as const),
   }));
 }
 

@@ -50,5 +50,6 @@ export const navItems: {
   { key: "carrier-library", label: "Carrier Library", href: routes.carrierLibrary, icon: "▨" },
   { key: "epay-policy", label: "ePayPolicy", href: routes.epayPolicy, icon: "▩" },
   { key: "send-center", label: "Send Center", href: routes.sendCenter, icon: "▪" },
+  { key: "global-search", label: "Global Search", href: routes.globalSearch, icon: "◈" },
   { key: "analytics", label: "Analytics", href: routes.analytics, icon: "▫" },
 ];
