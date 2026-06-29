@@ -48,9 +48,42 @@ export function resolveRoleRingGradient(role: string): string {
   return ROLE_RING_GRADIENTS.neutral;
 }
 
-/** Local portrait assets in /public/team — replace files to swap final photos */
+/** Portrait filenames in /public/team — keyed by team member id */
+const TEAM_PHOTO_FILES: Record<string, string> = {
+  eva: "eva.jpg",
+  "eva-chong": "eva-chong.jpg",
+  "valerie-martinez": "valerie-martinez.jpg",
+  "tracie-wong": "tracie-wong.png",
+  "sarah-chen": "sarah-chen.jpg",
+  sara: "sara.jpg",
+  jaffer: "jaffer.jpeg",
+  jojo: "jojo.jpg",
+  "pedro-va": "pedro-va.jpeg",
+  "pedro-alvarez": "pedro-alvarez.jpeg",
+  "mike-torres": "mike-torres.jpeg",
+  kat: "kat.jpg",
+  "arminda-ops": "arminda-ops.jpg",
+  kyle: "kyle.jpg",
+  hassan: "hassan.jpg",
+  "kyle-nguyen": "kyle-nguyen.jpg",
+};
+
+/** Source picture → team member id (from pictures - agency ops folder) */
+export const TEAM_PHOTO_SOURCE_MAP: Record<string, string> = {
+  "Eva.jpg": "eva-chong",
+  "Valerie.jpg": "valerie-martinez",
+  "Tracie.png": "tracie-wong",
+  "Sarah.jpg": "sarah-chen",
+  "Jaffer hussain.jpeg": "jaffer",
+  "joanna.jpg": "jojo",
+  "pedro torres.jpeg": "pedro-va",
+  "Profile Photo.jpg": "kat",
+  "Profile photo (1).jpg": "arminda-ops",
+};
+
 function teamPhotoPath(memberId: string) {
-  return `/team/${memberId}.jpg`;
+  const file = TEAM_PHOTO_FILES[memberId] ?? `${memberId}.jpg`;
+  return `/team/${file}`;
 }
 
 export const TEAM_IDENTITIES: TeamIdentity[] = [
@@ -123,7 +156,7 @@ export const TEAM_IDENTITIES: TeamIdentity[] = [
     role: "Agency Owner",
     ringGradient: RINGS.brand,
     photoUrl: teamPhotoPath("eva-chong"),
-    aliases: ["eva", "eva chong"],
+    aliases: ["eva", "eva chong", "Eva"],
     defaultStatus: "online",
   },
   {
@@ -137,11 +170,11 @@ export const TEAM_IDENTITIES: TeamIdentity[] = [
   },
   {
     id: "sara",
-    name: "Sara",
+    name: "Sarah",
     role: "Retention VA",
     ringGradient: RINGS.valerie,
     photoUrl: teamPhotoPath("sara"),
-    aliases: [],
+    aliases: ["sara"],
     defaultStatus: "online",
   },
   {

@@ -12,6 +12,7 @@ import {
   matchesSendCenterSearch,
   sentProposalRecords,
   sendCenterAiInsights,
+  sendCenterBulkActions,
   type SentProposalRecord,
 } from "@/data/sendCenter";
 import { routes } from "@/lib/routes";
@@ -21,13 +22,14 @@ import { useToast } from "@/hooks/useToast";
 import { toastMessages } from "@/lib/toastMessages";
 import { cn } from "@/lib/cn";
 import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
-import { getClientLanguage, getProposalLanguageMeta, translationStatusClass } from "@/data/bilingualClient";
+import { getClientLanguage } from "@/data/bilingualClient";
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
+import { exportSendCenterHistoryPdf } from "@/lib/export";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
 import { SendCenterBulkBar } from "./SendCenterBulkBar";
-import { ProposalWorkflowStepper } from "./ProposalWorkflowStepper";
+import { SentProposalLifecycleStepper } from "./SentProposalLifecycleStepper";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -37,11 +39,6 @@ import {
 type SentProposalsTabProps = {
   onToast: (message: string, variant?: "success" | "error") => void;
 };
-
-function getWorkflowProgress(row: SentProposalRecord) {
-  const detail = getProposalDetail(proposalIdByRowId[row.id] ?? row.proposalId);
-  return detail?.workflowProgress ?? ["draft", "review", "approved", "sent"];
-}
 
 function getEngagement(row: SentProposalRecord) {
   const detail = getProposalDetail(proposalIdByRowId[row.id] ?? row.proposalId);
@@ -118,12 +115,15 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
   };
 
   const handleBulk = async (action: string) => {
-    if (action === "Resend") {
+    if (action === "Export") {
+      exportSendCenterHistoryPdf();
+      onToast(`Exported ${selected.size} proposal record(s)`, "success");
+    } else if (action === "Send") {
       const toastId = toast.processing(toastMessages.sendCenter.sendingProposal);
       await new Promise((resolve) => window.setTimeout(resolve, 900));
       toast.update(toastId, toastMessages.sendCenter.proposalSent, "success");
-    } else if (action === "Assign Follow-up") {
-      toast.success(toastMessages.sendCenter.followUpScheduled);
+    } else if (action === "Escalate") {
+      onToast(`Escalated ${selected.size} proposal(s) for follow-up`, "success");
     } else {
       onToast(`${action} applied to ${selected.size} proposal(s)`, "success");
     }
@@ -131,6 +131,18 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
       setRows((prev) => prev.filter((r) => !selected.has(r.id)));
     }
     setSelected(new Set());
+  };
+
+  const handleAiAction = (actionId: string) => {
+    if (actionId === "archive") {
+      const kim = rows.find((r) => r.client.includes("Kim"));
+      if (kim) {
+        setRows((prev) => prev.filter((r) => r.id !== kim.id));
+        onToast(`${kim.client} proposal archived`, "success");
+      }
+      return;
+    }
+    onToast(`AI action: ${actionId.replace(/-/g, " ")}`, "success");
   };
 
   return (
@@ -143,7 +155,7 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
         <ExportMenu kind="send-center-history" />
       </div>
 
-      <SendCenterAiInsight insights={sendCenterAiInsights.sentProposals} />
+      <SendCenterAiInsight insights={sendCenterAiInsights.sentProposals} onAction={handleAiAction} />
 
       <SendCenterFilters
         search={search}
@@ -156,7 +168,7 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
 
       <SendCenterBulkBar
         selectedCount={selected.size}
-        actions={["Resend", "Archive", "Export", "Assign Follow-up"]}
+        actions={sendCenterBulkActions}
         onAction={handleBulk}
         onClear={() => setSelected(new Set())}
       />
@@ -191,17 +203,16 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                     />
                   </th>
                   <th>Client</th>
-                  <th>Language</th>
                   <th>Sent Date</th>
                   <th>Engagement</th>
-                  <th>Workflow</th>
+                  <th>Lifecycle</th>
                   <th aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={7}>
+                    <td colSpan={6}>
                       <HubEmptyState
                         title="No matches"
                         description="No sent proposals match your search. Try clearing filters or broadening your search."
@@ -212,7 +223,6 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                 ) : (
                   filtered.map((row) => {
                     const engagement = getEngagement(row);
-                    const progress = getWorkflowProgress(row);
                     return (
                       <tr
                         key={row.id}
@@ -241,25 +251,14 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                             {engagement}
                           </span>
                         </td>
-                        <td>
-                          {(() => {
-                            const meta = getProposalLanguageMeta(proposalIdByRowId[row.id] ?? row.proposalId);
-                            if (!meta) return <span className="badge badge-gray">EN</span>;
-                            return (
-                              <span className={cn("badge", translationStatusClass[meta.translationStatus])}>
-                                {meta.translationStatus}
-                              </span>
-                            );
-                          })()}
-                        </td>
                         <td>{row.sentDate}</td>
                         <td>
                           <span className="send-center-engagement-meta">
                             {row.openCount} opens · {row.daysSinceActivity}d since activity
                           </span>
                         </td>
-                        <td className="send-center-stepper-cell">
-                          <ProposalWorkflowStepper progress={progress} compact />
+                        <td className="send-center-lifecycle-cell">
+                          <SentProposalLifecycleStepper row={row} />
                         </td>
                         <td>
                           <div className="send-center-row-actions">

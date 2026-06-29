@@ -10,12 +10,14 @@ import {
   carrierSearchPlaceholder,
   carrierStatusClass,
   defaultCarrierFilters,
+  favoriteCarrierStack,
   getCarrierProfileHref,
+  marketFeedEventClass,
+  marketFeedEventLabel,
+  marketIntelligenceFeed,
   matchesCarrierFilters,
-  recentMarketActivity,
+  rankingBadgeClass,
   recommendedMarkets,
-  riskTypeClass,
-  savedMarkets,
   type CarrierFilterState,
   type CarrierRecord,
 } from "@/data/carrierLibrary";
@@ -29,19 +31,13 @@ import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
 import { CarrierSearchDrawer } from "./CarrierSearchDrawer";
 import { AppetiteFilterMatrix } from "./AppetiteFilterMatrix";
+import { RecommendedMarketCard } from "./RecommendedMarketCard";
 
 const riskRowClass = {
   "High Risk": "carrier-search-row--high-risk",
   Restricted: "carrier-search-row--restricted",
   Standard: "",
   Preferred: "",
-} as const;
-
-const riskLevelClass = {
-  Open: "badge-green",
-  Conditional: "badge-amber",
-  Restricted: "badge-amber",
-  "High Risk": "badge-rose",
 } as const;
 
 const filterLabels: Record<keyof CarrierFilterState, string> = {
@@ -118,9 +114,13 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
     );
   };
 
-  const openSavedMarket = (name: string) => {
+  const openCarrierByName = (name: string) => {
     const match = allCarriers.find((c) => c.name === name);
     if (match) setSelectedCarrier(match);
+  };
+
+  const openStackCarrier = (carrierId: string) => {
+    openProfile(carrierId);
   };
 
   return (
@@ -186,58 +186,17 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
       <section className="va-ops-panel carrier-intel-primary" aria-label="Recommended markets">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Recommended Markets</h3>
-          <p className="va-ops-section-sub">Primary decision intelligence — appetite, vertical, and turnaround fit.</p>
+          <p className="va-ops-section-sub">
+            Intelligent decision cards — appetite match, turnaround, bind rate, and team usage signals.
+          </p>
         </div>
         <div className="carrier-market-rec-grid">
           {recommendedMarkets.map((rec) => (
-            <article key={rec.id} className="carrier-market-rec-card">
-              <div className="carrier-market-rec-context">
-                <span className="carrier-market-rec-chip">{rec.vertical}</span>
-                <span className="carrier-market-rec-chip">{rec.product}</span>
-                <span className="carrier-market-rec-chip">{rec.state}</span>
-                <span className={cn("badge", riskLevelClass[rec.riskLevel])}>{rec.riskLevel}</span>
-              </div>
-              <div className="carrier-market-rec-best">
-                <span className="carrier-market-rec-best-label">Best Market</span>
-                <button
-                  type="button"
-                  className="carrier-market-rec-carrier"
-                  onClick={() => {
-                    const match = allCarriers.find((c) => c.name === rec.bestCarrier);
-                    if (match) setSelectedCarrier(match);
-                  }}
-                >
-                  {rec.bestCarrier}
-                </button>
-              </div>
-              <p className="carrier-market-rec-reason">{rec.reason}</p>
-              <dl className="carrier-market-rec-intel">
-                <div><dt>Appetite Fit</dt><dd>{rec.appetiteFit}</dd></div>
-                <div><dt>Vertical Fit</dt><dd>{rec.verticalFit}</dd></div>
-                <div><dt>Turnaround</dt><dd>{rec.turnaround}</dd></div>
-                {rec.restrictions && (
-                  <div><dt>Restrictions</dt><dd>{rec.restrictions}</dd></div>
-                )}
-              </dl>
-              {rec.alternateCarriers.length > 0 && (
-                <div className="carrier-market-rec-alternates">
-                  <span className="carrier-market-rec-alt-label">Also consider:</span>
-                  {rec.alternateCarriers.map((name) => (
-                    <button
-                      key={name}
-                      type="button"
-                      className="carrier-market-rec-alt-link"
-                      onClick={() => {
-                        const match = allCarriers.find((c) => c.name === name);
-                        if (match) setSelectedCarrier(match);
-                      }}
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </article>
+            <RecommendedMarketCard
+              key={rec.id}
+              rec={rec}
+              onOpenCarrier={openCarrierByName}
+            />
           ))}
         </div>
       </section>
@@ -246,19 +205,18 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Carrier Results</h3>
           <p className="va-ops-section-sub">
-            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"} — click a row to view details.
+            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"} — ranked by fit, speed, and appetite status.
           </p>
         </div>
         <div className="commercial-hub-table-wrap carrier-search-table-wrap">
-          <table className="commercial-hub-table carrier-search-table">
+          <table className="commercial-hub-table carrier-search-table carrier-search-table--ranked">
             <thead>
               <tr>
                 <th>Carrier</th>
-                <th>Product / Risk</th>
-                <th>Vertical</th>
-                <th>States</th>
-                <th>Submission</th>
-                <th>Status</th>
+                <th>Product</th>
+                <th>Appetite</th>
+                <th>State</th>
+                <th>Method</th>
                 <th aria-label="Action" />
               </tr>
             </thead>
@@ -277,22 +235,40 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
                     }
                   }}
                 >
-                  <td className="commercial-hub-carrier-name">{row.name}</td>
-                  <td>
-                    <div className="carrier-search-product-cell">
-                      <span className="carrier-search-product-name">{row.product}</span>
-                      <span className={cn("badge carrier-search-product-risk", riskTypeClass[row.riskType])}>
-                        {row.riskType}
-                      </span>
-                    </div>
+                  <td className="carrier-search-carrier-cell">
+                    <span className="commercial-hub-carrier-name">{row.name}</span>
+                    {row.rankingBadges && row.rankingBadges.length > 0 ? (
+                      <div className="carrier-rank-badges">
+                        {row.rankingBadges.map((badge) => (
+                          <span
+                            key={badge}
+                            className={cn("carrier-rank-badge", rankingBadgeClass[badge])}
+                          >
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
                   </td>
-                  <td>{row.verticalAppetite}</td>
-                  <td>{row.states}</td>
-                  <td>{row.submissionMethod}</td>
+                  <td>
+                    <span className="carrier-search-product-name">{row.product}</span>
+                  </td>
                   <td>
                     <span className={cn("badge", carrierStatusClass[row.status])}>{row.status}</span>
                   </td>
-                  <td>
+                  <td className="carrier-search-state-cell">{row.states}</td>
+                  <td>{row.submissionMethod}</td>
+                  <td className="carrier-search-action-cell">
+                    <button
+                      type="button"
+                      className="va-ops-action-btn carrier-search-profile-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openProfile(row.id);
+                      }}
+                    >
+                      View Profile
+                    </button>
                     <button
                       type="button"
                       className="va-ops-action-btn"
@@ -312,58 +288,65 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
       </section>
 
       <div className="commercial-hub-mid-grid">
-        <section className="va-ops-panel" aria-label="Recent market activity">
+        <section className="va-ops-panel carrier-market-feed" aria-label="Live market intelligence">
           <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Recent Market Activity</h3>
-            <p className="va-ops-section-sub">Market changes and appetite updates.</p>
+            <h3 className="va-ops-section-title">Live Market Feed</h3>
+            <p className="va-ops-section-sub">Real-time appetite shifts, product launches, and restriction alerts.</p>
           </div>
-          <ol className="outreach-activity-timeline">
-            {recentMarketActivity.map((item) => (
-              <li key={item.id} className="outreach-activity-item">
-                <div className="outreach-activity-dot" aria-hidden="true" />
-                <div className="outreach-activity-content">
-                  <div className="outreach-activity-message">{item.message}</div>
-                  <div className="outreach-activity-time">{item.timeAgo}</div>
+          <ol className="carrier-market-feed-list">
+            {marketIntelligenceFeed.map((item) => (
+              <li key={item.id} className="carrier-market-feed-item">
+                <span className={cn("carrier-feed-type", marketFeedEventClass[item.type])}>
+                  {marketFeedEventLabel[item.type]}
+                </span>
+                <div className="carrier-market-feed-body">
+                  <div className="carrier-market-feed-carrier">{item.carrier}</div>
+                  <div className="carrier-market-feed-message">{item.message}</div>
+                  <div className="carrier-market-feed-time">{item.timeAgo}</div>
                 </div>
               </li>
             ))}
           </ol>
         </section>
 
-        <section className="va-ops-panel" aria-label="Saved markets">
+        <section className="va-ops-panel" aria-label="Favorite carrier stack">
           <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Saved Markets</h3>
-            <p className="va-ops-section-sub">Quick access to favorite carriers.</p>
+            <h3 className="va-ops-section-title">Favorite Carrier Stack</h3>
+            <p className="va-ops-section-sub">Reusable broker memory — your team&apos;s go-to markets.</p>
           </div>
-          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
-            <table className="commercial-hub-table">
-              <thead>
-                <tr>
-                  <th>Carrier</th>
-                  <th>Last Used</th>
-                  <th>Top Vertical</th>
-                  <th aria-label="Action" />
-                </tr>
-              </thead>
-              <tbody>
-                {savedMarkets.map((row) => (
-                  <tr key={row.id}>
-                    <td className="commercial-hub-carrier-name">{row.name}</td>
-                    <td>{row.lastUsed}</td>
-                    <td>{row.topVertical}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="va-ops-action-btn"
-                        onClick={() => openSavedMarket(row.name)}
-                      >
-                        Open
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="carrier-stack-list">
+            {favoriteCarrierStack.map((item) => (
+              <article key={item.id} className="carrier-stack-card">
+                <div className="carrier-stack-card-top">
+                  <strong className="carrier-stack-name">{item.name}</strong>
+                  <span className={cn("badge", carrierStatusClass[item.appetiteStatus])}>
+                    {item.appetiteStatus}
+                  </span>
+                </div>
+                <dl className="carrier-stack-meta">
+                  <div>
+                    <dt>Preferred vertical</dt>
+                    <dd>{item.preferredVertical}</dd>
+                  </div>
+                  <div>
+                    <dt>Avg turnaround</dt>
+                    <dd>{item.avgTurnaround}</dd>
+                  </div>
+                  <div>
+                    <dt>Last successful bind</dt>
+                    <dd>{item.lastSuccessfulBind}</dd>
+                  </div>
+                </dl>
+                <button
+                  type="button"
+                  className="carrier-stack-open-btn"
+                  onClick={() => openStackCarrier(item.carrierId)}
+                >
+                  <AppIcon name="arrow-right-left" size={14} strokeWidth={2} />
+                  Quick open
+                </button>
+              </article>
+            ))}
           </div>
         </section>
       </div>

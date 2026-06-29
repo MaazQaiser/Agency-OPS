@@ -6,6 +6,7 @@ type ComplianceLockRingProps = {
   locked: boolean;
   onSend?: () => void;
   label?: string;
+  lockReason?: string;
   className?: string;
 };
 
@@ -15,7 +16,13 @@ type ComplianceLockRingProps = {
  * The ring is NOT just a gray-out — it is visually distinct.
  * When gate clears, ring disappears with 200ms fade and button becomes active.
  */
-export function ComplianceLockRing({ locked, onSend, label = "Send", className }: ComplianceLockRingProps) {
+export function ComplianceLockRing({
+  locked,
+  onSend,
+  label = "Send",
+  lockReason = "Compliance gate active — producer approval required before send",
+  className,
+}: ComplianceLockRingProps) {
   return (
     <div className={cn("compliance-lock-wrap", locked && "compliance-lock-wrap--locked", className)}>
       {locked && (
@@ -39,7 +46,7 @@ export function ComplianceLockRing({ locked, onSend, label = "Send", className }
       </button>
       {locked && (
         <p className="compliance-lock-note" role="alert">
-          Compliance gate active — producer approval required before send
+          {lockReason}
         </p>
       )}
     </div>

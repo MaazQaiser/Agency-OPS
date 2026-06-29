@@ -46,16 +46,16 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-width: 880px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: clamp(20px, 5vh, 56px) clamp(16px, 4vw, 32px) 20px;
+  padding: clamp(12px, 3vh, 32px) clamp(12px, 3vw, 24px) 12px;
 }
 
 .cmd-palette-brand {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   color: var(--text-muted);
   font-size: var(--font-size-12);
   font-weight: 600;
@@ -70,7 +70,8 @@
 .cmd-palette-search {
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
 }
 
 .cmd-palette-body {
@@ -79,7 +80,59 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scroll-behavior: smooth;
-  padding: 4px 0 12px;
+  padding: 2px 0 8px;
+}
+
+.cmd-palette-section {
+  margin-bottom: 6px;
+}
+
+.cmd-palette-row {
+  min-height: 36px;
+  padding: 6px 10px;
+}
+
+.cmd-palette-ai-guidance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.cmd-palette-ai-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(8, 145, 178, 0.28);
+  background: rgba(8, 145, 178, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.cmd-palette-ai-hint:hover {
+  background: rgba(8, 145, 178, 0.16);
+  border-color: rgba(8, 145, 178, 0.45);
+}
+
+.cmd-palette-categories {
+  margin-bottom: 8px;
+}
+
+.cmd-palette-footer {
+  padding-top: 8px;
+  gap: 12px;
+  font-size: 10px;
+}
+
+.cmd-palette-footer kbd {
+  font-size: 10px;
+  padding: 2px 5px;
 }
 
 .cmd-palette-hub-tag {

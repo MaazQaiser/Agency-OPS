@@ -83,12 +83,18 @@ export type ResourceCompletionStatus = "Completed" | "Pending" | "In Progress";
 
 export type ResourceDifficulty = "Beginner" | "Intermediate" | "Advanced";
 
+export type ContentBadge = "Script" | "SOP" | "Loom" | "Checklist" | "Guide" | "Compliance";
+export type RequirementLevel = "Required" | "Optional";
+
 export type TrainingResource = {
   id: string;
   title: string;
   department: string;
   departmentId: DepartmentId;
   type: ResourceType;
+  contentBadge: ContentBadge;
+  requirementLevel: RequirementLevel;
+  progressPercent?: number;
   duration: string;
   tags: string[];
   assignedTo: string;
@@ -110,6 +116,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Brokerage Team",
     departmentId: "brokerage",
     type: "Loom",
+    contentBadge: "Script",
+    requirementLevel: "Required",
+    progressPercent: 100,
     duration: "8 min",
     tags: ["Quoting", "Follow-Up", "Commercial"],
     assignedTo: "Pedro",
@@ -132,6 +141,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Dialer Team",
     departmentId: "dialer",
     type: "Loom",
+    contentBadge: "Script",
+    requirementLevel: "Required",
+    progressPercent: 0,
     duration: "12 min",
     tags: ["Objection Handling", "Lead Qualification"],
     assignedTo: "Kat",
@@ -151,6 +163,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Brokerage Team",
     departmentId: "brokerage",
     type: "Doc",
+    contentBadge: "SOP",
+    requirementLevel: "Required",
+    progressPercent: 42,
     duration: "15 min",
     tags: ["Submission Workflow", "Carrier Follow-Up", "Commercial"],
     assignedTo: "Pedro",
@@ -173,6 +188,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Research Team",
     departmentId: "research",
     type: "Scribe",
+    contentBadge: "Checklist",
+    requirementLevel: "Required",
+    progressPercent: 0,
     duration: "10 min",
     tags: ["Lead Qualification", "Commercial"],
     assignedTo: "Jaffer",
@@ -192,6 +210,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Sales Team",
     departmentId: "sales",
     type: "Doc",
+    contentBadge: "Guide",
+    requirementLevel: "Optional",
+    progressPercent: 100,
     duration: "14 min",
     tags: ["Renewals", "Retention", "Client Communication"],
     assignedTo: "Eva",
@@ -214,6 +235,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Sales Team",
     departmentId: "sales",
     type: "Loom",
+    contentBadge: "Loom",
+    requirementLevel: "Required",
+    progressPercent: 68,
     duration: "18 min",
     tags: ["Client Communication", "Commercial"],
     assignedTo: "Eva",
@@ -233,6 +257,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Research Team",
     departmentId: "research",
     type: "Scribe",
+    contentBadge: "SOP",
+    requirementLevel: "Required",
+    progressPercent: 0,
     duration: "9 min",
     tags: ["Lead Qualification", "Commercial"],
     assignedTo: "Jaffer",
@@ -252,6 +279,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Admin / Compliance",
     departmentId: "admin",
     type: "Doc",
+    contentBadge: "Compliance",
+    requirementLevel: "Required",
+    progressPercent: 100,
     duration: "7 min",
     tags: ["Compliance"],
     assignedTo: "All Team",
@@ -274,6 +304,9 @@ export const trainingResources: TrainingResource[] = [
     department: "Automation Team",
     departmentId: "automation",
     type: "Scribe",
+    contentBadge: "Guide",
+    requirementLevel: "Optional",
+    progressPercent: 100,
     duration: "20 min",
     tags: ["Submission Workflow"],
     assignedTo: "Kyle",
@@ -352,6 +385,20 @@ export const libraryActivity: LibraryActivityItem[] = [
   { id: "lib-act-3", actor: "Jaffer", message: "Jaffer viewed Prospect Qualification Workflow", timeAgo: "1 hr ago" },
   { id: "lib-act-4", actor: "Eva", message: "Eva uploaded Producer Closing Guide", timeAgo: "3 hr ago" },
 ];
+
+export const contentBadgeClass: Record<ContentBadge, string> = {
+  Script: "training-badge--script",
+  SOP: "training-badge--sop",
+  Loom: "training-badge--loom",
+  Checklist: "training-badge--checklist",
+  Guide: "training-badge--guide",
+  Compliance: "training-badge--compliance",
+};
+
+export const requirementLevelClass: Record<RequirementLevel, string> = {
+  Required: "badge-rose",
+  Optional: "badge-gray",
+};
 
 export const resourceCompletionClass: Record<ResourceCompletionStatus, string> = {
   Completed: "badge-green",

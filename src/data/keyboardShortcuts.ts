@@ -90,7 +90,7 @@ export const keyboardShortcutCatalog: ShortcutDefinition[] = [
   { id: "va-automation", label: "Open Automation Builder", keys: "Shift+A", category: "va-ops", type: "navigate", route: `${routes.vaOperations}?view=automations` },
 
   { id: "notif-open", label: "Open Notifications", keys: "Shift+N", category: "notifications", type: "ui", actionId: "open-notifications" },
-  { id: "notif-clear", label: "Clear Notifications", keys: "Shift+C", category: "notifications", type: "action", actionId: "clear-notifications" },
+  { id: "notif-clear", label: "Mark All as Read", keys: "Shift+C", category: "notifications", type: "action", actionId: "clear-notifications" },
 
   { id: "sys-health", label: "Open System Health", keys: "Shift+H", category: "system", type: "navigate", route: routes.systemHealth },
   { id: "sys-retry", label: "Retry System Test", keys: "Shift+T", category: "system", type: "action", actionId: "retry-system-test", route: routes.systemHealth },

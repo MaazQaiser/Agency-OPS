@@ -6110,7 +6110,7 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
 .va-ops-drawer-root {
   position: fixed;
   inset: 0;
-  z-index: 400;
+  z-index: 450;
   display: flex;
   justify-content: flex-end;
 }
@@ -9044,6 +9044,10 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   background: rgba(59, 130, 246, 0.06);
 }
 
+.submission-tracker-row-clickable:hover td.submission-tracker-status-col {
+  background: rgba(59, 130, 246, 0.06);
+}
+
 .submission-tracker-table-scroll {
   overflow-x: auto;
   overflow-y: visible;
@@ -9068,25 +9072,12 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
 
 .submission-tracker-table th.submission-tracker-status-col,
 .submission-tracker-table td.submission-tracker-status-col {
-  position: sticky;
-  right: 0;
-  z-index: 1;
   width: 130px;
   min-width: 130px;
-  max-width: 150px;
-  text-align: right;
+  max-width: 160px;
+  text-align: center;
   white-space: nowrap;
-  background: rgba(15, 20, 25, 0.98);
-  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.12);
-}
-
-.submission-tracker-table thead th.submission-tracker-status-col {
-  z-index: 3;
-}
-
-.submission-tracker-row.expanded td.submission-tracker-status-col,
-.submission-tracker-row-clickable:hover td.submission-tracker-status-col {
-  background: rgba(20, 26, 34, 0.98);
+  vertical-align: middle;
 }
 
 .submission-tracker-sla-item-notes {
@@ -9504,8 +9495,25 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
 }
 
 .submission-tracker-client-cell {
-  position: relative;
-  padding-right: 72px !important;
+  text-align: center;
+  vertical-align: middle;
+  padding-right: 16px !important;
+  padding-left: 16px !important;
+}
+
+.submission-tracker-client-name {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.submission-tracker-client-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
 }
 
 .submission-tracker-card-risk {
@@ -9528,7 +9536,8 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   }
 
   .submission-tracker-client-cell {
-    padding-right: 56px !important;
+    padding-right: 12px !important;
+    padding-left: 12px !important;
   }
 }
 
@@ -10099,6 +10108,39 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   flex-direction: column;
   gap: 5px;
   min-width: 108px;
+}
+
+.coverage-checklist-progress-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+
+.coverage-checklist-progress-bar--inline {
+  flex: 1 1 56px;
+  min-width: 48px;
+  max-width: 72px;
+  height: 5px;
+  margin: 0;
+}
+
+.coverage-checklist-progress-inline .coverage-checklist-progress-pct {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+}
+
+.coverage-checklist-progress-inline .coverage-checklist-risk-badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  padding: 2px 6px;
+}
+
+.coverage-checklist-progress-inline .coverage-checklist-progress-missing-hint {
+  flex-shrink: 0;
+  font-size: 10px;
 }
 
 .coverage-checklist-progress-compact-top {
@@ -14904,14 +14946,19 @@ html[data-theme="obsidian"] .cmd-palette {
 }
 
 .cmd-palette-section {
-  padding: 4px 8px 8px;
+  padding: 6px 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.cmd-palette-section:last-child {
+  border-bottom: none;
 }
 
 .cmd-palette-section-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px;
+  padding: 8px 8px 6px;
 }
 
 .cmd-palette-section-title {

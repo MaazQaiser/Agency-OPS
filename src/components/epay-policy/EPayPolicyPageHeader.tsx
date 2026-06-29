@@ -5,6 +5,7 @@ import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
 import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { epayPolicyHeader } from "@/data/epayPolicy";
 import { epayQuickActionPermissions, filterQuickActions } from "@/data/rolePermissions";
+import { cn } from "@/lib/cn";
 
 type EPayPolicyPageHeaderProps = {
   onQuickActionClick?: (actionId: string) => void;
@@ -32,6 +33,11 @@ export function EPayPolicyPageHeader({ onQuickActionClick }: EPayPolicyPageHeade
               actionId={action.id}
               label={action.label}
               icon={action.icon}
+              className={cn(
+                "va-ops-role-action-btn",
+                action.variant === "primary" && "epay-header-btn--primary",
+                action.variant === "secondary" && "epay-header-btn--secondary",
+              )}
               onClick={() => {
                 if (perm) {
                   requirePermission(perm, () => onQuickActionClick?.(action.id));

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { CoverageReviewItem } from "@/data/coverageChecklist";
 
@@ -32,7 +33,7 @@ export function CoverageDetailDrawer({ coverage, clientName, onClose }: Coverage
   const { drawer } = coverage;
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button
         type="button"
         className="va-ops-drawer-backdrop"
@@ -123,6 +124,6 @@ export function CoverageDetailDrawer({ coverage, clientName, onClose }: Coverage
           </div>
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import {
   computeEscalationStatus,
-  escalationStatusClass,
   formatWaitingTime,
   getEscalationRiskBadge,
   getSlaUrgencyTier,
@@ -11,12 +10,12 @@ import {
   matchesSendCenterSearch,
   pendingReviewRecords,
   sendCenterAiInsights,
+  sendCenterBulkActions,
   sendPriorityClass,
-  SLA_OWNER_MINUTES,
-  SLA_PRODUCER_MINUTES,
   type PendingReviewRecord,
   type SendCenterFilterState,
 } from "@/data/sendCenter";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useToast } from "@/hooks/useToast";
@@ -25,7 +24,13 @@ import { cn } from "@/lib/cn";
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
+import { exportSendCenterHistoryPdf } from "@/lib/export";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
+import { SendCenterBulkBar } from "./SendCenterBulkBar";
+import {
+  SendCenterSlaStageIndicator,
+  SendCenterSlaWorkflowRail,
+} from "./SendCenterSlaWorkflowRail";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -43,6 +48,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [rows, setRows] = useState(pendingReviewRecords);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const {
     status: loadStatus,
     retry,
@@ -69,15 +75,21 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
     [rows, search, filters],
   );
 
-  const slaCounts = useMemo(() => {
-    const onTrack = rows.filter((r) => computeEscalationStatus(r.waitingMinutes) === "On Track").length;
-    const producer = rows.filter((r) => computeEscalationStatus(r.waitingMinutes) === "Producer Alert").length;
-    const owner = rows.filter((r) => computeEscalationStatus(r.waitingMinutes) === "Owner Escalation").length;
-    return { onTrack, producer, owner };
-  }, [rows]);
-
   const updateFilter = (key: keyof SendCenterFilterState, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelected((prev) => (prev.size === filtered.length ? new Set() : new Set(filtered.map((r) => r.id))));
   };
 
   const handleAction = (action: string, row: PendingReviewRecord) => {
@@ -99,6 +111,20 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
     }
   };
 
+  const handleBulk = (action: string) => {
+    if (action === "Export") {
+      exportSendCenterHistoryPdf();
+      onToast(`Exported ${selected.size} review record(s)`, "success");
+    } else {
+      onToast(`${action} applied to ${selected.size} draft(s)`, "success");
+    }
+    setSelected(new Set());
+  };
+
+  const handleAiAction = (actionId: string) => {
+    onToast(`AI action: ${actionId.replace(/-/g, " ")}`, "success");
+  };
+
   return (
     <div className="va-ops-role-view send-center-tab">
       <RoleTabHeader
@@ -106,33 +132,27 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
         subtitle="Drafts awaiting licensed producer approval — SLA monitored."
       />
 
-      <SendCenterAiInsight insights={sendCenterAiInsights.pendingReview} />
+      <SendCenterAiInsight insights={sendCenterAiInsights.pendingReview} onAction={handleAiAction} />
 
-      <section className="send-center-sla-strip" aria-label="Review SLA thresholds">
-        <div className="send-center-sla-item">
-          <span>Producer alert</span>
-          <strong>{SLA_PRODUCER_MINUTES} min</strong>
-          <span className={cn("badge", "badge-amber")}>{slaCounts.producer} active</span>
-        </div>
-        <div className="send-center-sla-item">
-          <span>Owner escalation</span>
-          <strong>{SLA_OWNER_MINUTES} min</strong>
-          <span className={cn("badge", "badge-rose")}>{slaCounts.owner} breached</span>
-        </div>
-        <div className="send-center-sla-item">
-          <span>On track</span>
-          <strong>&lt; {SLA_PRODUCER_MINUTES} min</strong>
-          <span className={cn("badge", "badge-green")}>{slaCounts.onTrack} drafts</span>
-        </div>
-      </section>
+      <SendCenterSlaWorkflowRail />
 
-      <SendCenterFilters
-        search={search}
-        onSearchChange={setSearch}
-        placeholder="Search draft name, client, submitter..."
-        filters={filters}
-        onFilterChange={updateFilter}
-        filterKeys={["priority", "status"]}
+      <div className="send-center-table-toolbar">
+        <SendCenterFilters
+          search={search}
+          onSearchChange={setSearch}
+          placeholder="Search draft name, client, submitter..."
+          filters={filters}
+          onFilterChange={updateFilter}
+          filterKeys={["priority", "status"]}
+        />
+        <ExportMenu kind="send-center-history" compact />
+      </div>
+
+      <SendCenterBulkBar
+        selectedCount={selected.size}
+        actions={sendCenterBulkActions}
+        onAction={handleBulk}
+        onClear={() => setSelected(new Set())}
       />
 
       <section className="va-ops-panel" aria-label="Pending licensed review">
@@ -161,13 +181,20 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
             <table className="commercial-hub-table send-center-table">
               <thead>
                 <tr>
+                  <th className="send-center-checkbox-col">
+                    <input
+                      type="checkbox"
+                      aria-label="Select all pending reviews"
+                      checked={filtered.length > 0 && selected.size === filtered.length}
+                      onChange={toggleAll}
+                    />
+                  </th>
                   <th>Draft Name</th>
-                  <th>Submitted By</th>
                   <th>Client</th>
                   <th>Time Waiting</th>
                   <th>Priority</th>
-                  <th>Escalation Status</th>
-                  <th>Escalation Risk</th>
+                  <th>SLA Stage</th>
+                  <th>Risk</th>
                   <th aria-label="Actions" />
                 </tr>
               </thead>
@@ -194,10 +221,18 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                           "send-center-sla-row",
                           `send-center-sla-${urgency}`,
                           escalation === "Owner Escalation" && "send-center-row-escalated",
+                          selected.has(row.id) && "selected",
                         )}
                       >
+                        <td className="send-center-checkbox-col">
+                          <input
+                            type="checkbox"
+                            aria-label={`Select ${row.draftName}`}
+                            checked={selected.has(row.id)}
+                            onChange={() => toggleSelect(row.id)}
+                          />
+                        </td>
                         <td className="commercial-hub-client-cell">{row.draftName}</td>
-                        <td>{row.submittedBy}</td>
                         <td>{row.client}</td>
                         <td>
                           <span className="send-center-wait-time send-center-wait-indicator">
@@ -208,7 +243,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                           <span className={cn("badge", sendPriorityClass[row.priority])}>{row.priority}</span>
                         </td>
                         <td>
-                          <span className={cn("badge", escalationStatusClass[escalation])}>{escalation}</span>
+                          <SendCenterSlaStageIndicator status={escalation} waitingMinutes={row.waitingMinutes} />
                         </td>
                         <td>
                           <span className={cn("badge", risk.className)}>{risk.label}</span>
@@ -218,15 +253,15 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                             {(["Approve", "Reject", "Request Revision"] as const)
                               .filter((action) => action !== "Approve" || canApprove)
                               .map((action) => (
-                              <button
-                                key={action}
-                                type="button"
-                                className="va-ops-action-btn"
-                                onClick={() => handleAction(action, row)}
-                              >
-                                {action}
-                              </button>
-                            ))}
+                                <button
+                                  key={action}
+                                  type="button"
+                                  className="va-ops-action-btn"
+                                  onClick={() => handleAction(action, row)}
+                                >
+                                  {action}
+                                </button>
+                              ))}
                           </div>
                         </td>
                       </tr>

@@ -1,6 +1,7 @@
 import { QuickActionButton } from "@/components/keyboard/QuickActionButton";
 import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { sendCenterHeader } from "@/data/sendCenter";
+import { cn } from "@/lib/cn";
 
 type SendCenterPageHeaderProps = {
   onQuickActionClick?: (actionId: string) => void;
@@ -23,6 +24,11 @@ export function SendCenterPageHeader({ onQuickActionClick }: SendCenterPageHeade
             actionId={action.id}
             label={action.label}
             icon={action.icon}
+            className={cn(
+              "va-ops-role-action-btn",
+              action.variant === "primary" && "send-center-header-btn--primary",
+              action.variant === "secondary" && "send-center-header-btn--secondary",
+            )}
             onClick={() => onQuickActionClick?.(action.id)}
           />
         ))}

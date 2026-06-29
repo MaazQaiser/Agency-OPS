@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
+  groupNotificationsForFeed,
   notificationFilterTabs,
   notificationTypeLabels,
   tabCount,
@@ -27,9 +28,13 @@ type NotificationCenterPanelProps = {
   unreadCount: number;
   onTabChange: (tab: NotificationFilterTab) => void;
   onClose: () => void;
-  onClearAll: () => void;
+  onMarkAllRead: () => void;
+  onClearResolved: () => void;
   onOpenNotification: (notification: AppNotification) => void;
   onDismiss: (id: string) => void;
+  onTogglePin: (id: string) => void;
+  onSnooze: (id: string, option: import("@/data/notifications").SnoozeOption) => void;
+  onAction: (notification: AppNotification, actionId: string) => void;
 };
 
 export function NotificationCenterPanel({
@@ -44,11 +49,17 @@ export function NotificationCenterPanel({
   unreadCount,
   onTabChange,
   onClose,
-  onClearAll,
+  onMarkAllRead,
+  onClearResolved,
   onOpenNotification,
   onDismiss,
+  onTogglePin,
+  onSnooze,
+  onAction,
 }: NotificationCenterPanelProps) {
   const panelRef = useRef<HTMLElement>(null);
+
+  const feedGroups = useMemo(() => groupNotificationsForFeed(notifications), [notifications]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -62,8 +73,9 @@ export function NotificationCenterPanel({
     };
   }, [onClose]);
 
-  const hasClearable = allNotifications.some(
-    (n) => n.status !== "dismissed" && n.status !== "snoozed",
+  const hasUnread = unreadCount > 0;
+  const hasResolved = allNotifications.some(
+    (n) => n.resolutionState === "resolved" && n.status !== "dismissed",
   );
 
   return (
@@ -94,11 +106,19 @@ export function NotificationCenterPanel({
             <ExportMenu kind="notification-history" compact />
             <button
               type="button"
-              className="notification-center-header-btn notification-center-header-btn--clear"
-              onClick={onClearAll}
-              disabled={!hasClearable}
+              className="notification-center-header-btn notification-center-header-btn--mark-read"
+              onClick={onMarkAllRead}
+              disabled={!hasUnread}
             >
-              Clear all
+              Mark all as read
+            </button>
+            <button
+              type="button"
+              className="notification-center-header-btn notification-center-header-btn--clear-resolved"
+              onClick={onClearResolved}
+              disabled={!hasResolved}
+            >
+              Clear resolved
             </button>
             <button
               type="button"
@@ -155,16 +175,26 @@ export function NotificationCenterPanel({
               compact
             />
           ) : (
-            <ul className="notification-center-list">
-              {notifications.map((notification) => (
-                <NotificationCard
-                  key={notification.id}
-                  notification={notification}
-                  onOpen={() => onOpenNotification(notification)}
-                  onDismiss={() => onDismiss(notification.id)}
-                />
+            <div className="notification-center-feed">
+              {feedGroups.map((group) => (
+                <section key={group.id} className="notification-center-group">
+                  <h3 className="notification-center-group-label">{group.label}</h3>
+                  <ul className="notification-center-list">
+                    {group.notifications.map((notification) => (
+                      <NotificationCard
+                        key={notification.id}
+                        notification={notification}
+                        onOpen={() => onOpenNotification(notification)}
+                        onDismiss={() => onDismiss(notification.id)}
+                        onTogglePin={() => onTogglePin(notification.id)}
+                        onSnooze={(option) => onSnooze(notification.id, option)}
+                        onAction={(actionId) => onAction(notification, actionId)}
+                      />
+                    ))}
+                  </ul>
+                </section>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </aside>

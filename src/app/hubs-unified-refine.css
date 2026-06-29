@@ -87,9 +87,12 @@
   display: flex;
   flex-direction: column;
   min-height: 96px;
-  max-height: 96px;
   padding: 14px 16px;
   overflow: hidden;
+}
+
+.hub-kpi-grid .va-ops-kpi-tooltip {
+  display: none;
 }
 
 .hub-kpi-grid .va-ops-kpi-label {

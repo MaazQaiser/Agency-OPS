@@ -6,8 +6,8 @@ import {
 } from "./carrierLibrary";
 
 export const carrierProfileHeader = {
-  title: "Carrier Profile",
-  subtitle: "Review carrier appetite, products, and submission requirements.",
+  title: "Carrier Detail",
+  subtitle: "Appetite overview, submission methods, performance, and broker intelligence.",
   quickActions: [
     { id: "start-submission", label: "Start Submission", icon: "plus" as const },
     { id: "save-carrier", label: "Save Carrier", icon: "star" as const },
@@ -54,6 +54,9 @@ export type CarrierProfile = {
   responseTime: string;
   statesActive: string;
   appetiteStatus: CarrierStatus;
+  riskClassesAccepted: string[];
+  submissionMethods: { id: string; method: string; products: string; turnaround: string }[];
+  recentAppetiteUpdates: { id: string; message: string; date: string }[];
   productAppetite: CarrierProductAppetite[];
   underwritingGuidelines: {
     minimumPremium: string;
@@ -74,6 +77,7 @@ export type CarrierProfile = {
     avgTurnaround: string;
     bindWins: number;
     winRate: string;
+    hitRatio: string;
   };
 };
 
@@ -104,6 +108,15 @@ const markelProfile: CarrierProfile = {
   responseTime: "2.4 days average",
   statesActive: "CA, TX, FL, NY",
   appetiteStatus: "Open Appetite",
+  riskClassesAccepted: ["Contractors", "Janitorial", "Retail", "Light Trade"],
+  submissionMethods: [
+    { id: "markel-portal", method: "Broker Portal", products: "BOP, WC, GL, Umbrella", turnaround: "2.4 days" },
+    { id: "markel-email", method: "Email", products: "Umbrella referrals", turnaround: "3–4 days" },
+  ],
+  recentAppetiteUpdates: [
+    { id: "markel-up-1", message: "Tree work carve-back available on contractor BOP in CA", date: "Jun 26, 2026" },
+    { id: "markel-up-2", message: "Added TX restaurant BOP appetite", date: "Jun 20, 2026" },
+  ],
   productAppetite: [
     {
       id: "markel-bop",
@@ -229,6 +242,7 @@ const markelProfile: CarrierProfile = {
     avgTurnaround: "2.4 days",
     bindWins: 6,
     winRate: "33%",
+    hitRatio: "33%",
   },
 };
 
@@ -239,6 +253,15 @@ const travelersProfile: CarrierProfile = {
   responseTime: "1.8 days average",
   statesActive: "CA, TX, FL, NY, WA",
   appetiteStatus: "Open Appetite",
+  riskClassesAccepted: ["Auto Repair", "Contractors", "Service Fleets", "Retail"],
+  submissionMethods: [
+    { id: "travelers-portal", method: "Broker Portal", products: "Commercial Auto, GL, BOP", turnaround: "1.8 days" },
+    { id: "travelers-email", method: "Email", products: "Umbrella referrals", turnaround: "2–3 days" },
+  ],
+  recentAppetiteUpdates: [
+    { id: "travelers-up-1", message: "Restaurant submissions paused in Texas", date: "Jun 25, 2026" },
+    { id: "travelers-up-2", message: "Garagekeepers limits expanded for auto repair", date: "Jun 18, 2026" },
+  ],
   productAppetite: [
     {
       id: "travelers-auto",
@@ -345,6 +368,7 @@ const travelersProfile: CarrierProfile = {
     avgTurnaround: "1.8 days",
     bindWins: 9,
     winRate: "38%",
+    hitRatio: "38%",
   },
 };
 
@@ -355,6 +379,15 @@ const cnaProfile: CarrierProfile = {
   responseTime: "3.5 days average",
   statesActive: "CA, TX, FL, NY",
   appetiteStatus: "Open Appetite",
+  riskClassesAccepted: ["Restaurants", "Retail", "Janitorial", "Light Contractors"],
+  submissionMethods: [
+    { id: "cna-email", method: "Email", products: "BOP, WC, Commercial Auto", turnaround: "3.5 days" },
+    { id: "cna-portal", method: "Portal", products: "BOP renewals", turnaround: "2–3 days" },
+  ],
+  recentAppetiteUpdates: [
+    { id: "cna-up-1", message: "New commercial auto product launched", date: "Jun 24, 2026" },
+    { id: "cna-up-2", message: "FL janitorial WC requires underwriter referral", date: "Jun 22, 2026" },
+  ],
   productAppetite: [
     {
       id: "cna-bop",
@@ -460,6 +493,7 @@ const cnaProfile: CarrierProfile = {
     avgTurnaround: "3.5 days",
     bindWins: 4,
     winRate: "29%",
+    hitRatio: "29%",
   },
 };
 
@@ -478,6 +512,20 @@ function buildProfileFromRecord(record: CarrierRecord): CarrierProfile {
     responseTime: `${record.responseTime} average`,
     statesActive: record.states,
     appetiteStatus: record.status,
+    riskClassesAccepted: drawer.verticals,
+    submissionMethods: [
+      {
+        id: `${record.id}-method`,
+        method: record.submissionMethod,
+        products: record.product,
+        turnaround: record.responseTime,
+      },
+    ],
+    recentAppetiteUpdates: drawer.recentChanges.map((message, index) => ({
+      id: `${record.id}-change-${index}`,
+      message,
+      date: "Recent",
+    })),
     productAppetite: [
       {
         id: `${record.id}-product`,
@@ -550,6 +598,7 @@ function buildProfileFromRecord(record: CarrierRecord): CarrierProfile {
       avgTurnaround: record.responseTime,
       bindWins: 2,
       winRate: "25%",
+      hitRatio: "25%",
     },
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   vaOperationsRoles,
   vaOperationsTabs,
@@ -22,6 +22,7 @@ import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
 import { TasksTab } from "./TasksTab";
 import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { VAOperationsPageHeader } from "./VAOperationsPageHeader";
+import { VaQuickActionsCluster } from "./VaQuickActionsCluster";
 
 const validTabIds = new Set<string>(vaOperationsTabs.map((tab) => tab.id));
 const validRoleIds = new Set<string>(vaOperationsRoles.map((role) => role.id));
@@ -54,6 +55,7 @@ export function VAOperationsModule() {
   const activeTab = resolveTab(searchParams.get("view"));
   const safeActiveTab = validVisibleIds.has(activeTab) ? activeTab : (visibleTabs[0]?.id ?? "overview");
   const activeRole = resolveRole(searchParams.get("role"));
+  const [quickActionsOpen, setQuickActionsOpen] = useState(false);
 
   const setActiveTab = useCallback(
     (tabId: VaOperationsTabId) => {
@@ -94,6 +96,12 @@ export function VAOperationsModule() {
         {safeActiveTab === "bilingual-queue" && <BilingualQueueTab role={activeRole} />}
         </TabTransitionPanel>
       </div>
+
+      <VaQuickActionsCluster
+        open={quickActionsOpen}
+        onToggle={() => setQuickActionsOpen((prev) => !prev)}
+        onClose={() => setQuickActionsOpen(false)}
+      />
     </>
   );
 }

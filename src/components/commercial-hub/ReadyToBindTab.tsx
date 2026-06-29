@@ -29,6 +29,15 @@ import {
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
 import { BindPolicyConfirmModal } from "./BindPolicyConfirmModal";
+import { FarmersEdgeIntelTrigger } from "./FarmersEdgeIntelTrigger";
+import { buildFarmersEdgeIntelRequest } from "@/lib/farmersEdgeIntel";
+
+const bindStateClass: Record<ReadyToBindItem["bindState"], string> = {
+  "awaiting-signed-app": "commercial-bind-state--signature",
+  "awaiting-payment": "commercial-bind-state--payment",
+  "awaiting-producer-check": "commercial-bind-state--blocked",
+  "ready-to-issue": "commercial-bind-state--ready",
+};
 
 export function ReadyToBindTab() {
   const router = useRouter();
@@ -107,6 +116,16 @@ export function ReadyToBindTab() {
           ariaLabel="Ready to bind queue"
           title="Bind Queue"
           subtitle="Payment validation and producer approval before policy issuance."
+          actions={
+            <FarmersEdgeIntelTrigger
+              label="Cross-Sell Intelligence"
+              request={buildFarmersEdgeIntelRequest({
+                mode: "cross-sell",
+                client: queue[0]?.client,
+                coverage: "BOP",
+              })}
+            />
+          }
         >
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
@@ -127,7 +146,9 @@ export function ReadyToBindTab() {
                 {queue.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <span className="badge badge-blue">{readyToBindStateLabels[item.bindState]}</span>
+                      <span className={cn("badge commercial-bind-state-badge", bindStateClass[item.bindState])}>
+                        {readyToBindStateLabels[item.bindState]}
+                      </span>
                     </td>
                     <td>{item.va}</td>
                     <td>
@@ -157,7 +178,7 @@ export function ReadyToBindTab() {
                         {canBindPolicy && (
                           <button
                             type="button"
-                            className="va-ops-action-btn primary"
+                            className="va-ops-action-btn commercial-hub-btn-teal primary"
                             disabled={!canBind(item)}
                             onClick={() => requirePermission("action:bind-policy", () => setConfirmItem(item))}
                           >

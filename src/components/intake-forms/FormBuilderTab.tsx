@@ -11,15 +11,21 @@ import {
   getCoverageOptions,
   getDocumentFields,
   getFieldErrors,
+  getFieldValidationState,
   getFormDataByType,
   getReviewSections,
   getStep1Title,
+  getStepCompletionPercent,
+  getStepMissingCount,
+  getStepVisualState,
   getSuggestedCoverages,
   intakeLanguageOptions,
   isPersonalForm,
   routingPreview,
   stepContinueLabels,
+  stepStatusLabels,
   type FormBuilderStepId,
+  type FieldValidationState,
   type IntakeFormData,
 } from "@/data/formBuilder";
 import { getIntakeStep1Label } from "@/data/bilingualClient";
@@ -35,6 +41,8 @@ import { cn } from "@/lib/cn";
 import { toastMessages } from "@/lib/toastMessages";
 import { FormReviewDrawer } from "./FormReviewDrawer";
 import { SubmissionRulesDrawer } from "./SubmissionRulesDrawer";
+import { IntakeFormSection } from "./IntakeFormSection";
+import { IntakeAiAssistant } from "./IntakeAiAssistant";
 
 const US_STATES = ["CA", "TX", "NY", "WA", "FL", "AZ", "NV", "CO", "IL", "GA"];
 
@@ -49,16 +57,47 @@ type FormFieldProps = {
   label: string;
   required?: boolean;
   error?: string;
+  validationState?: FieldValidationState;
+  validationMessage?: string;
   children: React.ReactNode;
   className?: string;
 };
 
-function FormField({ label, required, error, children, className }: FormFieldProps) {
+const validationStateClass: Record<FieldValidationState, string> = {
+  valid: "intake-field-status--valid",
+  missing: "intake-field-status--missing",
+  incomplete: "intake-field-status--incomplete",
+  needs_review: "intake-field-status--review",
+};
+
+const validationStateLabel: Record<FieldValidationState, string> = {
+  valid: "Valid",
+  missing: "Missing",
+  incomplete: "Incomplete",
+  needs_review: "Needs review",
+};
+
+function FormField({
+  label,
+  required,
+  error,
+  validationState,
+  validationMessage,
+  children,
+  className,
+}: FormFieldProps) {
   return (
     <label className={cn("intake-form-field", className)}>
-      <span className="intake-form-label">
-        {label}
-        {required && <span className="intake-form-required"> *</span>}
+      <span className="intake-form-label-row">
+        <span className="intake-form-label">
+          {label}
+          {required && <span className="intake-form-required"> *</span>}
+        </span>
+        {validationState && (
+          <span className={cn("intake-field-status", validationStateClass[validationState])}>
+            {validationMessage ?? validationStateLabel[validationState]}
+          </span>
+        )}
       </span>
       {children}
       {error && <span className="intake-form-error">{error}</span>}
@@ -130,6 +169,8 @@ export function FormBuilderTab() {
   const [currentStep, setCurrentStep] = useState<FormBuilderStepId>(1);
   const [data, setData] = useState<IntakeFormData>(() => getFormDataByType(formType));
   const [touched, setTouched] = useState<FormBuilderStepId | null>(null);
+  const [visitedSteps, setVisitedSteps] = useState<Set<FormBuilderStepId>>(() => new Set([1]));
+  const [lastAutosaved, setLastAutosaved] = useState("2m ago");
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [uploadState, setUploadState] = useState<{
@@ -143,7 +184,13 @@ export function FormBuilderTab() {
     setData(getFormDataByType(formType));
     setCurrentStep(1);
     setTouched(null);
+    setVisitedSteps(new Set([1]));
   }, [formType]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setLastAutosaved("Just now"), 120_000);
+    return () => window.clearInterval(timer);
+  }, [data]);
 
   useSyncBreadcrumbDetail(`Step ${currentStep}`, {
     paramKey: "step",
@@ -166,7 +213,13 @@ export function FormBuilderTab() {
 
   const update = useCallback(<K extends keyof IntakeFormData>(key: K, value: IntakeFormData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));
+    setLastAutosaved("Just now");
   }, []);
+
+  const fieldStatus = (field: keyof IntakeFormData) => {
+    const { state, message } = getFieldValidationState(field, data, formType);
+    return { validationState: state, validationMessage: message };
+  };
 
   const toggleCoverage = (coverage: string) => {
     setData((prev) => ({
@@ -230,8 +283,13 @@ export function FormBuilderTab() {
 
   const validateAndContinue = () => {
     setTouched(currentStep);
+    setVisitedSteps((prev) => new Set([...prev, currentStep]));
     if (stepErrors.length > 0) return;
-    if (currentStep < 6) setCurrentStep((s) => (s + 1) as FormBuilderStepId);
+    if (currentStep < 6) {
+      const next = (currentStep + 1) as FormBuilderStepId;
+      setCurrentStep(next);
+      setVisitedSteps((prev) => new Set([...prev, next]));
+    }
   };
 
   const goBack = () => {
@@ -279,43 +337,62 @@ export function FormBuilderTab() {
     }
 
     return (
-      <div className="intake-form-grid">
-        <FormField label={L("preferredLanguage")} required error={errorFor(errs, "preferredClientLanguage")} className="intake-form-field-full">
-          <select className="intake-form-input" value={data.preferredClientLanguage} onChange={(e) => update("preferredClientLanguage", e.target.value as IntakeFormData["preferredClientLanguage"])}>
-            {intakeLanguageOptions.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-        </FormField>
-        <FormField label={L("businessName")} required error={errorFor(errs, "businessName")}>
-          <input className="intake-form-input" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} />
-        </FormField>
-        <FormField label={L("dbaName")}>
-          <input className="intake-form-input" value={data.dbaName} onChange={(e) => update("dbaName", e.target.value)} />
-        </FormField>
-        <FormField label={L("ownerName")} required error={errorFor(errs, "ownerName")}>
-          <input className="intake-form-input" value={data.ownerName} onChange={(e) => update("ownerName", e.target.value)} />
-        </FormField>
-        <FormField label={L("email")} required error={errorFor(errs, "email")}>
-          <input className="intake-form-input" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} />
-        </FormField>
-        <FormField label={L("phone")} required error={errorFor(errs, "phone")}>
-          <input className="intake-form-input" type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
-        </FormField>
-        <FormField label={L("address")} required error={errorFor(errs, "address")} className="intake-form-field-full">
-          <input className="intake-form-input" value={data.address} onChange={(e) => update("address", e.target.value)} />
-        </FormField>
-        <FormField label={L("state")} required error={errorFor(errs, "state")}>
-          <select className="intake-form-input" value={data.state} onChange={(e) => update("state", e.target.value)}>
-            <option value="">{L("selectState")}</option>
-            {US_STATES.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-        </FormField>
-        <FormField label={L("yearsInBusiness")} required error={errorFor(errs, "yearsInBusiness")}>
-          <input className="intake-form-input" type="number" value={data.yearsInBusiness} onChange={(e) => update("yearsInBusiness", e.target.value)} />
-        </FormField>
+      <div className="intake-form-sections">
+        <IntakeFormSection title="Business Information">
+          <div className="intake-form-grid">
+            <FormField label={L("businessName")} required error={errorFor(errs, "businessName")} {...fieldStatus("businessName")}>
+              <input className="intake-form-input" value={data.businessName} onChange={(e) => update("businessName", e.target.value)} />
+            </FormField>
+            <FormField label={L("dbaName")}>
+              <input className="intake-form-input" value={data.dbaName} onChange={(e) => update("dbaName", e.target.value)} />
+            </FormField>
+            <FormField label={L("yearsInBusiness")} required error={errorFor(errs, "yearsInBusiness")} {...fieldStatus("yearsInBusiness")}>
+              <input className="intake-form-input" type="number" value={data.yearsInBusiness} onChange={(e) => update("yearsInBusiness", e.target.value)} />
+            </FormField>
+            <FormField label={L("state")} required error={errorFor(errs, "state")} {...fieldStatus("state")}>
+              <select className="intake-form-input" value={data.state} onChange={(e) => update("state", e.target.value)}>
+                <option value="">{L("selectState")}</option>
+                {US_STATES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </FormField>
+          </div>
+        </IntakeFormSection>
+
+        <IntakeFormSection title="Owner Details">
+          <div className="intake-form-grid">
+            <FormField label={L("ownerName")} required error={errorFor(errs, "ownerName")} {...fieldStatus("ownerName")}>
+              <input className="intake-form-input" value={data.ownerName} onChange={(e) => update("ownerName", e.target.value)} />
+            </FormField>
+          </div>
+        </IntakeFormSection>
+
+        <IntakeFormSection title="Contact Information">
+          <div className="intake-form-grid">
+            <FormField label={L("preferredLanguage")} required error={errorFor(errs, "preferredClientLanguage")} className="intake-form-field-full" {...fieldStatus("preferredClientLanguage")}>
+              <select className="intake-form-input" value={data.preferredClientLanguage} onChange={(e) => update("preferredClientLanguage", e.target.value as IntakeFormData["preferredClientLanguage"])}>
+                {intakeLanguageOptions.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </FormField>
+            <FormField label={L("email")} required error={errorFor(errs, "email")} {...fieldStatus("email")}>
+              <input className="intake-form-input" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} />
+            </FormField>
+            <FormField label={L("phone")} required error={errorFor(errs, "phone")} {...fieldStatus("phone")}>
+              <input className="intake-form-input" type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
+            </FormField>
+          </div>
+        </IntakeFormSection>
+
+        <IntakeFormSection title="Location Information">
+          <div className="intake-form-grid">
+            <FormField label={L("address")} required error={errorFor(errs, "address")} className="intake-form-field-full" {...fieldStatus("address")}>
+              <input className="intake-form-input" value={data.address} onChange={(e) => update("address", e.target.value)} />
+            </FormField>
+          </div>
+        </IntakeFormSection>
       </div>
     );
   };
@@ -387,52 +464,56 @@ export function FormBuilderTab() {
   };
 
   const renderStep3 = (errs: ReturnType<typeof getFieldErrors>) => (
-    <div className="intake-form-step-content">
-      <fieldset className="intake-form-field intake-form-field-full">
-        <legend className="intake-form-label">Coverage Needed *</legend>
-        <div className="intake-form-checkboxes">
-          {coverageOptions.map((cov) => (
-            <label key={cov} className="intake-form-checkbox">
-              <input
-                type="checkbox"
-                checked={data.coverageNeeded.includes(cov)}
-                onChange={() => toggleCoverage(cov)}
-              />
-              {cov}
-            </label>
-          ))}
-        </div>
-        {showErrors && errorFor(errs, "coverageNeeded") && (
-          <span className="intake-form-error">{errorFor(errs, "coverageNeeded")}</span>
-        )}
-      </fieldset>
-    </div>
+    <IntakeFormSection title="Coverage Basics">
+      <div className="intake-form-step-content">
+        <fieldset className="intake-form-field intake-form-field-full">
+          <legend className="intake-form-label">Coverage Needed *</legend>
+          <div className="intake-form-checkboxes">
+            {coverageOptions.map((cov) => (
+              <label key={cov} className="intake-form-checkbox">
+                <input
+                  type="checkbox"
+                  checked={data.coverageNeeded.includes(cov)}
+                  onChange={() => toggleCoverage(cov)}
+                />
+                {cov}
+              </label>
+            ))}
+          </div>
+          {showErrors && errorFor(errs, "coverageNeeded") && (
+            <span className="intake-form-error">{errorFor(errs, "coverageNeeded")}</span>
+          )}
+        </fieldset>
+      </div>
+    </IntakeFormSection>
   );
 
   const renderStep4 = (errs: ReturnType<typeof getFieldErrors>) => (
-    <div className="intake-form-step-content">
-      <div className="intake-form-grid">
-        <FormField label="Current Carrier" required error={errorFor(errs, "currentCarrier")}>
-          <input className="intake-form-input" value={data.currentCarrier} onChange={(e) => update("currentCarrier", e.target.value)} />
-        </FormField>
-        <FormField label="Expiration Date" required error={errorFor(errs, "expirationDate")}>
-          <input className="intake-form-input" type="date" value={data.expirationDate} onChange={(e) => update("expirationDate", e.target.value)} />
-        </FormField>
-      </div>
-      <YesNoGroup label="Claims in Last 5 Years?" name="claimsLast5Years" value={data.claimsLast5Years} onChange={(v) => update("claimsLast5Years", v)} error={errorFor(errs, "claimsLast5Years")} />
-      {data.claimsLast5Years === "yes" && (
+    <IntakeFormSection title="Claims History">
+      <div className="intake-form-step-content">
         <div className="intake-form-grid">
-          <FormField label="Number of Claims" required error={errorFor(errs, "numberOfClaims")}>
-            <input className="intake-form-input" type="number" min={1} value={data.numberOfClaims} onChange={(e) => update("numberOfClaims", e.target.value)} />
+          <FormField label="Current Carrier" required error={errorFor(errs, "currentCarrier")} {...fieldStatus("currentCarrier")}>
+            <input className="intake-form-input" value={data.currentCarrier} onChange={(e) => update("currentCarrier", e.target.value)} />
           </FormField>
-          <FormField label="Total Loss Amount" required error={errorFor(errs, "totalLossAmount")}>
-            <input className="intake-form-input" value={data.totalLossAmount} onChange={(e) => update("totalLossAmount", e.target.value)} placeholder="$12,500" />
+          <FormField label="Expiration Date" required error={errorFor(errs, "expirationDate")} {...fieldStatus("expirationDate")}>
+            <input className="intake-form-input" type="date" value={data.expirationDate} onChange={(e) => update("expirationDate", e.target.value)} />
           </FormField>
         </div>
-      )}
-      <YesNoGroup label="Policy Cancellations?" name="policyCancellations" value={data.policyCancellations} onChange={(v) => update("policyCancellations", v)} error={errorFor(errs, "policyCancellations")} />
-      <YesNoGroup label="Coverage Gaps?" name="coverageGaps" value={data.coverageGaps} onChange={(v) => update("coverageGaps", v)} error={errorFor(errs, "coverageGaps")} />
-    </div>
+        <YesNoGroup label="Claims in Last 5 Years?" name="claimsLast5Years" value={data.claimsLast5Years} onChange={(v) => update("claimsLast5Years", v)} error={errorFor(errs, "claimsLast5Years")} />
+        {data.claimsLast5Years === "yes" && (
+          <div className="intake-form-grid">
+            <FormField label="Number of Claims" required error={errorFor(errs, "numberOfClaims")} {...fieldStatus("numberOfClaims")}>
+              <input className="intake-form-input" type="number" min={1} value={data.numberOfClaims} onChange={(e) => update("numberOfClaims", e.target.value)} />
+            </FormField>
+            <FormField label="Total Loss Amount" required error={errorFor(errs, "totalLossAmount")} {...fieldStatus("totalLossAmount")}>
+              <input className="intake-form-input" value={data.totalLossAmount} onChange={(e) => update("totalLossAmount", e.target.value)} placeholder="$12,500" />
+            </FormField>
+          </div>
+        )}
+        <YesNoGroup label="Policy Cancellations?" name="policyCancellations" value={data.policyCancellations} onChange={(v) => update("policyCancellations", v)} error={errorFor(errs, "policyCancellations")} />
+        <YesNoGroup label="Coverage Gaps?" name="coverageGaps" value={data.coverageGaps} onChange={(v) => update("coverageGaps", v)} error={errorFor(errs, "coverageGaps")} />
+      </div>
+    </IntakeFormSection>
   );
 
   const renderStep5 = (errs: ReturnType<typeof getFieldErrors>) => (
@@ -536,7 +617,8 @@ export function FormBuilderTab() {
   const stepTitle = currentStep === 1 ? getStep1Title(formType) : currentStepMeta.label;
   const continueLabel = stepContinueLabels[currentStep];
   const hasNotesContent = Boolean(data.internalNotes.trim());
-  const showSidebar = suggestions.length > 0 || hasNotesContent;
+  const showSidebar = true;
+  const stepMissingCount = getStepMissingCount(currentStep, data, formType);
 
   const notesPanel = (
     <section className="va-ops-panel">
@@ -583,38 +665,52 @@ export function FormBuilderTab() {
         onQuickActionClick={handleQuickAction}
       />
 
-      <div className="intake-form-progress" aria-label="Form progress">
+      <div className="intake-form-progress intake-form-progress--enhanced" aria-label="Form progress">
         <div className="intake-form-progress-meta">
           <span>Step {currentStep} of {formBuilderSteps.length}</span>
           <span>{completion}% completed</span>
+          <span className="intake-form-autosave">Autosaved {lastAutosaved}</span>
+          {stepMissingCount > 0 && (
+            <span className="intake-form-missing-count">{stepMissingCount} missing field{stepMissingCount === 1 ? "" : "s"}</span>
+          )}
         </div>
         <div className="intake-form-progress-bar">
           <div className="intake-form-progress-fill" style={{ width: `${completion}%` }} />
         </div>
-        <ol className="intake-form-stepper">
-          {formBuilderSteps.map((step) => (
-            <li
-              key={step.id}
-              className={cn(
-                "intake-form-step",
-                step.id === currentStep && "active",
-                step.id < currentStep && "complete",
-              )}
-            >
-              <button
-                type="button"
-                className="intake-form-step-btn"
-                onClick={() => {
-                  if (step.id < currentStep) setCurrentStep(step.id);
-                }}
-                disabled={step.id >= currentStep}
-                aria-current={step.id === currentStep ? "step" : undefined}
+        <ol className="intake-form-stepper intake-form-stepper--enhanced">
+          {formBuilderSteps.map((step) => {
+            const visualState = getStepVisualState(step.id, currentStep, data, formType, visitedSteps);
+            const stepPct = getStepCompletionPercent(step.id, data, formType);
+            const missing = getStepMissingCount(step.id, data, formType);
+            return (
+              <li
+                key={step.id}
+                className={cn(
+                  "intake-form-step",
+                  `intake-form-step--${visualState}`,
+                  step.id === currentStep && "active",
+                )}
               >
-                <span className="intake-form-step-index">{step.id}</span>
-                <span className="intake-form-step-label">{step.label}</span>
-              </button>
-            </li>
-          ))}
+                <button
+                  type="button"
+                  className="intake-form-step-btn"
+                  onClick={() => {
+                    if (step.id < currentStep) setCurrentStep(step.id);
+                  }}
+                  disabled={visualState === "locked"}
+                  aria-current={step.id === currentStep ? "step" : undefined}
+                >
+                  <span className="intake-form-step-index">{step.id}</span>
+                  <span className="intake-form-step-label">{step.label}</span>
+                  <span className="intake-form-step-status">{stepStatusLabels[visualState]}</span>
+                  <span className="intake-form-step-pct">{stepPct}%</span>
+                  {missing > 0 && visualState !== "locked" && (
+                    <span className="intake-form-step-missing">{missing} missing</span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
         </ol>
       </div>
 
@@ -627,21 +723,20 @@ export function FormBuilderTab() {
           {renderStep()}
         </section>
 
-        {showSidebar && (
-          <aside className="intake-form-helper intake-form-helper--sticky">
-            {suggestions.length > 0 && (
-              <section className="va-ops-panel">
-                <div className="va-ops-panel-header">
-                  <h3 className="va-ops-section-title">Suggested Coverages</h3>
-                </div>
-                <ul className="intake-suggestions-list">
-                  {suggestions.map((s) => <li key={s}>{s}</li>)}
-                </ul>
-              </section>
-            )}
-            {notesPanel}
-          </aside>
-        )}
+        <aside className="intake-form-helper intake-form-helper--sticky">
+          <IntakeAiAssistant onSuggestCoverages={() => toast.success("AI suggested coverages applied")} />
+          {suggestions.length > 0 && (
+            <section className="va-ops-panel">
+              <div className="va-ops-panel-header">
+                <h3 className="va-ops-section-title">Suggested Coverages</h3>
+              </div>
+              <ul className="intake-suggestions-list">
+                {suggestions.map((s) => <li key={s}>{s}</li>)}
+              </ul>
+            </section>
+          )}
+          {notesPanel}
+        </aside>
       </div>
 
       {!showSidebar && (

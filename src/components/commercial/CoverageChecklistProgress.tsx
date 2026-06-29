@@ -22,7 +22,7 @@ const riskIcon = {
 
 type CoverageChecklistProgressProps = {
   progress: ProgressData;
-  variant?: "compact" | "panel";
+  variant?: "compact" | "inline" | "panel";
   className?: string;
   title?: string;
 };
@@ -58,6 +58,35 @@ export function CoverageChecklistProgress({
         <span className="coverage-checklist-progress-missing-hint">
           {progress.missingDocs.length === 0
             ? "All required docs received"
+            : `${progress.missingDocs.length} missing`}
+        </span>
+      </div>
+    );
+  }
+
+  if (variant === "inline") {
+    return (
+      <div className={cn("coverage-checklist-progress-inline", className)}>
+        <span className="coverage-checklist-progress-pct">{progress.completionPercent}%</span>
+        <span className={cn("coverage-checklist-risk-badge", riskClass[progress.riskState])}>
+          {coverageChecklistRiskLabels[progress.riskState]}
+        </span>
+        <div
+          className="progress-bar coverage-checklist-progress-bar coverage-checklist-progress-bar--inline"
+          role="progressbar"
+          aria-valuenow={progress.completionPercent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${progress.completionPercent}% checklist complete`}
+        >
+          <div
+            className={cn("progress-fill", `coverage-checklist-progress-fill--${progress.riskState}`)}
+            style={{ width: `${progress.completionPercent}%` }}
+          />
+        </div>
+        <span className="coverage-checklist-progress-missing-hint">
+          {progress.missingDocs.length === 0
+            ? "Complete"
             : `${progress.missingDocs.length} missing`}
         </span>
       </div>

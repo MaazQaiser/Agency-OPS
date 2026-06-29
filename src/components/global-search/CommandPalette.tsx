@@ -13,18 +13,19 @@ import {
   filterPaletteActions,
   hubGroupOrder,
   moduleJumpActions,
-  pinnedPaletteActions,
+  paletteAiGuidance,
+  paletteTabs,
+  suggestedPaletteActions,
   type CommandPaletteAction,
+  type PaletteTabId,
 } from "@/data/commandPalette";
 import {
   groupResultsByHub,
   highlightMatch,
   resolveAiInsight,
-  searchCategories,
   searchGlobalResults,
   commandCriticalAlerts,
   getSuggestedSearchResults,
-  type SearchCategory,
   type CommandAlert,
 } from "@/data/globalSearchEngine";
 import { addRecentSearch, clearRecentSearches, getRecentSearches } from "@/lib/globalSearchHistory";
@@ -177,7 +178,7 @@ export function CommandPalette({
   const listRef = useRef<HTMLDivElement>(null);
 
   const [query, setQuery] = useState(initialQuery);
-  const [category, setCategory] = useState<SearchCategory>("all");
+  const [paletteTab, setPaletteTab] = useState<PaletteTabId>("all");
   const [activeIndex, setActiveIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [expandedHubs, setExpandedHubs] = useState<Set<string>>(new Set());
@@ -188,7 +189,7 @@ export function CommandPalette({
   const isSearching = query.trim() !== debouncedQuery.trim();
 
   const accessiblePinned = useMemo(
-    () => pinnedPaletteActions.filter((action) => canOpenHref(action.href)),
+    () => suggestedPaletteActions.filter((action) => canOpenHref(action.href)),
     [canOpenHref],
   );
 
@@ -214,13 +215,24 @@ export function CommandPalette({
 
   const searchResults = useMemo(() => {
     try {
-      return searchGlobalResults(debouncedQuery, defaultGlobalSearchFilters, category).filter((r) =>
+      return searchGlobalResults(debouncedQuery, defaultGlobalSearchFilters, "all").filter((r) =>
         canOpenHref(r.href),
       );
     } catch {
       return [];
     }
-  }, [debouncedQuery, category, canOpenHref]);
+  }, [debouncedQuery, canOpenHref]);
+
+  const hasQuery = debouncedQuery.trim().length > 0;
+  const showRecent = !hasQuery && (paletteTab === "all" || paletteTab === "search");
+  const showSuggestedActions = paletteTab === "all" || paletteTab === "actions";
+  const showAlerts = !hasQuery && paletteTab === "all";
+  const showJumps = !hasQuery && (paletteTab === "all" || paletteTab === "actions");
+  const showSearchResults = hasQuery && (paletteTab === "all" || paletteTab === "search");
+  const showMatchedActions = hasQuery && (paletteTab === "all" || paletteTab === "actions");
+  const showAiPanel = paletteTab === "all" || paletteTab === "ai";
+  const showSuggestedRecords = !hasQuery && paletteTab === "search";
+  const showAiGuidance = paletteTab === "ai" || paletteTab === "all";
 
   const groupedByHub = useMemo(() => {
     const limit = expandedHubs.size > 0 ? 999 : 5;
@@ -240,53 +252,74 @@ export function CommandPalette({
 
   const flatItems = useMemo((): PaletteItem[] => {
     const items: PaletteItem[] = [];
-    const hasQuery = debouncedQuery.trim().length > 0;
 
     if (!hasQuery) {
-      for (const term of recentSearches) {
-        items.push({ kind: "recent", id: `recent-${term}`, label: term });
+      if (showRecent) {
+        for (const term of recentSearches) {
+          items.push({ kind: "recent", id: `recent-${term}`, label: term });
+        }
       }
-      for (const alert of accessibleAlerts) {
-        items.push({ kind: "alert", id: alert.id, alert });
+      if (showSuggestedActions) {
+        for (const action of accessiblePinned) {
+          items.push({ kind: "action", id: `action-${action.id}`, action });
+        }
       }
-      for (const action of accessiblePinned) {
-        items.push({ kind: "action", id: `action-${action.id}`, action });
+      if (showAlerts) {
+        for (const alert of accessibleAlerts) {
+          items.push({ kind: "alert", id: alert.id, alert });
+        }
       }
-      for (const action of accessibleJumps) {
-        items.push({ kind: "action", id: `action-${action.id}`, action });
+      if (showJumps) {
+        for (const action of accessibleJumps) {
+          items.push({ kind: "action", id: `action-${action.id}`, action });
+        }
       }
-      for (const result of suggestedResults) {
-        items.push({ kind: "result", id: result.id, result });
+      if (showSuggestedRecords) {
+        for (const result of suggestedResults) {
+          items.push({ kind: "result", id: result.id, result });
+        }
       }
     } else {
-      for (const action of matchedActions.slice(0, 8)) {
-        items.push({ kind: "action", id: `action-${action.id}`, action });
-      }
-      for (const hub of hubGroupOrder) {
-        const hubResults = groupedByHub[hub];
-        if (!hubResults?.length) continue;
-        for (const result of hubResults) {
-          items.push({ kind: "result", id: result.id, result });
-        }
-        const totalInHub = searchResults.filter((r) => r.hub === hub).length;
-        if (totalInHub > 5 && !expandedHubs.has(hub)) {
-          items.push({ kind: "view-all", id: `view-all-${hub}`, hub, query: debouncedQuery });
+      if (showMatchedActions) {
+        for (const action of matchedActions.slice(0, 8)) {
+          items.push({ kind: "action", id: `action-${action.id}`, action });
         }
       }
-      for (const hub of Object.keys(groupedByHub)) {
-        if (hubGroupOrder.includes(hub)) continue;
-        const hubResults = groupedByHub[hub];
-        if (!hubResults?.length) continue;
-        for (const result of hubResults) {
-          items.push({ kind: "result", id: result.id, result });
+      if (showSearchResults) {
+        for (const hub of hubGroupOrder) {
+          const hubResults = groupedByHub[hub];
+          if (!hubResults?.length) continue;
+          for (const result of hubResults) {
+            items.push({ kind: "result", id: result.id, result });
+          }
+          const totalInHub = searchResults.filter((r) => r.hub === hub).length;
+          if (totalInHub > 5 && !expandedHubs.has(hub)) {
+            items.push({ kind: "view-all", id: `view-all-${hub}`, hub, query: debouncedQuery });
+          }
+        }
+        for (const hub of Object.keys(groupedByHub)) {
+          if (hubGroupOrder.includes(hub)) continue;
+          const hubResults = groupedByHub[hub];
+          if (!hubResults?.length) continue;
+          for (const result of hubResults) {
+            items.push({ kind: "result", id: result.id, result });
+          }
         }
       }
-      if (aiInsight) items.push({ kind: "ai", id: aiInsight.id });
+      if (showAiPanel && aiInsight) items.push({ kind: "ai", id: aiInsight.id });
     }
 
     return items;
   }, [
-    debouncedQuery,
+    hasQuery,
+    showRecent,
+    showSuggestedActions,
+    showAlerts,
+    showJumps,
+    showSuggestedRecords,
+    showMatchedActions,
+    showSearchResults,
+    showAiPanel,
     recentSearches,
     matchedActions,
     groupedByHub,
@@ -297,6 +330,7 @@ export function CommandPalette({
     accessibleAlerts,
     accessiblePinned,
     accessibleJumps,
+    debouncedQuery,
   ]);
 
   useEffect(() => {
@@ -307,7 +341,7 @@ export function CommandPalette({
 
   useEffect(() => {
     setActiveIndex(0);
-  }, [debouncedQuery, category, flatItems.length]);
+  }, [debouncedQuery, paletteTab, flatItems.length]);
 
   const navigate = useCallback(
     (href: string, newTab = false) => {
@@ -376,11 +410,11 @@ export function CommandPalette({
 
       if (event.key === "Tab" && debouncedQuery.trim()) {
         event.preventDefault();
-        const idx = searchCategories.findIndex((c) => c.id === category);
+        const idx = paletteTabs.findIndex((t) => t.id === paletteTab);
         const next = event.shiftKey
-          ? (idx - 1 + searchCategories.length) % searchCategories.length
-          : (idx + 1) % searchCategories.length;
-        setCategory(searchCategories[next].id);
+          ? (idx - 1 + paletteTabs.length) % paletteTabs.length
+          : (idx + 1) % paletteTabs.length;
+        setPaletteTab(paletteTabs[next].id);
         return;
       }
 
@@ -407,13 +441,14 @@ export function CommandPalette({
 
       if (event.key === "Enter" && flatItems[activeIndex]) {
         event.preventDefault();
-        activateItem(flatItems[activeIndex], event.shiftKey);
+        activateItem(flatItems[activeIndex], mod);
+        return;
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, flatItems, activeIndex, activateItem, category, selectedResult, debouncedQuery]);
+  }, [onClose, flatItems, activeIndex, activateItem, paletteTab, selectedResult, debouncedQuery]);
 
   useEffect(() => {
     const el = listRef.current?.querySelector(`[data-index="${activeIndex}"]`);
@@ -486,27 +521,44 @@ export function CommandPalette({
             <kbd className="cmd-palette-kbd">ESC</kbd>
           </div>
 
-          {debouncedQuery.trim().length > 0 && (
-            <div className="cmd-palette-categories" role="tablist" aria-label="Result categories">
-              {searchCategories.map((cat) => (
+          {showAiGuidance && (
+            <div className="cmd-palette-ai-guidance" aria-label="AI search suggestions">
+              {paletteAiGuidance.map((hint) => (
                 <button
-                  key={cat.id}
+                  key={hint.id}
                   type="button"
-                  role="tab"
-                  aria-selected={category === cat.id}
-                  className={cn("cmd-palette-category", category === cat.id && "active")}
-                  onClick={() => setCategory(cat.id)}
+                  className="cmd-palette-ai-hint"
+                  onClick={() => {
+                    setQuery(hint.query);
+                    setPaletteTab("ai");
+                  }}
                 >
-                  {cat.label}
+                  <AppIcon name="sparkles" size={12} strokeWidth={2} />
+                  {hint.label}
                 </button>
               ))}
             </div>
           )}
 
+          <div className="cmd-palette-categories" role="tablist" aria-label="Command palette views">
+            {paletteTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={paletteTab === tab.id}
+                className={cn("cmd-palette-category", paletteTab === tab.id && "active")}
+                onClick={() => setPaletteTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <div className="cmd-palette-body" ref={listRef}>
-            {!debouncedQuery.trim() && (
+            {!hasQuery && (
               <>
-                {recentSearches.length > 0 && (
+                {showRecent && recentSearches.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
                       <span className="cmd-palette-section-title">Recent</span>
@@ -536,7 +588,7 @@ export function CommandPalette({
                   </section>
                 )}
 
-                {accessibleAlerts.length > 0 && (
+                {showAlerts && accessibleAlerts.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
                       <span className="cmd-palette-section-title">Alerts</span>
@@ -571,9 +623,10 @@ export function CommandPalette({
                   </section>
                 )}
 
+                {showSuggestedActions && (
                 <section className="cmd-palette-section cmd-palette-section--pinned">
                   <div className="cmd-palette-section-header">
-                    <span className="cmd-palette-section-title">Commands</span>
+                    <span className="cmd-palette-section-title">Suggested Actions</span>
                   </div>
                   <ul className="cmd-palette-list">
                     {accessiblePinned.map((action) => {
@@ -595,7 +648,9 @@ export function CommandPalette({
                     })}
                   </ul>
                 </section>
+                )}
 
+                {showJumps && (
                 <section className="cmd-palette-section">
                   <div className="cmd-palette-section-header">
                     <span className="cmd-palette-section-title">Jump to Module</span>
@@ -620,8 +675,9 @@ export function CommandPalette({
                     })}
                   </ul>
                 </section>
+                )}
 
-                {suggestedResults.length > 0 && (
+                {showSuggestedRecords && suggestedResults.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
                       <span className="cmd-palette-section-title">Suggested Records</span>
@@ -651,7 +707,19 @@ export function CommandPalette({
               </>
             )}
 
-            {debouncedQuery.trim().length > 0 && (
+            {!hasQuery && paletteTab === "ai" && (
+              <section className="cmd-palette-section cmd-palette-ai">
+                <div className="cmd-palette-section-header">
+                  <AppIcon name="sparkles" size={16} strokeWidth={2} />
+                  <span className="cmd-palette-section-title">AI Assistant</span>
+                </div>
+                <div className="cmd-palette-ai-card">
+                  <p>Ask in plain language or pick a suggestion above. Agency OS will route you to the right hub, record, or action.</p>
+                </div>
+              </section>
+            )}
+
+            {hasQuery && (
               <>
                 {isSearching && (
                   <div className="cmd-palette-empty" aria-live="polite">
@@ -660,10 +728,10 @@ export function CommandPalette({
                   </div>
                 )}
 
-                {!isSearching && matchedActions.length > 0 && (
+                {!isSearching && showMatchedActions && matchedActions.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
-                      <span className="cmd-palette-section-title">Commands</span>
+                      <span className="cmd-palette-section-title">Suggested Actions</span>
                     </div>
                     <ul className="cmd-palette-list">
                       {matchedActions.slice(0, 8).map((action) => {
@@ -687,7 +755,7 @@ export function CommandPalette({
                   </section>
                 )}
 
-                {!isSearching &&
+                {!isSearching && showSearchResults &&
                   orderedHubs.map((hub) => {
                     const items = groupedByHub[hub];
                     if (!items?.length) return null;
@@ -741,7 +809,7 @@ export function CommandPalette({
                     );
                   })}
 
-                {!isSearching && aiInsight && (
+                {!isSearching && showAiPanel && aiInsight && (
                   <section className="cmd-palette-section cmd-palette-ai">
                     <div className="cmd-palette-section-header">
                       <AppIcon name="sparkles" size={16} strokeWidth={2} />
@@ -788,20 +856,10 @@ export function CommandPalette({
           </div>
 
           <footer className="cmd-palette-footer">
-            <span>
-              <kbd>↑↓</kbd> navigate
-            </span>
-            <span>
-              <kbd>↵</kbd> open
-            </span>
-            <span>
-              <kbd>⇧↵</kbd> new tab
-            </span>
-            {debouncedQuery.trim() ? (
-              <span>
-                <kbd>Tab</kbd> filter
-              </span>
-            ) : null}
+            <span><kbd>↵</kbd> Execute</span>
+            <span><kbd>⌘↵</kbd> Open in new tab</span>
+            <span><kbd>↑↓</kbd> Navigate</span>
+            <span><kbd>Esc</kbd> Close</span>
             {canOpenWorkspace ? (
               <button type="button" className="cmd-palette-footer-link" onClick={() => onOpenWorkspace(query)}>
                 Full search →

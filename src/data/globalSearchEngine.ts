@@ -118,27 +118,55 @@ function tokenize(query: string) {
   return query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 }
 
-function scoreResult(result: GlobalSearchResult, tokens: string[]): number {
-  if (tokens.length === 0) return 1;
-  const haystack = [
+function buildSearchHaystack(result: GlobalSearchResult): string {
+  return [
     result.title,
+    result.id,
     result.group,
     result.hub,
     result.status,
     result.owner ?? "",
-    result.lastUpdated,
-    ...result.fields.flatMap((f) => [f.label, f.value]),
+    result.priority ?? "",
+    result.riskState ?? "",
+    result.drawer.summary,
+    ...result.drawer.details.map((d) => `${d.label} ${d.value}`),
+    ...result.drawer.notes,
+    ...result.fields.map((f) => `${f.label} ${f.value}`),
   ]
     .join(" ")
     .toLowerCase();
+}
+
+function fuzzyTokenMatch(haystack: string, token: string): boolean {
+  if (haystack.includes(token)) return true;
+  const words = haystack.split(/[\s,.:;#/()-]+/).filter(Boolean);
+  if (words.some((word) => word.startsWith(token))) return true;
+  if (token.length >= 4) {
+    return words.some((word) => {
+      if (word.length < 3) return false;
+      let mismatches = 0;
+      const limit = Math.min(word.length, token.length);
+      for (let i = 0; i < limit; i += 1) {
+        if (word[i] !== token[i]) mismatches += 1;
+        if (mismatches > 1) return false;
+      }
+      return mismatches <= 1;
+    });
+  }
+  return false;
+}
+
+function scoreResult(result: GlobalSearchResult, tokens: string[]): number {
+  if (tokens.length === 0) return 1;
+  const haystack = buildSearchHaystack(result);
 
   let score = 0;
   for (const token of tokens) {
     if (result.title.toLowerCase().includes(token)) score += 10;
     if (result.title.toLowerCase().startsWith(token)) score += 5;
+    if (result.id.toLowerCase().includes(token)) score += 8;
     if (haystack.includes(token)) score += 3;
-    // fuzzy partial
-    if (token.length >= 3 && haystack.split(/\s+/).some((word) => word.startsWith(token))) score += 2;
+    if (fuzzyTokenMatch(haystack, token)) score += 2;
   }
   return score;
 }
@@ -190,21 +218,8 @@ export function matchesGlobalSearchEnhanced(
 ): boolean {
   const tokens = tokenize(query);
   if (tokens.length > 0) {
-    const haystack = [
-      result.title,
-      result.group,
-      result.hub,
-      result.status,
-      result.owner ?? "",
-      ...result.fields.map((f) => `${f.label} ${f.value}`),
-    ]
-      .join(" ")
-      .toLowerCase();
-    const matched = tokens.every(
-      (token) =>
-        haystack.includes(token) ||
-        haystack.split(/\s+/).some((word) => word.startsWith(token)),
-    );
+    const haystack = buildSearchHaystack(result);
+    const matched = tokens.every((token) => fuzzyTokenMatch(haystack, token));
     if (!matched) return false;
   }
 
@@ -231,14 +246,48 @@ export function matchesGlobalSearchEnhanced(
     return false;
   }
 
-  if (filters.coverageType !== "All Coverage" && result.type === "submission") {
-    const cov = result.fields.find((f) => f.label === "Coverage");
+  if (filters.coverageType !== "All Coverage") {
+    const cov = result.fields.find((f) => f.label === "Coverage" || f.label === "Coverage Stack" || f.label === "Policy");
     if (cov && !cov.value.includes(filters.coverageType)) return false;
   }
 
   if (filters.priority !== "All Priorities") {
     const pri = result.fields.find((f) => f.label === "Priority");
-    if (pri && pri.value !== filters.priority) return false;
+    const resolved = pri?.value ?? result.priority;
+    if (resolved && resolved !== filters.priority) return false;
+  }
+
+  if (filters.riskLevel !== "All Risk Levels") {
+    const risk =
+      result.riskState ??
+      result.fields.find((f) => f.label === "E&O Risk")?.value ??
+      result.priority;
+    if (risk && !risk.toLowerCase().includes(filters.riskLevel.toLowerCase())) return false;
+  }
+
+  if (filters.pendingApproval === "Pending Approval") {
+    const pending =
+      result.status.toLowerCase().includes("pending approval") ||
+      result.fields.some((f) => f.label === "Task Type" && f.value.includes("Approval"));
+    if (!pending) return false;
+  } else if (filters.pendingApproval === "Approved") {
+    if (!result.status.toLowerCase().includes("approved")) return false;
+  }
+
+  if (filters.missingDocs === "Has Missing Docs") {
+    const hasMissing =
+      result.status.toLowerCase().includes("missing") ||
+      result.drawer.openItems?.some((item) => item.label.toLowerCase().includes("missing")) ||
+      result.fields.some((f) => f.label === "Missing Docs");
+    if (!hasMissing) return false;
+  } else if (filters.missingDocs === "Docs Complete") {
+    if (result.status.toLowerCase().includes("missing")) return false;
+  }
+
+  if (filters.dateRange !== "All Dates") {
+    const updated = result.lastUpdated.toLowerCase();
+    if (filters.dateRange === "Today" && !updated.includes("today") && !updated.includes("min")) return false;
+    if (filters.dateRange === "This Week" && updated.includes("month")) return false;
   }
 
   return true;
@@ -246,7 +295,43 @@ export function matchesGlobalSearchEnhanced(
 
 export function resolveAiInsight(query: string): AiInsight | null {
   const q = query.trim().toLowerCase();
-  if (q.length < 8) return null;
+  if (q.length < 3) return null;
+
+  if (q.includes("high risk") && q.includes("renewal")) {
+    return {
+      id: "ai-high-risk-renewals",
+      summary: "4 renewals flagged high-risk this month — Rivera Construction and Metro Auto Repair need intervention.",
+      links: [
+        { label: "Retention Hub", href: routes.retention },
+        { label: "At-Risk Accounts", href: `${routes.commercialHub}?view=executive` },
+      ],
+      action: { label: "Review Renewals", href: routes.retention },
+    };
+  }
+
+  if (q.includes("lowest retention") || q.includes("retention producer")) {
+    return {
+      id: "ai-low-retention",
+      summary: "Mike Torres has the lowest save rate at 63% — 3 lost accounts this month.",
+      links: [
+        { label: "Producer Scorecard", href: routes.producer },
+        { label: "Retention Analytics", href: `${routes.analytics}?view=retention` },
+      ],
+      action: { label: "Open Retention", href: routes.retention },
+    };
+  }
+
+  if (q.includes("martinez")) {
+    return {
+      id: "ai-martinez",
+      summary: "Martinez Landscaping — pending docs, E&O exposure score 6, Workers Comp quote in flight.",
+      links: [
+        { label: "Open Client", href: `${routes.commercialHub}?view=submissions` },
+        { label: "Missing Docs", href: `${routes.commercialHub}?view=missing-docs` },
+      ],
+      action: { label: "Open Martinez Landscaping", href: `${routes.commercialHub}?view=submissions` },
+    };
+  }
 
   if (q.includes("overdue invoice")) {
     return {

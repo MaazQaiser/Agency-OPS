@@ -30,8 +30,16 @@
    Hub accent tokens — HTML spec mapping (header + accents only)
    ═══════════════════════════════════════════════════════════════ */
 .module-va-operations {
-  --hub-accent: #3b82f6;
-  --hub-secondary: #93c5fd;
+  --hub-accent: #4f46e5;
+  --hub-secondary: #a5b4fc;
+  --hub-deep: #3730a3;
+  --va-canvas: #080c12;
+  --va-surface: #0d1420;
+  --va-section: #131d2b;
+  --va-card: #182233;
+  --va-card-hover: #1d2940;
+  --va-indigo: #4f46e5;
+  --va-indigo-deep: #3730a3;
 }
 
 .module-commercial-hub {
@@ -1086,8 +1094,8 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
 
 /* Hub accent tokens on shell — utility strip + top chrome */
 .app-shell:has(.module-va-operations) {
-  --hub-accent: #3b82f6;
-  --hub-secondary: #93c5fd;
+  --hub-accent: #4f46e5;
+  --hub-secondary: #a5b4fc;
 }
 
 .app-shell:has(.module-commercial-hub) {
@@ -1463,16 +1471,17 @@ html[data-theme="obsidian"] :is(
    ═══════════════════════════════════════════════════════════════ */
 .module-va-operations .va-ops-page-header,
 html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
-  background-color: #2e3389;
+  background-color: #3730a3;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(99, 102, 241, 0.62) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(79, 70, 229, 0.38) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(129, 140, 248, 0.22) 0%, transparent 52%),
-    linear-gradient(180deg, #4349b8 0%, #353bb1 48%, #2a2f7a 100%);
+    radial-gradient(ellipse 48% 80% at 96% 8%, rgba(79, 70, 229, 0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 42% 70% at 6% 92%, rgba(79, 70, 229, 0.16) 0%, transparent 54%),
+    linear-gradient(180deg, #4f46e5 0%, #4338ca 40%, #3730a3 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
 .module-va-operations .va-ops-page-header::before,
@@ -1536,16 +1545,18 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
    ═══════════════════════════════════════════════════════════════ */
 .module-commercial-hub .va-ops-page-header,
 html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
-  background-color: #0c4f4a;
+  background-color: #095852;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(20, 184, 166, 0.48) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(13, 148, 136, 0.36) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(45, 212, 191, 0.2) 0%, transparent 52%),
-    linear-gradient(180deg, #117a72 0%, #0d5c56 48%, #0a4541 100%);
+    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(20, 184, 166, 0.42) 0%, transparent 58%),
+    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(13, 148, 136, 0.32) 0%, transparent 54%),
+    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(45, 212, 191, 0.18) 0%, transparent 52%),
+    linear-gradient(180deg, #0f8b82 0%, #0c6e67 45%, #095852 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 30px rgba(0, 0, 0, 0.24);
 }
 
 .module-commercial-hub .va-ops-page-header::before,

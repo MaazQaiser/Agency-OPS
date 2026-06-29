@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
   formatDurationMs,
@@ -48,7 +49,7 @@ export function SubmissionClockDrawer({
   if (!record) return null;
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button type="button" className="va-ops-drawer-backdrop" aria-label="Close submission clock" onClick={onClose} />
       <aside className="va-ops-drawer va-ops-drawer-wide submission-clock-drawer" role="dialog" aria-modal="true" aria-label={`Clock: ${record.clientName}`}>
         <div className="va-ops-drawer-header">
@@ -153,7 +154,7 @@ export function SubmissionClockDrawer({
           )}
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }
 

@@ -16,6 +16,7 @@ import { ModuleAccessGate } from "@/components/permissions/ModuleAccessGate";
 import { HubPageTransition } from "@/components/motion/HubPageTransition";
 import { ContextualHelpProvider } from "@/components/help/ContextualHelpProvider";
 import { TopHeader } from "./TopHeader";
+import { GlobalFolioStrip } from "./GlobalFolioStrip";
 import { MobileBottomNav } from "./MobileBottomNav";
 
 type AppShellProps = {
@@ -43,6 +44,7 @@ export function AppShell({ children }: AppShellProps) {
                     <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
                       <TopHeader />
                     </Suspense>
+                    <GlobalFolioStrip />
                   </div>
                   <main className="app-content">
                     <ModuleAccessGate>

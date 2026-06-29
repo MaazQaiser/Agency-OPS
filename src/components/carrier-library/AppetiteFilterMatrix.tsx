@@ -2,39 +2,13 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-
-type AppetiteLevel = "writes" | "conditional" | "no" | "unknown";
-
-type CarrierRow = {
-  id: string;
-  name: string;
-  appetite: Record<string, AppetiteLevel>;
-};
-
-const verticals = ["Contractors", "Landscapers", "Restaurants", "Cleaning", "Trucking", "Beauty", "Auto Repair"];
-
-const carriers: CarrierRow[] = [
-  { id: "c1", name: "Farmers", appetite: { Contractors: "writes", Landscapers: "writes", Restaurants: "writes", Cleaning: "writes", Trucking: "conditional", Beauty: "writes", "Auto Repair": "conditional" } },
-  { id: "c2", name: "Employers", appetite: { Contractors: "writes", Landscapers: "writes", Restaurants: "conditional", Cleaning: "writes", Trucking: "no", Beauty: "writes", "Auto Repair": "writes" } },
-  { id: "c3", name: "Guard Insurance", appetite: { Contractors: "conditional", Landscapers: "writes", Restaurants: "writes", Cleaning: "writes", Trucking: "no", Beauty: "conditional", "Auto Repair": "conditional" } },
-  { id: "c4", name: "Gainsco", appetite: { Contractors: "unknown", Landscapers: "unknown", Restaurants: "no", Cleaning: "unknown", Trucking: "writes", Beauty: "no", "Auto Repair": "writes" } },
-  { id: "c5", name: "KraftLake", appetite: { Contractors: "writes", Landscapers: "conditional", Restaurants: "writes", Cleaning: "conditional", Trucking: "no", Beauty: "no", "Auto Repair": "writes" } },
-  { id: "c6", name: "Progressive Comm.", appetite: { Contractors: "conditional", Landscapers: "writes", Restaurants: "no", Cleaning: "conditional", Trucking: "writes", Beauty: "no", "Auto Repair": "writes" } },
-];
-
-const appetiteLabel: Record<AppetiteLevel, string> = {
-  writes: "Writes",
-  conditional: "Conditional",
-  no: "No appetite",
-  unknown: "Unknown",
-};
-
-const appetiteCellClass: Record<AppetiteLevel, string> = {
-  writes: "appetite-cell--writes",
-  conditional: "appetite-cell--conditional",
-  no: "appetite-cell--no",
-  unknown: "appetite-cell--unknown",
-};
+import {
+  appetiteCellClass,
+  appetiteLabel,
+  appetiteMatrixCarriers,
+  appetiteMatrixVerticals,
+  type AppetiteLevel,
+} from "@/data/appetiteMatrix";
 
 /**
  * Carrier Library Signature Element — Appetite Filter Matrix
@@ -43,11 +17,13 @@ const appetiteCellClass: Record<AppetiteLevel, string> = {
  */
 export function AppetiteFilterMatrix() {
   const [activeVertical, setActiveVertical] = useState<string>("all");
+  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
 
-  const shownVerticals = activeVertical === "all" ? verticals : [activeVertical];
+  const shownVerticals =
+    activeVertical === "all" ? [...appetiteMatrixVerticals] : [activeVertical];
 
   return (
-    <div className="appetite-matrix">
+    <div className="appetite-matrix appetite-matrix--refined">
       <div className="appetite-matrix-header">
         <div className="appetite-matrix-title">Appetite Filter Matrix</div>
         <div className="appetite-matrix-filters">
@@ -58,7 +34,7 @@ export function AppetiteFilterMatrix() {
           >
             All Verticals
           </button>
-          {verticals.map((v) => (
+          {appetiteMatrixVerticals.map((v) => (
             <button
               key={v}
               type="button"
@@ -75,21 +51,56 @@ export function AppetiteFilterMatrix() {
         <table className="appetite-matrix-table" aria-label="Carrier appetite by vertical">
           <thead>
             <tr>
-              <th scope="col" className="appetite-matrix-carrier-col">Carrier</th>
+              <th scope="col" className="appetite-matrix-carrier-col">
+                Carrier
+              </th>
               {shownVerticals.map((v) => (
-                <th scope="col" key={v} className="appetite-matrix-vertical-col">{v}</th>
+                <th
+                  scope="col"
+                  key={v}
+                  className={cn(
+                    "appetite-matrix-vertical-col",
+                    activeVertical === v && "appetite-matrix-vertical-col--active",
+                  )}
+                >
+                  {v}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {carriers.map((carrier) => (
+            {appetiteMatrixCarriers.map((carrier) => (
               <tr key={carrier.id}>
                 <td className="appetite-matrix-carrier-name">{carrier.name}</td>
                 {shownVerticals.map((v) => {
                   const level: AppetiteLevel = carrier.appetite[v] ?? "unknown";
+                  const cellKey = `${carrier.id}-${v}`;
+                  const isRecent = carrier.recentlyUpdated?.includes(v);
+                  const reasoning = carrier.reasoning[v] ?? "No appetite reasoning on file.";
+                  const isHovered = hoveredCell === cellKey;
+
                   return (
-                    <td key={v} className={cn("appetite-cell", appetiteCellClass[level])}>
+                    <td
+                      key={v}
+                      className={cn(
+                        "appetite-cell",
+                        appetiteCellClass[level],
+                        isRecent && "appetite-cell--recent",
+                        activeVertical === v && "appetite-cell--column-focus",
+                      )}
+                      onMouseEnter={() => setHoveredCell(cellKey)}
+                      onMouseLeave={() => setHoveredCell(null)}
+                    >
                       <span className="appetite-cell-label">{appetiteLabel[level]}</span>
+                      {isRecent ? (
+                        <span className="appetite-cell-recent-dot" aria-label="Recently updated" />
+                      ) : null}
+                      {isHovered ? (
+                        <div className="appetite-cell-tooltip" role="tooltip">
+                          <strong>{carrier.name} · {v}</strong>
+                          <p>{reasoning}</p>
+                        </div>
+                      ) : null}
                     </td>
                   );
                 })}
@@ -102,10 +113,17 @@ export function AppetiteFilterMatrix() {
       <div className="appetite-legend">
         {(Object.entries(appetiteLabel) as [AppetiteLevel, string][]).map(([level, label]) => (
           <div key={level} className="appetite-legend-item">
-            <span className={cn("appetite-legend-swatch", `appetite-cell--${level}`)} aria-hidden="true" />
+            <span
+              className={cn("appetite-legend-swatch", `appetite-cell--${level}`)}
+              aria-hidden="true"
+            />
             <span className="appetite-legend-label">{label}</span>
           </div>
         ))}
+        <div className="appetite-legend-item appetite-legend-item--recent">
+          <span className="appetite-legend-recent-dot" aria-hidden="true" />
+          <span className="appetite-legend-label">Recently updated</span>
+        </div>
       </div>
     </div>
   );

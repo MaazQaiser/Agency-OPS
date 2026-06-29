@@ -10,9 +10,8 @@ export const epayPolicyHeader = {
   title: "ePayPolicy",
   subtitle: "Invoice tracking · Broker fees · Payment confirmation",
   quickActions: [
-    { id: "new-invoice", label: "New Invoice", icon: "plus" as const },
-    { id: "export", label: "Export Ledger", icon: "download" as const },
-    { id: "reconcile", label: "Reconcile Funds", icon: "check" as const },
+    { id: "send-payment-link", label: "Send Payment Link", icon: "send" as const, variant: "secondary" as const },
+    { id: "new-invoice", label: "New Invoice", icon: "plus" as const, variant: "primary" as const },
   ],
 };
 
@@ -518,6 +517,88 @@ export function calculateTotalDue(invoice: Pick<InvoiceFormData, "policyPremium"
 
 export function getComplianceStatus(compliance: ComplianceItem[]): "Ready" | "Blocked" {
   return compliance.every((item) => item.complete) ? "Ready" : "Blocked";
+}
+
+export type InvoiceReadinessItem = {
+  id: string;
+  label: string;
+  complete: boolean;
+};
+
+export function getInvoiceReadinessItems(
+  client: InvoiceClient,
+  form: Pick<InvoiceFormData, "policyPremium" | "brokerFee" | "paymentMethod">,
+): InvoiceReadinessItem[] {
+  const complianceMap = Object.fromEntries(client.compliance.map((c) => [c.id, c.complete]));
+  const disclosuresStep = client.brokerFeeTrigger.find((s) => s.id === "az-esign");
+  const disclosuresComplete =
+    client.billingType === "Direct Bill" ||
+    client.brokerFeeTrigger.length === 0 ||
+    disclosuresStep?.status === "success";
+
+  return [
+    { id: "premium", label: "Premium verified", complete: Boolean(complianceMap["c-premium"]) && form.policyPremium > 0 },
+    { id: "broker", label: "Broker fee separated", complete: Boolean(complianceMap["c-broker"]) && form.brokerFee > 0 },
+    { id: "carrier", label: "Carrier confirmed", complete: Boolean(complianceMap["c-carrier"]) },
+    { id: "method", label: "Payment method selected", complete: Boolean(complianceMap["c-method"]) && Boolean(form.paymentMethod) },
+    { id: "disclosures", label: "Compliance disclosures sent", complete: disclosuresComplete },
+    { id: "contact", label: "Client contact verified", complete: Boolean(complianceMap["c-client"]) && Boolean(client.paymentRequest.sentTo) },
+  ];
+}
+
+export function isInvoiceReadyForSend(items: readonly InvoiceReadinessItem[]): boolean {
+  return items.every((item) => item.complete);
+}
+
+export type ExtendedLifecycleStage = {
+  id: string;
+  label: string;
+  state: "completed" | "current" | "pending" | "failed";
+  timestamp?: string;
+};
+
+export function getExtendedPaymentLifecycle(client: InvoiceClient): ExtendedLifecycleStage[] {
+  const lc = client.paymentRequest.lifecycle;
+  const isPartial = client.status === "Partial Payment";
+  const isFailed = client.brokerFeeTrigger.some((s) => s.status === "failed") || client.status === "Overdue";
+  const opened = lc.viewed || client.paymentRequest.linkStatus === "Opened";
+  const paid = lc.paid || client.status === "Paid";
+
+  const stages: Omit<ExtendedLifecycleStage, "state">[] = [
+    { id: "generated", label: "Generated", timestamp: client.activity.find((a) => a.message.toLowerCase().includes("created"))?.timeAgo },
+    { id: "sent", label: "Sent", timestamp: client.paymentRequest.sentAt },
+    { id: "delivered", label: "Delivered", timestamp: client.paymentRequest.sentAt },
+    { id: "opened", label: "Opened", timestamp: opened ? client.activity.find((a) => a.message.toLowerCase().includes("opened"))?.timeAgo : undefined },
+    { id: "partial", label: "Partial", timestamp: isPartial ? client.activity[0]?.timeAgo : undefined },
+    { id: "terminal", label: paid ? "Paid" : isFailed ? "Failed" : "Paid / Failed", timestamp: paid ? client.activity.find((a) => a.message.toLowerCase().includes("received"))?.timeAgo : undefined },
+  ];
+
+  const flags = [lc.generated, lc.sent, lc.sent, opened, isPartial, paid || isFailed];
+  const result: ExtendedLifecycleStage[] = [];
+
+  for (let i = 0; i < stages.length; i++) {
+    const prevAllDone = flags.slice(0, i).every(Boolean);
+    let state: ExtendedLifecycleStage["state"] = "pending";
+    if (i === stages.length - 1 && isFailed && !paid) state = "failed";
+    else if (flags[i]) state = "completed";
+    else if (prevAllDone) state = "current";
+    result.push({ ...stages[i], state });
+  }
+
+  if (paid) {
+    const terminal = result[result.length - 1];
+    terminal.label = "Paid";
+    terminal.state = "completed";
+  } else if (isFailed && !paid) {
+    const terminal = result[result.length - 1];
+    terminal.label = "Failed";
+    terminal.state = "failed";
+  } else if (!isPartial) {
+    result[4].state = "pending";
+    result[4].timestamp = undefined;
+  }
+
+  return result;
 }
 
 import { epayStatusClass } from "./epayStatus";

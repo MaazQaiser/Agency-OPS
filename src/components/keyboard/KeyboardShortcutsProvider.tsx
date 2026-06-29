@@ -56,7 +56,7 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
   const router = useRouter();
   const pathname = usePathname();
   const { isOpen: searchOpen, open: openSearch, close: closeSearch, toggle: toggleSearch } = useGlobalSearch();
-  const { isOpen: notificationsOpen, open: openNotifications, close: closeNotifications, clearAll } =
+  const { isOpen: notificationsOpen, open: openNotifications, close: closeNotifications, markAllAsRead } =
     useNotificationCenter();
   const { isOpen: ownerOpen, toggle: toggleOwner, close: closeOwner, isOwner } = useOwnerQuickActions();
   const { isOpen: auditOpen, toggle: toggleAuditLog, close: closeAuditLog, canView: canViewAuditLog } = useAuditLog();
@@ -100,7 +100,7 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
         return;
       }
       if (actionId === "clear-notifications") {
-        clearAll();
+        markAllAsRead();
         return;
       }
       if (actionId === "go-back") {
@@ -147,7 +147,7 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
       if (actionId) dispatchShortcutAction(actionId);
     },
     [
-      clearAll,
+      markAllAsRead,
       isOwner,
       openHelp,
       openNotifications,

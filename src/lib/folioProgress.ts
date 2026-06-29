@@ -1,5 +1,7 @@
 export type FolioUrgency = "safe" | "watch" | "critical";
 
+export type FolioState = "healthy" | "warning" | "critical" | "closed";
+
 export type FolioPeriod = {
   number: number;
   startDate: string;
@@ -74,6 +76,13 @@ export const folioRiskStateLabels: Record<FolioUrgency, string> = {
   critical: "Period Ending",
 };
 
+export const folioStateLabels: Record<FolioState, string> = {
+  healthy: "Healthy",
+  warning: "Behind Target",
+  critical: "Critical",
+  closed: "Closed",
+};
+
 export type FolioProgressMetrics = {
   folioNumber: number;
   dateRangeLabel: string;
@@ -87,6 +96,7 @@ export type FolioProgressMetrics = {
   pacePct: number;
   performancePacePct: number;
   urgency: FolioUrgency;
+  folioState: FolioState;
   riskStateLabel: string;
   completionLabel: string;
   daysRemainingShortLabel: string;
@@ -97,7 +107,38 @@ export type FolioProgressMetrics = {
   paceLabel: string;
   previousFolio: PreviousFolioSummary;
   previousFolioDeltaPct: number;
+  remainingPremium: number;
+  remainingLabel: string;
 };
+
+export function resolveFolioState(
+  metrics: Pick<
+    FolioProgressMetrics,
+    "daysRemaining" | "timeRemainingPct" | "performancePacePct" | "goalProgressPct" | "daysTotal" | "daysElapsed"
+  >,
+  asOf: Date,
+  endDate: string,
+  hasBlockers = true,
+): FolioState {
+  const end = startOfDay(parseLocalDate(endDate));
+  const today = startOfDay(asOf);
+  const periodEnded = today > end || (metrics.daysRemaining === 0 && metrics.goalProgressPct >= 100);
+
+  if (periodEnded || metrics.goalProgressPct >= 100) return "closed";
+
+  const onPace = metrics.performancePacePct >= 98;
+  const finalDays = metrics.timeRemainingPct <= 0.15;
+
+  if (finalDays && (!onPace || hasBlockers)) return "critical";
+  if (!onPace) return "warning";
+  return "healthy";
+}
+
+export function urgencyFromFolioState(state: FolioState): FolioUrgency {
+  if (state === "healthy" || state === "closed") return "safe";
+  if (state === "warning") return "watch";
+  return "critical";
+}
 
 export function getFolioProgressMetrics(
   folio: FolioPeriod = currentFolioPeriod,
@@ -122,6 +163,18 @@ export function getFolioProgressMetrics(
 
   const urgency = getFolioUrgency(timeRemainingPct);
   const previousFolioDeltaPct = goalProgressPct - previous.pacePct;
+  const remainingPremium = Math.max(0, folio.targetPremium - folio.currentWritten);
+
+  const partialMetrics = {
+    daysRemaining,
+    timeRemainingPct,
+    performancePacePct,
+    goalProgressPct,
+    daysTotal,
+    daysElapsed,
+  };
+  const folioState = resolveFolioState(partialMetrics, today, folio.endDate);
+  const resolvedUrgency = urgencyFromFolioState(folioState);
 
   return {
     folioNumber: folio.number,
@@ -150,15 +203,18 @@ export function getFolioProgressMetrics(
     goalProgressPct,
     pacePct: goalProgressPct,
     performancePacePct,
-    urgency,
-    riskStateLabel: folioRiskStateLabels[urgency],
+    urgency: resolvedUrgency,
+    folioState,
+    riskStateLabel: folioStateLabels[folioState],
     completionLabel: `${Math.round(goalProgressPct)}% COMPLETE`,
     targetPremium: folio.targetPremium,
     currentWritten: folio.currentWritten,
     targetLabel: formatCompactCurrency(folio.targetPremium),
     writtenLabel: formatCompactCurrency(folio.currentWritten),
-    paceLabel: `${Math.round(goalProgressPct)}%`,
+    paceLabel: `${Math.round(performancePacePct)}%`,
     previousFolio: previous,
     previousFolioDeltaPct,
+    remainingPremium,
+    remainingLabel: formatCompactCurrency(remainingPremium),
   };
 }

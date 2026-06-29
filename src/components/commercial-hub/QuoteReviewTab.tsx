@@ -31,6 +31,8 @@ import {
   CommercialHubTabShell,
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
+import { FarmersEdgeIntelTrigger } from "./FarmersEdgeIntelTrigger";
+import { buildFarmersEdgeIntelRequest } from "@/lib/farmersEdgeIntel";
 
 const quoteStatusClass: Record<string, string> = {
   Quoted: "badge-green",
@@ -145,6 +147,20 @@ export function QuoteReviewTab() {
         ariaLabel="Quote comparison"
         title="Quote Comparison"
         subtitle="Compare returned carrier quotes across active submissions."
+        actions={
+          <FarmersEdgeIntelTrigger
+            label="Coverage Gap Analysis"
+            request={buildFarmersEdgeIntelRequest({
+              mode: "coverage-gap",
+              client: topRecommendation?.client,
+              coverage: trackerSubmissions.find((s) => s.client === topRecommendation?.client)?.coverage,
+              coverageGaps: trackerSubmissions
+                .find((s) => s.client === topRecommendation?.client)
+                ?.coverageChecklist.filter((item) => item.status !== "complete")
+                .map((item) => item.label),
+            })}
+          />
+        }
       >
         {topRecommendedQuote && topRecommendation && (
           <article className="quote-ai-recommended-card" aria-label="Recommended quote">
@@ -214,13 +230,29 @@ export function QuoteReviewTab() {
                     </div>
                   </td>
                   <td>
-                    <button
-                      type="button"
-                      className="va-ops-action-btn primary"
-                      onClick={() => sendToSendCenter(row.client, row.carrier, row.premium, row.brokerFee)}
-                    >
-                      Send to Send Center
-                    </button>
+                    <div className="commercial-hub-quote-actions">
+                      <button
+                        type="button"
+                        className="va-ops-action-btn commercial-hub-btn-teal primary"
+                        onClick={() => openQuotesForClient(row.client)}
+                      >
+                        Select Quote
+                      </button>
+                      <button
+                        type="button"
+                        className="va-ops-action-btn commercial-hub-btn-secondary-action"
+                        onClick={() => toast.success(toastMessages.commercialHub.quoteApproved)}
+                      >
+                        Send to Client
+                      </button>
+                      <button
+                        type="button"
+                        className="va-ops-action-btn commercial-hub-btn-tertiary-action"
+                        onClick={() => sendToSendCenter(row.client, row.carrier, row.premium, row.brokerFee)}
+                      >
+                        Move to Send Center
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -287,29 +319,31 @@ export function QuoteReviewTab() {
                   <div className="quote-review-producer-actions">
                     <button
                       type="button"
-                      className="va-ops-action-btn primary"
+                      className="va-ops-action-btn commercial-hub-btn-teal primary"
                       onClick={() => toast.success(toastMessages.commercialHub.quoteApproved)}
                     >
-                      Approve Quote
+                      Select Quote
                     </button>
                     <button
                       type="button"
-                      className="va-ops-action-btn"
+                      className="va-ops-action-btn commercial-hub-btn-secondary-action"
                       onClick={() => toast.success(toastMessages.commercialHub.quoteApproved)}
                     >
                       Send to Client
                     </button>
                     <button
                       type="button"
-                      className="va-ops-action-btn"
+                      className="va-ops-action-btn commercial-hub-btn-tertiary-action"
                       onClick={() => {
                         const q = reviewCase.selectedQuote;
                         if (q) sendToSendCenter(reviewCase.client, q.carrier, q.premium, q.brokerFee ?? "$0");
                       }}
                     >
-                      Send to Send Center
+                      Move to Send Center
                     </button>
-                    <button type="button" className="va-ops-action-btn">Request Revision</button>
+                    <button type="button" className="va-ops-action-btn commercial-hub-btn-tertiary-action">
+                      Request Revision
+                    </button>
                   </div>
                 </article>
 

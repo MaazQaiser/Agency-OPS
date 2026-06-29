@@ -8,7 +8,7 @@ import { useHubDataState } from "@/hooks/useHubDataState";
 import { createDraftQueueRecordFromForm, type NewDraftFormValues } from "@/data/newDraftForm";
 import {
   draftQueueRecords,
-  sendCenterKpis,
+  sendCenterKpiCommands,
   sendCenterTabs,
   type DraftQueueRecord,
   type SendCenterTabId,
@@ -20,8 +20,8 @@ import { useShortcutAction } from "@/hooks/useShortcutAction";
 import { getVisibleSendCenterTabs } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { routes } from "@/lib/routes";
-import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
+import { SendCenterKpiCommand } from "./SendCenterKpiCommand";
 import { SendCenterPageHeader } from "./SendCenterPageHeader";
 import { DraftQueueTab } from "./DraftQueueTab";
 import { PendingReviewTab } from "./PendingReviewTab";
@@ -58,7 +58,7 @@ export function SendCenterModule() {
     isStale: kpiStale,
     retrying: kpiRetrying,
   } = useHubDataState({
-    load: () => sendCenterKpis,
+    load: () => sendCenterKpiCommands,
     isEmpty: () => false,
     errorPreset: "supabase-timeout",
   });
@@ -120,8 +120,8 @@ export function SendCenterModule() {
       openNewDraft();
       return;
     }
-    if (actionId === "export-log") {
-      showToast("Communication log exported from proposal records", "success");
+    if (actionId === "use-template") {
+      setActive("templates");
     }
   };
 
@@ -171,11 +171,7 @@ export function SendCenterModule() {
             />
           }
         >
-          <div className="commercial-hub-kpi-grid send-center-kpi-grid hub-kpi-grid">
-            {sendCenterKpis.map((kpi) => (
-              <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
-            ))}
-          </div>
+          <SendCenterKpiCommand items={sendCenterKpiCommands} activeTab={safeActive} onSelect={setActive} />
         </DataStateView>
       </section>
 

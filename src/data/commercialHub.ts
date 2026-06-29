@@ -1,21 +1,21 @@
 export const commercialHubTabs = [
   { id: "executive", label: "Executive Dashboard" },
-  { id: "submissions", label: "Submission Tracker" },
+  { id: "submissions", label: "Active Market Pipeline" },
   { id: "checklist", label: "Coverage Checklist" },
   { id: "missing-docs", label: "Missing Docs" },
   { id: "follow-ups", label: "Carrier Follow-Up" },
-  { id: "quote-review", label: "Quote Review" },
-  { id: "ready-to-bind", label: "Ready to Bind" },
+  { id: "quote-review", label: "Carrier Comparison" },
+  { id: "ready-to-bind", label: "Bind Readiness" },
   { id: "outreach", label: "Outreach Queue" },
-  { id: "submission-clock", label: "Submission Clock" },
-  { id: "lead-velocity", label: "Lead Velocity" },
+  { id: "submission-clock", label: "Pipeline SLA Monitor" },
+  { id: "lead-velocity", label: "Speed-to-Market" },
 ] as const;
 
 export type CommercialHubTabId = (typeof commercialHubTabs)[number]["id"];
 
 export const commercialHubHeader = {
   title: "Commercial Hub",
-  subtitle: "Pipeline intelligence · Quote tracking · Stage flow",
+  subtitle: "Commercial pipeline intelligence across submissions, markets, and bind velocity.",
   quickActions: [
     { id: "new-submission", label: "New Submission", icon: "plus" as const },
     { id: "add-market", label: "Add Market", icon: "target" as const },
@@ -29,7 +29,7 @@ export const commercialHubKpis = [
     value: "18",
     sub: "Open commercial cases",
     helper: "Intake → bind in progress",
-    color: "primary" as const,
+    color: "teal" as const,
     tier: "primary" as const,
   },
   {
@@ -37,7 +37,7 @@ export const commercialHubKpis = [
     value: "$184,000",
     sub: "Quoted but not bound",
     helper: "Total premium in pipeline",
-    color: "primary" as const,
+    color: "green" as const,
     tier: "secondary" as const,
   },
   {
@@ -45,7 +45,7 @@ export const commercialHubKpis = [
     value: "11",
     sub: "This week",
     helper: "Awaiting producer review",
-    color: "green" as const,
+    color: "aqua" as const,
     tier: "secondary" as const,
   },
   {
@@ -53,7 +53,7 @@ export const commercialHubKpis = [
     value: "3",
     sub: "Final stage queue",
     helper: "Quote selected + approved",
-    color: "green" as const,
+    color: "aqua" as const,
     tier: "primary" as const,
   },
   {
@@ -61,7 +61,7 @@ export const commercialHubKpis = [
     value: "4",
     sub: "No movement 5+ days",
     helper: "Needs broker escalation",
-    color: "yellow" as const,
+    color: "rose" as const,
     tier: "secondary" as const,
   },
   {
@@ -69,7 +69,7 @@ export const commercialHubKpis = [
     value: "7",
     sub: "Blocking progress",
     helper: "Doc validation queue",
-    color: "red" as const,
+    color: "amber" as const,
     tier: "primary" as const,
   },
 ];

@@ -40,7 +40,7 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  gap: 16px;
+  gap: 10px;
 }
 
 /* Page header toolbar — uniform controls on signature header */
@@ -85,7 +85,7 @@
 }
 
 .module-send-center .send-center-kpi-strip {
-  padding: 12px 48px 16px;
+  padding: 8px 48px 10px;
 }
 
 /* ── 3. Unified KPI cards (Commercial Hub benchmark) ── */
@@ -180,7 +180,7 @@
 }
 
 .module-send-center .va-ops-tab-content {
-  padding: 20px 48px 32px;
+  padding: 12px 48px 24px;
 }
 
 /* ── 5. Table refinement ── */
@@ -270,7 +270,12 @@
 }
 
 .module-send-center .send-center-ai-list {
-  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .module-send-center .send-center-ai-item {
@@ -307,8 +312,8 @@
 
 /* ── 7. Search + filters (ITA focus glow) ── */
 .module-send-center .send-center-filters {
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .module-send-center .send-center-filters .va-ops-search {
@@ -430,5 +435,493 @@
 
   .module-send-center .send-center-tab .commercial-hub-table-wrap {
     max-height: none;
+  }
+}
+
+/* ── Header CTA hierarchy ── */
+.module-send-center .send-center-header-btn--primary {
+  background: var(--sc-primary);
+  border-color: color-mix(in srgb, var(--sc-primary) 80%, #000);
+  color: #fff;
+}
+
+.module-send-center .send-center-header-btn--primary:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--sc-primary) 35%, transparent);
+}
+
+.module-send-center .send-center-header-btn--secondary {
+  background: color-mix(in srgb, var(--sc-secondary) 12%, var(--surface-elevated));
+  border-color: color-mix(in srgb, var(--sc-secondary) 40%, var(--border-subtle));
+  color: var(--text-primary);
+}
+
+/* ── KPI command filters ── */
+.module-send-center .send-center-kpi-command-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.module-send-center .send-center-kpi-command {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  height: 88px;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-elevated);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.module-send-center .send-center-kpi-command:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--sc-primary) 40%, var(--border-default));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--sc-deep) 10%, transparent);
+}
+
+.module-send-center .send-center-kpi-command.active {
+  border-color: var(--sc-primary);
+  background: color-mix(in srgb, var(--sc-primary) 10%, var(--surface-elevated));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--sc-primary) 25%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--sc-primary) 15%, transparent);
+}
+
+.module-send-center .send-center-kpi-command-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+}
+
+.module-send-center .send-center-kpi-command-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.module-send-center .send-center-kpi-urgency {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.module-send-center .send-center-kpi-urgency--amber {
+  background: color-mix(in srgb, var(--status-amber) 18%, transparent);
+  color: var(--status-amber);
+}
+
+.module-send-center .send-center-kpi-urgency--red {
+  background: color-mix(in srgb, var(--sc-primary) 18%, transparent);
+  color: var(--sc-primary);
+}
+
+.module-send-center .send-center-kpi-urgency--green {
+  background: color-mix(in srgb, var(--status-green) 18%, transparent);
+  color: var(--status-green);
+}
+
+.module-send-center .send-center-kpi-urgency--blue {
+  background: color-mix(in srgb, var(--sc-secondary) 22%, transparent);
+  color: color-mix(in srgb, var(--sc-secondary) 90%, var(--text-primary));
+}
+
+.module-send-center .send-center-kpi-command-value {
+  font-family: var(--font-family-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.module-send-center .send-center-kpi-command-sub {
+  margin-top: auto;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Table toolbar + export local placement ── */
+.module-send-center .send-center-table-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.module-send-center .send-center-table-toolbar .send-center-filters {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ── Draft queue expandable details ── */
+.module-send-center .send-center-expand-col {
+  width: 28px;
+  padding: 0 4px !important;
+}
+
+.module-send-center .send-center-expand-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.module-send-center .send-center-expand-btn.expanded {
+  transform: rotate(90deg);
+  border-color: var(--sc-primary);
+  color: var(--sc-primary);
+}
+
+.module-send-center .send-center-detail-row td {
+  padding: 0 10px 10px !important;
+  height: auto !important;
+  background: color-mix(in srgb, var(--sc-deep) 5%, transparent);
+}
+
+.module-send-center .send-center-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px dashed color-mix(in srgb, var(--sc-secondary) 30%, var(--border-subtle));
+}
+
+.module-send-center .send-center-detail-grid dt {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.module-send-center .send-center-detail-grid dd {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.module-send-center .send-center-next-action {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.module-send-center .send-center-row--urgent td {
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--status-amber) 70%, transparent);
+}
+
+/* ── SLA workflow rail ── */
+.module-send-center .send-center-sla-workflow-rail {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--sc-secondary) 28%, var(--border-subtle));
+  background: color-mix(in srgb, var(--sc-deep) 6%, var(--surface-elevated));
+}
+
+.module-send-center .send-center-sla-workflow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.module-send-center .send-center-sla-workflow-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.module-send-center .send-center-sla-workflow-connector {
+  flex: 1;
+  height: 2px;
+  margin: 0 6px;
+  background: color-mix(in srgb, var(--sc-secondary) 35%, var(--border-subtle));
+}
+
+.module-send-center .send-center-sla-workflow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.module-send-center .send-center-sla-workflow-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--sc-secondary) 50%, var(--border-subtle));
+  background: var(--surface-elevated);
+}
+
+.module-send-center .send-center-sla-workflow-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.module-send-center .send-center-sla-stage-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.module-send-center .send-center-sla-stage-segment {
+  width: 18px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sc-secondary) 25%, var(--border-subtle));
+}
+
+.module-send-center .send-center-sla-stage-segment.active {
+  background: color-mix(in srgb, var(--sc-secondary) 70%, var(--text-muted));
+}
+
+.module-send-center .send-center-sla-stage-segment.current {
+  background: var(--sc-primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sc-primary) 40%, transparent);
+}
+
+.module-send-center .send-center-sla-stage-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.module-send-center .send-center-sla-stage-indicator--overdue .send-center-sla-stage-segment.current {
+  background: var(--status-amber);
+}
+
+.module-send-center .send-center-sla-stage-indicator--risk .send-center-sla-stage-segment.current {
+  background: var(--status-amber);
+  animation: send-center-sla-pulse 1.6s ease-in-out infinite;
+}
+
+.module-send-center .send-center-sla-stage-indicator--blocked .send-center-sla-stage-segment.current {
+  background: var(--sc-primary);
+}
+
+.module-send-center .send-center-sla-stage-indicator--blocked .send-center-sla-stage-label {
+  color: var(--sc-primary);
+}
+
+@keyframes send-center-sla-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ── Sent proposal lifecycle stepper ── */
+.module-send-center .send-center-lifecycle-stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 280px;
+}
+
+.module-send-center .send-center-lifecycle-step-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.module-send-center .send-center-lifecycle-connector {
+  flex: 1;
+  height: 2px;
+  min-width: 8px;
+  background: var(--border-subtle);
+}
+
+.module-send-center .send-center-lifecycle-connector.completed {
+  background: color-mix(in srgb, var(--status-green) 60%, var(--border-subtle));
+}
+
+.module-send-center .send-center-lifecycle-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.module-send-center .send-center-lifecycle-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--border-subtle);
+  background: var(--surface-elevated);
+}
+
+.module-send-center .send-center-lifecycle-step.completed .send-center-lifecycle-dot {
+  border-color: var(--status-green);
+  background: var(--status-green);
+}
+
+.module-send-center .send-center-lifecycle-step.current .send-center-lifecycle-dot {
+  border-color: var(--sc-primary);
+  background: var(--sc-primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sc-primary) 45%, transparent);
+}
+
+.module-send-center .send-center-lifecycle-label {
+  font-size: 8px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.15;
+  max-width: 52px;
+}
+
+.module-send-center .send-center-lifecycle-step.current .send-center-lifecycle-label {
+  color: var(--sc-primary);
+}
+
+.module-send-center .send-center-lifecycle-step.completed .send-center-lifecycle-label {
+  color: var(--text-secondary);
+}
+
+.module-send-center .send-center-lifecycle-cell {
+  min-width: 300px;
+}
+
+/* ── AI action blocks ── */
+.module-send-center .send-center-ai-action-block {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--surface-elevated) 60%, transparent);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.module-send-center .send-center-ai-action-block:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--sc-primary) 28%, transparent);
+  background: color-mix(in srgb, var(--sc-primary) 6%, var(--surface-elevated));
+}
+
+.module-send-center .send-center-ai-action-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.module-send-center .send-center-ai-action-title {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.module-send-center .send-center-ai-action-detail {
+  margin: 0 0 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.module-send-center .send-center-ai-action-why {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.module-send-center .send-center-ai-action-why-label {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+  color: color-mix(in srgb, var(--sc-primary) 80%, var(--text-muted));
+}
+
+.module-send-center .send-center-ai-action-cta {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--sc-primary) 45%, var(--border-subtle));
+  background: color-mix(in srgb, var(--sc-primary) 12%, var(--surface-elevated));
+  color: var(--sc-primary);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+.module-send-center .send-center-ai-action-cta:hover {
+  background: color-mix(in srgb, var(--sc-primary) 20%, var(--surface-elevated));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--sc-primary) 22%, transparent);
+}
+
+/* ── Approved row actions + compliance ── */
+.module-send-center .send-center-row-actions--stacked {
+  flex-wrap: wrap;
+  max-width: 320px;
+}
+
+.module-send-center .send-center-action-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.module-send-center .send-center-action-disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+  .module-send-center .send-center-kpi-command-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .module-send-center .send-center-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -52,9 +52,14 @@ export type IntakeFormCard = {
   id: IntakeFormType;
   title: string;
   description: string;
+  riskCategory: "Low" | "Medium" | "High";
+  recommended?: boolean;
   submissionsThisMonth: number;
   lastSubmitted: string;
   avgCompletionTime: string;
+  successRate: number;
+  pendingReview: number;
+  failedRoutes: number;
   icon: "clipboard" | "folder" | "shield";
   drawer: {
     overview: string;
@@ -71,9 +76,14 @@ export const intakeFormCards: IntakeFormCard[] = [
     title: "Contractors Intake",
     description:
       "Collect business details, payroll, subcontractor info, and coverage needs.",
+    riskCategory: "High",
+    recommended: true,
     submissionsThisMonth: 28,
     lastSubmitted: "2 hours ago",
     avgCompletionTime: "9 min",
+    successRate: 94,
+    pendingReview: 4,
+    failedRoutes: 1,
     icon: "clipboard",
     drawer: {
       overview:
@@ -95,9 +105,14 @@ export const intakeFormCards: IntakeFormCard[] = [
     title: "Restaurants Intake",
     description:
       "Capture restaurant operations, liquor exposure, payroll, and property details.",
+    riskCategory: "Medium",
+    recommended: true,
     submissionsThisMonth: 21,
     lastSubmitted: "5 hours ago",
     avgCompletionTime: "11 min",
+    successRate: 91,
+    pendingReview: 3,
+    failedRoutes: 1,
     icon: "folder",
     drawer: {
       overview:
@@ -118,9 +133,13 @@ export const intakeFormCards: IntakeFormCard[] = [
     id: "personal-lines",
     title: "Personal Lines Intake",
     description: "Collect personal auto, home, and bundled policy details.",
+    riskCategory: "Low",
     submissionsThisMonth: 35,
     lastSubmitted: "45 min ago",
     avgCompletionTime: "6 min",
+    successRate: 97,
+    pendingReview: 2,
+    failedRoutes: 0,
     icon: "shield",
     drawer: {
       overview:
@@ -189,7 +208,9 @@ export const routingStatus = [
   { id: "route-monday", system: "Monday", status: "Connected", lastSync: "4 min ago" },
 ];
 
-export type IntakeDraftStatus = "Draft" | "In Progress";
+export type IntakeDraftStatus = "Draft" | "In Progress" | "Needs Review";
+
+export type IntakeDraftRisk = "Low" | "Medium" | "High";
 
 export type IntakeDraft = {
   id: string;
@@ -197,9 +218,53 @@ export type IntakeDraft = {
   form: string;
   formType: IntakeFormType;
   lastEdited: string;
+  lastEditedMs: number;
   progress: number;
   status: IntakeDraftStatus;
   assignedOwner: string;
+  riskLevel: IntakeDraftRisk;
+  missingFields: number;
+  blockers: string[];
+};
+
+export const draftSummaryKpis = [
+  { label: "Total Drafts", value: "4", sub: "Active saves", color: "primary" as const },
+  { label: "At-Risk Drafts", value: "2", sub: "Stale or blocked", color: "red" as const },
+  { label: "Oldest Draft", value: "2d", sub: "Atlas Roofing", color: "yellow" as const },
+  { label: "Avg Completion", value: "35%", sub: "Across all drafts", color: "green" as const },
+  { label: "Drafts by Owner", value: "4", sub: "4 team members", color: "primary" as const },
+];
+
+export const draftFilterOptions = {
+  formType: ["All Forms", "Contractors", "Restaurants", "Personal Lines"],
+  owner: ["All Owners", "JoJo", "Pedro", "Tracie", "Valerie"],
+  completion: ["Any Completion", "0–25%", "26–50%", "51–75%", "76–99%"],
+  lastEdited: ["Any Time", "Today", "Yesterday", "Last 7 days", "Older"],
+  riskLevel: ["All Risk", "Low", "Medium", "High"],
+} as const;
+
+export type DraftFilterState = {
+  formType: string;
+  owner: string;
+  completion: string;
+  lastEdited: string;
+  riskLevel: string;
+};
+
+export const defaultDraftFilters: DraftFilterState = {
+  formType: "All Forms",
+  owner: "All Owners",
+  completion: "Any Completion",
+  lastEdited: "Any Time",
+  riskLevel: "All Risk",
+};
+
+export type DraftSortOption = "oldest" | "completion" | "needs-review";
+
+export const draftSortLabels: Record<DraftSortOption, string> = {
+  oldest: "Oldest first",
+  completion: "Highest completion",
+  "needs-review": "Needs review",
 };
 
 export const savedDrafts: IntakeDraft[] = [
@@ -208,39 +273,166 @@ export const savedDrafts: IntakeDraft[] = [
     client: "Rivera Construction",
     form: "Contractors",
     lastEdited: "Today, 2:14 PM",
+    lastEditedMs: Date.now() - 2 * 60 * 60 * 1000,
     progress: 60,
     formType: "contractors",
     status: "In Progress",
     assignedOwner: "JoJo",
+    riskLevel: "High",
+    missingFields: 3,
+    blockers: ["Payroll report missing", "EIN not provided"],
   },
   {
     id: "draft-greenline",
     client: "Greenline Logistics",
     form: "Contractors",
     lastEdited: "Yesterday, 4:30 PM",
+    lastEditedMs: Date.now() - 28 * 60 * 60 * 1000,
     progress: 40,
     formType: "contractors",
-    status: "Draft",
+    status: "Needs Review",
     assignedOwner: "Pedro",
+    riskLevel: "Medium",
+    missingFields: 5,
+    blockers: ["Claims history incomplete", "Driver list incomplete"],
   },
   {
     id: "draft-kim",
     client: "Kim Auto Shop",
     form: "Contractors",
     lastEdited: "Yesterday, 11:05 AM",
+    lastEditedMs: Date.now() - 36 * 60 * 60 * 1000,
     progress: 25,
     formType: "contractors",
     status: "Draft",
     assignedOwner: "Tracie",
+    riskLevel: "Medium",
+    missingFields: 8,
+    blockers: ["Coverage not selected"],
   },
   {
     id: "draft-atlas",
     client: "Atlas Roofing",
     form: "Contractors",
     lastEdited: "2 days ago",
+    lastEditedMs: Date.now() - 52 * 60 * 60 * 1000,
     progress: 15,
     formType: "contractors",
     status: "Draft",
     assignedOwner: "Valerie",
+    riskLevel: "Low",
+    missingFields: 11,
+    blockers: ["Business info incomplete"],
   },
 ];
+
+export type ClientRoutingStep = {
+  system: string;
+  status: "Sent" | "Success" | "Pending" | "Failed" | "Assigned" | "Created" | "Linked";
+};
+
+export type ClientRoutingStatus = {
+  id: string;
+  client: string;
+  steps: ClientRoutingStep[];
+};
+
+export const clientRoutingStatus: ClientRoutingStatus[] = [
+  {
+    id: "cr-martinez",
+    client: "Martinez Landscaping",
+    steps: [
+      { system: "AgencyZoom", status: "Sent" },
+      { system: "Slack", status: "Success" },
+      { system: "Monday", status: "Pending" },
+      { system: "Producer", status: "Assigned" },
+      { system: "Send Center", status: "Created" },
+      { system: "Commercial Hub", status: "Linked" },
+    ],
+  },
+  {
+    id: "cr-kim",
+    client: "Kim Auto Shop",
+    steps: [
+      { system: "AgencyZoom", status: "Failed" },
+      { system: "Slack", status: "Success" },
+      { system: "Monday", status: "Success" },
+      { system: "Producer", status: "Pending" },
+      { system: "Send Center", status: "Pending" },
+      { system: "Commercial Hub", status: "Pending" },
+    ],
+  },
+  {
+    id: "cr-greenline",
+    client: "Greenline Logistics",
+    steps: [
+      { system: "AgencyZoom", status: "Success" },
+      { system: "Slack", status: "Success" },
+      { system: "Monday", status: "Success" },
+      { system: "Producer", status: "Assigned" },
+      { system: "Send Center", status: "Created" },
+      { system: "Commercial Hub", status: "Linked" },
+    ],
+  },
+  {
+    id: "cr-rivera",
+    client: "Rivera Construction",
+    steps: [
+      { system: "AgencyZoom", status: "Sent" },
+      { system: "Slack", status: "Pending" },
+      { system: "Monday", status: "Pending" },
+      { system: "Producer", status: "Assigned" },
+      { system: "Send Center", status: "Pending" },
+      { system: "Commercial Hub", status: "Linked" },
+    ],
+  },
+];
+
+export const importSubmissionTypes = [
+  {
+    id: "csv",
+    label: "CSV Upload",
+    description: "Bulk import client and coverage data",
+    accept: ".csv",
+    icon: "upload" as const,
+  },
+  {
+    id: "acord",
+    label: "ACORD Form",
+    description: "Parse ACORD 125/126 application data",
+    accept: ".pdf,.xml",
+    icon: "file-text" as const,
+  },
+  {
+    id: "pdf",
+    label: "PDF Extraction",
+    description: "AI-assisted field extraction from PDF",
+    accept: ".pdf",
+    icon: "file-text" as const,
+  },
+  {
+    id: "email",
+    label: "Email Parsing",
+    description: "Import from forwarded intake email",
+    accept: ".eml,.msg",
+    icon: "mail" as const,
+  },
+  {
+    id: "carrier",
+    label: "Carrier Form",
+    description: "Carrier-specific application upload",
+    accept: ".pdf,.doc,.docx",
+    icon: "folder" as const,
+  },
+] as const;
+
+export type ImportJobStatus = "queued" | "processing" | "completed" | "failed";
+
+export type ImportJob = {
+  id: string;
+  fileName: string;
+  type: string;
+  status: ImportJobStatus;
+  progress: number;
+  startedAt: string;
+};

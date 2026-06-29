@@ -42,7 +42,7 @@ export const vaOperationsKpis = [
     value: "24",
     sub: "8 overdue",
     helper: "Tasks requiring attention today",
-    color: "yellow" as const,
+    color: "slate" as const,
   },
   {
     label: "Leads Waiting",
@@ -63,7 +63,7 @@ export const vaOperationsKpis = [
     value: "9",
     sub: "Requires producer review",
     helper: "Drafts awaiting approval",
-    color: "orange" as const,
+    color: "steel" as const,
   },
 ];
 
@@ -208,7 +208,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: "sara",
-    name: "Sara",
+    name: "Sarah",
     role: "Retention VA",
     roleType: "retention",
     status: "active",
@@ -245,6 +245,42 @@ export const teamMembers: TeamMember[] = [
       { text: "Resolved upload timeout issue", time: "2 hours ago" },
     ],
   },
+];
+
+export type TeamPresenceStatus = "online" | "on-call" | "busy" | "offline";
+
+const presenceByMember: TeamPresenceStatus[] = [
+  "online",
+  "online",
+  "on-call",
+  "online",
+  "busy",
+  "online",
+  "offline",
+  "on-call",
+];
+
+export const teamPresenceStrip = teamMembers.slice(0, 8).map((member, index) => ({
+  id: member.id,
+  name: member.name,
+  role: member.role,
+  presence: presenceByMember[index] ?? "online",
+}));
+
+export type TodayTimelineEventType = "call" | "appointment" | "deadline" | "follow-up";
+
+export type TodayTimelineEvent = {
+  id: string;
+  time: string;
+  type: TodayTimelineEventType;
+  label: string;
+};
+
+export const todayTimeline: TodayTimelineEvent[] = [
+  { id: "tl-1", time: "9:00 AM", type: "call", label: "Outbound dial block — Kat" },
+  { id: "tl-2", time: "11:30 AM", type: "follow-up", label: "Martinez Landscaping callback" },
+  { id: "tl-3", time: "2:00 PM", type: "appointment", label: "Producer review — Kim Auto Shop" },
+  { id: "tl-4", time: "4:00 PM", type: "deadline", label: "Loss runs due — Rivera Construction" },
 ];
 
 export type PriorityTaskStatus = "urgent" | "pending" | "critical";
@@ -345,7 +381,7 @@ export const priorityQueue: PriorityTask[] = [
     id: "task-4",
     title: "Producer approval — BOP quote draft",
     assignedTo: "Pedro",
-    assignedBy: "Sarah",
+    assignedBy: "Sarah Chen",
     due: "3:00 PM",
     dueDateRisk: "on-track",
     priority: "high",
@@ -358,7 +394,7 @@ export const priorityQueue: PriorityTask[] = [
   {
     id: "task-5",
     title: "Retention save — Lopez Family Auto",
-    assignedTo: "Sara",
+    assignedTo: "Sarah",
     assignedBy: "Eva",
     due: "4:30 PM",
     dueDateRisk: "at-risk",
@@ -462,9 +498,9 @@ export const liveActivity: ActivityItem[] = [
   },
   {
     id: "act-5",
-    text: "Sara completed retention save call",
+    text: "Sarah completed retention save call",
     summary: "Completed save call",
-    actor: "Sara",
+    actor: "Sarah",
     eventType: "complete",
     source: "Retention",
     time: "14 minutes ago",
@@ -542,7 +578,7 @@ export const workloadDistribution: WorkloadRow[] = [
   { id: "wl-jaffer", name: "Jaffer", role: "Research", roleType: "research", openTasks: 6, completedToday: 4, overdueCount: 0, slaRisk: "on-track", pendingApprovals: 1 },
   { id: "wl-pedro", name: "Pedro", role: "Brokerage", roleType: "brokerage", openTasks: 12, completedToday: 8, overdueCount: 3, slaRisk: "at-risk", pendingApprovals: 2 },
   { id: "wl-jojo", name: "JoJo", role: "Brokerage", roleType: "brokerage", openTasks: 9, completedToday: 6, overdueCount: 1, slaRisk: "on-track", pendingApprovals: 1 },
-  { id: "wl-sara", name: "Sara", role: "Retention", roleType: "retention", openTasks: 5, completedToday: 3, overdueCount: 0, slaRisk: "on-track", pendingApprovals: 0 },
+  { id: "wl-sara", name: "Sarah", role: "Retention", roleType: "retention", openTasks: 5, completedToday: 3, overdueCount: 0, slaRisk: "on-track", pendingApprovals: 0 },
 ];
 
 export type ApprovalType = "quote" | "proposal" | "renewal" | "exception-request";
@@ -617,7 +653,7 @@ export const approvalQueue: ApprovalDraft[] = [
   {
     id: "draft-4",
     title: "Rate Exception Request",
-    preparedBy: "Sara",
+    preparedBy: "Sarah",
     client: "Lopez Family Auto",
     submitted: "45 min ago",
     approvalType: "exception-request",
@@ -798,6 +834,6 @@ export const tabPlaceholders: Record<PlaceholderTabId, { title: string; descript
   },
   retention: {
     title: "Retention VA",
-    description: "Sara's retention workspace — renewals, cancellation saves, and cross-sell follow-ups.",
+    description: "Sarah's retention workspace — renewals, cancellation saves, and cross-sell follow-ups.",
   },
 };

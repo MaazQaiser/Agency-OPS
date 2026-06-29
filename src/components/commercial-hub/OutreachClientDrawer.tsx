@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { OutreachClientProfile } from "@/data/outreachQueue";
 import { getNameInitials } from "@/lib/nameInitials";
@@ -32,7 +33,7 @@ export function OutreachClientDrawer({ client, profile, onClose, onReviseProposa
   if (!client || !profile) return null;
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button
         type="button"
         className="va-ops-drawer-backdrop"
@@ -154,6 +155,6 @@ export function OutreachClientDrawer({ client, profile, onClose, onReviseProposa
           </div>
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

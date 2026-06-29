@@ -429,6 +429,63 @@ export function formatRemaining(record: PaymentRecord): string {
   return formatMoney(getRemainingBalance(record));
 }
 
+export type PaymentPriorityTier = "Overdue" | "Partial Payment" | "Due Today" | "Pending" | "Paid";
+
+export const paymentPriorityOrder: Record<PaymentPriorityTier, number> = {
+  Overdue: 0,
+  "Partial Payment": 1,
+  "Due Today": 2,
+  Pending: 3,
+  Paid: 4,
+};
+
+export function getPaymentPriorityTier(record: PaymentRecord): PaymentPriorityTier {
+  if (record.status === "Paid") return "Paid";
+  if (record.status === "Overdue" || record.status === "Failed") return "Overdue";
+  if (record.status === "Partial") return "Partial Payment";
+  if (record.dueDate.toLowerCase().includes("today") || record.dueDate.toLowerCase().includes("tomorrow")) {
+    return "Due Today";
+  }
+  return "Pending";
+}
+
+export function sortPaymentsByUrgency(records: PaymentRecord[]): PaymentRecord[] {
+  return [...records].sort((a, b) => {
+    const tierDiff = paymentPriorityOrder[getPaymentPriorityTier(a)] - paymentPriorityOrder[getPaymentPriorityTier(b)];
+    if (tierDiff !== 0) return tierDiff;
+    return getRemainingBalance(b) - getRemainingBalance(a);
+  });
+}
+
+export type PaymentRiskLevel = "Low" | "Medium" | "High";
+
+export function getPaymentRiskScore(record: PaymentRecord): PaymentRiskLevel {
+  const hasFailedAttempt = record.drawer.paymentAttempts.some((a) =>
+    /declined|failed|no payment/i.test(a.result),
+  );
+  const openedUnpaid =
+    record.drawer.paymentHistory.some((h) => /opened/i.test(h.action)) && getRemainingBalance(record) > 0;
+  const overdueHistory = record.status === "Overdue" || record.drawer.trustAccount.depositStatus.toLowerCase().includes("overdue");
+
+  if (record.status === "Failed" || hasFailedAttempt || overdueHistory) return "High";
+  if (record.status === "Partial" || openedUnpaid || record.status === "Overdue") return "Medium";
+  return "Low";
+}
+
+export const paymentRiskClass: Record<PaymentRiskLevel, string> = {
+  Low: "badge-green",
+  Medium: "badge-amber",
+  High: "badge-rose",
+};
+
+export const FAILED_RECOVERY_ACTIONS = [
+  "Retry payment",
+  "Resend payment link",
+  "Contact client",
+  "Update payment method",
+  "Escalate to producer",
+] as const;
+
 export function formatPaid(record: PaymentRecord): string {
   return formatMoney(record.paidAmount);
 }

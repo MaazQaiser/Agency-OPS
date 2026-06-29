@@ -1,18 +1,22 @@
 "use client";
 
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useMemo, useState, Fragment, type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import {
   draftStatusClass,
+  getDraftNextAction,
+  getDraftRiskLevel,
   matchesSendCenterFilters,
   matchesSendCenterSearch,
   sendCenterAiInsights,
+  sendCenterBulkActions,
   sendPriorityClass,
   type DraftQueueRecord,
   type SendCenterFilterState,
 } from "@/data/sendCenter";
 import { proposalIdByRowId } from "@/data/sendCenterProposals";
 import { routes } from "@/lib/routes";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { cn } from "@/lib/cn";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
@@ -27,6 +31,7 @@ import {
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
+import { exportSendCenterHistoryPdf } from "@/lib/export";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -57,6 +62,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useSendCenterFilters();
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = useMemo(
     () =>
@@ -101,18 +107,32 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
       onToast(`${row.client} submitted for licensed review`, "success");
       return;
     }
-    if (action === "Delete Draft") {
+    if (action === "Delete") {
       setRows((prev) => prev.filter((r) => r.id !== row.id));
       onToast(`Draft for ${row.client} deleted`, "success");
     }
   };
 
   const handleBulk = (action: string) => {
-    onToast(`${action} applied to ${selected.size} draft(s)`, "success");
-    if (action === "Delete") {
+    if (action === "Export") {
+      exportSendCenterHistoryPdf();
+      onToast(`Exported ${selected.size} draft record(s)`, "success");
+    } else {
+      onToast(`${action} applied to ${selected.size} draft(s)`, "success");
+    }
+    if (action === "Archive") {
       setRows((prev) => prev.filter((r) => !selected.has(r.id)));
     }
     setSelected(new Set());
+  };
+
+  const handleAiAction = (actionId: string) => {
+    if (actionId === "review-draft") {
+      const kim = rows.find((r) => r.client.includes("Kim"));
+      if (kim) openProposal(kim);
+      return;
+    }
+    onToast(`AI action: ${actionId.replace(/-/g, " ")}`, "success");
   };
 
   return (
@@ -124,19 +144,22 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
         onQuickActionClick={() => onOpenNewDraft()}
       />
 
-      <SendCenterAiInsight insights={sendCenterAiInsights.draftQueue} />
+      <SendCenterAiInsight insights={sendCenterAiInsights.draftQueue} onAction={handleAiAction} />
 
-      <SendCenterFilters
-        search={search}
-        onSearchChange={setSearch}
-        placeholder="Search clients, policy types, producers..."
-        filters={filters}
-        onFilterChange={updateFilter}
-      />
+      <div className="send-center-table-toolbar">
+        <SendCenterFilters
+          search={search}
+          onSearchChange={setSearch}
+          placeholder="Search clients, policy types, producers..."
+          filters={filters}
+          onFilterChange={updateFilter}
+        />
+        <ExportMenu kind="send-center-history" compact />
+      </div>
 
       <SendCenterBulkBar
         selectedCount={selected.size}
-        actions={["Submit", "Delete", "Assign"]}
+        actions={sendCenterBulkActions}
         onAction={handleBulk}
         onClear={() => setSelected(new Set())}
       />
@@ -159,7 +182,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
           }
         >
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
-            <table className="commercial-hub-table send-center-table">
+            <table className="commercial-hub-table send-center-table send-center-table--compact">
               <thead>
                 <tr>
                   <th className="send-center-checkbox-col">
@@ -170,21 +193,20 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                       onChange={toggleAll}
                     />
                   </th>
+                  <th aria-label="Expand" className="send-center-expand-col" />
                   <th>Client</th>
-                  <th>Language</th>
-                  <th>Policy Type</th>
-                  <th>Draft Type</th>
+                  <th>Policy</th>
                   <th>Assigned Producer</th>
-                  <th>Created At</th>
-                  <th>Priority</th>
-                  <th>Status</th>
+                  <th>Progress State</th>
+                  <th>Risk Level</th>
+                  <th>Next Action</th>
                   <th aria-label="Actions" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={10}>
+                    <td colSpan={9}>
                       <HubEmptyState
                         title="No matches"
                         description="No drafts match your search or filters. Try clearing filters or broadening your search."
@@ -193,64 +215,112 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((row) => (
-                    <tr
-                      key={row.id}
-                      className={cn("send-center-clickable-row", selected.has(row.id) && "selected")}
-                    >
-                      <td className="send-center-checkbox-col" data-label="">
-                        <input
-                          type="checkbox"
-                          aria-label={`Select ${row.client}`}
-                          checked={selected.has(row.id)}
-                          onChange={() => toggleSelect(row.id)}
-                        />
-                      </td>
-                      <td className="commercial-hub-client-cell" data-label="Client">
-                        <button type="button" className="send-center-row-link" onClick={() => openProposal(row)}>
-                          <span className="bilingual-client-cell">
-                            {row.client}
-                            <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
-                          </span>
-                        </button>
-                      </td>
-                      <td data-label="Language">
-                        {(() => {
-                          const meta = getProposalLanguageMeta(proposalIdByRowId[row.id] ?? row.proposalId);
-                          if (!meta) return <span className="badge badge-gray">EN</span>;
-                          return (
-                            <span className={cn("badge", translationStatusClass[meta.translationStatus])}>
-                              {meta.translationStatus}
-                            </span>
-                          );
-                        })()}
-                      </td>
-                      <td data-label="Policy Type">{row.policyType}</td>
-                      <td data-label="Draft Type">{row.draftType}</td>
-                      <td data-label="Producer"><UserChip name={row.assignedProducer} /></td>
-                      <td data-label="Created">{row.createdAt}</td>
-                      <td data-label="Priority">
-                        <span className={cn("badge", sendPriorityClass[row.priority])}>{row.priority}</span>
-                      </td>
-                      <td data-label="Status">
-                        <span className={cn("badge", draftStatusClass[row.status])}>{row.status}</span>
-                      </td>
-                      <td data-label="" className="ops-responsive-cell--bare">
-                        <div className="send-center-row-actions">
-                          {(["Edit Draft", "Submit for Review", "Delete Draft"] as const).map((action) => (
+                  filtered.map((row) => {
+                    const expanded = expandedId === row.id;
+                    const langMeta = getProposalLanguageMeta(proposalIdByRowId[row.id] ?? row.proposalId);
+                    return (
+                      <Fragment key={row.id}>
+                        <tr
+                          className={cn(
+                            "send-center-clickable-row",
+                            selected.has(row.id) && "selected",
+                            row.priority === "High" && "send-center-row--urgent",
+                          )}
+                        >
+                          <td className="send-center-checkbox-col" data-label="">
+                            <input
+                              type="checkbox"
+                              aria-label={`Select ${row.client}`}
+                              checked={selected.has(row.id)}
+                              onChange={() => toggleSelect(row.id)}
+                            />
+                          </td>
+                          <td className="send-center-expand-col" data-label="">
                             <button
-                              key={action}
                               type="button"
-                              className={cn("va-ops-action-btn", action === "Delete Draft" && "send-center-action-danger")}
-                              onClick={() => handleAction(action, row)}
+                              className={cn("send-center-expand-btn", expanded && "expanded")}
+                              aria-expanded={expanded}
+                              aria-label={expanded ? "Collapse details" : "Expand details"}
+                              onClick={() => setExpandedId(expanded ? null : row.id)}
                             >
-                              {action}
+                              ›
                             </button>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                          </td>
+                          <td className="commercial-hub-client-cell" data-label="Client">
+                            <button type="button" className="send-center-row-link" onClick={() => openProposal(row)}>
+                              <span className="bilingual-client-cell">
+                                {row.client}
+                                <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
+                              </span>
+                            </button>
+                          </td>
+                          <td data-label="Policy" title={`${row.policyType} · ${row.draftType}`}>
+                            {row.policyType}
+                          </td>
+                          <td data-label="Producer">
+                            <UserChip name={row.assignedProducer} />
+                          </td>
+                          <td data-label="Progress State">
+                            <span className={cn("badge", draftStatusClass[row.status])}>{row.status}</span>
+                          </td>
+                          <td data-label="Risk Level">
+                            <span className={cn("badge", sendPriorityClass[row.priority])}>
+                              {getDraftRiskLevel(row.priority)}
+                            </span>
+                          </td>
+                          <td data-label="Next Action">
+                            <span className="send-center-next-action">{getDraftNextAction(row.status)}</span>
+                          </td>
+                          <td data-label="" className="ops-responsive-cell--bare">
+                            <div className="send-center-row-actions">
+                              {(["Edit Draft", "Submit for Review", "Delete"] as const).map((action) => (
+                                <button
+                                  key={action}
+                                  type="button"
+                                  className={cn("va-ops-action-btn", action === "Delete" && "send-center-action-danger")}
+                                  onClick={() => handleAction(action, row)}
+                                >
+                                  {action}
+                                </button>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                        {expanded && (
+                          <tr className="send-center-detail-row">
+                            <td colSpan={9}>
+                              <dl className="send-center-detail-grid">
+                                <div>
+                                  <dt>Draft type</dt>
+                                  <dd>{row.draftType}</dd>
+                                </div>
+                                <div>
+                                  <dt>Created</dt>
+                                  <dd>{row.createdAt}</dd>
+                                </div>
+                                <div>
+                                  <dt>Language</dt>
+                                  <dd>
+                                    {langMeta ? (
+                                      <span className={cn("badge", translationStatusClass[langMeta.translationStatus])}>
+                                        {langMeta.translationStatus}
+                                      </span>
+                                    ) : (
+                                      <span className="badge badge-gray">EN</span>
+                                    )}
+                                  </dd>
+                                </div>
+                                <div>
+                                  <dt>Priority</dt>
+                                  <dd>{row.priority}</dd>
+                                </div>
+                              </dl>
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    );
+                  })
                 )}
               </tbody>
             </table>

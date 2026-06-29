@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { DrawerSkeleton } from "@/components/shared/loading";
 import { useDrawerLoading } from "@/hooks/useTabLoading";
@@ -51,7 +52,7 @@ export function SubmissionDrawer({ submission, onClose }: SubmissionDrawerProps)
   const checklistProgress = progressFromHubMissingDocs(submission.missingDocs);
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button
         type="button"
         className="va-ops-drawer-backdrop"
@@ -194,6 +195,6 @@ export function SubmissionDrawer({ submission, onClose }: SubmissionDrawerProps)
           )}
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

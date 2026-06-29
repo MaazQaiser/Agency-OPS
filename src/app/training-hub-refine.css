@@ -487,3 +487,352 @@
     gap: 2px;
   }
 }
+
+/* ── KPI priority tiers ── */
+.module-training-hub .training-kpi-card--primary {
+  border-color: color-mix(in srgb, var(--hub-accent, #a855f7) 40%, var(--border-subtle));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--hub-accent, #a855f7) 15%, transparent);
+}
+
+.module-training-hub .training-kpi-card--secondary {
+  opacity: 0.92;
+}
+
+/* ── Live training pods ── */
+.module-training-hub .training-dept-pod {
+  border-color: color-mix(in srgb, var(--hub-accent, #a855f7) 22%, var(--border-subtle));
+}
+
+.module-training-hub .training-dept-pod-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0 4px;
+}
+
+.module-training-hub .training-dept-overdue-badge {
+  animation: training-pod-pulse 2s ease-in-out infinite;
+}
+
+.module-training-hub .training-dept-pod-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.module-training-hub .training-dept-pod-activity {
+  grid-column: 1 / -1;
+}
+
+.module-training-hub .training-dept-pod-activity dd {
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
+.module-training-hub .dept-progress-ring-value {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@keyframes training-pod-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ── Library resource cards ── */
+.module-training-hub .training-resource-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.module-training-hub .training-resource-type-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+}
+
+.module-training-hub .training-badge--script { background: color-mix(in srgb, #8b5cf6 15%, transparent); color: #c4b5fd; }
+.module-training-hub .training-badge--sop { background: color-mix(in srgb, #3b82f6 15%, transparent); color: #93c5fd; }
+.module-training-hub .training-badge--loom { background: color-mix(in srgb, #ec4899 15%, transparent); color: #f9a8d4; }
+.module-training-hub .training-badge--checklist { background: color-mix(in srgb, #14b8a6 15%, transparent); color: #5eead4; }
+.module-training-hub .training-badge--guide { background: color-mix(in srgb, #f59e0b 15%, transparent); color: #fcd34d; }
+.module-training-hub .training-badge--compliance { background: color-mix(in srgb, #ef4444 15%, transparent); color: #fca5a5; }
+
+.module-training-hub .training-resource-dept-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.module-training-hub .training-resource-meta--compact {
+  gap: 4px;
+}
+
+.module-training-hub .training-resource-progress {
+  margin-top: 8px;
+}
+
+.module-training-hub .training-resource-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+}
+
+.module-training-hub .training-resource-progress-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.module-training-hub .training-resource-progress-fill {
+  height: 100%;
+  background: var(--hub-accent, #a855f7);
+  border-radius: 999px;
+}
+
+/* ── Detail content preview ── */
+.module-training-hub .training-content-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.module-training-hub .training-content-preview-type {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--hub-accent, #a855f7);
+}
+
+.module-training-hub .training-content-preview-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.module-training-hub .training-video-preview {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--hub-accent, #a855f7) 6%, var(--surface-elevated));
+  min-height: 120px;
+}
+
+.module-training-hub .training-video-preview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.module-training-hub .training-resume-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--hub-accent, #a855f7) 10%, transparent);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.module-training-hub .training-progress-memory {
+  margin-top: 12px;
+}
+
+.module-training-hub .training-progress-memory-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+}
+
+/* ── Quiz block ── */
+.module-training-hub .training-quiz-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.module-training-hub .training-quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.module-training-hub .training-quiz-title {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 800;
+}
+
+.module-training-hub .training-quiz-sub {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.module-training-hub .training-quiz-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.module-training-hub .training-quiz-attempt {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.module-training-hub .training-quiz-questions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.module-training-hub .training-quiz-question-card {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-elevated) 80%, transparent);
+}
+
+.module-training-hub .training-quiz-question {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.module-training-hub .training-quiz-number {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--hub-accent, #a855f7) 15%, transparent);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.module-training-hub .training-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.module-training-hub .training-quiz-option {
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.module-training-hub .training-quiz-option.selected {
+  border-color: var(--hub-accent, #a855f7);
+  background: color-mix(in srgb, var(--hub-accent, #a855f7) 10%, transparent);
+}
+
+.module-training-hub .training-quiz-option.correct {
+  border-color: var(--status-green);
+  background: color-mix(in srgb, var(--status-green) 12%, transparent);
+}
+
+.module-training-hub .training-quiz-option.incorrect {
+  border-color: var(--status-red, #f43f5e);
+  background: color-mix(in srgb, var(--status-red, #f43f5e) 10%, transparent);
+}
+
+.module-training-hub .training-quiz-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border-subtle);
+}
+
+.module-training-hub .training-quiz-score-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.module-training-hub .training-quiz-score-label {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.module-training-hub .training-quiz-pass-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 11px;
+  color: var(--status-green);
+}
+
+/* ── Leaderboard + certifications ── */
+.module-training-hub .training-leaderboard-completion {
+  font-weight: 800;
+  color: var(--hub-accent, #a855f7);
+}
+
+.module-training-hub .training-cert-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.module-training-hub .training-cert-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  font-size: 11px;
+}
+
+.module-training-hub .training-cert-list-item strong {
+  display: block;
+  font-size: var(--font-size-xs);
+}
+
+.module-training-hub .training-cert-required {
+  margin-left: 6px;
+  font-size: 9px;
+}

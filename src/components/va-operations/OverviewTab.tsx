@@ -9,6 +9,7 @@ import {
 import { DataStateView, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { VaOpsPanels } from "./VaOpsPanels";
+import { VaOpsTopStrips } from "./VaOpsTopStrips";
 
 type OverviewTabProps = {
   role: VaOperationsRoleId;
@@ -44,10 +45,10 @@ export function OverviewTab({ role }: OverviewTabProps) {
       }
     >
       <div className="va-ops-overview">
+        <VaOpsTopStrips />
         <VaOpsPanels
           role={role}
           showOperationalSnapshot
-          contentStacked
           priorityLimit={3}
           activityLimit={5}
         />

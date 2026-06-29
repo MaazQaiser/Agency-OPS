@@ -45,6 +45,27 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  gap: 10px;
+}
+
+.module-epay-policy .epay-invoice-builder,
+.module-epay-policy .epay-payment-tracker,
+.module-epay-policy .epay-trust-reference {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.module-epay-policy .va-ops-panel {
+  padding: 12px 14px;
+}
+
+.module-epay-policy .va-ops-panel-header {
+  margin-bottom: 8px;
+}
+
+.module-epay-policy .epay-builder-accordions {
+  gap: 8px;
 }
 
 /* ── 1. Payment Tracker: 60 / 40 overdue vs failed ── */
@@ -421,5 +442,359 @@
 
   .epay-accordion-trigger-meta {
     display: none;
+  }
+}
+
+/* ── Header CTA hierarchy ── */
+.module-epay-policy .epay-header-btn--primary {
+  background: var(--hub-accent, #22c55e);
+  border-color: color-mix(in srgb, var(--hub-accent, #22c55e) 80%, #000);
+  color: #fff;
+}
+
+.module-epay-policy .epay-header-btn--secondary {
+  background: color-mix(in srgb, var(--hub-secondary, #86efac) 12%, var(--surface-elevated));
+  border-color: color-mix(in srgb, var(--hub-secondary, #86efac) 40%, var(--border-subtle));
+  color: var(--text-primary);
+}
+
+/* ── Invoice readiness pre-flight ── */
+.module-epay-policy .epay-readiness-panel {
+  border-color: color-mix(in srgb, var(--hub-accent, #22c55e) 25%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-readiness-panel--blocked {
+  border-color: color-mix(in srgb, var(--status-red, #f43f5e) 35%, var(--border-subtle));
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--status-red, #f43f5e) 70%, transparent);
+}
+
+.module-epay-policy .epay-readiness-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.module-epay-policy .epay-readiness-checklist {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.module-epay-policy .epay-readiness-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-elevated) 80%, transparent);
+  font-size: 11px;
+}
+
+.module-epay-policy .epay-readiness-item.complete {
+  border-color: color-mix(in srgb, var(--status-green) 35%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-readiness-icon {
+  color: var(--text-muted);
+}
+
+.module-epay-policy .epay-readiness-item.complete .epay-readiness-icon {
+  color: var(--status-green);
+}
+
+.module-epay-policy .epay-readiness-label {
+  flex: 1;
+  font-weight: 600;
+}
+
+.module-epay-policy .epay-readiness-status {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Send gate flow ── */
+.module-epay-policy .epay-send-gate-panel {
+  border-color: color-mix(in srgb, var(--hub-accent, #22c55e) 30%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-send-gate-flow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+.module-epay-policy .epay-send-gate-flow span {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.module-epay-policy .epay-send-gate-flow span.active {
+  color: var(--hub-accent, #22c55e);
+  border-color: color-mix(in srgb, var(--hub-accent, #22c55e) 45%, var(--border-subtle));
+  background: color-mix(in srgb, var(--hub-accent, #22c55e) 10%, transparent);
+}
+
+.module-epay-policy .epay-send-gate-blocked {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--status-red, #f43f5e) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status-red, #f43f5e) 25%, transparent);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ── Extended payment lifecycle ── */
+.module-epay-policy .epay-extended-lifecycle-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  overflow-x: auto;
+}
+
+.module-epay-policy .epay-extended-lifecycle-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.module-epay-policy .epay-extended-lifecycle-connector {
+  flex: 1;
+  height: 2px;
+  min-width: 8px;
+  background: var(--border-subtle);
+}
+
+.module-epay-policy .epay-extended-lifecycle-connector.completed {
+  background: color-mix(in srgb, var(--status-green) 60%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-extended-lifecycle-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 72px;
+}
+
+.module-epay-policy .epay-extended-lifecycle-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--border-subtle);
+}
+
+.module-epay-policy .epay-extended-lifecycle-step.completed .epay-extended-lifecycle-dot {
+  border-color: var(--status-green);
+  background: var(--status-green);
+}
+
+.module-epay-policy .epay-extended-lifecycle-step.current .epay-extended-lifecycle-dot {
+  border-color: var(--hub-accent, #22c55e);
+  background: var(--hub-accent, #22c55e);
+}
+
+.module-epay-policy .epay-extended-lifecycle-step.failed .epay-extended-lifecycle-dot {
+  border-color: var(--status-red, #f43f5e);
+  background: var(--status-red, #f43f5e);
+}
+
+.module-epay-policy .epay-extended-lifecycle-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.module-epay-policy .epay-extended-lifecycle-time {
+  font-size: 8px;
+  color: var(--text-secondary);
+}
+
+/* ── Payment tracker priority + risk ── */
+.module-epay-policy .epay-tracker-row--overdue td {
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--status-amber) 80%, transparent);
+  background: color-mix(in srgb, var(--status-amber) 6%, transparent);
+}
+
+.module-epay-policy .epay-priority-badge.epay-priority--overdue {
+  background: color-mix(in srgb, var(--status-amber) 18%, transparent);
+  color: var(--status-amber);
+}
+
+.module-epay-policy .epay-risk-badge {
+  font-size: 10px;
+}
+
+.module-epay-policy .epay-failed-recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* ── Trust flow rail ── */
+.module-epay-policy .epay-trust-flow-rail {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--hub-accent, #22c55e) 22%, var(--border-subtle));
+  background: color-mix(in srgb, var(--hub-accent, #22c55e) 5%, var(--surface-elevated));
+}
+
+.module-epay-policy .epay-trust-flow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.module-epay-policy .epay-trust-flow-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.module-epay-policy .epay-trust-flow-connector {
+  flex: 1;
+  height: 2px;
+  margin: 0 6px;
+  background: var(--border-subtle);
+}
+
+.module-epay-policy .epay-trust-flow-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.module-epay-policy .epay-trust-flow-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--hub-accent, #22c55e) 40%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-trust-flow-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.module-epay-policy .epay-trust-flow-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.module-epay-policy .epay-trust-flow-segment {
+  width: 16px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+}
+
+.module-epay-policy .epay-trust-flow-segment.active {
+  background: color-mix(in srgb, var(--hub-accent, #22c55e) 50%, var(--border-subtle));
+}
+
+.module-epay-policy .epay-trust-flow-segment.current {
+  background: var(--hub-accent, #22c55e);
+}
+
+.module-epay-policy .epay-trust-flow-stage-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.module-epay-policy .epay-trust-flow-indicator--blocked .epay-trust-flow-segment.current {
+  background: var(--status-red, #f43f5e);
+}
+
+/* ── Broker fee holds alert ── */
+.module-epay-policy .epay-broker-fee-alert {
+  border-color: color-mix(in srgb, var(--status-amber) 35%, var(--border-subtle));
+  background: color-mix(in srgb, var(--status-amber) 6%, var(--surface-elevated));
+}
+
+.module-epay-policy .epay-broker-fee-alert-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.module-epay-policy .epay-broker-fee-alert-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.module-epay-policy .epay-broker-fee-alert-metrics dt {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.module-epay-policy .epay-broker-fee-alert-metrics dd {
+  margin: 2px 0 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base-sm);
+  font-weight: 800;
+}
+
+.module-epay-policy .epay-broker-fee-row--held td {
+  background: color-mix(in srgb, var(--status-amber) 5%, transparent);
+}
+
+.module-epay-policy .epay-broker-fee-reason {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.module-epay-policy .epay-reconciliation-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.module-epay-policy .epay-reconcile-btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .module-epay-policy .epay-readiness-checklist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

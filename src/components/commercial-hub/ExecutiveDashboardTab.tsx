@@ -39,6 +39,7 @@ import {
   CommercialHubTabShell,
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
+import { buildMarketSpreadMatrix } from "@/lib/marketSpreadMatrix";
 import { PipelineStageBar } from "./PipelineStageBar";
 
 const submissionStatusClass: Record<HubSubmissionStatus, string> = {
@@ -102,6 +103,11 @@ export function ExecutiveDashboardTab() {
     [],
   );
 
+  const marketSpreadRows = useMemo(
+    () => buildMarketSpreadMatrix(activeSubmissions),
+    [],
+  );
+
   if (status === "loading") {
     return (
       <CommercialHubTabShell className="commercial-hub-executive">
@@ -137,6 +143,7 @@ export function ExecutiveDashboardTab() {
       <CommercialHubTabHeader
         title={header.title}
         subtitle={header.subtitle}
+        strategic
         utilities={
           <>
             <span className="commercial-hub-last-updated">
@@ -154,6 +161,7 @@ export function ExecutiveDashboardTab() {
         ariaLabel="Active submissions"
         title="Active Submissions"
         subtitle="Main working pipeline — click a row for full details."
+        strategicTitle
       >
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
@@ -203,6 +211,48 @@ export function ExecutiveDashboardTab() {
                 </tr>
               );
               })}
+            </tbody>
+          </table>
+        </div>
+      </CommercialHubWorkspace>
+
+      <CommercialHubWorkspace
+        ariaLabel="Market spread matrix"
+        title="Market Spread Matrix"
+        subtitle="Carrier response visibility across active submissions."
+        strategicTitle
+      >
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <table className="commercial-hub-table commercial-hub-market-spread-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Markets Submitted</th>
+                <th>Responses Received</th>
+                <th>Waiting</th>
+                <th>Declined</th>
+                <th>Best Quote</th>
+              </tr>
+            </thead>
+            <tbody>
+              {marketSpreadRows.map((row) => (
+                <tr key={row.id}>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td>{row.marketsSubmitted}</td>
+                  <td>{row.responsesReceived}</td>
+                  <td>
+                    <span className={cn("badge", row.waiting > 0 ? "badge-yellow" : "badge-gray")}>
+                      {row.waiting}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={cn("badge", row.declined > 0 ? "badge-red" : "badge-gray")}>
+                      {row.declined}
+                    </span>
+                  </td>
+                  <td className="commercial-hub-premium">{row.bestQuote}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

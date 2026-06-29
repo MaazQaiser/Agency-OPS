@@ -6,7 +6,12 @@ import {
   auditActionTypes,
   auditActionLabels,
   auditHubSources,
+  auditSeverityLabels,
+  auditSeverityOptions,
+  AUDIT_LOG_PAGE_SIZE,
+  computeAuditMetrics,
   defaultAuditLogFilters,
+  exportAuditLogCsv,
   filterAuditLog,
   groupAuditLogByDate,
   type AuditLogEntry,
@@ -26,6 +31,7 @@ type AuditLogDrawerProps = {
 export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDrawerProps) {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<AuditLogFilters>(defaultAuditLogFilters);
+  const [visibleCount, setVisibleCount] = useState(AUDIT_LOG_PAGE_SIZE);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -39,23 +45,48 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
     };
   }, [onClose]);
 
+  useEffect(() => {
+    setVisibleCount(AUDIT_LOG_PAGE_SIZE);
+  }, [search, filters]);
+
   const filtered = useMemo(
     () => filterAuditLog(entries, search, filters),
     [entries, search, filters],
   );
 
-  const grouped = useMemo(() => groupAuditLogByDate(filtered), [filtered]);
+  const visibleEntries = useMemo(
+    () => filtered.slice(0, visibleCount),
+    [filtered, visibleCount],
+  );
+
+  const grouped = useMemo(() => groupAuditLogByDate(visibleEntries), [visibleEntries]);
+
+  const metrics = useMemo(() => computeAuditMetrics(entries), [entries]);
 
   const updateFilter = <K extends keyof AuditLogFilters>(key: K, value: AuditLogFilters[K]) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const hasActiveFilters =
-    filters.action !== "all" || filters.hub !== "all" || filters.role !== "all";
+    filters.action !== "all" ||
+    filters.hub !== "all" ||
+    filters.role !== "all" ||
+    filters.severity !== "all";
 
   const clearFilters = () => {
     setFilters(defaultAuditLogFilters);
     setSearch("");
+  };
+
+  const showingCount = Math.min(visibleCount, filtered.length);
+  const hasMore = visibleCount < filtered.length;
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + AUDIT_LOG_PAGE_SIZE);
+  };
+
+  const handleExport = () => {
+    exportAuditLogCsv(filtered);
   };
 
   return (
@@ -143,6 +174,21 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
                 ))}
               </select>
             </label>
+
+            <label className="audit-log-filter">
+              <span className="audit-log-filter-label">Severity</span>
+              <select
+                value={filters.severity}
+                onChange={(e) => updateFilter("severity", e.target.value as AuditLogFilters["severity"])}
+                aria-label="Filter by severity"
+              >
+                {auditSeverityOptions.map((severity) => (
+                  <option key={severity} value={severity}>
+                    {severity === "all" ? "All" : auditSeverityLabels[severity]}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
 
           {(hasActiveFilters || search) && (
@@ -150,6 +196,25 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
               Clear filters
             </button>
           )}
+        </div>
+
+        <div className="audit-log-metrics" aria-label="Audit log summary metrics">
+          <div className="audit-log-metric">
+            <span className="audit-log-metric-value">{metrics.totalEventsToday}</span>
+            <span className="audit-log-metric-label">Total Events Today</span>
+          </div>
+          <div className="audit-log-metric audit-log-metric--critical">
+            <span className="audit-log-metric-value">{metrics.criticalActions}</span>
+            <span className="audit-log-metric-label">Critical Actions</span>
+          </div>
+          <div className="audit-log-metric audit-log-metric--failed">
+            <span className="audit-log-metric-value">{metrics.failedActions}</span>
+            <span className="audit-log-metric-label">Failed Actions</span>
+          </div>
+          <div className="audit-log-metric audit-log-metric--pending">
+            <span className="audit-log-metric-value">{metrics.pendingReviews}</span>
+            <span className="audit-log-metric-label">Pending Reviews</span>
+          </div>
         </div>
 
         <div className="audit-log-body">
@@ -176,7 +241,7 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
                   <h3 className="audit-log-group-label">{group.label}</h3>
                   <ul className="audit-log-list">
                     {group.entries.map((entry) => (
-                      <AuditLogItem key={entry.id} entry={entry} />
+                      <AuditLogItem key={entry.id} entry={entry} onNavigate={onClose} />
                     ))}
                   </ul>
                 </section>
@@ -187,8 +252,23 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
 
         <footer className="audit-log-footer">
           <span className="audit-log-footer-count">
-            {filtered.length} {filtered.length === 1 ? "entry" : "entries"}
+            Showing {showingCount} of {filtered.length} events
           </span>
+          <div className="audit-log-footer-actions">
+            {hasMore && (
+              <button type="button" className="audit-log-footer-btn" onClick={handleLoadMore}>
+                Load More
+              </button>
+            )}
+            <button
+              type="button"
+              className={cn("audit-log-footer-btn", "audit-log-footer-btn--primary")}
+              onClick={handleExport}
+              disabled={filtered.length === 0}
+            >
+              Export Audit Log
+            </button>
+          </div>
         </footer>
       </aside>
     </div>

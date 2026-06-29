@@ -428,6 +428,7 @@ export const userProfilesById: Record<string, UserProfile> = Object.fromEntries(
 
 const nameAliases: Record<string, string> = {
   eva: "eva-chong",
+  Eva: "eva-chong",
   "eva chong": "eva-chong",
   mike: "mike-torres",
   "mike torres": "mike-torres",

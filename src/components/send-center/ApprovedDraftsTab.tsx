@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import {
   approvedDraftRecords,
   approvedStatusClass,
+  getApprovedComplianceBlock,
   matchesSendCenterFilters,
   matchesSendCenterSearch,
+  sendCenterBulkActions,
   type ApprovedDraftRecord,
   type SendCenterFilterState,
 } from "@/data/sendCenter";
@@ -22,16 +24,18 @@ import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
 import { SendCenterBulkBar } from "./SendCenterBulkBar";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { ComplianceLockRing } from "./ComplianceLockRing";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
   useSendCenterFilters,
 } from "./SendCenterFilters";
-import { ComplianceLockRing } from "./ComplianceLockRing";
 
 type ApprovedDraftsTabProps = {
   onToast: (message: string, variant?: "success" | "error") => void;
 };
+
+const ROW_ACTIONS = ["Schedule Send", "Add Reminder", "Download PDF", "Add Notes"] as const;
 
 export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
   const { can, requirePermission } = usePermissions();
@@ -89,10 +93,23 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
   };
 
   const handleAction = (action: string, row: ApprovedDraftRecord) => {
-    if (action === "Send Proposal") {
+    const complianceBlock = getApprovedComplianceBlock(row);
+    if (complianceBlock && (action === "Send Now" || action === "Schedule Send")) {
+      onToast(complianceBlock, "error");
+      return;
+    }
+    if (action === "Send Now") {
       requirePermission("action:send-proposals", () => {
         onToast(`Proposal sent to ${row.client}`, "success");
       });
+      return;
+    }
+    if (action === "Schedule Send") {
+      onToast(`Send scheduled for ${row.client}`, "success");
+      return;
+    }
+    if (action === "Add Reminder") {
+      onToast(`Reminder set for ${row.client}`, "success");
       return;
     }
     if (action === "Download PDF") {
@@ -106,7 +123,16 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
   };
 
   const handleBulk = (action: string) => {
-    onToast(`${action} applied to ${selected.size} approved draft(s)`, "success");
+    if (action === "Export") {
+      exportSendCenterHistoryPdf();
+      onToast(`Exported ${selected.size} approved draft(s)`, "success");
+    } else if (action === "Send") {
+      requirePermission("action:send-proposals", () => {
+        onToast(`Sent ${selected.size} approved proposal(s)`, "success");
+      });
+    } else {
+      onToast(`${action} applied to ${selected.size} approved draft(s)`, "success");
+    }
     setSelected(new Set());
   };
 
@@ -131,7 +157,7 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
 
       <SendCenterBulkBar
         selectedCount={selected.size}
-        actions={["Send", "Schedule", "Download PDF"]}
+        actions={sendCenterBulkActions}
         onAction={handleBulk}
         onClear={() => setSelected(new Set())}
       />
@@ -190,52 +216,63 @@ export function ApprovedDraftsTab({ onToast }: ApprovedDraftsTabProps) {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((row) => (
-                    <tr key={row.id} className={cn("send-center-clickable-row", selected.has(row.id) && "selected")}>
-                      <td className="send-center-checkbox-col">
-                        <input
-                          type="checkbox"
-                          aria-label={`Select ${row.client}`}
-                          checked={selected.has(row.id)}
-                          onChange={() => toggleSelect(row.id)}
-                        />
-                      </td>
-                      <td className="commercial-hub-client-cell">
-                        <button type="button" className="send-center-row-link" onClick={() => openProposal(row)}>
-                          {row.client}
-                        </button>
-                      </td>
-                      <td><UserChip name={row.approvedBy} /></td>
-                      <td>{row.date}</td>
-                      <td>{row.proposalType}</td>
-                      <td>
-                        <span className={cn("badge", approvedStatusClass[row.status])}>{row.status}</span>
-                      </td>
-                      <td>
-                        <div className="send-center-row-actions">
-                          {canSend ? (
-                            <ComplianceLockRing
-                              locked={row.status === "On Hold"}
-                              onSend={() => handleAction("Send Proposal", row)}
-                              label="Send Proposal"
-                              className="send-center-compliance-lock"
-                            />
-                          ) : null}
-                          {(["Download PDF", "Add Notes"] as const)
-                            .map((action) => (
-                            <button
-                              key={action}
-                              type="button"
-                              className="va-ops-action-btn"
-                              onClick={() => handleAction(action, row)}
-                            >
-                              {action}
-                            </button>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  filtered.map((row) => {
+                    const complianceBlock = getApprovedComplianceBlock(row);
+                    const locked = Boolean(complianceBlock);
+                    return (
+                      <tr key={row.id} className={cn("send-center-clickable-row", selected.has(row.id) && "selected")}>
+                        <td className="send-center-checkbox-col">
+                          <input
+                            type="checkbox"
+                            aria-label={`Select ${row.client}`}
+                            checked={selected.has(row.id)}
+                            onChange={() => toggleSelect(row.id)}
+                          />
+                        </td>
+                        <td className="commercial-hub-client-cell">
+                          <button type="button" className="send-center-row-link" onClick={() => openProposal(row)}>
+                            {row.client}
+                          </button>
+                        </td>
+                        <td>
+                          <UserChip name={row.approvedBy} />
+                        </td>
+                        <td>{row.date}</td>
+                        <td>{row.proposalType}</td>
+                        <td>
+                          <span className={cn("badge", approvedStatusClass[row.status])}>{row.status}</span>
+                        </td>
+                        <td>
+                          <div className="send-center-row-actions send-center-row-actions--stacked">
+                            {canSend ? (
+                              <ComplianceLockRing
+                                locked={locked}
+                                lockReason={complianceBlock ?? undefined}
+                                onSend={() => handleAction("Send Now", row)}
+                                label="Send Now"
+                                className="send-center-compliance-lock"
+                              />
+                            ) : null}
+                            {ROW_ACTIONS.map((action) => {
+                              const disabled = locked && action === "Schedule Send";
+                              return (
+                                <button
+                                  key={action}
+                                  type="button"
+                                  className={cn("va-ops-action-btn", disabled && "send-center-action-disabled")}
+                                  disabled={disabled}
+                                  title={disabled ? complianceBlock ?? undefined : undefined}
+                                  onClick={() => handleAction(action, row)}
+                                >
+                                  {action}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>

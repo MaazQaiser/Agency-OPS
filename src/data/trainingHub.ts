@@ -19,11 +19,20 @@ export const trainingHubHeader = {
 
 export const trainingHubKpis = [
   {
-    label: "Total Training Resources",
-    value: "146",
-    sub: "Across all departments",
-    helper: "Knowledge library size",
-    color: "primary" as const,
+    label: "Pending Assignments",
+    value: "18",
+    sub: "Need review or completion",
+    helper: "Open training tasks",
+    color: "yellow" as const,
+    tier: "primary" as const,
+  },
+  {
+    label: "Overdue Certifications",
+    value: "5",
+    sub: "Require immediate action",
+    helper: "Compliance risk",
+    color: "red" as const,
+    tier: "primary" as const,
   },
   {
     label: "Completed This Week",
@@ -31,20 +40,15 @@ export const trainingHubKpis = [
     sub: "Team completions logged",
     helper: "Learning progress",
     color: "green" as const,
+    tier: "secondary" as const,
   },
   {
-    label: "Pending Assignments",
-    value: "18",
-    sub: "Need review or completion",
-    helper: "Open training tasks",
-    color: "yellow" as const,
-  },
-  {
-    label: "Recently Updated",
+    label: "New Resources",
     value: "9",
-    sub: "Modified in last 7 days",
+    sub: "Added in last 7 days",
     helper: "Fresh training content",
     color: "primary" as const,
+    tier: "secondary" as const,
   },
 ];
 
@@ -56,6 +60,8 @@ export type DepartmentId =
   | "automation"
   | "admin";
 
+export type CertificationHealth = "Active" | "Expiring" | "Missing";
+
 export type TrainingDepartment = {
   id: DepartmentId;
   title: string;
@@ -64,6 +70,10 @@ export type TrainingDepartment = {
   completion: number;
   lastUpdated: string;
   icon: "phone" | "telescope" | "clipboard" | "trophy" | "rocket" | "shield";
+  assignedTrainingCount: number;
+  overdueTrainingCount: number;
+  lastActivity: string;
+  certificationHealth: CertificationHealth;
   drawer: {
     summary: string;
     teamMembers: string[];
@@ -81,6 +91,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 24,
     completion: 82,
     lastUpdated: "2 days ago",
+    assignedTrainingCount: 4,
+    overdueTrainingCount: 1,
+    lastActivity: "Kat completed Call Objection Basics · 12 min ago",
+    certificationHealth: "Active",
     icon: "phone",
     drawer: {
       summary: "Outbound call training, scripts, and objection handling for dialer VAs.",
@@ -103,6 +117,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 18,
     completion: 74,
     lastUpdated: "Today",
+    assignedTrainingCount: 3,
+    overdueTrainingCount: 0,
+    lastActivity: "Jaffer viewed Lead Qualification SOP · 1 hr ago",
+    certificationHealth: "Expiring",
     icon: "telescope",
     drawer: {
       summary: "Lead research, enrichment workflows, and qualification standards.",
@@ -125,6 +143,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 31,
     completion: 69,
     lastUpdated: "Yesterday",
+    assignedTrainingCount: 5,
+    overdueTrainingCount: 2,
+    lastActivity: "Pedro started Carrier Submission SOP · 34 min ago",
+    certificationHealth: "Expiring",
     icon: "clipboard",
     drawer: {
       summary: "Commercial submission workflows, carrier outreach, and quoting SOPs.",
@@ -147,6 +169,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 27,
     completion: 88,
     lastUpdated: "3 days ago",
+    assignedTrainingCount: 2,
+    overdueTrainingCount: 0,
+    lastActivity: "Eva uploaded Producer Script · 2 hr ago",
+    certificationHealth: "Active",
     icon: "trophy",
     drawer: {
       summary: "Producer sales workflows, closing techniques, and retention playbooks.",
@@ -167,6 +193,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 22,
     completion: 71,
     lastUpdated: "Today",
+    assignedTrainingCount: 1,
+    overdueTrainingCount: 0,
+    lastActivity: "Kyle completed Slack Integration Setup · 3 hr ago",
+    certificationHealth: "Active",
     icon: "rocket",
     drawer: {
       summary: "Automation builder training, trigger logic, and integration setup.",
@@ -187,6 +217,10 @@ export const trainingDepartments: TrainingDepartment[] = [
     resources: 24,
     completion: 91,
     lastUpdated: "1 day ago",
+    assignedTrainingCount: 6,
+    overdueTrainingCount: 2,
+    lastActivity: "Tracie renewed E&O compliance · Yesterday",
+    certificationHealth: "Missing",
     icon: "shield",
     drawer: {
       summary: "Agency policies, compliance procedures, and approval workflows.",
@@ -310,4 +344,38 @@ export const assignmentStatusClass: Record<AssignmentStatus, string> = {
   Pending: "badge-amber",
   "In Progress": "badge-blue",
   Completed: "badge-green",
+};
+
+export type CertificationStatus = "Active" | "Expiring Soon" | "Expired" | "Required";
+
+export type TeamCertification = {
+  id: string;
+  name: string;
+  holder: string;
+  department: string;
+  status: CertificationStatus;
+  expires?: string;
+  required: boolean;
+};
+
+export const teamCertifications: TeamCertification[] = [
+  { id: "cert-eo", name: "E&O Compliance", holder: "All Team", department: "Admin / Compliance", status: "Required", required: true },
+  { id: "cert-carrier", name: "Carrier Submission", holder: "Pedro", department: "Brokerage Team", status: "Expiring Soon", expires: "Jun 30, 2026", required: true },
+  { id: "cert-dialer", name: "Outbound Dialer", holder: "Kat", department: "Dialer Team", status: "Active", expires: "Dec 2026", required: false },
+  { id: "cert-research", name: "Lead Research", holder: "Jaffer", department: "Research Team", status: "Expired", expires: "May 15, 2026", required: true },
+  { id: "cert-sales", name: "Producer Closing", holder: "Eva", department: "Sales Team", status: "Active", expires: "Jan 2027", required: false },
+  { id: "cert-az", name: "AZ E-Sign Disclosure", holder: "JoJo", department: "Brokerage Team", status: "Expiring Soon", expires: "Jul 5, 2026", required: true },
+];
+
+export const certificationStatusClass: Record<CertificationStatus, string> = {
+  Active: "badge-green",
+  "Expiring Soon": "badge-amber",
+  Expired: "badge-rose",
+  Required: "badge-violet",
+};
+
+export const certificationHealthClass: Record<CertificationHealth, string> = {
+  Active: "badge-green",
+  Expiring: "badge-amber",
+  Missing: "badge-rose",
 };

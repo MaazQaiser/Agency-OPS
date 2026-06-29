@@ -12,9 +12,9 @@ type DepartmentProgressRingProps = {
  * Training Hub Signature Element — Circular progress ring per department
  * Ring stroke uses --hub-primary via CSS. Track uses --hub-glow.
  */
-export function DepartmentProgressRing({ completion, size = 48, label }: DepartmentProgressRingProps) {
+export function DepartmentProgressRing({ completion, size = 56, label }: DepartmentProgressRingProps) {
   const [animated, setAnimated] = useState(false);
-  const radius = (size - 6) / 2;
+  const radius = (size - 8) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (animated ? completion / 100 : 0) * circumference;
 
@@ -33,7 +33,7 @@ export function DepartmentProgressRing({ completion, size = 48, label }: Departm
           cy={size / 2}
           r={radius}
           fill="none"
-          strokeWidth="3"
+          strokeWidth="4"
           className="dept-progress-ring-track"
         />
         <circle
@@ -41,7 +41,7 @@ export function DepartmentProgressRing({ completion, size = 48, label }: Departm
           cy={size / 2}
           r={radius}
           fill="none"
-          strokeWidth="3"
+          strokeWidth="4"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"

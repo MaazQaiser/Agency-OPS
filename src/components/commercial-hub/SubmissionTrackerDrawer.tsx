@@ -21,6 +21,7 @@ import { CoverageChecklistProgress } from "@/components/commercial/CoverageCheck
 import { eoRiskFromTrackerSubmission } from "@/lib/eoRiskScore";
 import { progressFromTrackerSubmission } from "@/lib/coverageChecklistProgress";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { SubmissionQuotePanel } from "./SubmissionQuotePanel";
 
 const docStatusIcon = {
@@ -102,7 +103,7 @@ export function SubmissionTrackerDrawer({ submission, onClose }: SubmissionTrack
   ];
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button
         type="button"
         className="va-ops-drawer-backdrop"
@@ -309,6 +310,6 @@ export function SubmissionTrackerDrawer({ submission, onClose }: SubmissionTrack
           )}
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

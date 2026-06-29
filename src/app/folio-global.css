@@ -1,0 +1,291 @@
+/* Global Folio Strip — persistent agency heartbeat */
+
+.global-folio-strip {
+  width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  background: rgba(10, 16, 24, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 56px;
+  max-height: 64px;
+  grid-template-columns: minmax(0, max-content) minmax(140px, 1fr) minmax(0, max-content);
+  gap: 16px;
+  padding: 6px var(--space-lg);
+  z-index: 120;
+}
+
+.global-folio-strip:hover {
+  background: rgba(10, 16, 24, 0.9);
+}
+
+.global-folio-strip .folio-progress-dates,
+.global-folio-strip .folio-progress-stat-label {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.global-folio-strip .folio-progress-stat-value,
+.global-folio-strip .folio-progress-pct {
+  color: #ffffff;
+}
+
+.global-folio-strip .folio-progress-badge {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.global-folio-strip--glow {
+  box-shadow: inset 0 -1px 0 rgba(244, 63, 94, 0.22), 0 4px 24px rgba(244, 63, 94, 0.08);
+}
+
+.folio-progress-bar--closed,
+.global-folio-strip--closed {
+  --folio-accent: #94a3b8;
+}
+
+.global-folio-strip--closed .folio-progress-fill {
+  background: linear-gradient(90deg, #64748b, #94a3b8);
+}
+
+.global-folio-left {
+  gap: 8px;
+}
+
+.global-folio-days {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.global-folio-center {
+  padding: 0 8px;
+}
+
+.global-folio-track-wrap {
+  width: min(100%, 480px);
+}
+
+.global-folio-right {
+  gap: 12px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.global-folio-right .folio-progress-stat {
+  min-width: 52px;
+}
+
+.global-folio-right .folio-progress-stat--sparkline .folio-progress-stat-spark,
+.global-folio-right .folio-progress-stat--sparkline .kpi-sparkline-intelligence {
+  display: none;
+}
+
+.global-folio-risk-value {
+  color: #fca5a5;
+}
+
+.global-folio-urgency-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: 8px;
+}
+
+.global-folio-urgency-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.global-folio-urgency-badge--amber {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.32);
+}
+
+.global-folio-urgency-badge--red {
+  color: #fecdd3;
+  background: rgba(244, 63, 94, 0.16);
+  border-color: rgba(244, 63, 94, 0.32);
+}
+
+.global-folio-urgency-badge--slate {
+  color: #cbd5e1;
+  background: rgba(100, 116, 139, 0.2);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+/* Hub-local pulse (replaces duplicated folio in hubs) */
+.hub-operational-strips--local {
+  gap: 0;
+}
+
+.hub-local-pulse {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+  padding: 6px var(--space-lg);
+  border-bottom: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-header) 88%, transparent);
+}
+
+.hub-local-pulse-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.hub-local-pulse-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hub-local-pulse-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.hub-local-pulse-chip strong {
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.hub-local-pulse-chip--amber {
+  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.hub-local-pulse-chip--red {
+  border-color: rgba(244, 63, 94, 0.28);
+  background: rgba(244, 63, 94, 0.08);
+}
+
+.hub-local-pulse-chip--blue {
+  border-color: rgba(59, 130, 246, 0.28);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+/* Folio leadership drawer */
+.folio-drawer {
+  width: min(440px, 100vw);
+}
+
+.folio-drawer-body {
+  gap: var(--space-md);
+}
+
+.folio-drawer-section-title {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.folio-drawer-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+
+.folio-drawer-metrics dt {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.folio-drawer-metrics dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.folio-drawer-count {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.folio-drawer-list,
+.folio-drawer-team {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.folio-drawer-list li,
+.folio-drawer-team-row {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.folio-drawer-team-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.folio-drawer-team-row--overloaded {
+  border-left: 3px solid #f43f5e;
+}
+
+.folio-drawer-team-row--at-risk {
+  border-left: 3px solid #f59e0b;
+}
+
+@media (max-width: 1200px) {
+  .global-folio-urgency-badges {
+    display: none;
+  }
+
+  .global-folio-right .folio-progress-stat:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .global-folio-strip {
+    grid-template-columns: 1fr;
+    max-height: none;
+    gap: 8px;
+  }
+
+  .global-folio-right {
+    flex-wrap: wrap;
+  }
+}

@@ -9,6 +9,7 @@ import {
   dailyReconciliation,
   depositStatusClass,
   findLedgerEntryById,
+  getBrokerFeeHoldSummary,
   ledgerStatusClass,
   ledgerTypeClass,
   pendingDeposits,
@@ -21,6 +22,7 @@ import {
   type LedgerEntryType,
   type TrustLedgerEntry,
 } from "@/data/trustReference";
+import { formatMoney } from "@/data/epayPolicy";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { AppIconName } from "@/components/ui/AppIcon";
@@ -30,8 +32,8 @@ import { useHubDataState } from "@/hooks/useHubDataState";
 import { useSyncBreadcrumbDetail } from "@/hooks/useSyncBreadcrumbDetail";
 import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
-import { EPayAccordion } from "./EPayAccordion";
 import { EPayConfirmModal } from "./EPayConfirmModal";
+import { TrustFlowRail, TrustFlowStageIndicator } from "./TrustFlowRail";
 import { TrustLedgerDrawer } from "./TrustLedgerDrawer";
 
 const trustActivityIcon: Record<LedgerEntryType, AppIconName> = {
@@ -50,7 +52,8 @@ const trustActivityIconClass: Record<LedgerEntryType, string> = {
   Refund: "epay-trust-activity-icon--refund",
 };
 
-const heldBrokerFees = brokerFeeLedger.filter((row) => row.status === "Held").length;
+
+const brokerFeeSummary = getBrokerFeeHoldSummary(brokerFeeLedger);
 
 type TrustReferenceTabProps = {
   onToast?: (message: string, variant?: "success" | "error") => void;
@@ -108,6 +111,11 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         title={trustReferenceHeader.title}
         subtitle={trustReferenceHeader.subtitle}
         quickActions={trustReferenceHeader.quickActions}
+        onQuickActionClick={(id) => {
+          if (id === "export") onToast?.("Trust ledger export started", "success");
+          else if (id === "reconcile") onToast?.("Reconciliation workflow opened", "success");
+          else onToast?.(`${id.replace(/-/g, " ")} action triggered`, "success");
+        }}
       />
 
       <div className="epay-trust-updated">{trustLastUpdated}</div>
@@ -139,6 +147,46 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         </div>
       </dl>
 
+      <TrustFlowRail />
+
+      <section className="va-ops-panel epay-broker-fee-alert" aria-label="Broker fee holds alert">
+        <div className="epay-broker-fee-alert-header">
+          <h3 className="va-ops-section-title">Broker Fee Holds</h3>
+          <span className="badge badge-amber">{brokerFeeSummary.heldCount} active holds</span>
+        </div>
+        <dl className="epay-broker-fee-alert-metrics">
+          <div>
+            <dt>Amount held</dt>
+            <dd>{formatMoney(brokerFeeSummary.amountHeld)}</dd>
+          </div>
+          <div>
+            <dt>Amount released</dt>
+            <dd>{formatMoney(brokerFeeSummary.amountReleased)}</dd>
+          </div>
+          <div>
+            <dt>Pending releases</dt>
+            <dd>{brokerFeeSummary.pendingReleases}</dd>
+          </div>
+        </dl>
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <table className="commercial-hub-table">
+            <thead>
+              <tr><th>Client</th><th>Broker Fee</th><th>Status</th><th>Hold Reason</th></tr>
+            </thead>
+            <tbody>
+              {brokerFeeLedger.map((row) => (
+                <tr key={row.id} className={row.status === "Held" ? "epay-broker-fee-row--held" : undefined}>
+                  <td className="commercial-hub-client-cell">{row.client}</td>
+                  <td className="epay-broker-fee-highlight">{row.brokerFee}</td>
+                  <td><span className={cn("badge", brokerFeeStatusClass[row.status])}>{row.status}</span></td>
+                  <td className="epay-broker-fee-reason">{row.holdReason ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <div className="epay-trust-main">
         <section className="va-ops-panel" aria-label="Trust ledger activity">
           <div className="va-ops-panel-header">
@@ -148,7 +196,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
           <div className="commercial-hub-table-wrap epay-trust-ledger-wrap">
             <table className="commercial-hub-table epay-trust-ledger-table">
               <thead>
-                <tr><th>Date</th><th>Reference #</th><th>Client</th><th>Type</th><th>Amount</th><th>Status</th><th>Balance After</th></tr>
+                <tr><th>Date</th><th>Reference #</th><th>Client</th><th>Flow</th><th>Type</th><th>Amount</th><th>Status</th><th>Balance After</th></tr>
               </thead>
               <tbody>
                 {trustLedgerEntries.map((row) => (
@@ -168,6 +216,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
                     <td>{row.date}</td>
                     <td className="epay-trust-ref-cell">{row.referenceNumber}</td>
                     <td className="commercial-hub-client-cell">{row.client}</td>
+                    <td><TrustFlowStageIndicator entry={row} /></td>
                     <td><span className={cn("badge", ledgerTypeClass[row.type])}>{row.type}</span></td>
                     <td className="commercial-hub-premium">{row.amount}</td>
                     <td><span className={cn("badge", ledgerStatusClass[row.status])}>{row.status}</span></td>
@@ -247,46 +296,20 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         </div>
       </section>
 
-      <EPayAccordion
-        title="Broker Fee Holds"
-        subtitle="Separate compliance tracking — broker fees held apart from premiums."
-        className="epay-broker-fee-accordion"
-        countBadge={brokerFeeLedger.length}
-        statusSummary={`${heldBrokerFees} held · ${brokerFeeLedger.length} total`}
-        preview={
-          <ul className="epay-accordion-preview-list">
-            {brokerFeeLedger.slice(0, 2).map((row) => (
-              <li key={row.id} className="epay-accordion-preview-item">
-                <span className="epay-accordion-preview-label">{row.client}</span>
-                <span className="epay-accordion-preview-meta">{row.brokerFee} · {row.status}</span>
-              </li>
-            ))}
-          </ul>
-        }
-      >
-        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
-          <table className="commercial-hub-table">
-            <thead>
-              <tr><th>Client</th><th>Broker Fee</th><th>Status</th><th>Collected</th></tr>
-            </thead>
-            <tbody>
-              {brokerFeeLedger.map((row) => (
-                <tr key={row.id}>
-                  <td className="commercial-hub-client-cell">{row.client}</td>
-                  <td className="epay-broker-fee-highlight">{row.brokerFee}</td>
-                  <td><span className={cn("badge", brokerFeeStatusClass[row.status])}>{row.status}</span></td>
-                  <td>{row.collected}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </EPayAccordion>
-
       <section className="va-ops-panel epay-reconciliation-detail" aria-label="Daily reconciliation detail">
-        <div className="va-ops-panel-header">
-          <h3 className="va-ops-section-title">Daily Reconciliation Detail</h3>
-          <p className="va-ops-section-sub">Full audit breakdown for today.</p>
+        <div className="va-ops-panel-header epay-reconciliation-header">
+          <div>
+            <h3 className="va-ops-section-title">Daily Reconciliation Detail</h3>
+            <p className="va-ops-section-sub">Full audit breakdown for today.</p>
+          </div>
+          <button
+            type="button"
+            className="va-ops-role-action-btn epay-reconcile-btn"
+            onClick={() => onToast?.("Reconcile funds workflow started", "success")}
+          >
+            <AppIcon name="check" size={15} strokeWidth={2} />
+            Reconcile Funds
+          </button>
         </div>
         <dl className="epay-reconciliation-grid">
           <div><dt>Deposits Cleared</dt><dd className="epay-summary-positive">{dailyReconciliation.depositsCleared}</dd></div>

@@ -11,64 +11,108 @@ export type CommandPaletteAction = {
   pinned?: boolean;
 };
 
-/** Always-visible shortcuts when the palette opens. */
-export const pinnedPaletteActions: CommandPaletteAction[] = [
+export type PaletteTabId = "all" | "search" | "actions" | "ai";
+
+export const paletteTabs: { id: PaletteTabId; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "search", label: "Search" },
+  { id: "actions", label: "Actions" },
+  { id: "ai", label: "AI" },
+];
+
+export type PaletteAiGuidance = {
+  id: string;
+  label: string;
+  query: string;
+};
+
+export const paletteAiGuidance: PaletteAiGuidance[] = [
+  { id: "ai-q-overdue", label: "Show overdue invoices", query: "overdue invoices" },
+  { id: "ai-q-renewals", label: "Find high-risk renewals", query: "high risk renewals" },
+  { id: "ai-q-retention", label: "Who has lowest retention?", query: "lowest retention producer" },
+  { id: "ai-q-martinez", label: "Open Martinez Landscaping", query: "Martinez Landscaping" },
+];
+
+/** Verb-first operational actions — Suggested Actions group */
+export const suggestedPaletteActions: CommandPaletteAction[] = [
   {
-    id: "create-note",
-    label: "Create AZ Note",
-    href: `${routes.commercialHub}?view=submissions&action=create-note`,
-    icon: "file-text",
-    hub: "Commercial Hub",
-    keywords: ["create", "note", "az", "agency zoom", "internal"],
+    id: "create-submission",
+    label: "Create New Submission",
+    href: `${routes.intakeForms}?view=new-submission`,
+    icon: "plus",
+    hub: "Intake Forms",
+    keywords: ["create", "submission", "intake", "new"],
     pinned: true,
   },
   {
-    id: "flag-followup",
-    label: "Flag Follow-Up",
-    href: `${routes.commercialHub}?view=follow-ups&action=flag`,
-    icon: "flag",
-    hub: "Commercial Hub",
-    keywords: ["flag", "follow", "follow-up", "urgent", "escalate"],
+    id: "create-invoice",
+    label: "Create Invoice",
+    href: `${routes.epayPolicy}?view=builder`,
+    icon: "dollar",
+    hub: "ePayPolicy",
+    keywords: ["create", "invoice", "payment", "epay"],
     pinned: true,
   },
   {
-    id: "open-producer",
+    id: "assign-training",
+    label: "Assign Training",
+    href: `${routes.trainingHub}?view=library&action=assign`,
+    icon: "trophy",
+    hub: "Training Hub",
+    keywords: ["assign", "training", "certification", "course"],
+    pinned: true,
+  },
+  {
+    id: "send-proposal",
+    label: "Send Proposal",
+    href: `${routes.sendCenter}?view=drafts&action=send`,
+    icon: "send",
+    hub: "Send Center",
+    keywords: ["send", "proposal", "draft", "deliver"],
+    pinned: true,
+  },
+  {
+    id: "reconcile-trust",
+    label: "Reconcile Trust",
+    href: `${routes.epayPolicy}?view=trust&action=reconcile`,
+    icon: "check",
+    hub: "ePayPolicy",
+    keywords: ["reconcile", "trust", "funds", "account"],
+    pinned: true,
+  },
+  {
+    id: "open-pending-reviews",
+    label: "Open Pending Reviews",
+    href: `${routes.sendCenter}?view=pending`,
+    icon: "clipboard",
+    hub: "Send Center",
+    keywords: ["pending", "review", "approval", "sla"],
+    pinned: true,
+  },
+  {
+    id: "open-producer-scorecard",
     label: "Open Producer Scorecard",
     href: routes.producer,
     icon: "bar-chart",
-    hub: "Commercial Hub",
-    keywords: ["producer", "scorecard", "kpi", "production"],
+    hub: "Producer",
+    keywords: ["producer", "scorecard", "kpi", "performance"],
     pinned: true,
   },
   {
-    id: "open-send",
-    label: "Open Send Center",
-    href: routes.sendCenter,
-    icon: "send",
-    hub: "Send Center",
-    keywords: ["send", "proposal", "draft", "center"],
-    pinned: true,
-  },
-  {
-    id: "open-commercial-records",
-    label: "Open Commercial Records",
+    id: "open-client-profile",
+    label: "Open Client Profile",
     href: `${routes.commercialHub}?view=submissions`,
-    icon: "clipboard",
+    icon: "users",
     hub: "Commercial Hub",
-    keywords: ["commercial", "records", "submissions", "clients", "pipeline"],
+    keywords: ["client", "profile", "account", "open"],
     pinned: true,
   },
 ];
 
+/** @deprecated Use suggestedPaletteActions */
+export const pinnedPaletteActions = suggestedPaletteActions;
+
 const extraModuleJumpActions: CommandPaletteAction[] = [
-  {
-    id: "jump-producer",
-    label: "Go to Producer Scorecard",
-    href: routes.producer,
-    icon: "bar-chart",
-    hub: "Commercial Hub",
-    keywords: ["producer", "scorecard", "jump", "go"],
-  },
   {
     id: "jump-retention",
     label: "Go to Retention Hub",
@@ -101,7 +145,7 @@ export const moduleJumpActions: CommandPaletteAction[] = dedupePaletteActions([
 ]);
 
 export const allPaletteActions: CommandPaletteAction[] = dedupePaletteActions([
-  ...pinnedPaletteActions,
+  ...suggestedPaletteActions,
   ...moduleJumpActions,
   {
     id: "review-approvals",
@@ -110,22 +154,6 @@ export const allPaletteActions: CommandPaletteAction[] = dedupePaletteActions([
     icon: "shield",
     hub: "VA Operations",
     keywords: ["approve", "approval", "pending"],
-  },
-  {
-    id: "new-submission",
-    label: "New Submission",
-    href: `${routes.intakeForms}?view=new-submission`,
-    icon: "plus",
-    hub: "Intake Forms",
-    keywords: ["intake", "form", "submit"],
-  },
-  {
-    id: "new-invoice",
-    label: "New Invoice",
-    href: `${routes.epayPolicy}?view=builder`,
-    icon: "dollar",
-    hub: "ePayPolicy",
-    keywords: ["invoice", "payment", "epay"],
   },
   {
     id: "missing-docs",

@@ -13,6 +13,7 @@ import { TrainingHubPageHeader } from "./TrainingHubPageHeader";
 import { TrainingDetailTab } from "./TrainingDetailTab";
 import { TrainingLibraryTab } from "./TrainingLibraryTab";
 import { UploadTrainingModal } from "./UploadTrainingModal";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 
 const validTabIds = new Set<string>(trainingHubTabs.map((tab) => tab.id));
 
@@ -87,6 +88,8 @@ export function TrainingHubModule() {
           ))}
         </nav>
       )}
+
+      <HubOperationalStrips />
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={showingDetail ? "detail" : active}>

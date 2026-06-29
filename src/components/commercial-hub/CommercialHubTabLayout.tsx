@@ -24,6 +24,7 @@ export function CommercialHubTabShell({ children, className }: CommercialHubTabS
 type CommercialHubTabHeaderProps = {
   title: string;
   subtitle: string;
+  strategic?: boolean;
   actions?: CommercialHubTabAction[];
   onActionClick?: (actionId: string) => void;
   utilities?: ReactNode;
@@ -32,6 +33,7 @@ type CommercialHubTabHeaderProps = {
 export function CommercialHubTabHeader({
   title,
   subtitle,
+  strategic = false,
   actions,
   onActionClick,
   utilities,
@@ -43,7 +45,7 @@ export function CommercialHubTabHeader({
   return (
     <header className="commercial-hub-tab-header">
       <div className="commercial-hub-tab-header-copy">
-        <h2 className="commercial-hub-tab-title">{title}</h2>
+        <h2 className={cn("commercial-hub-tab-title", strategic && "commercial-hub-tab-title--strategic")}>{title}</h2>
         <p className="commercial-hub-tab-subtitle">{subtitle}</p>
       </div>
       {(primary.length > 0 || secondary.length > 0 || utility.length > 0 || utilities) && (
@@ -115,6 +117,7 @@ export function CommercialHubKpiStrip({ kpis, columns = 4, className }: Commerci
 type CommercialHubWorkspaceProps = {
   title?: string;
   subtitle?: string;
+  strategicTitle?: boolean;
   actions?: ReactNode;
   toolbar?: ReactNode;
   children: ReactNode;
@@ -125,6 +128,7 @@ type CommercialHubWorkspaceProps = {
 export function CommercialHubWorkspace({
   title,
   subtitle,
+  strategicTitle = false,
   actions,
   toolbar,
   children,
@@ -136,7 +140,11 @@ export function CommercialHubWorkspace({
       {(title || subtitle || actions) && (
         <div className="commercial-hub-workspace-header">
           <div className="commercial-hub-workspace-heading">
-            {title && <h3 className="va-ops-section-title">{title}</h3>}
+            {title && (
+              <h3 className={cn("va-ops-section-title", strategicTitle && "commercial-hub-section-title--strategic")}>
+                {title}
+              </h3>
+            )}
             {subtitle && <p className="va-ops-section-sub">{subtitle}</p>}
           </div>
           {actions && <div className="commercial-hub-workspace-actions">{actions}</div>}

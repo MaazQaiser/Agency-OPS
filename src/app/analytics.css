@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .analytics-kpi-card {
@@ -96,7 +96,7 @@
 }
 
 .analytics-content {
-  padding: 20px 48px 40px;
+  padding: 16px 32px 32px;
 }
 
 @media (max-width: 700px) {

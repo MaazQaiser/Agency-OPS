@@ -43,17 +43,16 @@ export function EPayPolicyModule() {
 
   const handlePageQuickAction = (actionId: string) => {
     if (actionId === "new-invoice") setActive("builder");
-    if (actionId === "reconcile") {
-      requirePermission("action:reconcile-trust", () => setActive("trust"));
-      return;
-    }
-    if (actionId === "export") {
-      requirePermission("action:export-ledger", () => showToast("Ledger export started"));
+    if (actionId === "send-payment-link") {
+      setActive("builder");
+      showToast("Open invoice builder to send payment link", "success");
     }
   };
 
-  useShortcutAction("reconcile-trust", () => handlePageQuickAction("reconcile"));
-  useShortcutAction("export-ledger", () => handlePageQuickAction("export"));
+  useShortcutAction("reconcile-trust", () => setActive("trust"));
+  useShortcutAction("export-ledger", () => {
+    requirePermission("action:export-ledger", () => showToast("Ledger export started"));
+  });
 
   return (
     <>

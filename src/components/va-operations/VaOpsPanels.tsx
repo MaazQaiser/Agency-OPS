@@ -40,12 +40,12 @@ const memberUserIds: Record<string, string> = {
   Jaffer: "jaffer",
   Pedro: "pedro-va",
   JoJo: "jojo",
-  Sara: "sara",
+  Sarah: "sara",
   Kyle: "kyle",
   Hassan: "hassan",
   Valerie: "valerie-martinez",
   Tracie: "tracie-wong",
-  Sarah: "sarah-chen",
+  "Sarah Chen": "sarah-chen",
   Arminda: "arminda-ops",
   Eva: "eva-chong",
   Hamad: "jaffer",
@@ -122,7 +122,7 @@ function VaOpsPanelHeader({
   return (
     <div className="va-ops-panel-header">
       <div className="va-ops-panel-header-main">
-        <h2 className="va-ops-section-title">{title}</h2>
+        <h2 className="va-ops-panel-title">{title}</h2>
         <p className="va-ops-section-sub">{sub}</p>
       </div>
       {(freshness || source) && (
@@ -256,7 +256,6 @@ type VaOpsPanelsProps = {
   showApprovals?: boolean;
   priorityLimit?: number;
   activityLimit?: number;
-  contentStacked?: boolean;
 };
 
 export function VaOpsKpiStrip({ role }: { role: VaOperationsRoleId }) {
@@ -286,7 +285,7 @@ export function VaOpsOperationalSnapshot({ role }: { role: VaOperationsRoleId })
   return (
     <section className="va-ops-snapshot-section" aria-label="Operational snapshot">
       <div className="va-ops-section-heading">
-        <h2 className="va-ops-section-title">Operational Snapshot</h2>
+        <h2 className="va-ops-panel-title">Operational Snapshot</h2>
         <p className="va-ops-section-sub">Agency-wide activity summary for today</p>
       </div>
       <div className={cn("va-ops-snapshot-grid", items.length < 5 && `cols-${items.length}`)}>
@@ -435,7 +434,7 @@ export function VaOpsLeadTracker({ role }: { role: VaOperationsRoleId }) {
   return (
     <section className="va-ops-panel va-ops-lead-panel va-ops-panel--accent" aria-label="Lead response tracker">
       <VaOpsPanelHeader
-        title="Lead Response Tracker"
+        title="Speed-to-Lead Monitor"
         sub="Monitor response times and SLA performance."
         freshness="Latency updated 30s ago"
         source={{ label: "AgencyZoom", type: "LIVE" }}
@@ -575,8 +574,8 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
   return (
     <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent" aria-label="Approval queue">
       <VaOpsPanelHeader
-        title="Approval Queue"
-        sub="Shared across Commercial, Send Center, and Retention."
+        title="Pending Decisions"
+        sub="Approval queue across Commercial, Send Center, and Retention."
         freshness="Live sync active"
         source={{ label: "Supabase", type: "SYNC" }}
       />
@@ -600,21 +599,16 @@ export function VaOpsPanels({
   showApprovals = true,
   priorityLimit,
   activityLimit,
-  contentStacked = false,
 }: VaOpsPanelsProps) {
   return (
     <>
       {showKpis && <VaOpsKpiStrip role={role} />}
       {showOperationalSnapshot && <VaOpsOperationalSnapshot role={role} />}
-      {(showPriorityQueue || showActivity) && (
-        <div className={cn("va-ops-content-grid", contentStacked && "stacked")}>
-          {showPriorityQueue && <VaOpsPriorityQueue role={role} limit={priorityLimit} />}
-          {showActivity && <VaOpsActivityFeed role={role} limit={activityLimit} />}
-        </div>
-      )}
-      {showLeadTracker && <VaOpsLeadTracker role={role} />}
-      {showWorkload && <VaOpsWorkload role={role} />}
+      {showPriorityQueue && <VaOpsPriorityQueue role={role} limit={priorityLimit} />}
+      {showActivity && <VaOpsActivityFeed role={role} limit={activityLimit} />}
       {showApprovals && <VaOpsApprovalQueue role={role} />}
+      {showWorkload && <VaOpsWorkload role={role} />}
+      {showLeadTracker && <VaOpsLeadTracker role={role} />}
     </>
   );
 }

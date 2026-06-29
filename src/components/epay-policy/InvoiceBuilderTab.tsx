@@ -11,14 +11,15 @@ import {
   formatMoney,
   getComplianceStatus,
   getInvoiceClient,
+  getInvoiceReadinessItems,
   installmentOptions,
   invoiceBuilderHeader,
   invoiceClients,
+  isInvoiceReadyForSend,
   paymentMethodOptions,
   pendingInvoices,
   pendingStatusClass,
   type InvoiceFormData,
-  type PaymentLifecycle,
   type PendingInvoice,
 } from "@/data/epayPolicy";
 import { epayStatusClass } from "@/data/epayStatus";
@@ -37,8 +38,8 @@ import { EPayAccordion } from "./EPayAccordion";
 import { EPayConfirmModal } from "./EPayConfirmModal";
 import { BrokerFeeTriggerConfirmation } from "./BrokerFeeTriggerConfirmation";
 import { InvoiceDrawer } from "./InvoiceDrawer";
-
-const lifecycleSteps = ["Generated", "Sent", "Viewed", "Paid"] as const;
+import { InvoiceReadinessPanel } from "./InvoiceReadinessPanel";
+import { PaymentLifecycleStepper } from "./PaymentLifecycleStepper";
 
 function parseMoneyInput(value: string): number {
   const parsed = Number(value.replace(/[^0-9.]/g, ""));
@@ -99,9 +100,9 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
   });
 
   const totalDue = calculateTotalDue(form);
+  const readinessItems = useMemo(() => getInvoiceReadinessItems(client, form), [client, form]);
+  const isReady = isInvoiceReadyForSend(readinessItems);
   const complianceStatus = getComplianceStatus(client.compliance);
-  const isReady = complianceStatus === "Ready";
-  const lifecycle = client.paymentRequest.lifecycle;
   const billingLang = getClientLanguage(client.clientName);
   const invoiceLocalized = billingLang.billingLanguage === billingLang.preferredLanguage;
   const pendingTotal = pendingInvoices.reduce((sum, inv) => sum + inv.amountValue, 0);
@@ -178,6 +179,8 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           invoiceExport={() => exportEpayInvoicePdf(client, totalDue)}
         />
       </div>
+
+      <InvoiceReadinessPanel items={readinessItems} ready={isReady} />
 
       <section className="va-ops-panel epay-client-summary" aria-label="Client summary">
         <div className="epay-client-summary-top">
@@ -307,14 +310,20 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
             />
           </section>
 
-          <section className="va-ops-panel epay-compliance-panel" aria-label="Invoice compliance review">
+          <section className="va-ops-panel epay-send-gate-panel" aria-label="Send gate — validation and compliance">
+            <div className="epay-send-gate-flow" aria-hidden="true">
+              <span className="active">Build</span>
+              <span className={isReady ? "active" : ""}>Validate</span>
+              <span className={complianceStatus === "Ready" ? "active" : ""}>Compliance</span>
+              <span className={isReady ? "active" : ""}>Send</span>
+            </div>
             <div className="epay-compliance-header">
               <div>
-                <h3 className="va-ops-section-title">Invoice Compliance Review</h3>
-                <p className="va-ops-section-sub">Validate before sending — Build → Preview → Validate → Send</p>
+                <h3 className="va-ops-section-title">Compliance Check</h3>
+                <p className="va-ops-section-sub">Hard gate before invoice send — all requirements must pass.</p>
               </div>
               <span className={cn("badge epay-compliance-badge", isReady ? epayStatusClass.Paid : epayStatusClass.Failed)}>
-                {complianceStatus}
+                {isReady ? "Ready" : "Blocked"}
               </span>
             </div>
             <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
@@ -323,7 +332,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
                   <tr><th>Requirement</th><th>Status</th></tr>
                 </thead>
                 <tbody>
-                  {client.compliance.map((item) => (
+                  {readinessItems.map((item) => (
                     <tr key={item.id} className={cn(item.complete && "epay-compliance-row-complete")}>
                       <td>{item.label}</td>
                       <td>
@@ -337,6 +346,11 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
                 </tbody>
               </table>
             </div>
+            {!isReady && (
+              <p className="epay-send-gate-blocked" role="alert">
+                Send blocked — complete all readiness checks before sending invoice.
+              </p>
+            )}
             <div className="epay-compliance-actions">
               <button
                 type="button"
@@ -354,21 +368,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
 
       <div className="epay-builder-accordions">
         <EPayAccordion title="Payment Request" subtitle="Payment lifecycle and link delivery." defaultOpen>
-          <div className="epay-lifecycle-tracker" aria-label="Payment lifecycle">
-            <div className="epay-lifecycle-label">Payment Lifecycle</div>
-            <ol className="epay-lifecycle-steps">
-              {lifecycleSteps.map((step) => {
-                const key = step.toLowerCase() as keyof PaymentLifecycle;
-                const complete = lifecycle[key];
-                return (
-                  <li key={step} className={cn("epay-lifecycle-step", complete && "complete")}>
-                    <span className="epay-lifecycle-dot" aria-hidden="true" />
-                    <span className="epay-lifecycle-step-label">{step}</span>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
+          <PaymentLifecycleStepper client={client} />
           <dl className="epay-payment-request-grid">
             <div><dt>Sent To</dt><dd><a href={`mailto:${client.paymentRequest.sentTo}`} className="epay-contact-link">{client.paymentRequest.sentTo}</a></dd></div>
             <div><dt>Sent At</dt><dd>{client.paymentRequest.sentAt}</dd></div>

@@ -6,9 +6,12 @@ import { AppIcon } from "@/components/ui/AppIcon";
 import {
   assignedTraining,
   assignmentStatusClass,
+  certificationHealthClass,
+  certificationStatusClass,
   contentFormatCards,
   recentlyAddedResources,
   resourceTypeClass,
+  teamCertifications,
   trainingActivity,
   trainingDepartments,
   trainingHubKpis,
@@ -97,13 +100,17 @@ export function DepartmentOverviewTab() {
       }
     >
     <div className="va-ops-role-view training-department-overview">
-      <section className="va-ops-kpi-strip" aria-label="Training hub KPI summary">
+      <section className="va-ops-kpi-strip training-kpi-priority-strip" aria-label="Training hub KPI summary">
         <div className="commercial-hub-kpi-grid training-kpi-grid hub-kpi-grid">
           {trainingHubKpis.map((kpi) => (
             <VaOpsKpiCard
               key={kpi.label}
               {...kpi}
-              className="commercial-hub-kpi-uniform"
+              className={cn(
+                "commercial-hub-kpi-uniform",
+                kpi.tier === "primary" && "training-kpi-card--primary",
+                kpi.tier === "secondary" && "training-kpi-card--secondary",
+              )}
               sparkline={false}
             />
           ))}
@@ -111,12 +118,12 @@ export function DepartmentOverviewTab() {
       </section>
 
       <div className="va-ops-panel-header">
-        <h3 className="va-ops-section-title">Departments</h3>
-        <p className="va-ops-section-sub">Select a department to access team-specific training resources.</p>
+        <h3 className="va-ops-section-title">Live Training Pods</h3>
+        <p className="va-ops-section-sub">Operational department views — assignments, overdue items, and certification health.</p>
       </div>
       <div className="training-dept-card-grid">
         {trainingDepartments.map((dept) => (
-          <article key={dept.id} className="training-dept-card">
+          <article key={dept.id} className="training-dept-card training-dept-pod">
             <button
               type="button"
               className="training-dept-card-body"
@@ -128,20 +135,34 @@ export function DepartmentOverviewTab() {
                 </div>
                 <DepartmentProgressRing
                   completion={dept.completion}
-                  size={44}
+                  size={56}
                   label={dept.title}
                 />
               </div>
+              <div className="training-dept-pod-badges">
+                {dept.overdueTrainingCount > 0 && (
+                  <span className="badge badge-rose training-dept-overdue-badge">
+                    {dept.overdueTrainingCount} overdue
+                  </span>
+                )}
+                <span className={cn("badge", certificationHealthClass[dept.certificationHealth])}>
+                  Cert: {dept.certificationHealth}
+                </span>
+              </div>
               <h4 className="training-dept-card-title">{dept.title}</h4>
               <p className="training-dept-card-desc">{dept.description}</p>
-              <dl className="training-dept-card-stats">
+              <dl className="training-dept-card-stats training-dept-pod-stats">
+                <div>
+                  <dt>Assigned</dt>
+                  <dd>{dept.assignedTrainingCount}</dd>
+                </div>
                 <div>
                   <dt>Resources</dt>
                   <dd>{dept.resources}</dd>
                 </div>
-                <div>
-                  <dt>Last updated</dt>
-                  <dd>{dept.lastUpdated}</dd>
+                <div className="training-dept-pod-activity">
+                  <dt>Last activity</dt>
+                  <dd>{dept.lastActivity}</dd>
                 </div>
               </dl>
             </button>
@@ -155,6 +176,42 @@ export function DepartmentOverviewTab() {
           </article>
         ))}
       </div>
+
+      <section className="va-ops-panel training-certifications-panel" aria-label="Team certifications">
+        <div className="va-ops-panel-header">
+          <h3 className="va-ops-section-title">Certifications</h3>
+          <p className="va-ops-section-sub">Active, expiring, expired, and required certifications across the team.</p>
+        </div>
+        <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <table className="commercial-hub-table">
+            <thead>
+              <tr>
+                <th>Certification</th>
+                <th>Holder</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Expires</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teamCertifications.map((cert) => (
+                <tr key={cert.id}>
+                  <td className="commercial-hub-client-cell">
+                    {cert.name}
+                    {cert.required && <span className="badge badge-violet training-cert-required">Required</span>}
+                  </td>
+                  <td>{cert.holder}</td>
+                  <td>{cert.department}</td>
+                  <td>
+                    <span className={cn("badge", certificationStatusClass[cert.status])}>{cert.status}</span>
+                  </td>
+                  <td>{cert.expires ?? "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <div className="commercial-hub-mid-grid">
         <section className="va-ops-panel" aria-label="Recently added resources">

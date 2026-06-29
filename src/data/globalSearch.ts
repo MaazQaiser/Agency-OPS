@@ -1,10 +1,11 @@
 import { routes } from "@/lib/routes";
 import { crossModuleRoutes, fixSearchResultHref } from "@/lib/crossModuleLinks";
 import { getCarrierProfileHref } from "./carrierLibrary";
+import type { CommandCenterSection } from "./globalSearchCommandCenter";
 
 export const globalSearchHeader = {
   title: "Global Search",
-  subtitle: "Cross-hub search · Client lookup · Real-time results",
+  subtitle: "Agency OS Command Center · Cross-hub intelligence · Find, preview, and act",
   quickActions: [
     { id: "saved", label: "Saved Searches", icon: "star" as const },
     { id: "filters", label: "Advanced Filters", icon: "telescope" as const },
@@ -25,7 +26,10 @@ export type SearchResultType =
   | "invoice"
   | "task"
   | "document"
-  | "user";
+  | "user"
+  | "policy"
+  | "alert"
+  | "note";
 
 export type SearchResultGroup =
   | "Clients"
@@ -35,17 +39,24 @@ export type SearchResultGroup =
   | "Invoices"
   | "Documents"
   | "Users"
-  | "Tasks";
+  | "Tasks"
+  | "Policies"
+  | "Alerts"
+  | "Notes";
 
 export type GlobalSearchResult = {
   id: string;
   type: SearchResultType;
   group: SearchResultGroup;
+  section?: CommandCenterSection;
   title: string;
   hub: string;
   status: string;
   lastUpdated: string;
   owner?: string;
+  priority?: string;
+  riskState?: string;
+  policyCount?: number;
   cta: string;
   href: string;
   fields: { label: string; value: string }[];
@@ -54,6 +65,9 @@ export type GlobalSearchResult = {
     details: { label: string; value: string }[];
     notes: string[];
     relatedLinks: { label: string; href: string }[];
+    openItems?: { label: string; value: string; urgent?: boolean }[];
+    policies?: { label: string; value: string; status?: string }[];
+    riskFlags?: { label: string; level: "high" | "medium" | "low" }[];
   };
 };
 
@@ -67,6 +81,9 @@ export type GlobalSearchFilterState = {
   coverageType: string;
   priority: string;
   trainingType: string;
+  riskLevel: string;
+  pendingApproval: string;
+  missingDocs: string;
 };
 
 export const globalSearchFilterOptions = {
@@ -94,6 +111,9 @@ export const globalSearchFilterOptions = {
   coverageType: ["All Coverage", "BOP", "Workers Comp", "Commercial Auto", "GL", "Umbrella"],
   priority: ["All Priorities", "High", "Medium", "Low"],
   trainingType: ["All Types", "Loom", "Scribe", "Document", "SOP"],
+  riskLevel: ["All Risk Levels", "High", "Medium", "Low"],
+  pendingApproval: ["All", "Pending Approval", "Approved", "Not Required"],
+  missingDocs: ["All", "Has Missing Docs", "Docs Complete"],
 };
 
 export const defaultGlobalSearchFilters: GlobalSearchFilterState = {
@@ -106,6 +126,9 @@ export const defaultGlobalSearchFilters: GlobalSearchFilterState = {
   coverageType: globalSearchFilterOptions.coverageType[0],
   priority: globalSearchFilterOptions.priority[0],
   trainingType: globalSearchFilterOptions.trainingType[0],
+  riskLevel: globalSearchFilterOptions.riskLevel[0],
+  pendingApproval: globalSearchFilterOptions.pendingApproval[0],
+  missingDocs: globalSearchFilterOptions.missingDocs[0],
 };
 
 type RawSearchResult = Omit<GlobalSearchResult, "status" | "lastUpdated"> &
@@ -122,8 +145,10 @@ export const rawSearchResults: RawSearchResult[] = [
     href: crossModuleRoutes.submissionTracker("trk-martinez"),
     fields: [
       { label: "Type", value: "Commercial Client" },
+      { label: "Policy Count", value: "2" },
       { label: "Current Stage", value: "Quoted" },
       { label: "Assigned", value: "JoJo" },
+      { label: "E&O Risk", value: "High · Score 6" },
       { label: "Last Activity", value: "2 hours ago" },
     ],
     drawer: {
@@ -139,6 +164,18 @@ export const rawSearchResults: RawSearchResult[] = [
       relatedLinks: [
         { label: "Coverage Checklist", href: `${routes.commercialHub}?view=checklist` },
         { label: "Submission Tracker", href: `${routes.commercialHub}?view=submissions` },
+      ],
+      openItems: [
+        { label: "Missing docs", value: "Loss Runs", urgent: true },
+        { label: "Pending approval", value: "Producer review" },
+      ],
+      policies: [
+        { label: "BOP", value: "Markel · $4,200", status: "Quoted" },
+        { label: "Workers Comp", value: "Markel · $4,200", status: "Quoted" },
+      ],
+      riskFlags: [
+        { label: "E&O exposure", level: "high" },
+        { label: "Coverage gap — Umbrella", level: "medium" },
       ],
     },
   },
@@ -694,6 +731,187 @@ export const rawSearchResults: RawSearchResult[] = [
       relatedLinks: [{ label: "VA Operations", href: routes.vaOperations }],
     },
   },
+  {
+    id: "sr-atlas-policy",
+    type: "policy",
+    group: "Policies",
+    section: "Policies",
+    title: "Atlas Roofing — BOP Renewal",
+    hub: "Commercial Hub",
+    status: "Renewal in 14 days",
+    lastUpdated: "Today",
+    owner: "Pedro",
+    cta: "Review Renewal",
+    href: `${routes.commercialHub}?view=ready-to-bind`,
+    fields: [
+      { label: "Coverage Stack", value: "BOP + Umbrella" },
+      { label: "Premium", value: "$18,900" },
+      { label: "Payment Status", value: "Pending" },
+      { label: "Renewal Date", value: "July 11, 2026" },
+    ],
+    drawer: {
+      summary: "Atlas Roofing renewal package — ICW BOP with umbrella layer.",
+      details: [
+        { label: "Producer", value: "Pedro" },
+        { label: "Assigned VA", value: "Pedro" },
+        { label: "Carrier", value: "ICW" },
+      ],
+      notes: ["Renewal quote requested from carrier."],
+      relatedLinks: [{ label: "Ready to Bind", href: `${routes.commercialHub}?view=ready-to-bind` }],
+      policies: [
+        { label: "BOP", value: "ICW · $18,900", status: "Active" },
+        { label: "Umbrella", value: "ICW · $1,200", status: "Quoted" },
+      ],
+      riskFlags: [{ label: "Payment pending", level: "medium" }],
+    },
+  },
+  {
+    id: "sr-sla-alert",
+    type: "alert",
+    group: "Alerts",
+    section: "Alerts",
+    title: "SLA Breach — Kim Auto Shop",
+    hub: "VA Operations",
+    status: "Critical",
+    lastUpdated: "18 min ago",
+    owner: "Tracie",
+    priority: "High",
+    cta: "Review Alert",
+    href: `${routes.commercialHub}?view=missing-docs`,
+    fields: [
+      { label: "E&O Risk", value: "Score 7" },
+      { label: "SLA", value: "Breached · 48h" },
+      { label: "Type", value: "Missing Docs" },
+    ],
+    drawer: {
+      summary: "Kim Auto Shop missing driver schedule — SLA breached on document chase.",
+      details: [
+        { label: "Client", value: "Kim Auto Shop" },
+        { label: "Producer", value: "Pedro" },
+        { label: "Assigned VA", value: "Tracie" },
+      ],
+      notes: ["Escalated to Eva for producer follow-up."],
+      relatedLinks: [{ label: "Missing Docs", href: `${routes.commercialHub}?view=missing-docs` }],
+      openItems: [
+        { label: "Missing docs", value: "Driver List, Loss Runs", urgent: true },
+        { label: "Follow-up overdue", value: "2 days", urgent: true },
+      ],
+      riskFlags: [
+        { label: "E&O exposure", level: "high" },
+        { label: "Missed approval window", level: "high" },
+      ],
+    },
+  },
+  {
+    id: "sr-folio-alert",
+    type: "alert",
+    group: "Alerts",
+    section: "Alerts",
+    title: "Folio Pace Warning",
+    hub: "VA Operations",
+    status: "Warning",
+    lastUpdated: "1 hour ago",
+    owner: "Eva",
+    priority: "Medium",
+    cta: "View Folio",
+    href: routes.vaOperations,
+    fields: [
+      { label: "Folio Progress", value: "61%" },
+      { label: "Days Left", value: "7" },
+      { label: "Type", value: "Folio Warning" },
+    ],
+    drawer: {
+      summary: "Current folio at 61% pace with 7 days remaining — bind velocity below target.",
+      details: [{ label: "Target Binds", value: "12" }, { label: "Current", value: "7" }],
+      notes: [],
+      relatedLinks: [{ label: "VA Operations", href: routes.vaOperations }],
+      riskFlags: [{ label: "Folio under pace", level: "medium" }],
+    },
+  },
+  {
+    id: "sr-az-note-martinez",
+    type: "note",
+    group: "Notes",
+    section: "Documents",
+    title: "AZ Note — Martinez Landscaping",
+    hub: "Commercial Hub",
+    status: "Internal Flag",
+    lastUpdated: "3 hours ago",
+    owner: "Eva",
+    cta: "Open Note",
+    href: crossModuleRoutes.submissionTracker("trk-martinez"),
+    fields: [
+      { label: "Note Type", value: "AZ Note" },
+      { label: "Client", value: "Martinez Landscaping" },
+      { label: "Flag", value: "Producer comment" },
+    ],
+    drawer: {
+      summary: "Producer comment flagged — client wants quote by Friday with umbrella option.",
+      details: [
+        { label: "Author", value: "Eva" },
+        { label: "Client", value: "Martinez Landscaping" },
+      ],
+      notes: ["Client wants quote by Friday.", "Discuss umbrella cross-sell on next call."],
+      relatedLinks: [{ label: "Submission", href: crossModuleRoutes.submissionTracker("trk-martinez") }],
+    },
+  },
+  {
+    id: "sr-task-pending-bind",
+    type: "task",
+    group: "Tasks",
+    section: "Tasks",
+    title: "Pending Bind — Rivera Construction",
+    hub: "Commercial Hub",
+    status: "Pending Bind",
+    lastUpdated: "Today",
+    owner: "Pedro",
+    priority: "High",
+    cta: "Open Bind Queue",
+    href: `${routes.commercialHub}?view=ready-to-bind`,
+    fields: [
+      { label: "Task Type", value: "Pending Bind" },
+      { label: "Assigned", value: "Pedro" },
+      { label: "Due", value: "Today" },
+    ],
+    drawer: {
+      summary: "Rivera Construction ready to bind — awaiting signed application.",
+      details: [
+        { label: "Client", value: "Rivera Construction" },
+        { label: "Carrier", value: "CNA" },
+        { label: "Premium", value: "$12,400" },
+      ],
+      notes: ["Signed app requested from client."],
+      relatedLinks: [{ label: "Ready to Bind", href: `${routes.commercialHub}?view=ready-to-bind` }],
+      openItems: [{ label: "Pending approval", value: "Signed application", urgent: true }],
+    },
+  },
+  {
+    id: "sr-task-approval",
+    type: "task",
+    group: "Tasks",
+    section: "Tasks",
+    title: "Approval Waiting — Harbor Logistics",
+    hub: "Commercial Hub",
+    status: "Pending Approval",
+    lastUpdated: "Yesterday",
+    owner: "Eva",
+    priority: "High",
+    cta: "Review Approval",
+    href: `${routes.commercialHub}?view=quote-review`,
+    fields: [
+      { label: "Task Type", value: "Approval Waiting" },
+      { label: "Coverage", value: "GL + Umbrella" },
+      { label: "Producer", value: "Eva" },
+    ],
+    drawer: {
+      summary: "Harbor Logistics GL + Umbrella quote awaiting producer approval.",
+      details: [{ label: "Client", value: "Harbor Logistics" }],
+      notes: ["Approval missed SLA by 4 hours."],
+      relatedLinks: [{ label: "Quote Review", href: `${routes.commercialHub}?view=quote-review` }],
+      openItems: [{ label: "Pending approval", value: "Producer sign-off", urgent: true }],
+      riskFlags: [{ label: "Missed approval", level: "high" }],
+    },
+  },
 ];
 
 function enrichSearchResult(result: RawSearchResult): GlobalSearchResult {
@@ -706,11 +924,15 @@ function enrichSearchResult(result: RawSearchResult): GlobalSearchResult {
   const assigned = result.fields.find(
     (f) => f.label === "Assigned" || f.label === "Owner",
   );
+  const riskField = result.fields.find((f) => f.label === "E&O Risk");
+  const policyField = result.fields.find((f) => f.label === "Policy Count");
   return {
     ...result,
     status: result.status ?? statusField?.value ?? "Active",
     lastUpdated: result.lastUpdated ?? activity?.value ?? "Today",
     owner: result.owner ?? assigned?.value,
+    riskState: result.riskState ?? riskField?.value,
+    policyCount: result.policyCount ?? (policyField ? Number.parseInt(policyField.value, 10) || undefined : undefined),
   };
 }
 
@@ -762,6 +984,9 @@ export const searchTypeHubClass: Record<SearchResultType, string> = {
   document: "badge-yellow",
   user: "badge-blue",
   task: "badge-red",
+  policy: "badge-green",
+  alert: "badge-red",
+  note: "badge-yellow",
 };
 
 export function matchesGlobalSearch(

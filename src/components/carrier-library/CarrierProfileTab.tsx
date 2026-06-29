@@ -154,12 +154,16 @@ export function CarrierProfileTab() {
               <dd>{profile.mgaContact}</dd>
             </div>
             <div>
-              <dt>Response Time</dt>
+              <dt>Avg Quote Turnaround</dt>
               <dd>{profile.responseTime}</dd>
             </div>
             <div>
-              <dt>States Active</dt>
+              <dt>States Served</dt>
               <dd>{profile.statesActive}</dd>
+            </div>
+            <div>
+              <dt>Hit Ratio</dt>
+              <dd>{performance.hitRatio}</dd>
             </div>
             <div>
               <dt>Risk Appetite Status</dt>
@@ -170,6 +174,46 @@ export function CarrierProfileTab() {
               </dd>
             </div>
           </dl>
+        </section>
+
+        <section className="va-ops-panel carrier-profile-overview" aria-label="Appetite overview">
+          <div className="va-ops-panel-header">
+            <h3 className="va-ops-section-title">Appetite Overview</h3>
+            <p className="va-ops-section-sub">Risk classes, submission channels, and recent market shifts.</p>
+          </div>
+          <div className="carrier-detail-overview-grid">
+            <div className="carrier-detail-overview-block">
+              <h4 className="carrier-detail-overview-label">Risk classes accepted</h4>
+              <ul className="carrier-detail-tag-list">
+                {profile.riskClassesAccepted.map((risk) => (
+                  <li key={risk} className="carrier-detail-tag">{risk}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="carrier-detail-overview-block">
+              <h4 className="carrier-detail-overview-label">Submission methods</h4>
+              <ul className="carrier-detail-method-list">
+                {profile.submissionMethods.map((method) => (
+                  <li key={method.id} className="carrier-detail-method-item">
+                    <strong>{method.method}</strong>
+                    <span>{method.products}</span>
+                    <span className="carrier-detail-method-turnaround">{method.turnaround}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="carrier-detail-overview-block">
+              <h4 className="carrier-detail-overview-label">Recent appetite updates</h4>
+              <ul className="carrier-detail-updates-list">
+                {profile.recentAppetiteUpdates.map((update) => (
+                  <li key={update.id} className="carrier-detail-update-item">
+                    <span className="carrier-detail-update-date">{update.date}</span>
+                    <span>{update.message}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
 
         <div className="carrier-profile-main">
@@ -360,6 +404,10 @@ export function CarrierProfileTab() {
               <div>
                 <dt>Win Rate</dt>
                 <dd>{performance.winRate}</dd>
+              </div>
+              <div>
+                <dt>Hit Ratio</dt>
+                <dd>{performance.hitRatio}</dd>
               </div>
             </dl>
           </section>

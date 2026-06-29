@@ -3,7 +3,7 @@
 import { cn } from "@/lib/cn";
 import { TeamAvatar, type TeamAvatarSize } from "./TeamAvatar";
 import { useAvatarProfile } from "./AvatarProfileProvider";
-import type { TeamAvatarStatus } from "@/lib/teamIdentity";
+import { resolveTeamIdentity, type TeamAvatarStatus } from "@/lib/teamIdentity";
 
 type ClickableAvatarProps = {
   userId?: string;
@@ -67,6 +67,7 @@ export function UserChip({
   preferVa = false,
 }: UserChipProps) {
   const { openProfile } = useAvatarProfile();
+  const resolvedUserId = userId ?? resolveTeamIdentity(name)?.id;
 
   return (
     <button
@@ -74,12 +75,12 @@ export function UserChip({
       className={cn("user-chip", className)}
       onClick={(e) => {
         e.stopPropagation();
-        openProfile(userId ?? name);
+        openProfile(resolvedUserId ?? name);
       }}
     >
       {showAvatar && (
         <TeamAvatar
-          userId={userId}
+          userId={resolvedUserId}
           name={name}
           size="sm"
           status={status}

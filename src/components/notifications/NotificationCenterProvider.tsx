@@ -14,6 +14,7 @@ import { getNotificationRoute } from "@/lib/crossModuleLinks";
 import { useToast } from "@/hooks/useToast";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import {
+  computeSnoozeUntil,
   countUnread,
   filterNotifications,
   hasDangerUnread,
@@ -23,9 +24,11 @@ import {
   mergeNotificationsWithOverrides,
   saveNotificationOverrides,
   seedNotifications,
+  snoozeOptionLabels,
   type AppNotification,
   type NotificationFilterTab,
   type NotificationOverrides,
+  type SnoozeOption,
 } from "@/data/notifications";
 import { NotificationCenterPanel } from "./NotificationCenterPanel";
 
@@ -38,10 +41,21 @@ type NotificationCenterContextValue = {
   hasDanger: boolean;
   hasUrgentPulse: boolean;
   loading: boolean;
+  markAllAsRead: () => void;
+  /** @deprecated Use markAllAsRead */
   clearAll: () => void;
 };
 
 const NotificationCenterContext = createContext<NotificationCenterContextValue | null>(null);
+
+function pickOverrides(seed: AppNotification, current: AppNotification): NotificationOverrides[string] | null {
+  const diff: NotificationOverrides[string] = {};
+  if (seed.status !== current.status) diff.status = current.status;
+  if (seed.snoozedUntil !== current.snoozedUntil) diff.snoozedUntil = current.snoozedUntil;
+  if ((seed.pinned ?? false) !== (current.pinned ?? false)) diff.pinned = current.pinned;
+  if (seed.resolutionState !== current.resolutionState) diff.resolutionState = current.resolutionState;
+  return Object.keys(diff).length > 0 ? diff : null;
+}
 
 export function NotificationCenterProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -87,9 +101,8 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
     for (const n of next) {
       const seed = seedNotifications.find((s) => s.id === n.id);
       if (!seed) continue;
-      if (seed.status !== n.status || seed.snoozedUntil !== n.snoozedUntil) {
-        overrides[n.id] = { status: n.status, snoozedUntil: n.snoozedUntil };
-      }
+      const diff = pickOverrides(seed, n);
+      if (diff) overrides[n.id] = diff;
     }
     saveNotificationOverrides(overrides);
   }, []);
@@ -108,28 +121,90 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
   const dismiss = useCallback(
     (id: string) => {
       updateNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, status: "dismissed" as const } : n)),
+        prev.map((n) =>
+          n.id === id
+            ? { ...n, status: "dismissed" as const, resolutionState: "dismissed" as const }
+            : n,
+        ),
       );
     },
     [updateNotifications],
   );
 
-  const clearAll = useCallback(() => {
+  const markAllAsRead = useCallback(() => {
     updateNotifications((prev) =>
       prev.map((n) =>
-        isNotificationVisible(n) ? { ...n, status: "dismissed" as const } : n,
+        isNotificationVisible(n) && n.status === "unread" ? { ...n, status: "read" as const } : n,
       ),
     );
-    toast.success("All notifications cleared");
-    close();
-  }, [close, updateNotifications, toast]);
+    toast.success("All notifications marked as read");
+  }, [updateNotifications, toast]);
+
+  const clearResolved = useCallback(() => {
+    updateNotifications((prev) =>
+      prev.map((n) =>
+        n.resolutionState === "resolved" && n.status !== "dismissed"
+          ? { ...n, status: "dismissed" as const }
+          : n,
+      ),
+    );
+    toast.success("Resolved notifications cleared");
+  }, [updateNotifications, toast]);
+
+  const togglePin = useCallback(
+    (id: string) => {
+      updateNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)),
+      );
+    },
+    [updateNotifications],
+  );
+
+  const snooze = useCallback(
+    (id: string, option: SnoozeOption) => {
+      const until = computeSnoozeUntil(option);
+      updateNotifications((prev) =>
+        prev.map((n) =>
+          n.id === id ? { ...n, status: "snoozed" as const, snoozedUntil: until } : n,
+        ),
+      );
+      toast.success(snoozeOptionLabels[option]);
+    },
+    [updateNotifications, toast],
+  );
+
+  const handleAction = useCallback(
+    (notification: AppNotification, actionId: string) => {
+      updateNotifications((prev) =>
+        prev.map((n) =>
+          n.id === notification.id
+            ? {
+                ...n,
+                status: n.status === "unread" ? ("read" as const) : n.status,
+                resolutionState:
+                  n.resolutionState === "open" ? ("in_progress" as const) : n.resolutionState,
+              }
+            : n,
+        ),
+      );
+      close();
+      router.push(getNotificationRoute(notification));
+      toast.success(`Action: ${actionId.replace(/-/g, " ")}`);
+    },
+    [close, router, toast, updateNotifications],
+  );
 
   const openNotification = useCallback(
     (notification: AppNotification) => {
+      updateNotifications((prev) =>
+        prev.map((n) =>
+          n.id === notification.id && n.status === "unread" ? { ...n, status: "read" as const } : n,
+        ),
+      );
       close();
       router.push(getNotificationRoute(notification));
     },
-    [close, router],
+    [close, router, updateNotifications],
   );
 
   const filtered = useMemo(
@@ -151,9 +226,10 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
       hasDanger,
       hasUrgentPulse,
       loading,
-      clearAll,
+      markAllAsRead,
+      clearAll: markAllAsRead,
     }),
-    [isOpen, open, close, toggle, unreadCount, hasDanger, hasUrgentPulse, loading, clearAll],
+    [isOpen, open, close, toggle, unreadCount, hasDanger, hasUrgentPulse, loading, markAllAsRead],
   );
 
   return (
@@ -172,9 +248,13 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
           unreadCount={unreadCount}
           onTabChange={setActiveTab}
           onClose={close}
-          onClearAll={clearAll}
+          onMarkAllRead={markAllAsRead}
+          onClearResolved={clearResolved}
           onOpenNotification={openNotification}
           onDismiss={dismiss}
+          onTogglePin={togglePin}
+          onSnooze={snooze}
+          onAction={handleAction}
         />
       )}
     </NotificationCenterContext.Provider>

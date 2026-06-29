@@ -5,12 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
   assignmentStatusClass,
-  resourceTypeClass,
   resourceTypeCardClass,
-  resourceTypeIconClass,
-  resourceTypeLabel,
 } from "@/data/trainingHub";
 import {
+  contentBadgeClass,
+  requirementLevelClass,
+  resourceCompletionClass,
   findResourceByTitleLoose,
   findResourceFromActivityMessage,
   getInitialLibraryFilters,
@@ -22,7 +22,6 @@ import {
   matchesLibraryFilters,
   popularTopics,
   recentlyViewed,
-  resourceCompletionClass,
   trainingLibraryHeader,
   trainingLibraryKpis,
   trainingResources,
@@ -210,32 +209,27 @@ export function TrainingLibraryTab() {
                 className="training-resource-card-body"
                 onClick={() => openDetail(resource.id)}
               >
-                <span className={cn("training-resource-type-icon", resourceTypeIconClass[resource.type])} aria-hidden="true">
-                  <AppIcon
-                    name={resource.type === "Loom" ? "telescope" : resource.type === "Doc" ? "file-text" : "clipboard"}
-                    size={14}
-                    strokeWidth={2.25}
-                  />
-                </span>
+                <div className="training-resource-card-top">
+                  <span className={cn("training-resource-type-badge", contentBadgeClass[resource.contentBadge])}>
+                    {resource.contentBadge}
+                  </span>
+                  <span className={cn("badge training-resource-requirement", requirementLevelClass[resource.requirementLevel])}>
+                    {resource.requirementLevel}
+                  </span>
+                </div>
                 <h4 className="training-resource-title">{resource.title}</h4>
                 <div className="training-resource-priority-row">
                   <span className={cn("badge", resourceCompletionClass[resource.completionStatus])}>
                     {resource.completionStatus}
                   </span>
-                  <span className={cn("badge", resourceTypeClass[resource.type])}>
-                    {resourceTypeLabel[resource.type]}
-                  </span>
+                  <span className="training-resource-dept-meta">{resource.department}</span>
                 </div>
-                <dl className="training-resource-meta">
+                <dl className="training-resource-meta training-resource-meta--compact">
                   <div className="training-resource-meta-row training-resource-meta-row--secondary">
                     <dt>Duration</dt>
                     <dd>{resource.duration}</dd>
                   </div>
-                  <div className="training-resource-meta-row training-resource-meta-row--category">
-                    <dt>Department</dt>
-                    <dd>{resource.department}</dd>
-                  </div>
-                  <div className="training-resource-meta-row training-resource-meta-row--category">
+                  <div className="training-resource-meta-row training-resource-meta-row--tertiary">
                     <dt>Difficulty</dt>
                     <dd>{resource.difficulty}</dd>
                   </div>
@@ -243,13 +237,23 @@ export function TrainingLibraryTab() {
                     <dt>Updated</dt>
                     <dd>{resource.lastUpdated}</dd>
                   </div>
-                  <div className="training-resource-meta-row training-resource-meta-row--tertiary">
-                    <dt>Assigned</dt>
-                    <dd>{resource.assignedTo}</dd>
-                  </div>
                 </dl>
+                {resource.progressPercent != null && resource.completionStatus !== "Completed" && (
+                  <div className="training-resource-progress">
+                    <div className="training-resource-progress-label">
+                      <span>Progress</span>
+                      <span>{resource.progressPercent}%</span>
+                    </div>
+                    <div className="training-resource-progress-track">
+                      <div
+                        className="training-resource-progress-fill"
+                        style={{ width: `${resource.progressPercent}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
                 <div className="training-resource-tags">
-                  {resource.tags.map((tag) => (
+                  {resource.tags.slice(0, 3).map((tag) => (
                     <span key={tag} className="training-resource-tag">{tag}</span>
                   ))}
                 </div>

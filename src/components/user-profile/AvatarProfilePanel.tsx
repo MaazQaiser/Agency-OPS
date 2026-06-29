@@ -12,6 +12,7 @@ import {
 } from "@/data/userProfiles";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { presenceToAvatarStatus } from "@/lib/teamIdentity";
 import { KpiSkeletonGrid, ProfileSkeleton } from "@/components/shared/loading";
 import { cn } from "@/lib/cn";
@@ -114,7 +115,7 @@ export function AvatarProfilePanel({
   );
 
   return (
-    <div className="va-ops-drawer-root avatar-profile-root" role="presentation">
+    <VaOpsDrawerRoot className="avatar-profile-root">
       <button
         type="button"
         className="va-ops-drawer-backdrop avatar-profile-backdrop"
@@ -313,6 +314,6 @@ export function AvatarProfilePanel({
           )}
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

@@ -24,6 +24,7 @@ export type Permission =
   | "access:global-search"
   | "access:analytics"
   | "access:system-health"
+  | "action:open-farmers-edge-intel"
   | "action:approve-proposals"
   | "action:approve-drafts"
   | "action:send-proposals"
@@ -105,6 +106,7 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
   producer: [
     "access:commercial-hub",
     "access:farmers-edge",
+    "action:open-farmers-edge-intel",
     "access:send-center",
     "access:carrier-library",
     "access:intake-forms",
@@ -126,6 +128,7 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
     "access:training-hub",
     "access:commercial-hub",
     "access:farmers-edge",
+    "action:open-farmers-edge-intel",
     "access:send-center",
     "access:global-search",
     "action:create-drafts",
@@ -151,6 +154,7 @@ const rolePermissions: Record<AgencyRole, Permission[]> = {
     "access:va-operations",
     "access:commercial-hub",
     "access:farmers-edge",
+    "action:open-farmers-edge-intel",
     "access:send-center",
     "access:global-search",
     "access:analytics",
@@ -298,6 +302,7 @@ export function pathnameToModule(pathname: string): AppModule | "system-health" 
   if (pathname.startsWith("/epay-policy")) return "epay-policy";
   if (pathname.startsWith("/send-center")) return "send-center";
   if (pathname.startsWith("/global-search")) return "global-search";
+  if (pathname.startsWith("/farmers-edge")) return "farmers-edge";
   if (pathname.startsWith("/retention")) return "retention";
   if (pathname.startsWith("/producer") || pathname.startsWith("/production")) return "producer";
   if (pathname.startsWith("/prime-agency")) return "prime-agency";
@@ -328,6 +333,7 @@ export const commercialHubQuickActionPermissions: Record<string, Permission> = {
 
 export const epayQuickActionPermissions: Record<string, Permission> = {
   "new-invoice": "action:create-invoices",
+  "send-payment-link": "action:create-invoices",
   export: "action:export-ledger",
   reconcile: "action:reconcile-trust",
 };

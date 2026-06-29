@@ -423,3 +423,138 @@
     padding: 7px 12px;
   }
 }
+
+/* ── Embedded intelligence panel (Commercial Hub) ── */
+.farmers-edge-intel-root {
+  z-index: 460;
+}
+
+.farmers-edge-intelligence-drawer {
+  width: min(80vw, 1200px);
+  max-width: 100vw;
+  background: var(--hub-bg, #071510);
+  border-left: 1px solid rgba(16, 185, 129, 0.22);
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(16, 185, 129, 0.08);
+}
+
+.fe-intel-drawer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.16);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), transparent);
+}
+
+.fe-intel-drawer-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.fe-intel-drawer-eyebrow {
+  margin: 0 0 4px;
+  font-size: 10px;
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(110, 231, 183, 0.75);
+}
+
+.fe-intel-drawer-title {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ecfdf5;
+}
+
+.fe-intel-drawer-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: rgba(236, 253, 245, 0.72);
+}
+
+.fe-intel-drawer-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fe-intel-full-hub-link {
+  font-size: 12px;
+  color: #6ee7b7;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fe-intel-full-hub-link:hover {
+  color: #a7f3d0;
+  text-decoration: underline;
+}
+
+.fe-intel-context-banner {
+  margin: 0;
+  padding: 14px 22px;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.fe-intel-context-banner p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: rgba(236, 253, 245, 0.78);
+  line-height: 1.5;
+}
+
+.fe-intel-context-client {
+  margin-top: 10px !important;
+}
+
+.fe-intel-context-gaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fe-intel-context-gaps li {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  background: rgba(244, 63, 94, 0.1);
+  color: #fecdd3;
+}
+
+.fe-intel-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0 24px;
+}
+
+.fe-content-area--embedded {
+  padding: 16px 22px 28px;
+}
+
+.fe-intel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.fe-intel-toolbar--compact .fe-header-search {
+  flex: 1 1 220px;
+  min-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .farmers-edge-intelligence-drawer {
+    width: 100vw;
+  }
+}

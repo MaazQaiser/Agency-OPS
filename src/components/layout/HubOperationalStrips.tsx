@@ -1,11 +1,9 @@
-import { FolioProgressBar } from "./FolioProgressBar";
-import { OwnerIntelligenceStrip } from "./OwnerIntelligenceStrip";
+import { HubLocalPulse } from "./HubLocalPulse";
 
 export function HubOperationalStrips() {
   return (
-    <div className="hub-operational-strips">
-      <FolioProgressBar />
-      <OwnerIntelligenceStrip />
+    <div className="hub-operational-strips hub-operational-strips--local">
+      <HubLocalPulse />
     </div>
   );
 }

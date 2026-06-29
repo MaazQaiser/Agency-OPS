@@ -8,19 +8,25 @@ import {
   collectionActivity,
   collectionSummary,
   defaultPaymentTrackerFilters,
+  FAILED_RECOVERY_ACTIONS,
   failedTransactions,
   findPaymentById,
   formatRemaining,
+  getPaymentPriorityTier,
+  getPaymentRiskScore,
   getRemainingBalance,
   matchesPaymentFilters,
   overdueInvoices,
   paymentRecords,
+  paymentRiskClass,
   paymentTrackerFilterOptions,
   paymentTrackerHeader,
   paymentTrackerKpis,
   paymentTrackerPlaceholder,
+  sortPaymentsByUrgency,
   trackerStatusClass,
   type PaymentRecord,
+  type PaymentPriorityTier,
   type TrackerFilterState,
 } from "@/data/paymentTracker";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
@@ -42,6 +48,14 @@ const filterLabels: Record<keyof TrackerFilterState, string> = {
   producer: "Producer",
   carrier: "Carrier",
   paymentMethod: "Payment Method",
+};
+
+const priorityTierClass: Record<PaymentPriorityTier, string> = {
+  Overdue: "epay-priority--overdue",
+  "Partial Payment": "epay-priority--partial",
+  "Due Today": "epay-priority--today",
+  Pending: "epay-priority--pending",
+  Paid: "epay-priority--paid",
 };
 
 const queueTypeClass = {
@@ -72,7 +86,7 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filteredRows = useMemo(
-    () => paymentRecords.filter((row) => matchesPaymentFilters(row, search, filters)),
+    () => sortPaymentsByUrgency(paymentRecords.filter((row) => matchesPaymentFilters(row, search, filters))),
     [search, filters],
   );
 
@@ -143,7 +157,17 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
       }
     >
     <div className="va-ops-role-view epay-payment-tracker">
-      <RoleTabHeader title={paymentTrackerHeader.title} subtitle={paymentTrackerHeader.subtitle} quickActions={paymentTrackerHeader.quickActions} />
+      <div className="export-table-header-export">
+        <RoleTabHeader
+          title={paymentTrackerHeader.title}
+          subtitle={paymentTrackerHeader.subtitle}
+          quickActions={paymentTrackerHeader.quickActions}
+          onQuickActionClick={(id) => {
+            if (id === "export") onToast?.("Payment export started", "success");
+            else onToast?.(`${id.replace(/-/g, " ")} action triggered`, "success");
+          }}
+        />
+      </div>
 
       <section className="va-ops-kpi-strip" aria-label="Payment tracker KPI summary">
         <div className="commercial-hub-kpi-grid hub-kpi-grid epay-tracker-kpi-grid">
@@ -186,6 +210,8 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                 <th aria-label="Expand" />
                 <th>Client Name</th>
                 <th>Invoice Number</th>
+                <th>Priority</th>
+                <th>Risk</th>
                 <th>Remaining Balance</th>
                 <th>Due Date</th>
                 <th>Status</th>
@@ -195,11 +221,16 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
             <tbody>
               {filteredRows.map((row) => {
                 const expanded = expandedId === row.id;
+                const priority = getPaymentPriorityTier(row);
+                const risk = getPaymentRiskScore(row);
                 return (
                   <Fragment key={row.id}>
                     <tr
-                      key={row.id}
-                      className="epay-tracker-row"
+                      className={cn(
+                        "epay-tracker-row",
+                        priorityTierClass[priority],
+                        priority === "Overdue" && "epay-tracker-row--overdue",
+                      )}
                       tabIndex={0}
                       role="button"
                       onClick={() => toggleExpand(row.id)}
@@ -220,6 +251,12 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                         </span>
                       </td>
                       <td>{row.invoiceNumber}</td>
+                      <td>
+                        <span className={cn("badge epay-priority-badge", priorityTierClass[priority])}>{priority}</span>
+                      </td>
+                      <td>
+                        <span className={cn("badge epay-risk-badge", paymentRiskClass[risk])}>{risk}</span>
+                      </td>
                       <td className={getRemainingBalance(row) > 0 ? "epay-balance-due" : ""}>{formatRemaining(row)}</td>
                       <td>{row.dueDate}</td>
                       <td><span className={cn("badge", trackerStatusClass[row.status])}>{row.status}</span></td>
@@ -230,8 +267,8 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                       </td>
                     </tr>
                     {expanded && (
-                      <tr key={`${row.id}-detail`} className="epay-tracker-expand-row">
-                        <td colSpan={7}>
+                      <tr className="epay-tracker-expand-row">
+                        <td colSpan={9}>
                           <dl className="epay-tracker-expand-grid">
                             <div><dt>Policy Type</dt><dd>{row.policyType}</dd></div>
                             <div><dt>Producer</dt><dd><UserChip name={row.producer} /></dd></div>
@@ -323,7 +360,7 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
               <thead>
-                <tr><th>Client</th><th>Reason</th><th>Amount</th><th>Time</th><th aria-label="Action" /></tr>
+                <tr><th>Client</th><th>Reason</th><th>Amount</th><th>Time</th><th>Recovery Actions</th></tr>
               </thead>
               <tbody>
                 {failedTransactions.map((row) => (
@@ -338,17 +375,21 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                     <td className="commercial-hub-premium">{row.amount}</td>
                     <td>{row.time}</td>
                     <td>
-                      <button
-                        type="button"
-                        className="va-ops-action-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (row.cta === "Retry Payment") onToast?.(`Retry initiated for ${row.clientName}`, "success");
-                          else onToast?.(`Contact logged for ${row.clientName}`, "success");
-                        }}
-                      >
-                        {row.cta}
-                      </button>
+                      <div className="epay-failed-recovery-actions" onClick={(e) => e.stopPropagation()}>
+                        {FAILED_RECOVERY_ACTIONS.map((action) => (
+                          <button
+                            key={action}
+                            type="button"
+                            className={cn(
+                              "va-ops-action-btn",
+                              action === "Retry payment" && "epay-overdue-action-btn--primary",
+                            )}
+                            onClick={() => onToast?.(`${action} for ${row.clientName}`, "success")}
+                          >
+                            {action}
+                          </button>
+                        ))}
+                      </div>
                     </td>
                   </tr>
                 ))}

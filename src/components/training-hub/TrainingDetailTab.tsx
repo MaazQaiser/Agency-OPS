@@ -8,10 +8,10 @@ import {
   getTypeDisplayLabel,
   resourceCompletionClass,
   trainingDetailHeader,
-  type KnowledgeQuestion,
   type RelatedTrainingItem,
   type SopStep,
 } from "@/data/trainingDetail";
+import { teamCertifications, certificationStatusClass } from "@/data/trainingHub";
 import { findResourceByTitle, getTrainingDetailHref } from "@/data/trainingLibrary";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
@@ -19,6 +19,7 @@ import { FormSkeleton } from "@/components/shared/loading";
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { RelatedResourceDrawer } from "./RelatedResourceDrawer";
+import { TrainingQuizBlock } from "./TrainingQuizBlock";
 
 const DEFAULT_RESOURCE_ID = "lib-quote-script";
 
@@ -44,14 +45,14 @@ export function TrainingDetailTab() {
   const detail = useMemo(() => getTrainingDetail(resourceId), [resourceId]);
 
   const [sopSteps, setSopSteps] = useState<SopStep[]>([]);
-  const [knowledgeCheck, setKnowledgeCheck] = useState<KnowledgeQuestion[]>([]);
+  const [quizValidated, setQuizValidated] = useState(false);
   const [notes, setNotes] = useState("");
   const [relatedDrawer, setRelatedDrawer] = useState<RelatedTrainingItem | null>(null);
 
   useEffect(() => {
     if (detail) {
       setSopSteps(detail.sopSteps);
-      setKnowledgeCheck(detail.knowledgeCheck.map((q) => ({ ...q })));
+      setQuizValidated(false);
       setNotes("");
     }
   }, [detail]);
@@ -116,11 +117,7 @@ export function TrainingDetailTab() {
     );
   };
 
-  const setKnowledgeAnswer = (questionId: string, answer: "yes" | "no") => {
-    setKnowledgeCheck((prev) =>
-      prev.map((q) => (q.id === questionId ? { ...q, answer } : q)),
-    );
-  };
+  const progressPercent = detail.readProgress ?? detail.playbackProgress ?? 0;
 
   const openResource = (id: string) => {
     router.push(
@@ -148,52 +145,104 @@ export function TrainingDetailTab() {
     if (resource.type === "Loom") {
       return (
         <div className="training-content-viewer training-video-viewer">
-          <div className="training-video-placeholder" aria-label="Video player placeholder">
-            <AppIcon name="folder" size={48} strokeWidth={1.5} />
-            <span>{resource.title}</span>
+          <div className="training-content-preview-header">
+            <span className="training-content-preview-type">Video preview</span>
+            <span className="training-content-preview-time">Est. {detail.estimatedCompletionTime}</span>
           </div>
-          <div className="training-video-meta">
-            <span>Video duration: {resource.duration}</span>
-            {detail.playbackProgress != null && (
-              <span>Playback progress: {detail.playbackProgress}%</span>
-            )}
-          </div>
-          {detail.playbackProgress != null && (
-            <div className="training-video-progress">
-              <div
-                className="training-video-progress-fill"
-                style={{ width: `${detail.playbackProgress}%` }}
-              />
+          <div className="training-video-preview" aria-label="Video player preview">
+            <div className="training-video-preview-play" aria-hidden="true">
+              <AppIcon name="folder" size={32} strokeWidth={1.5} />
             </div>
+            <div className="training-video-preview-body">
+              <strong>{resource.title}</strong>
+              <span>Loom training video · {resource.duration}</span>
+            </div>
+          </div>
+          {detail.resumeLabel && (
+            <p className="training-resume-label">
+              <AppIcon name="clock" size={14} strokeWidth={2} />
+              {detail.resumeLabel}
+            </p>
           )}
+          <div className="training-progress-memory">
+            <div className="training-progress-memory-top">
+              <span>Watched</span>
+              <strong>{progressPercent}%</strong>
+            </div>
+            <div className="training-video-progress">
+              <div className="training-video-progress-fill" style={{ width: `${progressPercent}%` }} />
+            </div>
+          </div>
         </div>
       );
     }
 
     if (resource.type === "Scribe" && detail.scribeSteps) {
       return (
-        <ol className="training-scribe-steps">
-          {detail.scribeSteps.map((step, index) => (
-            <li key={step.id}>
-              <div className="training-scribe-step-index">{index + 1}</div>
-              <div>
-                <div className="training-scribe-step-title">{step.title}</div>
-                <p className="training-scribe-step-body">{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div className="training-content-viewer training-script-viewer">
+          <div className="training-content-preview-header">
+            <span className="training-content-preview-type">Script preview</span>
+            <span className="training-content-preview-time">Est. {detail.estimatedCompletionTime}</span>
+          </div>
+          {detail.resumeLabel && (
+            <p className="training-resume-label">
+              <AppIcon name="clock" size={14} strokeWidth={2} />
+              {detail.resumeLabel}
+            </p>
+          )}
+          <ol className="training-scribe-steps">
+            {detail.scribeSteps.map((step, index) => (
+              <li key={step.id}>
+                <div className="training-scribe-step-index">{index + 1}</div>
+                <div>
+                  <div className="training-scribe-step-title">{step.title}</div>
+                  <p className="training-scribe-step-body">{step.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="training-progress-memory">
+            <div className="training-progress-memory-top">
+              <span>Read</span>
+              <strong>{progressPercent}%</strong>
+            </div>
+            <div className="training-video-progress">
+              <div className="training-video-progress-fill" style={{ width: `${progressPercent}%` }} />
+            </div>
+          </div>
+        </div>
       );
     }
 
     return (
-      <div className="training-doc-viewer">
-        {detail.documentSections?.map((section, index) => (
-          <div key={index} className="training-doc-section">
-            <div className="training-doc-section-num">{index + 1}</div>
-            <p>{section}</p>
+      <div className="training-content-viewer training-doc-viewer-wrap">
+        <div className="training-content-preview-header">
+          <span className="training-content-preview-type">Document preview</span>
+          <span className="training-content-preview-time">Est. {detail.estimatedCompletionTime}</span>
+        </div>
+        {detail.resumeLabel && (
+          <p className="training-resume-label">
+            <AppIcon name="clock" size={14} strokeWidth={2} />
+            {detail.resumeLabel}
+          </p>
+        )}
+        <div className="training-doc-viewer">
+          {detail.documentSections?.map((section, index) => (
+            <div key={index} className="training-doc-section">
+              <div className="training-doc-section-num">{index + 1}</div>
+              <p>{section}</p>
+            </div>
+          ))}
+        </div>
+        <div className="training-progress-memory">
+          <div className="training-progress-memory-top">
+            <span>Read</span>
+            <strong>{progressPercent}%</strong>
           </div>
-        ))}
+          <div className="training-video-progress">
+            <div className="training-video-progress-fill" style={{ width: `${progressPercent}%` }} />
+          </div>
+        </div>
       </div>
     );
   };
@@ -331,31 +380,8 @@ export function TrainingDetailTab() {
             />
           </section>
 
-          <section className="va-ops-panel" aria-label="Quick review">
-            <div className="va-ops-panel-header">
-              <h3 className="va-ops-section-title">Quick Review</h3>
-              <p className="va-ops-section-sub">Basic training validation.</p>
-            </div>
-            <ul className="training-knowledge-check">
-              {knowledgeCheck.map((q) => (
-                <li key={q.id}>
-                  <p className="training-knowledge-question">{q.question}</p>
-                  <div className="training-knowledge-options">
-                    {(["yes", "no"] as const).map((opt) => (
-                      <label key={opt} className="intake-form-radio">
-                        <input
-                          type="radio"
-                          name={q.id}
-                          checked={q.answer === opt}
-                          onChange={() => setKnowledgeAnswer(q.id, opt)}
-                        />
-                        {opt === "yes" ? "Yes" : "No"}
-                      </label>
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <section className="va-ops-panel" aria-label="Knowledge validation quiz">
+            <TrainingQuizBlock questions={detail.quiz} onValidated={setQuizValidated} />
           </section>
         </div>
 
@@ -396,24 +422,65 @@ export function TrainingDetailTab() {
           </div>
         </section>
 
-        <section className="va-ops-panel" aria-label="Completion history">
+        <section className="va-ops-panel" aria-label="Team completion leaderboard">
           <div className="va-ops-panel-header">
-            <h3 className="va-ops-section-title">Completion History</h3>
-            <p className="va-ops-section-sub">Track team usage of this resource.</p>
+            <h3 className="va-ops-section-title">Team Completion Leaderboard</h3>
+            <p className="va-ops-section-sub">Completion rates and quiz performance across the team.</p>
           </div>
-          <ul className="training-completion-history">
-            {detail.completionHistory.map((item) => (
-              <li key={item.id}>
-                <span>{item.message}</span>
-                <span>{item.timeAgo}</span>
-              </li>
-            ))}
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+            <table className="commercial-hub-table training-leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Team Member</th>
+                  <th>Completion %</th>
+                  <th>Avg Quiz Score</th>
+                  <th>Last Completed Training</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detail.teamLeaderboard.map((entry) => (
+                  <tr key={entry.id}>
+                    <td className="commercial-hub-client-cell">{entry.member}</td>
+                    <td>
+                      <span className="training-leaderboard-completion">{entry.completionPercent}%</span>
+                    </td>
+                    <td>{entry.avgQuizScore}%</td>
+                    <td>{entry.lastCompleted}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="va-ops-panel training-detail-certifications" aria-label="Certifications">
+          <div className="va-ops-panel-header">
+            <h3 className="va-ops-section-title">Certifications</h3>
+            <p className="va-ops-section-sub">Certification status related to this department.</p>
+          </div>
+          <ul className="training-cert-list">
+            {teamCertifications
+              .filter((c) => c.department === resource.department || c.holder === "All Team")
+              .map((cert) => (
+                <li key={cert.id} className="training-cert-list-item">
+                  <div>
+                    <strong>{cert.name}</strong>
+                    <span>{cert.holder}</span>
+                  </div>
+                  <span className={cn("badge", certificationStatusClass[cert.status])}>{cert.status}</span>
+                </li>
+              ))}
           </ul>
         </section>
 
         <div className="training-detail-sticky-actions">
           <div className="training-detail-sticky-inner">
-            <button type="button" className="va-ops-role-action-btn intake-form-submit-btn">
+            <button
+              type="button"
+              className="va-ops-role-action-btn intake-form-submit-btn"
+              disabled={!quizValidated && resource.requirementLevel === "Required"}
+              title={!quizValidated ? "Pass the knowledge validation quiz first" : undefined}
+            >
               <AppIcon name="check" size={15} strokeWidth={2} />
               Mark Complete
             </button>

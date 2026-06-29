@@ -70,6 +70,13 @@ export type CarrierStatus = "Open Appetite" | "Restricted" | "Paused" | "Review 
 export type RiskType = "Preferred" | "Standard" | "High Risk";
 export type SubmissionMethod = "Portal" | "Email" | "Broker Portal" | "Wholesaler";
 
+export type CarrierRankingBadge =
+  | "Best Option"
+  | "Faster Than Average"
+  | "Higher Commission"
+  | "Requires Review"
+  | "Restricted";
+
 export type CarrierRecord = {
   id: string;
   name: string;
@@ -82,6 +89,7 @@ export type CarrierRecord = {
   responseTime: string;
   status: CarrierStatus;
   admitted: "Admitted" | "Non-Admitted";
+  rankingBadges?: CarrierRankingBadge[];
   drawer: {
     summary: string;
     products: string[];
@@ -108,6 +116,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "2.4 days",
     status: "Open Appetite",
     admitted: "Admitted",
+    rankingBadges: ["Best Option", "Faster Than Average"],
     drawer: {
       summary: "Strong contractor appetite for BOP and GL with competitive terms on landscaping and light trade classes.",
       products: ["BOP", "GL", "Umbrella"],
@@ -156,6 +165,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "1.8 days",
     status: "Open Appetite",
     admitted: "Admitted",
+    rankingBadges: ["Best Option", "Faster Than Average", "Higher Commission"],
     drawer: {
       summary: "Commercial auto for service and repair shops. Strong garagekeepers options.",
       products: ["Commercial Auto", "GL", "Garagekeepers"],
@@ -228,6 +238,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "4.0 days",
     status: "Review Needed",
     admitted: "Admitted",
+    rankingBadges: ["Requires Review"],
     drawer: {
       summary: "Workers comp for janitorial and cleaning services.",
       products: ["Workers Comp", "GL"],
@@ -276,6 +287,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "2.2 days",
     status: "Open Appetite",
     admitted: "Admitted",
+    rankingBadges: ["Best Option"],
     drawer: {
       summary: "Restaurant and retail BOP with competitive property terms.",
       products: ["BOP", "GL"],
@@ -324,6 +336,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "2.6 days",
     status: "Restricted",
     admitted: "Admitted",
+    rankingBadges: ["Restricted", "Requires Review"],
     drawer: {
       summary: "Commercial auto for logistics and delivery fleets.",
       products: ["Commercial Auto", "GL"],
@@ -372,6 +385,7 @@ export const carrierRecords: CarrierRecord[] = [
     responseTime: "1.5 days",
     status: "Open Appetite",
     admitted: "Admitted",
+    rankingBadges: ["Faster Than Average", "Higher Commission"],
     drawer: {
       summary: "Fast-turn workers comp for janitorial and light commercial.",
       products: ["Workers Comp", "GL"],
@@ -400,6 +414,8 @@ export function getAllCarrierRecords(): CarrierRecord[] {
   return [...carrierRecords, ...extraCarrierRecords];
 }
 
+export type ConfidenceLevel = "Best Fit" | "Strong Fit" | "Conditional";
+
 export type MarketRecommendation = {
   id: string;
   vertical: string;
@@ -413,6 +429,25 @@ export type MarketRecommendation = {
   turnaround: string;
   restrictions?: string;
   riskLevel: "Open" | "Conditional" | "Restricted" | "High Risk";
+  appetiteMatchScore: number;
+  avgTurnaroundSpeed: string;
+  bindSuccessRate: number;
+  lastUsedByTeam: string;
+  confidence: ConfidenceLevel;
+};
+
+export const confidenceLevelClass: Record<ConfidenceLevel, string> = {
+  "Best Fit": "carrier-confidence--best",
+  "Strong Fit": "carrier-confidence--strong",
+  Conditional: "carrier-confidence--conditional",
+};
+
+export const rankingBadgeClass: Record<CarrierRankingBadge, string> = {
+  "Best Option": "carrier-rank-badge--best",
+  "Faster Than Average": "carrier-rank-badge--fast",
+  "Higher Commission": "carrier-rank-badge--commission",
+  "Requires Review": "carrier-rank-badge--review",
+  Restricted: "carrier-rank-badge--restricted",
 };
 
 export const recommendedMarkets: MarketRecommendation[] = [
@@ -429,6 +464,11 @@ export const recommendedMarkets: MarketRecommendation[] = [
     turnaround: "2.4 days avg quote",
     restrictions: "Roofing class restricted",
     riskLevel: "Open",
+    appetiteMatchScore: 94,
+    avgTurnaroundSpeed: "2.4 days",
+    bindSuccessRate: 78,
+    lastUsedByTeam: "Today · Producer desk",
+    confidence: "Best Fit",
   },
   {
     id: "rec-restaurant-bop-tx",
@@ -443,6 +483,11 @@ export const recommendedMarkets: MarketRecommendation[] = [
     turnaround: "3.1 days avg quote",
     restrictions: "Travelers paused in TX",
     riskLevel: "Conditional",
+    appetiteMatchScore: 81,
+    avgTurnaroundSpeed: "3.1 days",
+    bindSuccessRate: 62,
+    lastUsedByTeam: "Yesterday · Commercial team",
+    confidence: "Strong Fit",
   },
   {
     id: "rec-auto-repair-ca",
@@ -456,22 +501,146 @@ export const recommendedMarkets: MarketRecommendation[] = [
     verticalFit: "Auto Repair · garagekeepers available",
     turnaround: "1.8 days avg quote",
     riskLevel: "Open",
+    appetiteMatchScore: 91,
+    avgTurnaroundSpeed: "1.8 days",
+    bindSuccessRate: 85,
+    lastUsedByTeam: "2 days ago · Auto desk",
+    confidence: "Best Fit",
   },
 ];
 
-export const recentMarketActivity = [
-  { id: "ma-1", message: "Markel updated contractor appetite", timeAgo: "Today" },
-  { id: "ma-2", message: "Travelers paused restaurant submissions in Texas", timeAgo: "Yesterday" },
-  { id: "ma-3", message: "CNA added new commercial auto product", timeAgo: "2 days ago" },
-  { id: "ma-4", message: "Liberty Mutual tightened logistics appetite in CA", timeAgo: "3 days ago" },
+export type MarketFeedEventType =
+  | "appetite_tightened"
+  | "new_product"
+  | "submissions_paused"
+  | "state_restriction"
+  | "appetite_expanded";
+
+export type MarketIntelligenceFeedItem = {
+  id: string;
+  type: MarketFeedEventType;
+  carrier: string;
+  message: string;
+  timeAgo: string;
+};
+
+export const marketFeedEventLabel: Record<MarketFeedEventType, string> = {
+  appetite_tightened: "Appetite tightened",
+  new_product: "New product launched",
+  submissions_paused: "Submissions paused",
+  state_restriction: "State restriction added",
+  appetite_expanded: "Appetite expanded",
+};
+
+export const marketFeedEventClass: Record<MarketFeedEventType, string> = {
+  appetite_tightened: "carrier-feed--tightened",
+  new_product: "carrier-feed--new",
+  submissions_paused: "carrier-feed--paused",
+  state_restriction: "carrier-feed--restriction",
+  appetite_expanded: "carrier-feed--expanded",
+};
+
+export const marketIntelligenceFeed: MarketIntelligenceFeedItem[] = [
+  {
+    id: "feed-1",
+    type: "appetite_expanded",
+    carrier: "Markel",
+    message: "Contractor appetite expanded — tree work carve-back now available in CA",
+    timeAgo: "Today",
+  },
+  {
+    id: "feed-2",
+    type: "submissions_paused",
+    carrier: "Travelers",
+    message: "Restaurant submissions paused in Texas until further notice",
+    timeAgo: "Yesterday",
+  },
+  {
+    id: "feed-3",
+    type: "new_product",
+    carrier: "CNA",
+    message: "New commercial auto product launched for local delivery fleets",
+    timeAgo: "2 days ago",
+  },
+  {
+    id: "feed-4",
+    type: "appetite_tightened",
+    carrier: "Liberty Mutual",
+    message: "Logistics appetite tightened in California — fleets over 15 units restricted",
+    timeAgo: "3 days ago",
+  },
+  {
+    id: "feed-5",
+    type: "state_restriction",
+    carrier: "CNA",
+    message: "Florida janitorial WC now requires underwriter referral",
+    timeAgo: "4 days ago",
+  },
 ];
 
-export const savedMarkets = [
-  { id: "fav-markel", name: "Markel", lastUsed: "Today", topVertical: "Contractors" },
-  { id: "fav-travelers", name: "Travelers", lastUsed: "Yesterday", topVertical: "Commercial Auto" },
-  { id: "fav-cna", name: "CNA", lastUsed: "3 days ago", topVertical: "Workers Comp" },
-  { id: "fav-employers", name: "Employers", lastUsed: "1 week ago", topVertical: "Janitorial" },
+/** @deprecated Use marketIntelligenceFeed */
+export const recentMarketActivity = marketIntelligenceFeed.map((item) => ({
+  id: item.id,
+  message: `${item.carrier}: ${item.message}`,
+  timeAgo: item.timeAgo,
+}));
+
+export type FavoriteCarrierStackItem = {
+  id: string;
+  name: string;
+  carrierId: string;
+  preferredVertical: string;
+  avgTurnaround: string;
+  lastSuccessfulBind: string;
+  appetiteStatus: CarrierStatus;
+};
+
+export const favoriteCarrierStack: FavoriteCarrierStackItem[] = [
+  {
+    id: "stack-markel",
+    name: "Markel",
+    carrierId: "car-markel-bop",
+    preferredVertical: "Contractors",
+    avgTurnaround: "2.4 days",
+    lastSuccessfulBind: "Jun 24 · BOP bind",
+    appetiteStatus: "Open Appetite",
+  },
+  {
+    id: "stack-travelers",
+    name: "Travelers",
+    carrierId: "car-travelers-auto",
+    preferredVertical: "Auto Repair",
+    avgTurnaround: "1.8 days",
+    lastSuccessfulBind: "Jun 22 · Commercial Auto",
+    appetiteStatus: "Open Appetite",
+  },
+  {
+    id: "stack-cna",
+    name: "CNA",
+    carrierId: "car-cna-bop",
+    preferredVertical: "Restaurants",
+    avgTurnaround: "3.5 days",
+    lastSuccessfulBind: "Jun 18 · BOP bind",
+    appetiteStatus: "Open Appetite",
+  },
+  {
+    id: "stack-employers",
+    name: "Employers",
+    carrierId: "car-employers-wc",
+    preferredVertical: "Janitorial",
+    avgTurnaround: "1.5 days",
+    lastSuccessfulBind: "Jun 12 · WC bind",
+    appetiteStatus: "Open Appetite",
+  },
 ];
+
+/** @deprecated Use favoriteCarrierStack */
+export const savedMarkets = favoriteCarrierStack.map((item) => ({
+  id: item.id,
+  name: item.name,
+  lastUsed: item.lastSuccessfulBind.split(" ·")[0] ?? item.lastSuccessfulBind,
+  topVertical: item.preferredVertical,
+}));
 
 export const carrierStatusClass: Record<CarrierStatus, string> = {
   "Open Appetite": "badge-green",

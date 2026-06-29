@@ -44,7 +44,6 @@ export const navItems: {
 }[] = [
   { key: "va-operations", label: "VA Operations", href: routes.vaOperations, icon: "◆" },
   { key: "commercial", label: "Commercial Hub", href: routes.commercialHub, icon: "▤" },
-  { key: "farmers-edge", label: "Farmers Edge", href: routes.farmersEdge, icon: "▣" },
   { key: "intake-forms", label: "Intake Forms", href: routes.intakeForms, icon: "▦" },
   { key: "training-hub", label: "Training Hub", href: routes.trainingHub, icon: "▧" },
   { key: "carrier-library", label: "Carrier Library", href: routes.carrierLibrary, icon: "▨" },

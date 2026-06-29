@@ -109,37 +109,97 @@
 .notification-card {
   position: relative;
   display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-card) 88%, var(--ita-base));
   border-left: 3px solid transparent;
-  transition: border-color 200ms ease, opacity 200ms ease, transform 200ms ease;
+  overflow: visible;
+  transition:
+    border-color 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    background 200ms ease;
 }
 
 .notification-card.unread {
   border-left-color: var(--notification-accent, var(--ita-primary));
-  background: color-mix(in srgb, var(--notification-accent, var(--ita-primary)) 6%, var(--surface-card));
+  background: color-mix(in srgb, var(--notification-accent, var(--ita-primary)) 8%, var(--surface-card));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--notification-accent, var(--ita-primary)) 12%, transparent),
+    0 0 20px color-mix(in srgb, var(--notification-accent, var(--ita-primary)) 10%, transparent);
 }
 
-.notification-card-row {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  width: 100%;
-  padding: var(--space-md);
-  padding-right: calc(var(--space-md) + 36px);
-  border: none;
-  background: none;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
+.notification-card.unread .notification-card-title {
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
-.notification-card-close {
+.notification-card.unread .notification-card-unread-dot {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary-light) 80%, transparent);
+  animation: notification-unread-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes notification-unread-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(0.92);
+  }
+}
+
+.notification-card.read {
+  opacity: 0.72;
+  border-color: color-mix(in srgb, var(--border-subtle) 80%, transparent);
+}
+
+.notification-card.read .notification-card-title {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.notification-card.read .notification-card-unread-dot {
+  display: none;
+}
+
+.notification-card.pinned {
+  border-color: color-mix(in srgb, var(--ita-primary) 22%, var(--border-subtle));
+}
+
+.notification-card--resolved {
+  opacity: 0.55;
+}
+
+.notification-card--resolved .notification-card-resolution.notification-resolution--resolved {
+  opacity: 1;
+}
+
+.notification-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  z-index: 1;
+}
+
+.notification-card-toolbar {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 3;
+}
+
+.notification-card-pin,
+.notification-card-snooze {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   margin: 0;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -149,8 +209,117 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
-  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+  opacity: 0;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease,
+    opacity 200ms ease;
+}
+
+.notification-card:hover .notification-card-pin,
+.notification-card:hover .notification-card-snooze,
+.notification-card.pinned .notification-card-pin {
+  opacity: 1;
+}
+
+.notification-card-pin--active {
+  opacity: 1 !important;
+  color: var(--warning-amber);
+  border-color: color-mix(in srgb, var(--warning-amber) 40%, transparent);
+  background: color-mix(in srgb, var(--warning-amber) 12%, var(--surface-elevated));
+}
+
+.notification-card-pin:hover,
+.notification-card-snooze:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--surface-card);
+}
+
+.notification-card-snooze-wrap {
+  position: relative;
+}
+
+.notification-card-snooze-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 188px;
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-elevated);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 10;
+}
+
+.notification-card-snooze-item {
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 8px 10px;
+  text-align: left;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.notification-card-snooze-item:hover {
+  background: var(--primary-muted);
+  color: var(--primary-light);
+}
+
+.notification-card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-card-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md);
+  padding-right: calc(var(--space-md) + 88px);
+  padding-bottom: var(--space-sm);
+  border: none;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.notification-card-close {
+  position: static;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  background: var(--surface-elevated);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease,
+    opacity 200ms ease;
+}
+
+.notification-card:hover .notification-card-close {
+  opacity: 1;
 }
 
 .notification-card-close:hover {
@@ -159,21 +328,261 @@
   background: var(--surface-card);
 }
 
+.notification-card-resolution {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.notification-resolution--open {
+  color: var(--metric-blue);
+  background: color-mix(in srgb, var(--metric-blue) 12%, transparent);
+  border-color: color-mix(in srgb, var(--metric-blue) 25%, transparent);
+}
+
+.notification-resolution--in-progress {
+  color: var(--warning-amber);
+  background: color-mix(in srgb, var(--warning-amber) 12%, transparent);
+  border-color: color-mix(in srgb, var(--warning-amber) 25%, transparent);
+}
+
+.notification-resolution--resolved {
+  color: var(--success-green);
+  background: color-mix(in srgb, var(--success-green) 12%, transparent);
+  border-color: color-mix(in srgb, var(--success-green) 25%, transparent);
+}
+
+.notification-resolution--escalated {
+  color: var(--critical-rose);
+  background: color-mix(in srgb, var(--critical-rose) 12%, transparent);
+  border-color: color-mix(in srgb, var(--critical-rose) 25%, transparent);
+}
+
+.notification-resolution--dismissed {
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--text-muted) 12%, transparent);
+  border-color: color-mix(in srgb, var(--text-muted) 25%, transparent);
+}
+
+.notification-card-metadata {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.notification-card-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface-elevated) 90%, transparent);
+  border: 1px solid var(--border-subtle);
+  font-size: 10px;
+}
+
+.notification-card-meta-key {
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.notification-card-meta-value {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.notification-card-assignee::before {
+  content: "·";
+  margin-right: 4px;
+  opacity: 0.5;
+}
+
+.notification-card-assignee {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .notification-card-hub-label {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.notification-card-hub-label::before {
+  display: none;
+}
+
+.notification-source--va-ops {
+  color: #a5b4fc;
+  background: color-mix(in srgb, #6366f1 18%, transparent);
+  border-color: color-mix(in srgb, #6366f1 30%, transparent);
+}
+
+.notification-source--commercial {
+  color: #5eead4;
+  background: color-mix(in srgb, #14b8a6 18%, transparent);
+  border-color: color-mix(in srgb, #14b8a6 30%, transparent);
+}
+
+.notification-source--send {
+  color: #93c5fd;
+  background: color-mix(in srgb, #3b82f6 18%, transparent);
+  border-color: color-mix(in srgb, #3b82f6 30%, transparent);
+}
+
+.notification-source--epay {
+  color: #6ee7b7;
+  background: color-mix(in srgb, #10b981 18%, transparent);
+  border-color: color-mix(in srgb, #10b981 30%, transparent);
+}
+
+.notification-source--training {
+  color: #fcd34d;
+  background: color-mix(in srgb, #f59e0b 18%, transparent);
+  border-color: color-mix(in srgb, #f59e0b 30%, transparent);
+}
+
+.notification-source--search,
+.notification-source--neutral {
+  color: #d1d5db;
+  background: color-mix(in srgb, #6b7280 18%, transparent);
+  border-color: color-mix(in srgb, #6b7280 30%, transparent);
+}
+
+.notification-card-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  transition: -webkit-line-clamp 200ms ease;
+}
+
+.notification-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 var(--space-md) var(--space-md);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    max-height 220ms ease,
+    opacity 200ms ease,
+    padding 200ms ease;
+}
+
+.notification-card-action-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  background: var(--surface-elevated);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+}
+
+.notification-card-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--surface-card);
+}
+
+.notification-card-action-btn--primary {
+  background: color-mix(in srgb, var(--primary) 14%, var(--surface-elevated));
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  color: var(--primary-light);
+}
+
+.notification-card:hover .notification-card-desc {
+  -webkit-line-clamp: 4;
+}
+
+.notification-card:hover .notification-card-metadata {
+  display: flex;
+}
+
+.notification-card:hover .notification-card-actions {
+  max-height: 80px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.notification-center-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.notification-center-group-label {
+  margin: 0 0 var(--space-xs);
+  padding: 0 var(--space-xs);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-.notification-card-hub-label::before {
-  content: "·";
-  margin-right: 2px;
-  opacity: 0.5;
+.notification-center-header-btn--clear-resolved {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.notification-center-header-btn--clear-resolved:hover:not(:disabled) {
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-card.unread .notification-card-unread-dot {
+    animation: none;
+  }
+}
+
+@media (hover: none) {
+  .notification-card-pin,
+  .notification-card-snooze,
+  .notification-card-close {
+    opacity: 1;
+  }
+
+  .notification-card-desc {
+    -webkit-line-clamp: 2;
+  }
+
+  .notification-card-metadata {
+    display: flex;
+  }
+
+  .notification-card-actions {
+    max-height: 80px;
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .notification-card--dismissing {

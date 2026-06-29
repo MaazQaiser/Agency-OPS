@@ -113,7 +113,7 @@
 
 .audit-log-filters {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -157,6 +157,56 @@
 
 .audit-log-clear-filters:hover {
   color: var(--ita-primary);
+}
+
+.audit-log-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  background: var(--surface-header);
+}
+
+.audit-log-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-card);
+}
+
+.audit-log-metric-value {
+  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.audit-log-metric-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.audit-log-metric--critical .audit-log-metric-value {
+  color: var(--critical-rose);
+}
+
+.audit-log-metric--failed .audit-log-metric-value {
+  color: var(--warning-amber);
+}
+
+.audit-log-metric--pending .audit-log-metric-value {
+  color: var(--metric-blue);
 }
 
 .audit-log-body {
@@ -214,19 +264,64 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-sm);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.audit-log-item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.audit-log-severity-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--obs) 40%, transparent);
+}
+
+.audit-log-severity--critical {
+  color: #fff;
+  background: var(--critical-rose);
+  border-color: color-mix(in srgb, var(--critical-rose) 80%, #fff);
+}
+
+.audit-log-severity--warning {
+  color: #1a1200;
+  background: var(--warning-amber);
+  border-color: color-mix(in srgb, var(--warning-amber) 70%, #fff);
+}
+
+.audit-log-severity--success {
+  color: #fff;
+  background: var(--success-green);
+  border-color: color-mix(in srgb, var(--success-green) 70%, #fff);
+}
+
+.audit-log-severity--pending {
+  color: #fff;
+  background: var(--metric-blue);
+  border-color: color-mix(in srgb, var(--metric-blue) 70%, #fff);
 }
 
 .audit-log-action-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   border: 1px solid transparent;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--obs) 35%, transparent);
 }
 
 .audit-log-action--created {
@@ -266,17 +361,18 @@
 }
 
 .audit-log-timestamp {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--text-muted) 72%, transparent);
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .audit-log-what {
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   font-size: 12px;
   font-weight: 500;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--text-primary);
 }
 
@@ -284,7 +380,8 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  padding-top: 2px;
 }
 
 .audit-log-meta-row {
@@ -321,8 +418,159 @@
   font-weight: 600;
 }
 
+.audit-log-record-link {
+  color: var(--ita-secondary);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--ita-secondary) 45%, transparent);
+}
+
+.audit-log-record-link:hover {
+  color: var(--ita-primary);
+  border-bottom-color: var(--ita-primary);
+}
+
+.audit-log-record-label {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.audit-log-why {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.audit-log-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ita-secondary);
+  cursor: pointer;
+}
+
+.audit-log-details-toggle:hover {
+  color: var(--ita-primary);
+}
+
+.audit-log-details-chevron {
+  transition: transform 150ms ease;
+}
+
+.audit-log-details-chevron--open {
+  transform: rotate(180deg);
+}
+
+.audit-log-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audit-log-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.audit-log-details-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.audit-log-details-block--internal {
+  padding: 8px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--warning-amber) 8%, var(--surface-card));
+  border: 1px solid color-mix(in srgb, var(--warning-amber) 22%, transparent);
+}
+
+.audit-log-details-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.audit-log-details-block p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.audit-log-details-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.audit-log-details-attachments {
+  list-style: none;
+  padding-left: 0;
+}
+
+.audit-log-details-attachments li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.audit-log-details-attachments a {
+  color: var(--ita-secondary);
+  text-decoration: none;
+}
+
+.audit-log-details-attachments a:hover {
+  color: var(--ita-primary);
+  text-decoration: underline;
+}
+
+.audit-log-details-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.audit-log-details-links a {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ita-secondary);
+  text-decoration: none;
+}
+
+.audit-log-details-links a:hover {
+  color: var(--ita-primary);
+  text-decoration: underline;
+}
+
+.audit-log-item--expanded {
+  border-color: color-mix(in srgb, var(--ita-primary) 28%, var(--border-subtle));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ita-primary) 12%, transparent);
+}
+
 .audit-log-footer {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
   padding: var(--space-sm) var(--space-lg);
   border-top: 1px solid var(--border-subtle);
   background: var(--surface-header);
@@ -332,6 +580,50 @@
   font-family: var(--font-family-mono, var(--font-mono), monospace);
   font-size: 11px;
   color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.audit-log-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.audit-log-footer-btn {
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-default);
+  background: var(--surface-card);
+  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.audit-log-footer-btn:hover:not(:disabled) {
+  border-color: var(--ita-primary);
+  color: var(--ita-primary);
+}
+
+.audit-log-footer-btn--primary {
+  color: #fff;
+  background: var(--ita-primary);
+  border-color: var(--ita-primary);
+}
+
+.audit-log-footer-btn--primary:hover:not(:disabled) {
+  color: #fff;
+  background: color-mix(in srgb, var(--ita-primary) 88%, #000);
+  border-color: color-mix(in srgb, var(--ita-primary) 88%, #000);
+}
+
+.audit-log-footer-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .audit-log-skeleton {
@@ -367,7 +659,28 @@
   }
 
   .audit-log-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .audit-log-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .audit-log-details-grid {
     grid-template-columns: 1fr;
+  }
+
+  .audit-log-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .audit-log-footer-actions {
+    justify-content: stretch;
+  }
+
+  .audit-log-footer-btn {
+    flex: 1;
   }
 }
 

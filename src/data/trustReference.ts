@@ -67,7 +67,41 @@ export type BrokerFeeEntry = {
   brokerFee: string;
   status: "Held" | "Released";
   collected: "Yes" | "No";
+  holdReason?: string;
 };
+
+export const TRUST_FLOW_STAGES = [
+  { id: "deposited", label: "Deposited" },
+  { id: "held", label: "Held" },
+  { id: "broker-fee", label: "Broker Fee" },
+  { id: "carrier-release", label: "Carrier Release" },
+  { id: "reconciled", label: "Reconciled" },
+] as const;
+
+export function getTrustFlowStageIndex(entry: TrustLedgerEntry): number {
+  if (entry.status === "Failed") return 0;
+  if (entry.type === "Deposit" && entry.status === "Pending") return 0;
+  if (entry.type === "Deposit" && entry.status === "Processing") return 1;
+  if (entry.type === "Broker Fee Hold") return 2;
+  if (entry.type === "Carrier Release" && entry.status !== "Completed") return 3;
+  if (entry.type === "Carrier Release" || entry.status === "Completed") return 4;
+  if (entry.type === "Adjustment") return 3;
+  return 1;
+}
+
+export function getBrokerFeeHoldSummary(entries: BrokerFeeEntry[]) {
+  const held = entries.filter((e) => e.status === "Held");
+  const released = entries.filter((e) => e.status === "Released");
+  const pendingReleases = held.filter((e) => e.collected === "No").length;
+  const parseFee = (fee: string) => Number(fee.replace(/[^0-9.]/g, "")) || 0;
+
+  return {
+    amountHeld: held.reduce((sum, e) => sum + parseFee(e.brokerFee), 0),
+    amountReleased: released.reduce((sum, e) => sum + parseFee(e.brokerFee), 0),
+    pendingReleases,
+    heldCount: held.length,
+  };
+}
 
 export const trustReferenceKpis = [
   {
@@ -333,6 +367,7 @@ export const brokerFeeLedger: BrokerFeeEntry[] = [
     brokerFee: "$500",
     status: "Held",
     collected: "Yes",
+    holdReason: "Awaiting carrier bind confirmation before release",
   },
   {
     id: "bf-kim",
@@ -340,6 +375,7 @@ export const brokerFeeLedger: BrokerFeeEntry[] = [
     brokerFee: "$600",
     status: "Released",
     collected: "Yes",
+    holdReason: "Released after premium deposit cleared",
   },
   {
     id: "bf-seoul",
@@ -347,6 +383,7 @@ export const brokerFeeLedger: BrokerFeeEntry[] = [
     brokerFee: "$550",
     status: "Held",
     collected: "No",
+    holdReason: "Overdue invoice — broker fee held pending payment",
   },
   {
     id: "bf-coastal",
@@ -354,6 +391,7 @@ export const brokerFeeLedger: BrokerFeeEntry[] = [
     brokerFee: "$300",
     status: "Released",
     collected: "Yes",
+    holdReason: "Standard release after reconciliation",
   },
 ];
 

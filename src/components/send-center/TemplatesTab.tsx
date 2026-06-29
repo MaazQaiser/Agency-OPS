@@ -74,7 +74,10 @@ export function TemplatesTab({ onToast }: TemplatesTabProps) {
         onQuickActionClick={() => onToast("Template builder opened")}
       />
 
-      <SendCenterAiInsight insights={sendCenterAiInsights.templates} />
+      <SendCenterAiInsight
+        insights={sendCenterAiInsights.templates}
+        onAction={(actionId) => onToast(`AI action: ${actionId.replace(/-/g, " ")}`, "success")}
+      />
 
       <section className="send-center-template-performance" aria-label="Template performance">
         <div className="send-center-template-perf-grid">

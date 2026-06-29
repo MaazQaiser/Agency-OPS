@@ -19,6 +19,7 @@ import { CarrierLibraryPageHeader } from "./CarrierLibraryPageHeader";
 import { CarrierProfileTab } from "./CarrierProfileTab";
 import { CarrierSearchTab } from "./CarrierSearchTab";
 import { SubmissionRulesTab } from "./SubmissionRulesTab";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 
 const validTabIds = new Set<string>(carrierLibraryTabs.map((tab) => tab.id));
 
@@ -95,6 +96,8 @@ export function CarrierLibraryModule() {
           ))}
         </nav>
       )}
+
+      <HubOperationalStrips />
 
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={showingProfile ? "profile" : active}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import {
   speedRatingClass,
@@ -48,7 +49,7 @@ export function LeadVelocityDrawer({ record, onClose, onAction }: LeadVelocityDr
   const slowest = record.stages.find((s) => s.isSlowest);
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button type="button" className="va-ops-drawer-backdrop" aria-label="Close lead velocity" onClick={onClose} />
       <aside
         className="va-ops-drawer va-ops-drawer-wide lead-velocity-drawer"
@@ -245,7 +246,7 @@ export function LeadVelocityDrawer({ record, onClose, onAction }: LeadVelocityDr
           )}
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }
 

@@ -12,17 +12,62 @@ export const sendCenterHeader = {
   title: "Send Center",
   subtitle: "Outbound communication · Tone selection · Compliance gate",
   quickActions: [
-    { id: "new-draft", label: "New Draft", icon: "plus" as const },
-    { id: "export-log", label: "Export Log", icon: "download" as const },
+    { id: "use-template", label: "Use Template", icon: "file-text" as const, variant: "secondary" as const },
+    { id: "new-draft", label: "New Draft", icon: "plus" as const, variant: "primary" as const },
   ],
 };
 
-export const sendCenterKpis = [
-  { label: "Draft Queue", value: "8", sub: "Awaiting action", helper: "3 high priority", color: "yellow" as const },
-  { label: "Pending Review", value: "4", sub: "Licensed review", helper: "1 SLA breach", color: "red" as const },
-  { label: "Approved", value: "6", sub: "Ready to send", helper: "2 scheduled today", color: "green" as const },
-  { label: "Sent This Week", value: "14", sub: "Proposals delivered", helper: "68% opened", color: "primary" as const },
-];
+export const sendCenterKpiCommands = [
+  {
+    id: "kpi-draft",
+    label: "Draft Queue",
+    value: "8",
+    sub: "8 awaiting action",
+    urgencyLabel: "3 high priority",
+    urgencyTone: "amber" as const,
+    tab: "draft-queue" as const,
+    color: "yellow" as const,
+  },
+  {
+    id: "kpi-pending",
+    label: "Pending Review",
+    value: "4",
+    sub: "4 at risk",
+    urgencyLabel: "1 SLA breach",
+    urgencyTone: "red" as const,
+    tab: "pending-review" as const,
+    color: "red" as const,
+  },
+  {
+    id: "kpi-approved",
+    label: "Approved",
+    value: "6",
+    sub: "6 ready to send",
+    urgencyLabel: "2 scheduled today",
+    urgencyTone: "green" as const,
+    tab: "approved" as const,
+    color: "green" as const,
+  },
+  {
+    id: "kpi-sent",
+    label: "Sent This Week",
+    value: "14",
+    sub: "14 delivered",
+    urgencyLabel: "68% opened",
+    urgencyTone: "blue" as const,
+    tab: "sent" as const,
+    color: "primary" as const,
+  },
+] as const;
+
+/** @deprecated Use sendCenterKpiCommands for operational KPI strip */
+export const sendCenterKpis = sendCenterKpiCommands.map((k) => ({
+  label: k.label,
+  value: k.value,
+  sub: k.sub,
+  helper: k.urgencyLabel,
+  color: k.color,
+}));
 
 export type SendPriority = "High" | "Medium" | "Low";
 
@@ -231,24 +276,113 @@ export function getEscalationRiskBadge(waitingMinutes: number): { label: string;
   return map[tier];
 }
 
+export const sendCenterBulkActions = ["Assign producer", "Send", "Archive", "Escalate", "Export"] as const;
+
+export function getDraftNextAction(status: DraftQueueStatus): string {
+  if (status === "Draft") return "Complete draft";
+  if (status === "In Progress") return "Continue editing";
+  return "Submit for review";
+}
+
+export function getDraftRiskLevel(priority: SendPriority): string {
+  return priority;
+}
+
+export function getApprovedComplianceBlock(row: ApprovedDraftRecord): string | null {
+  if (row.status === "On Hold") {
+    return "Broker fee and carrier bind confirmation required before send";
+  }
+  return null;
+}
+
 export const sendCenterAiInsights = {
   draftQueue: [
-    { id: "dq-ai-1", title: "Missing documents", detail: "2 drafts are missing required attachments before licensed review." },
-    { id: "dq-ai-2", title: "Missing broker fee", detail: "Kim Auto Shop draft has no broker fee line item configured." },
-    { id: "dq-ai-3", title: "Incomplete carrier quote", detail: "Rivera Construction WC bind is missing AmTrust quote confirmation." },
+    {
+      id: "dq-ai-1",
+      title: "Missing documents",
+      detail: "2 drafts are missing required attachments before licensed review.",
+      why: "Licensed review will reject incomplete packages.",
+      actionLabel: "Fix mismatch",
+      actionId: "fix-mismatch",
+    },
+    {
+      id: "dq-ai-2",
+      title: "Missing broker fee",
+      detail: "Kim Auto Shop draft has no broker fee line item configured.",
+      why: "Compliance gate blocks send until fee is confirmed.",
+      actionLabel: "Review draft",
+      actionId: "review-draft",
+    },
+    {
+      id: "dq-ai-3",
+      title: "Incomplete carrier quote",
+      detail: "Rivera Construction WC bind is missing AmTrust quote confirmation.",
+      why: "Bind request cannot route without carrier confirmation.",
+      actionLabel: "Escalate approval",
+      actionId: "escalate",
+    },
   ],
   pendingReview: [
-    { id: "pr-ai-1", title: "Approval bottlenecks", detail: "Martinez BOP + WC has been waiting 72 min — owner escalation triggered." },
-    { id: "pr-ai-2", title: "SLA risks", detail: "2 drafts will breach producer alert threshold within 10 minutes." },
+    {
+      id: "pr-ai-1",
+      title: "Approval bottlenecks",
+      detail: "Martinez BOP + WC has been waiting 72 min — owner escalation triggered.",
+      why: "SLA breach risks client delay and revenue slip.",
+      actionLabel: "Escalate approval",
+      actionId: "escalate",
+    },
+    {
+      id: "pr-ai-2",
+      title: "SLA risks",
+      detail: "2 drafts will breach producer alert threshold within 10 minutes.",
+      why: "Early action prevents owner escalation.",
+      actionLabel: "Follow up now",
+      actionId: "follow-up",
+    },
   ],
   sentProposals: [
-    { id: "sp-ai-1", title: "High engagement detected", detail: "Martinez Landscaping opened 4 times and replied — prioritize follow-up today." },
-    { id: "sp-ai-2", title: "Best follow-up timing", detail: "Atlas Roofing viewed proposal twice — optimal window is 10–11 AM." },
-    { id: "sp-ai-3", title: "No activity for 24 days", detail: "Kim Auto Shop proposal expired with zero opens — consider resend or archive." },
+    {
+      id: "sp-ai-1",
+      title: "High engagement detected",
+      detail: "Martinez Landscaping opened 4 times and replied — prioritize follow-up today.",
+      why: "Hot leads close fastest within 24 hours of reply.",
+      actionLabel: "Follow up now",
+      actionId: "follow-up",
+    },
+    {
+      id: "sp-ai-2",
+      title: "Best follow-up timing",
+      detail: "Atlas Roofing viewed proposal twice — optimal window is 10–11 AM.",
+      why: "Second views signal buying intent.",
+      actionLabel: "Resend proposal",
+      actionId: "resend",
+    },
+    {
+      id: "sp-ai-3",
+      title: "No activity for 24 days",
+      detail: "Kim Auto Shop proposal expired with zero opens — consider resend or archive.",
+      why: "Stale proposals clutter pipeline and hurt metrics.",
+      actionLabel: "Archive inactive",
+      actionId: "archive",
+    },
   ],
   templates: [
-    { id: "tpl-ai-1", title: "Best converting template", detail: "Renewal Summary Letter leads with 82% close rate across 35 sends." },
-    { id: "tpl-ai-2", title: "Lowest response template", detail: "Contractor Coverage Comparison has 48% conversion — review messaging." },
+    {
+      id: "tpl-ai-1",
+      title: "Best converting template",
+      detail: "Renewal Summary Letter leads with 82% close rate across 35 sends.",
+      why: "High performers should be default for renewals.",
+      actionLabel: "Use template",
+      actionId: "use-template",
+    },
+    {
+      id: "tpl-ai-2",
+      title: "Lowest response template",
+      detail: "Contractor Coverage Comparison has 48% conversion — review messaging.",
+      why: "Underperforming templates waste send capacity.",
+      actionLabel: "Review template",
+      actionId: "review-template",
+    },
   ],
 } as const;
 

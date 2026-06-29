@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCrossModuleHandoff } from "@/hooks/useCrossModuleHandoff";
 import { resolveSubmissionId } from "@/lib/crossModuleLinks";
 import { AppIcon } from "@/components/ui/AppIcon";
@@ -30,6 +31,7 @@ import { toastMessages } from "@/lib/toastMessages";
 import { AddMarketModal } from "./AddMarketModal";
 import { QuoteDetailsModal } from "./QuoteDetailsModal";
 import { SubmissionTrackerDrawer } from "./SubmissionTrackerDrawer";
+import { SubmissionTrackerExpandPanel } from "./SubmissionTrackerExpandPanel";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
 import {
@@ -43,6 +45,10 @@ import { CoverageChecklistProgress } from "@/components/commercial/CoverageCheck
 import { progressFromTrackerSubmission } from "@/lib/coverageChecklistProgress";
 import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
 import { submissionTrackerTabKpis } from "@/lib/commercialHubTabKpis";
+import { routes } from "@/lib/routes";
+import { buildSubmissionAnalysisRequest } from "@/lib/farmersEdgeIntel";
+import { useFarmersEdgeIntel } from "@/components/farmers-edge/FarmersEdgeIntelligenceProvider";
+import { CommercialRowActionMenu } from "./CommercialRowActionMenu";
 import {
   CommercialHubIntelPanel,
   CommercialHubKpiStrip,
@@ -164,7 +170,9 @@ export function SubmissionTrackerTab({
   onAddMarketOpenChange,
   initialSubmissionId,
 }: SubmissionTrackerTabProps) {
+  const router = useRouter();
   const toast = useToast();
+  const { openIntel, canOpen: canOpenFarmersEdge } = useFarmersEdgeIntel();
   const { trackerSubmissions: submissions } = useCommercialHubStore();
   const {
     status: loadStatus,
@@ -181,6 +189,7 @@ export function SubmissionTrackerTab({
   const [filters, setFilters] = useState(defaultFilters);
   const [quickChip, setQuickChip] = useState<QuickChip>("all");
   const [drawerSubmissionId, setDrawerSubmissionId] = useState<string | null>(null);
+  const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [quoteModalClient, setQuoteModalClient] = useState<string | null>(null);
   const [quoteModalQuotes, setQuoteModalQuotes] = useState<QuoteOption[]>([]);
   const [quoteModalSubmissionId, setQuoteModalSubmissionId] = useState<string | null>(null);
@@ -238,6 +247,11 @@ export function SubmissionTrackerTab({
 
   const openDrawer = (rowId: string) => {
     setDrawerSubmissionId(rowId);
+    setActiveSubmissionId(rowId);
+  };
+
+  const toggleExpand = (rowId: string) => {
+    setExpandedRowId((current) => (current === rowId ? null : rowId));
     setActiveSubmissionId(rowId);
   };
 
@@ -355,7 +369,7 @@ export function SubmissionTrackerTab({
     );
   };
 
-  const tableColSpan = 12;
+  const tableColSpan = 13;
   const header = commercialHubTabHeaders.submissions;
   const urgentRows = filteredRows.filter((row) => row.daysOpen >= 6 || row.status === "Pending Docs").slice(0, 4);
 
@@ -368,7 +382,7 @@ export function SubmissionTrackerTab({
       <CommercialHubWorkspace
         ariaLabel="Active submissions"
         title="Active Submissions"
-        subtitle={`${filteredRows.length} submission${filteredRows.length === 1 ? "" : "s"} — click a row to inspect in the drawer.`}
+        subtitle={`${filteredRows.length} submission${filteredRows.length === 1 ? "" : "s"} — click a row to expand pipeline details.`}
         actions={
           <>
             <ExportMenu kind="submission-log" />
@@ -418,19 +432,21 @@ export function SubmissionTrackerTab({
                   </select>
                 </label>
               ))}
-            </div>
 
-            <div className="submission-tracker-quick-chips" role="group" aria-label="Quick filters">
-              {quickChipOptions.map((chip) => (
-                <button
-                  key={chip.id}
-                  type="button"
-                  className={cn("submission-quick-chip", quickChip === chip.id && "active")}
-                  onClick={() => setQuickChip(chip.id)}
+              <label className="submission-tracker-filter submission-tracker-quick-filter">
+                <select
+                  className="header-filter-select submission-tracker-select"
+                  aria-label="Quick filter"
+                  value={quickChip}
+                  onChange={(e) => setQuickChip(e.target.value as QuickChip)}
                 >
-                  {chip.label}
-                </button>
-              ))}
+                  {quickChipOptions.map((chip) => (
+                    <option key={chip.id} value={chip.id}>
+                      {chip.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
           </>
         }
@@ -466,11 +482,12 @@ export function SubmissionTrackerTab({
                 <th>Producer</th>
                 <th>Days Open</th>
                 <th>E&O Risk</th>
-                <th>Client</th>
+                <th className="submission-tracker-client-col">Client</th>
                 <th>Coverage</th>
                 <th>Markets</th>
                 <th>Quotes</th>
-                <th>Checklist</th>
+                <th className="submission-tracker-checklist-col">Checklist</th>
+                <th className="submission-tracker-actions-col" aria-label="Actions" />
               </tr>
             </thead>
             <tbody>
@@ -479,39 +496,39 @@ export function SubmissionTrackerTab({
                   <td colSpan={tableColSpan}>
                     <HubEmptyState
                       title="No matches"
-                      description="No submissions match your search or filters. Adjust filters or quick chips to see active submissions."
+                      description="No submissions match your search or filters. Adjust filters or quick filter to see active submissions."
                       compact
                     />
                   </td>
                 </tr>
               ) : (
-                filteredRows.map((row) => {
-                const isOpen = drawerSubmissionId === row.id;
+                filteredRows.flatMap((row) => {
+                const isExpanded = expandedRowId === row.id;
                 const checklistProgress = progressFromTrackerSubmission(row);
                 const eoRisk = eoRiskFromTrackerSubmission(row);
-                return (
+                return [
                   <tr
                     key={row.id}
                     className={cn(
                       "submission-tracker-row submission-tracker-row-clickable",
-                      isOpen && "expanded selected",
+                      isExpanded && "expanded selected",
                       activeSubmissionId === row.id && "selected",
                     )}
                     onClick={(event) => {
                       const target = event.target as HTMLElement;
                       if (target.closest("button")) return;
-                      openDrawer(row.id);
+                      toggleExpand(row.id);
                     }}
                   >
                     <td>
                       <button
                         type="button"
                         className="submission-tracker-expand-btn"
-                        aria-expanded={isOpen}
-                        aria-label={`${isOpen ? "Close" : "Inspect"} ${row.client}`}
-                        onClick={() => (isOpen ? closeDrawer() : openDrawer(row.id))}
+                        aria-expanded={isExpanded}
+                        aria-label={`${isExpanded ? "Collapse" : "Expand"} ${row.client}`}
+                        onClick={() => toggleExpand(row.id)}
                       >
-                        <AppIcon name="chevron-down" size={14} strokeWidth={2.5} className={cn(isOpen && "rotated")} />
+                        <AppIcon name="chevron-down" size={14} strokeWidth={2.5} className={cn(isExpanded && "rotated")} />
                       </button>
                     </td>
                     <td className="submission-tracker-status-col">
@@ -527,16 +544,10 @@ export function SubmissionTrackerTab({
                       className="commercial-hub-client-cell submission-tracker-client-cell"
                       onClick={() => setActiveSubmissionId(row.id)}
                     >
-                      <span className="bilingual-client-cell">
-                        {row.client}
+                      <span className="bilingual-client-cell submission-tracker-client-name">
+                        <span className="submission-tracker-client-label">{row.client}</span>
                         <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
                       </span>
-                      <EoRiskBadge
-                        score={eoRisk}
-                        compact
-                        className="submission-tracker-card-risk"
-                        onClick={() => openDrawer(row.id)}
-                      />
                     </td>
                     <td>{row.coverage}</td>
                     <td>{row.marketsSubmitted}</td>
@@ -553,11 +564,68 @@ export function SubmissionTrackerTab({
                         row.quotesReceived
                       )}
                     </td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <CoverageChecklistProgress progress={checklistProgress} variant="compact" />
+                    <td className="submission-tracker-checklist-col" onClick={(e) => e.stopPropagation()}>
+                      <CoverageChecklistProgress progress={checklistProgress} variant="inline" />
                     </td>
-                  </tr>
-                );
+                    <td onClick={(e) => e.stopPropagation()} className="submission-tracker-actions-col">
+                      <CommercialRowActionMenu
+                        label={`Actions for ${row.client}`}
+                        actions={[
+                          {
+                            id: "review",
+                            label: "Review Submission",
+                            onSelect: () => openDrawer(row.id),
+                          },
+                          {
+                            id: "follow-up",
+                            label: "Assign Follow-up",
+                            onSelect: () => {
+                              router.push(`${routes.commercialHub}?view=follow-ups`);
+                              toast.success(`Follow-up queued for ${row.client}`);
+                            },
+                          },
+                          {
+                            id: "carrier",
+                            label: "Open Carrier",
+                            onSelect: () => {
+                              const carrier =
+                                row.carriers.find((c) => c.status === "Quoted")?.carrier ??
+                                row.carriers[0]?.carrier;
+                              if (carrier) {
+                                router.push(
+                                  `${routes.carrierLibrary}?search=${encodeURIComponent(carrier)}`,
+                                );
+                              } else {
+                                toast.success(`No carrier on file for ${row.client}`);
+                              }
+                            },
+                          },
+                          ...(canOpenFarmersEdge
+                            ? [
+                                {
+                                  id: "farmers-edge",
+                                  label: "Analyze in Farmers Edge",
+                                  accent: "farmers-edge" as const,
+                                  onSelect: () =>
+                                    openIntel(buildSubmissionAnalysisRequest(row)),
+                                },
+                              ]
+                            : []),
+                        ]}
+                      />
+                    </td>
+                  </tr>,
+                  isExpanded ? (
+                    <tr key={`${row.id}-detail`} className="submission-tracker-detail-row">
+                      <td colSpan={tableColSpan}>
+                        <SubmissionTrackerExpandPanel
+                          submission={row}
+                          onOpenDrawer={() => openDrawer(row.id)}
+                        />
+                      </td>
+                    </tr>
+                  ) : null,
+                ].filter(Boolean);
               })
               )}
             </tbody>

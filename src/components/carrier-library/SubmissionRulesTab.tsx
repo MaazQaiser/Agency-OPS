@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { AppIcon } from "@/components/ui/AppIcon";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { TableSkeleton } from "@/components/shared/loading";
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
@@ -13,9 +14,11 @@ import { routes } from "@/lib/routes";
 import { VaOpsKpiCard } from "@/components/kpi/VaOpsKpiCard";
 import { cn } from "@/lib/cn";
 import {
+  autoValidationClass,
   bindingRules,
   carrierConditionCardClass,
   carrierConditionStatusClass,
+  declineSeverityClass,
   declineTriggers,
   requiredDocumentsByProduct,
   ruleStatusClass,
@@ -24,6 +27,7 @@ import {
   submissionRulesHeader,
   submissionRulesKpis,
 } from "@/data/submissionRules";
+import { CarrierAiSubmissionGuidance } from "./CarrierAiSubmissionGuidance";
 
 export function SubmissionRulesTab() {
   const router = useRouter();
@@ -49,6 +53,19 @@ export function SubmissionRulesTab() {
     }
     return Array.from(groups.entries());
   }, []);
+
+  const flattenedDocs = useMemo(
+    () =>
+      requiredDocumentsByProduct.flatMap((product) =>
+        product.documents.map((doc) => ({
+          ...doc,
+          product: product.product,
+          productStatus: product.status,
+          productNotes: product.notes,
+        })),
+      ),
+    [],
+  );
 
   const applyRules = (product: string, documents: string[]) => {
     toast.success(toastMessages.carrierLibrary.rulesSaved, {
@@ -105,6 +122,8 @@ export function SubmissionRulesTab() {
         subtitle={submissionRulesHeader.subtitle}
       />
 
+      <CarrierAiSubmissionGuidance />
+
       <section className="va-ops-kpi-strip" aria-label="Submission rules KPI summary">
         <div className="commercial-hub-kpi-grid hub-kpi-grid carrier-kpi-grid">
           {submissionRulesKpis.map((kpi) => (
@@ -116,33 +135,58 @@ export function SubmissionRulesTab() {
       <section className="va-ops-panel carrier-rules-primary" aria-label="Required documents by product">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Required Documents by Product</h3>
-          <p className="va-ops-section-sub">Standard document requirements before carrier submission.</p>
+          <p className="va-ops-section-sub">
+            Document requirements with carrier scope, auto-validation, and missing doc warnings.
+          </p>
         </div>
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
-          <table className="commercial-hub-table">
+          <table className="commercial-hub-table carrier-docs-table">
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Required Documents</th>
-                <th>Status</th>
-                <th>Notes</th>
+                <th>Document</th>
+                <th>Required by carrier</th>
+                <th>Required by product</th>
+                <th>Auto-validation</th>
                 <th aria-label="Action" />
               </tr>
             </thead>
             <tbody>
-              {requiredDocumentsByProduct.map((row) => (
-                <tr key={row.id}>
+              {flattenedDocs.map((row) => (
+                <tr
+                  key={row.id}
+                  className={cn(row.missing && "carrier-doc-row--missing")}
+                >
                   <td className="commercial-hub-carrier-name">{row.product}</td>
-                  <td>{row.documents.join(", ")}</td>
                   <td>
-                    <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>
+                    <div className="carrier-doc-name-cell">
+                      {row.missing ? (
+                        <span className="carrier-doc-missing-warning" title="Missing document">
+                          <AppIcon name="triangle-alert" size={14} strokeWidth={2} />
+                          Missing
+                        </span>
+                      ) : null}
+                      <span>{row.document}</span>
+                    </div>
                   </td>
-                  <td>{row.notes}</td>
+                  <td>{row.requiredByCarrier}</td>
+                  <td>{row.requiredByProduct}</td>
+                  <td>
+                    <span className={cn("badge", autoValidationClass[row.autoValidation])}>
+                      {row.autoValidation}
+                    </span>
+                  </td>
                   <td>
                     <button
                       type="button"
                       className="va-ops-action-btn"
-                      onClick={() => applyRules(row.product, row.documents)}
+                      onClick={() => {
+                        const productGroup = requiredDocumentsByProduct.find((p) => p.product === row.product);
+                        applyRules(
+                          row.product,
+                          productGroup?.documents.map((d) => d.document) ?? [row.document],
+                        );
+                      }}
                     >
                       Apply Rules
                     </button>
@@ -226,10 +270,10 @@ export function SubmissionRulesTab() {
       <section className="va-ops-panel carrier-rules-decline" aria-label="Decline triggers">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Decline Triggers</h3>
-          <p className="va-ops-section-sub">Conditions that block or restrict submission.</p>
+          <p className="va-ops-section-sub">Severity-ranked conditions that block or restrict submission.</p>
         </div>
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
-          <table className="commercial-hub-table">
+          <table className="commercial-hub-table carrier-decline-table">
             <thead>
               <tr>
                 <th>Trigger</th>
@@ -240,9 +284,13 @@ export function SubmissionRulesTab() {
             </thead>
             <tbody>
               {declineTriggers.map((row) => (
-                <tr key={row.id}>
+                <tr key={row.id} className={cn("carrier-decline-row", declineSeverityClass[row.severity])}>
                   <td className="commercial-hub-client-cell">{row.trigger}</td>
-                  <td>{row.severity}</td>
+                  <td>
+                    <span className={cn("carrier-decline-severity", declineSeverityClass[row.severity])}>
+                      {row.severity}
+                    </span>
+                  </td>
                   <td>{row.action}</td>
                   <td>
                     <span className={cn("badge", ruleStatusClass[row.status])}>{row.status}</span>

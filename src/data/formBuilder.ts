@@ -757,3 +757,146 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
     },
   ];
 }
+
+export type FieldValidationState = "valid" | "missing" | "incomplete" | "needs_review";
+
+export type StepVisualState = "complete" | "active" | "locked" | "error";
+
+export const stepStatusLabels: Record<StepVisualState, string> = {
+  complete: "Complete",
+  active: "In Progress",
+  locked: "Locked",
+  error: "Needs Attention",
+};
+
+const fieldValidationMessages: Partial<Record<keyof IntakeFormData | string, string>> = {
+  payroll: "Payroll docs missing",
+  payrollReport: "Payroll report missing",
+  lossRuns: "Loss runs missing",
+  drivers: "Driver list incomplete",
+  claimsLast5Years: "Claims history missing",
+  numberOfClaims: "Claims count missing",
+  licenseStatus: "License status needs review",
+  coi: "COI document missing",
+  decPages: "Dec pages missing",
+  businessName: "Business name missing",
+  ownerName: "Owner name missing",
+  ein: "EIN missing",
+};
+
+export function getFieldValidationState(
+  field: keyof IntakeFormData | string,
+  data: IntakeFormData,
+  formType: IntakeFormType,
+): { state: FieldValidationState; message: string } {
+  const errors = getFieldErrors(data, formType);
+  const fieldError = errors.find((e) => e.field === field);
+
+  if (field === "licenseStatus" && data.licenseStatus && data.licenseStatus.toLowerCase().includes("expired")) {
+    return { state: "needs_review", message: "License may be expired — verify status" };
+  }
+
+  if (fieldError) {
+    const message = fieldValidationMessages[field] ?? fieldError.message;
+    const state: FieldValidationState =
+      String(data[field as keyof IntakeFormData] ?? "").trim() === "" ? "missing" : "incomplete";
+    return { state, message };
+  }
+
+  const value = data[field as keyof IntakeFormData];
+  if (typeof value === "boolean" && value) {
+    return { state: "valid", message: "Uploaded" };
+  }
+  if (String(value ?? "").trim() !== "") {
+    return { state: "valid", message: "Valid" };
+  }
+
+  return { state: "missing", message: fieldValidationMessages[field] ?? "Required field" };
+}
+
+export function getStepMissingCount(
+  step: FormBuilderStepId,
+  data: IntakeFormData,
+  formType: IntakeFormType,
+): number {
+  return getFieldErrors(data, formType, step).length;
+}
+
+export function getStepCompletionPercent(
+  step: FormBuilderStepId,
+  data: IntakeFormData,
+  formType: IntakeFormType,
+): number {
+  const total = getStepMissingCount(step, data, formType);
+  if (step === 1) {
+    const required = step1Required(formType).length;
+    const filled = step1Required(formType).filter((f) => String(data[f]).trim() !== "").length;
+    return Math.round((filled / required) * 100);
+  }
+  if (step === 2) {
+    const required = step2Required(formType).length;
+    const filled = step2Required(formType).filter((f) => String(data[f]).trim() !== "").length;
+    return Math.round((filled / required) * 100);
+  }
+  if (step === 3) return data.coverageNeeded.length > 0 ? 100 : 0;
+  if (step === 4) {
+    const base = step4Required(formType);
+    const filled = base.filter((f) => String(data[f]).trim() !== "").length;
+    return Math.round((filled / base.length) * 100);
+  }
+  if (step === 5) {
+    const docs = getDocumentFields(formType).filter((d) => d.required);
+    const uploaded = docs.filter((d) => data.documents[d.id]).length;
+    return docs.length ? Math.round((uploaded / docs.length) * 100) : 100;
+  }
+  if (step === 6) return total === 0 ? 100 : Math.max(0, 100 - total * 10);
+  return 0;
+}
+
+export function getStepVisualState(
+  step: FormBuilderStepId,
+  currentStep: FormBuilderStepId,
+  data: IntakeFormData,
+  formType: IntakeFormType,
+  visitedSteps: Set<FormBuilderStepId>,
+): StepVisualState {
+  if (step > currentStep && !visitedSteps.has(step)) return "locked";
+  if (step === currentStep) {
+    const missing = getStepMissingCount(step, data, formType);
+    return missing > 0 && visitedSteps.has(step) ? "error" : "active";
+  }
+  const missing = getStepMissingCount(step, data, formType);
+  if (missing > 0 && visitedSteps.has(step)) return "error";
+  return step < currentStep ? "complete" : "locked";
+}
+
+export type FormFieldGroup = {
+  id: string;
+  title: string;
+  fields: (keyof IntakeFormData)[];
+};
+
+export function getStep1FieldGroups(formType: IntakeFormType): FormFieldGroup[] {
+  if (formType === "personal-lines") {
+    return [
+      { id: "contact", title: "Contact Information", fields: ["businessName", "email", "phone", "preferredClientLanguage"] },
+      { id: "location", title: "Location Information", fields: ["address"] },
+    ];
+  }
+  return [
+    { id: "business", title: "Business Information", fields: ["businessName", "dbaName", "yearsInBusiness", "state"] },
+    { id: "owner", title: "Owner Details", fields: ["ownerName"] },
+    { id: "contact", title: "Contact Information", fields: ["email", "phone", "preferredClientLanguage"] },
+    { id: "location", title: "Location Information", fields: ["address"] },
+    { id: "notes", title: "Additional Notes", fields: [] },
+  ];
+}
+
+export const aiIntakeSuggestions = [
+  { id: "extract", label: "Extract uploaded docs", icon: "upload" as const },
+  { id: "autofill", label: "Autofill from ACORD", icon: "file-text" as const },
+  { id: "duplicate", label: "Check duplicates", icon: "search" as const },
+  { id: "coverage", label: "Suggest coverages", icon: "shield" as const },
+  { id: "risk", label: "Flag risky submission", icon: "triangle-alert" as const },
+  { id: "docs", label: "Recommend missing docs", icon: "folder" as const },
+];

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { intakeFormsTabs, type IntakeFormsTabId } from "@/data/intakeForms";
 import { routes } from "@/lib/routes";
 import { TabTransitionPanel } from "@/components/motion/TabTransitionPanel";
@@ -10,6 +10,8 @@ import { FormBuilderTab } from "./FormBuilderTab";
 import { SubmissionHistoryTab } from "./SubmissionHistoryTab";
 import { FormSelectorTab } from "./FormSelectorTab";
 import { IntakeFormsPageHeader } from "./IntakeFormsPageHeader";
+import { ImportSubmissionModal } from "./ImportSubmissionModal";
+import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 
 const validTabIds = new Set<string>(intakeFormsTabs.map((tab) => tab.id));
 
@@ -23,6 +25,7 @@ export function IntakeFormsModule() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const active = resolveTab(searchParams.get("view"));
+  const [importOpen, setImportOpen] = useState(false);
 
   const setActive = useCallback(
     (tabId: IntakeFormsTabId) => {
@@ -35,9 +38,13 @@ export function IntakeFormsModule() {
     [router],
   );
 
+  const handleQuickAction = useCallback((actionId: string) => {
+    if (actionId === "import") setImportOpen(true);
+  }, []);
+
   return (
     <>
-      <IntakeFormsPageHeader />
+      <IntakeFormsPageHeader onQuickActionClick={handleQuickAction} />
 
       <nav className="va-ops-tab-nav" aria-label="Intake Forms views">
         {intakeFormsTabs.map((tab) => (
@@ -52,6 +59,8 @@ export function IntakeFormsModule() {
         ))}
       </nav>
 
+      <HubOperationalStrips />
+
       <div className="va-ops-tab-content">
         <TabTransitionPanel tabKey={active}>
         {active === "selector" && <FormSelectorTab />}
@@ -60,6 +69,8 @@ export function IntakeFormsModule() {
         {active === "history" && <SubmissionHistoryTab />}
         </TabTransitionPanel>
       </div>
+
+      <ImportSubmissionModal open={importOpen} onClose={() => setImportOpen(false)} />
     </>
   );
 }

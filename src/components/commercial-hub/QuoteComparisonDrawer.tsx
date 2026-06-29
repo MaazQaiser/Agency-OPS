@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { QuoteOption } from "@/data/submissionTracker";
 
@@ -30,7 +31,7 @@ export function QuoteComparisonDrawer({ quote, clientName, onClose }: QuoteCompa
   if (!quote || !clientName) return null;
 
   return (
-    <div className="va-ops-drawer-root" role="presentation">
+    <VaOpsDrawerRoot>
       <button
         type="button"
         className="va-ops-drawer-backdrop"
@@ -89,6 +90,6 @@ export function QuoteComparisonDrawer({ quote, clientName, onClose }: QuoteCompa
           </div>
         </div>
       </aside>
-    </div>
+    </VaOpsDrawerRoot>
   );
 }

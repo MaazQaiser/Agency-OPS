@@ -21,6 +21,7 @@ import { ReadyToBindTab } from "./ReadyToBindTab";
 import { SubmissionTrackerTab } from "./SubmissionTrackerTab";
 import { SubmissionClockTab } from "./SubmissionClockTab";
 import { LeadVelocityTab } from "./LeadVelocityTab";
+import { FarmersEdgeIntelligenceProvider } from "@/components/farmers-edge/FarmersEdgeIntelligenceProvider";
 
 const validTabIds = new Set<string>(commercialHubTabs.map((tab) => tab.id));
 
@@ -73,7 +74,7 @@ export function CommercialHubModule() {
   useShortcutAction("add-market", () => handleQuickAction("add-market"));
 
   return (
-    <>
+    <FarmersEdgeIntelligenceProvider>
       <CommercialHubPageHeader onQuickActionClick={handleQuickAction} />
 
       <nav className="va-ops-tab-nav" aria-label="Commercial Hub views">
@@ -111,6 +112,6 @@ export function CommercialHubModule() {
         {safeActive === "lead-velocity" && <LeadVelocityTab />}
         </TabTransitionPanel>
       </div>
-    </>
+    </FarmersEdgeIntelligenceProvider>
   );
 }
