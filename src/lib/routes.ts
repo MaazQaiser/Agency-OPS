@@ -36,6 +36,7 @@ export type AppModule =
   | "prime-agency"
   | "va-operations";
 
+/** @deprecated Use sidebarNavItems from @/lib/sidebarNavigation */
 export const navItems: {
   key: AppModule;
   label: string;
@@ -44,11 +45,12 @@ export const navItems: {
 }[] = [
   { key: "va-operations", label: "VA Operations", href: routes.vaOperations, icon: "◆" },
   { key: "commercial", label: "Commercial Hub", href: routes.commercialHub, icon: "▤" },
+  { key: "farmers-edge", label: "Farmers Edge", href: routes.farmersEdge, icon: "▧" },
   { key: "intake-forms", label: "Intake Forms", href: routes.intakeForms, icon: "▦" },
   { key: "training-hub", label: "Training Hub", href: routes.trainingHub, icon: "▧" },
   { key: "carrier-library", label: "Carrier Library", href: routes.carrierLibrary, icon: "▨" },
   { key: "epay-policy", label: "ePayPolicy", href: routes.epayPolicy, icon: "▩" },
   { key: "send-center", label: "Send Center", href: routes.sendCenter, icon: "▪" },
-  { key: "global-search", label: "Global Search", href: routes.globalSearch, icon: "◈" },
   { key: "analytics", label: "Analytics", href: routes.analytics, icon: "▫" },
+  { key: "global-search", label: "Global Search", href: routes.globalSearch, icon: "◈" },
 ];

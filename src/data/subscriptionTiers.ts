@@ -74,7 +74,9 @@ export const moduleToSubscriptionFeature: Partial<Record<AccessTarget, Subscript
   producer: "retention",
   "prime-agency": "retention",
   "send-center": "send-center",
+  analytics: "analytics",
   "global-search": "analytics",
+  "farmers-edge": "commercial-hub",
 };
 
 /** VA Operations tabs gated beyond the base module. */

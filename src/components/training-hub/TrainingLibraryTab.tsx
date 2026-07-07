@@ -387,6 +387,8 @@ export function TrainingLibraryTab() {
                 name={item.actor}
                 size="sm"
                 showStatus={false}
+                interactive
+                openProfileOnClick
                 className="training-activity-avatar"
               />
               <div className="training-activity-body">

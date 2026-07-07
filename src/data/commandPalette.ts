@@ -1,5 +1,6 @@
 import type { AppIconName } from "@/components/ui/AppIcon";
-import { navItems, routes } from "@/lib/routes";
+import { sidebarNavItems } from "@/lib/sidebarNavigation";
+import { routes } from "@/lib/routes";
 
 export type CommandPaletteAction = {
   id: string;
@@ -133,14 +134,16 @@ function dedupePaletteActions(actions: CommandPaletteAction[]): CommandPaletteAc
 }
 
 export const moduleJumpActions: CommandPaletteAction[] = dedupePaletteActions([
-  ...navItems.map((item) => ({
-    id: `jump-${item.key}`,
-    label: `Go to ${item.label}`,
-    href: item.href,
-    icon: moduleIcon(item.key),
-    hub: item.label,
-    keywords: [item.label, item.key, "jump", "open", "module", "hub", "go"],
-  })),
+  ...sidebarNavItems
+    .filter((item) => item.href && item.module)
+    .map((item) => ({
+      id: `jump-${item.key}`,
+      label: `Go to ${item.label}`,
+      href: item.href!.split("?")[0] ?? item.href!,
+      icon: moduleIcon(item.module ?? item.key),
+      hub: item.label,
+      keywords: [item.label, item.key, "jump", "open", "module", "hub", "go"],
+    })),
   ...extraModuleJumpActions,
 ]);
 
@@ -192,6 +195,12 @@ function moduleIcon(key: string): AppIconName {
       return "dollar";
     case "send-center":
       return "send";
+    case "farmers-edge":
+      return "telescope";
+    case "analytics":
+      return "bar-chart";
+    case "global-search":
+      return "search";
     default:
       return "search";
   }

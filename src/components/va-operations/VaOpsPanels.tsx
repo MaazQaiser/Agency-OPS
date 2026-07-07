@@ -173,6 +173,8 @@ function ActivityFeedItem({ item }: { item: ActivityItem }) {
         name={item.actor}
         size="sm"
         showStatus={false}
+        interactive
+        openProfileOnClick
         className="va-ops-activity-avatar"
       />
       <span className={cn("va-ops-activity-icon-wrap", activityIconClass[item.eventType])}>

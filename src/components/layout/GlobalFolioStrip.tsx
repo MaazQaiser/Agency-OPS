@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
-import { KpiSparklineIntelligence } from "@/components/kpi/KpiSparklineIntelligence";
 import { folioUrgencyIndicators, folioOperationalMetrics, formatRevenueAtRisk } from "@/data/folioOperationalData";
 import { getFolioProgressMetrics } from "@/lib/folioProgress";
 import { FolioDrawer } from "./FolioDrawer";
@@ -65,46 +64,56 @@ export function GlobalFolioStrip() {
         </div>
 
         <div className="folio-progress-right global-folio-right">
-          <div className="folio-progress-stat">
+          <div className="folio-progress-stat global-folio-stat">
             <span className="folio-progress-stat-label">Target</span>
             <span className="folio-progress-stat-value">{metrics.targetLabel}</span>
           </div>
-          <div className="folio-progress-stat folio-progress-stat--sparkline">
+          <div className="folio-progress-stat global-folio-stat">
             <span className="folio-progress-stat-label">Written</span>
             <span className="folio-progress-stat-value">{metrics.writtenLabel}</span>
-            <KpiSparklineIntelligence label="Premium Written" compact />
           </div>
-          <div className="folio-progress-stat folio-progress-stat--sparkline">
+          <div className="folio-progress-stat global-folio-stat">
             <span className="folio-progress-stat-label">Pace</span>
-            <span className={cn("folio-progress-stat-value", "folio-progress-stat-pace", `folio-progress-stat-pace--${stateClass}`)}>
+            <span
+              className={cn(
+                "folio-progress-stat-value",
+                "folio-progress-stat-pace",
+                `folio-progress-stat-pace--${stateClass}`,
+              )}
+            >
               {metrics.paceLabel}
             </span>
           </div>
-          <div className="folio-progress-stat">
-            <span className="folio-progress-stat-label">Binds</span>
-            <span className="folio-progress-stat-value">{folioOperationalMetrics.pendingBinds}</span>
-          </div>
-          <div className="folio-progress-stat">
-            <span className="folio-progress-stat-label">Approvals</span>
-            <span className="folio-progress-stat-value">{folioOperationalMetrics.pendingApprovals}</span>
-          </div>
-          <div className="folio-progress-stat">
-            <span className="folio-progress-stat-label">At Risk</span>
-            <span className="folio-progress-stat-value global-folio-risk-value">
-              {formatRevenueAtRisk(folioOperationalMetrics.revenueAtRisk)}
-            </span>
-          </div>
 
-          <div className="global-folio-urgency-badges" aria-label="Folio urgency indicators">
-            {folioUrgencyIndicators.map((indicator) => (
-              <span
-                key={indicator.id}
-                className={cn("global-folio-urgency-badge", `global-folio-urgency-badge--${indicator.tone}`)}
-              >
-                {indicator.label}
-              </span>
-            ))}
-          </div>
+          {metrics.folioState !== "closed" && (
+            <>
+              <div className="folio-progress-stat global-folio-stat global-folio-stat--secondary">
+                <span className="folio-progress-stat-label">Binds</span>
+                <span className="folio-progress-stat-value">{folioOperationalMetrics.pendingBinds}</span>
+              </div>
+              <div className="folio-progress-stat global-folio-stat global-folio-stat--secondary">
+                <span className="folio-progress-stat-label">Approvals</span>
+                <span className="folio-progress-stat-value">{folioOperationalMetrics.pendingApprovals}</span>
+              </div>
+              <div className="folio-progress-stat global-folio-stat global-folio-stat--secondary">
+                <span className="folio-progress-stat-label">At Risk</span>
+                <span className="folio-progress-stat-value global-folio-risk-value">
+                  {formatRevenueAtRisk(folioOperationalMetrics.revenueAtRisk)}
+                </span>
+              </div>
+
+              <div className="global-folio-urgency-badges" aria-label="Folio urgency indicators">
+                {folioUrgencyIndicators.map((indicator) => (
+                  <span
+                    key={indicator.id}
+                    className={cn("global-folio-urgency-badge", `global-folio-urgency-badge--${indicator.tone}`)}
+                  >
+                    {indicator.label}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </button>
 

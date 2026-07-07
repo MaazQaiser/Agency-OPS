@@ -53,7 +53,7 @@
 
 .pipeline-stage-bar-name {
   font-size: 9px;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
   overflow: hidden;
@@ -62,7 +62,7 @@
 
 .pipeline-stage-bar-count {
   font-size: 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-family-display);
   font-weight: 700;
   color: #fff;
 }
@@ -84,7 +84,7 @@
 
 .pipeline-stage-bar-label {
   font-size: 9px;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   color: var(--text-muted, #5a7a95);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -93,7 +93,7 @@
 
 .pipeline-stage-bar-premium {
   font-size: 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-family-display);
   font-weight: 600;
   color: var(--text-secondary, #8fa8c0);
 }
@@ -120,7 +120,7 @@
 .dept-progress-ring-value {
   position: absolute;
   font-size: 10px;
-  font-family: var(--font-display), serif;
+  font-family: var(--font-family-display);
   font-weight: 700;
   color: var(--text-primary, #f0f6ff);
   line-height: 1;
@@ -194,7 +194,7 @@
 .appetite-matrix-table th {
   text-align: left;
   font-size: 9px;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   color: var(--text-muted, #5a7a95);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -230,7 +230,7 @@
 
 .appetite-cell-label {
   font-size: 10px;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   padding: 2px 6px;
   border-radius: 3px;
   white-space: nowrap;
@@ -318,7 +318,7 @@
 
 .live-submission-badge {
   font-size: 8px;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   letter-spacing: 0.12em;
   background: rgba(217, 119, 6, 0.15);
   border: 1px solid rgba(217, 119, 6, 0.35);
@@ -346,7 +346,7 @@
 
 .live-submission-time {
   margin-left: auto;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-family-mono);
   font-size: 10px;
 }
 

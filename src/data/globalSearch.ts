@@ -12,8 +12,7 @@ export const globalSearchHeader = {
   ],
 };
 
-export const globalSearchPlaceholder =
-  "Search hubs, records, and commands…";
+export const globalSearchPlaceholder = "Search Agency OS…";
 
 export const globalSearchHelper =
   "Results are filtered by your role and permissions.";

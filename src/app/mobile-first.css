@@ -40,25 +40,15 @@
   }
 }
 
-/* ── Shell: sticky topbar + bottom nav clearance ── */
+/* ── Shell: bottom nav clearance (sidebar hidden on mobile) ── */
 @media (max-width: 767px) {
   .app-shell {
+    flex-direction: column;
     --app-mobile-nav-offset: calc(var(--mobile-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
   }
 
   .app-content {
     padding-bottom: var(--app-mobile-nav-offset);
-  }
-
-  .app-top-header-stack {
-    position: sticky;
-    top: 0;
-    z-index: 300;
-  }
-
-  .app-top-header {
-    position: sticky;
-    top: 0;
   }
 }
 
@@ -180,25 +170,17 @@
   }
 }
 
-/* ── Header: compact mobile topbar ── */
+/* ── Header: legacy topbar hidden (sidebar architecture) ── */
 @media (max-width: 767px) {
   :root {
+    --top-header-bar-height: 0px;
     --top-header-hub-nav-height: 0px;
-    --top-header-height: var(--top-header-bar-height);
-    --app-header-stack-height: calc(var(--top-header-bar-height) + var(--folio-bar-height));
+    --top-header-height: 0px;
+    --app-header-stack-height: var(--folio-bar-height);
   }
 
-  .app-top-header-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: var(--top-header-bar-height);
-    min-height: var(--top-header-bar-height);
-    padding: 0 var(--mobile-page-pad);
-    gap: var(--mobile-gap);
-  }
-
-  .top-header-nav {
+  .app-top-header-stack,
+  .app-top-header {
     display: none !important;
   }
 

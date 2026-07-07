@@ -15,13 +15,47 @@ import { SubscriptionProvider } from "@/components/subscription/SubscriptionProv
 import { ModuleAccessGate } from "@/components/permissions/ModuleAccessGate";
 import { HubPageTransition } from "@/components/motion/HubPageTransition";
 import { ContextualHelpProvider } from "@/components/help/ContextualHelpProvider";
-import { TopHeader } from "./TopHeader";
+import { AgencySidebar } from "./AgencySidebar";
+import { AppTopNav } from "./AppTopNav";
 import { GlobalFolioStrip } from "./GlobalFolioStrip";
 import { MobileBottomNav } from "./MobileBottomNav";
+import { SidebarNavProvider, useSidebarNav } from "./SidebarNavProvider";
 
 type AppShellProps = {
   children: React.ReactNode;
 };
+
+function AppShellLayout({ children }: AppShellProps) {
+  const { collapsed, hydrated } = useSidebarNav();
+
+  return (
+    <div
+      className="app-shell"
+      data-sidebar-collapsed={hydrated ? collapsed : undefined}
+    >
+      <Suspense fallback={null}>
+        <CrossModuleLinkHandler />
+      </Suspense>
+      <Suspense fallback={null}>
+        <AgencySidebar />
+      </Suspense>
+      <div className="app-shell-main">
+        <Suspense fallback={null}>
+          <AppTopNav />
+        </Suspense>
+        <GlobalFolioStrip />
+        <main className="app-content">
+          <ModuleAccessGate>
+            <HubPageTransition>{children}</HubPageTransition>
+          </ModuleAccessGate>
+        </main>
+      </div>
+      <Suspense fallback={null}>
+        <MobileBottomNav />
+      </Suspense>
+    </div>
+  );
+}
 
 export function AppShell({ children }: AppShellProps) {
   return (
@@ -36,25 +70,9 @@ export function AppShell({ children }: AppShellProps) {
             <AuditLogProvider>
             <OwnerQuickActionsProvider>
               <KeyboardShortcutsProvider>
-                <div className="app-shell">
-                  <Suspense fallback={null}>
-                    <CrossModuleLinkHandler />
-                  </Suspense>
-                  <div className="app-top-header-stack">
-                    <Suspense fallback={<header className="app-top-header" aria-hidden="true" />}>
-                      <TopHeader />
-                    </Suspense>
-                    <GlobalFolioStrip />
-                  </div>
-                  <main className="app-content">
-                    <ModuleAccessGate>
-                      <HubPageTransition>{children}</HubPageTransition>
-                    </ModuleAccessGate>
-                  </main>
-                  <Suspense fallback={null}>
-                    <MobileBottomNav />
-                  </Suspense>
-                </div>
+                <SidebarNavProvider>
+                  <AppShellLayout>{children}</AppShellLayout>
+                </SidebarNavProvider>
               </KeyboardShortcutsProvider>
             </OwnerQuickActionsProvider>
             </AuditLogProvider>

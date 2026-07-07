@@ -128,7 +128,7 @@ export function AvatarProfilePanel({
             <TeamAvatar
               userId={profile.id}
               name={profile.name}
-              size="xl"
+              size="lg"
               status={presenceToAvatarStatus(profile.status)}
               imageSrc={profile.avatarUrl}
               showTooltip={false}

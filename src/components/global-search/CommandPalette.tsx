@@ -43,7 +43,9 @@ import { useEntitlements } from "@/hooks/useEntitlements";
 import { routes } from "@/lib/routes";
 import { useDebouncedValue } from "@/lib/useDebouncedValue";
 import { cn } from "@/lib/cn";
-import { QuickResultDrawer } from "./QuickResultDrawer";
+import { overlaySearchHints } from "@/lib/overlaySearchGroups";
+import { CommandPaletteSkeleton } from "@/components/shared/loading";
+import { SearchPreviewPanel } from "./SearchPreviewPanel";
 
 type PaletteItem =
   | { kind: "recent"; id: string; label: string }
@@ -56,8 +58,6 @@ type PaletteItem =
 type CommandPaletteProps = {
   initialQuery?: string;
   onClose: () => void;
-  onOpenWorkspace: (query: string) => void;
-  canOpenWorkspace?: boolean;
 };
 
 function HighlightText({ text, query }: { text: string; query: string }) {
@@ -75,6 +75,22 @@ function HighlightText({ text, query }: { text: string; query: string }) {
       )}
     </>
   );
+}
+
+function hubRowAccentClass(hub: string) {
+  const accent = resolveHubAccent(hub);
+  const map: Record<string, string> = {
+    commercial: "cmd-hub-accent-commercial",
+    va: "cmd-hub-accent-va",
+    training: "cmd-hub-accent-training",
+    carrier: "cmd-hub-accent-carrier",
+    analytics: "cmd-hub-accent-analytics",
+    send: "cmd-hub-accent-send",
+    farmers: "cmd-hub-accent-farmers",
+    epay: "cmd-hub-accent-epay",
+    intake: "cmd-hub-accent-intake",
+  };
+  return map[accent] ?? "cmd-hub-accent-va";
 }
 
 function statusBadgeClass(status: string) {
@@ -125,7 +141,7 @@ function ActionRow({
   return (
     <button
       type="button"
-      className={cn("cmd-palette-row cmd-palette-action-row", active && "active")}
+      className={cn("cmd-palette-row cmd-palette-action-row", hubRowAccentClass(action.hub), active && "active")}
       data-index={index}
       onClick={onSelect}
       onMouseEnter={onHover}
@@ -136,6 +152,7 @@ function ActionRow({
       </span>
       <HubTag hub={action.hub} />
       <kbd className="cmd-palette-row-kbd">↵</kbd>
+      <AppIcon name="chevron-down" size={14} strokeWidth={2.25} className="cmd-palette-row-chevron" />
     </button>
   );
 }
@@ -161,6 +178,7 @@ function ResultRowContent({
         <span className="cmd-palette-result-time">{result.lastUpdated}</span>
       </div>
       <HubTag hub={result.hub} />
+      <AppIcon name="chevron-down" size={14} strokeWidth={2.25} className="cmd-palette-row-chevron" />
     </>
   );
 }
@@ -168,8 +186,6 @@ function ResultRowContent({
 export function CommandPalette({
   initialQuery = "",
   onClose,
-  onOpenWorkspace,
-  canOpenWorkspace = true,
 }: CommandPaletteProps) {
   const router = useRouter();
   const { openProfile } = useAvatarProfile();
@@ -182,8 +198,9 @@ export function CommandPalette({
   const [activeIndex, setActiveIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [expandedHubs, setExpandedHubs] = useState<Set<string>>(new Set());
-  const [selectedResult, setSelectedResult] = useState<GlobalSearchResult | null>(null);
+  const [previewResult, setPreviewResult] = useState<GlobalSearchResult | null>(null);
   const [mounted, setMounted] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const debouncedQuery = useDebouncedValue(query, 100);
   const isSearching = query.trim() !== debouncedQuery.trim();
@@ -392,18 +409,17 @@ export function CommandPalette({
           break;
         case "ai":
           if (aiInsight?.action) navigate(aiInsight.action.href, newTab);
-          else if (canOpenWorkspace) onOpenWorkspace(debouncedQuery);
           break;
       }
     },
-    [navigate, aiInsight, debouncedQuery, onOpenWorkspace, onClose, openProfile, canOpenWorkspace],
+    [navigate, aiInsight, onClose, openProfile],
   );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        if (selectedResult) setSelectedResult(null);
+        if (previewResult) setPreviewResult(null);
         else onClose();
         return;
       }
@@ -448,7 +464,39 @@ export function CommandPalette({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, flatItems, activeIndex, activateItem, paletteTab, selectedResult, debouncedQuery]);
+  }, [onClose, flatItems, activeIndex, activateItem, paletteTab, previewResult, debouncedQuery]);
+
+  useEffect(() => {
+    const item = flatItems[activeIndex];
+    if (item?.kind === "result") setPreviewResult(item.result);
+    else setPreviewResult(null);
+  }, [activeIndex, flatItems]);
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const focusable = panel.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const trap = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || focusable.length === 0) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    panel.addEventListener("keydown", trap);
+    return () => panel.removeEventListener("keydown", trap);
+  }, [mounted]);
 
   useEffect(() => {
     const el = listRef.current?.querySelector(`[data-index="${activeIndex}"]`);
@@ -483,62 +531,75 @@ export function CommandPalette({
         aria-hidden="true"
       />
       <div
+        ref={panelRef}
         className={cn("cmd-palette", mounted && "cmd-palette-visible")}
         role="dialog"
         aria-modal="true"
-        aria-label="Command palette"
+        aria-label="Global search"
       >
-        <div className="cmd-palette-shell">
-          <div className="cmd-palette-brand">
-            <AppIcon name="search" size={14} strokeWidth={2} />
-            <span>Agency OS Command</span>
-            <kbd className="cmd-palette-kbd">⌘K</kbd>
-          </div>
-
-          <div className="cmd-palette-search">
-            <AppIcon name="search" size={20} strokeWidth={2} className="cmd-palette-search-icon" />
-            <input
-              ref={inputRef}
-              type="search"
-              className="cmd-palette-input"
-              placeholder={globalSearchPlaceholder}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              aria-label="Search commands and records"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            {query && (
-              <button
-                type="button"
-                className="cmd-palette-clear"
-                onClick={() => setQuery("")}
-                aria-label="Clear search"
-              >
-                <AppIcon name="close" size={16} strokeWidth={2} />
-              </button>
-            )}
-            <kbd className="cmd-palette-kbd">ESC</kbd>
-          </div>
-
-          {showAiGuidance && (
-            <div className="cmd-palette-ai-guidance" aria-label="AI search suggestions">
-              {paletteAiGuidance.map((hint) => (
-                <button
-                  key={hint.id}
-                  type="button"
-                  className="cmd-palette-ai-hint"
-                  onClick={() => {
-                    setQuery(hint.query);
-                    setPaletteTab("ai");
-                  }}
-                >
-                  <AppIcon name="sparkles" size={12} strokeWidth={2} />
-                  {hint.label}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="cmd-palette-panel">
+          <div className="cmd-palette-layout">
+            <div className="cmd-palette-main">
+              <div className="cmd-palette-shell">
+                <div className="cmd-palette-header">
+                  <div className="cmd-palette-header-top">
+                    <span className="cmd-palette-eyebrow">Agency OS Search</span>
+                    <kbd className="cmd-palette-header-kbd" aria-hidden="true">
+                      {typeof navigator !== "undefined" && navigator.platform.toUpperCase().includes("MAC") ? "⌘K" : "Ctrl K"}
+                    </kbd>
+                  </div>
+                  <div className="cmd-palette-search">
+                    <AppIcon name="search" size={22} strokeWidth={2} className="cmd-palette-search-icon" />
+                    <input
+                      ref={inputRef}
+                      type="search"
+                      className="cmd-palette-input"
+                      placeholder="Search clients, hubs, commands…"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      aria-label="Search across Agency OS"
+                      autoComplete="off"
+                      spellCheck={false}
+                    />
+                    {query && (
+                      <button
+                        type="button"
+                        className="cmd-palette-clear"
+                        onClick={() => setQuery("")}
+                        aria-label="Clear search"
+                      >
+                        <AppIcon name="close" size={16} strokeWidth={2} />
+                      </button>
+                    )}
+                  </div>
+                  {!hasQuery && (
+                    <div className="cmd-palette-hints" aria-hidden="true">
+                      {overlaySearchHints.map((hint) => (
+                        <span key={hint} className="cmd-palette-hint">
+                          {hint}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {showAiGuidance && !hasQuery && (
+                    <div className="cmd-palette-ai-guidance" aria-label="AI search suggestions">
+                      {paletteAiGuidance.map((hint) => (
+                        <button
+                          key={hint.id}
+                          type="button"
+                          className="cmd-palette-ai-hint"
+                          onClick={() => {
+                            setQuery(hint.query);
+                            setPaletteTab("ai");
+                          }}
+                        >
+                          <AppIcon name="sparkles" size={12} strokeWidth={2} />
+                          {hint.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
           <div className="cmd-palette-categories" role="tablist" aria-label="Command palette views">
             {paletteTabs.map((tab) => (
@@ -561,7 +622,7 @@ export function CommandPalette({
                 {showRecent && recentSearches.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
-                      <span className="cmd-palette-section-title">Recent</span>
+                      <span className="cmd-palette-section-title">Recent Searches</span>
                       <button type="button" className="cmd-palette-link-btn" onClick={handleClearHistory}>
                         Clear
                       </button>
@@ -626,7 +687,7 @@ export function CommandPalette({
                 {showSuggestedActions && (
                 <section className="cmd-palette-section cmd-palette-section--pinned">
                   <div className="cmd-palette-section-header">
-                    <span className="cmd-palette-section-title">Suggested Actions</span>
+                    <span className="cmd-palette-section-title">Pinned Items</span>
                   </div>
                   <ul className="cmd-palette-list">
                     {accessiblePinned.map((action) => {
@@ -653,7 +714,7 @@ export function CommandPalette({
                 {showJumps && (
                 <section className="cmd-palette-section">
                   <div className="cmd-palette-section-header">
-                    <span className="cmd-palette-section-title">Jump to Module</span>
+                    <span className="cmd-palette-section-title">Frequently Used Hubs</span>
                   </div>
                   <ul className="cmd-palette-list">
                     {accessibleJumps.map((action) => {
@@ -680,7 +741,7 @@ export function CommandPalette({
                 {showSuggestedRecords && suggestedResults.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
-                      <span className="cmd-palette-section-title">Suggested Records</span>
+                      <span className="cmd-palette-section-title">Recent Clients</span>
                     </div>
                     <ul className="cmd-palette-list">
                       {suggestedResults.map((result) => {
@@ -691,9 +752,19 @@ export function CommandPalette({
                           <li key={result.id}>
                             <button
                               type="button"
-                              className={cn("cmd-palette-row cmd-palette-result-row", flatIdx === activeIndex && "active")}
+                              className={cn(
+                                "cmd-palette-row cmd-palette-result-row",
+                                hubRowAccentClass(result.hub),
+                                flatIdx === activeIndex && "active",
+                              )}
                               data-index={flatIdx}
-                              onClick={() => setSelectedResult(result)}
+                              onClick={() => {
+                                setPreviewResult(result);
+                                const idx = flatItems.findIndex(
+                                  (item) => item.kind === "result" && item.result.id === result.id,
+                                );
+                                if (idx >= 0) setActiveIndex(idx);
+                              }}
                               onMouseEnter={() => setActiveIndex(flatIdx)}
                             >
                               <ResultRowContent result={result} query="" />
@@ -721,17 +792,12 @@ export function CommandPalette({
 
             {hasQuery && (
               <>
-                {isSearching && (
-                  <div className="cmd-palette-empty" aria-live="polite">
-                    <AppIcon name="search" size={20} strokeWidth={2} />
-                    <p>Searching…</p>
-                  </div>
-                )}
+                {isSearching && <CommandPaletteSkeleton rows={5} />}
 
                 {!isSearching && showMatchedActions && matchedActions.length > 0 && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
-                      <span className="cmd-palette-section-title">Suggested Actions</span>
+                      <span className="cmd-palette-section-title">Commands</span>
                     </div>
                     <ul className="cmd-palette-list">
                       {matchedActions.slice(0, 8).map((action) => {
@@ -779,10 +845,17 @@ export function CommandPalette({
                                   type="button"
                                   className={cn(
                                     "cmd-palette-row cmd-palette-result-row",
+                                    hubRowAccentClass(result.hub),
                                     flatIdx === activeIndex && "active",
                                   )}
                                   data-index={flatIdx}
-                                  onClick={() => setSelectedResult(result)}
+                                  onClick={() => {
+                                setPreviewResult(result);
+                                const idx = flatItems.findIndex(
+                                  (item) => item.kind === "result" && item.result.id === result.id,
+                                );
+                                if (idx >= 0) setActiveIndex(idx);
+                              }}
                                   onMouseEnter={() => setActiveIndex(flatIdx)}
                                 >
                                   <ResultRowContent result={result} query={debouncedQuery} />
@@ -838,17 +911,32 @@ export function CommandPalette({
                 )}
 
                 {showEmpty && (
-                  <div className="cmd-palette-empty">
-                    <AppIcon name="search" size={24} strokeWidth={2} />
-                    <p>No results found</p>
-                    <p className="cmd-palette-empty-hint">
-                      Try a client name, carrier, command, or module jump.
+                  <div className="cmd-palette-empty" role="status">
+                    <div className="cmd-palette-empty-illustration" aria-hidden="true">
+                      <AppIcon name="search" size={28} strokeWidth={1.75} />
+                    </div>
+                    <h3>No results found</h3>
+                    <p>
+                      We couldn&apos;t find anything matching &ldquo;{debouncedQuery}&rdquo;. Try a different term or browse a hub.
                     </p>
-                    {canOpenWorkspace && (
-                      <button type="button" className="va-ops-action-btn" onClick={() => onOpenWorkspace(debouncedQuery)}>
-                        Search in workspace
+                    <div className="cmd-palette-empty-actions">
+                      <button type="button" className="cmd-palette-empty-btn" onClick={() => setQuery("commercial")}>
+                        Search Commercial
                       </button>
-                    )}
+                      <button type="button" className="cmd-palette-empty-btn" onClick={() => setQuery("carrier")}>
+                        Search Carriers
+                      </button>
+                      <button
+                        type="button"
+                        className="cmd-palette-empty-btn"
+                        onClick={() => {
+                          setQuery("");
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        View Recent
+                      </button>
+                    </div>
                   </div>
                 )}
               </>
@@ -859,25 +947,17 @@ export function CommandPalette({
             <span><kbd>↵</kbd> Execute</span>
             <span><kbd>⌘↵</kbd> Open in new tab</span>
             <span><kbd>↑↓</kbd> Navigate</span>
+            <span><kbd>Tab</kbd> Sections</span>
             <span><kbd>Esc</kbd> Close</span>
-            {canOpenWorkspace ? (
-              <button type="button" className="cmd-palette-footer-link" onClick={() => onOpenWorkspace(query)}>
-                Full search →
-              </button>
-            ) : null}
           </footer>
+              </div>
+            </div>
+            <div className="cmd-palette-preview-slot" aria-live="polite">
+              <SearchPreviewPanel result={previewResult} onNavigate={onClose} />
+            </div>
+          </div>
         </div>
       </div>
-
-      <QuickResultDrawer
-        result={selectedResult}
-        onClose={() => setSelectedResult(null)}
-        onNavigate={(href) => {
-          if (query.trim()) addRecentSearch(query.trim());
-          onClose();
-          router.push(href);
-        }}
-      />
     </>
   );
 }

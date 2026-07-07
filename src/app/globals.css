@@ -161,30 +161,34 @@ html[data-theme="obsidian"] {
   --radius: 8px;
   --radius-lg: var(--radius);
 
-  /* Font sizes — premium scale */
-  --font-size-micro: 11px;
-  --font-size-badge: 10px;
+  /* Font sizes — official body + display scale */
+  --font-size-11: 11px;
   --font-size-12: 12px;
+  --font-size-13: 13px;
   --font-size-14: 14px;
   --font-size-16: 16px;
   --font-size-18: 18px;
   --font-size-24: 24px;
-  --font-size-26: 26px;
   --font-size-28: 28px;
   --font-size-32: 32px;
-  --font-size-42: 42px;
+  --font-size-40: 40px;
+  --font-size-48: 48px;
+  --font-size-micro: 11px;
+  --font-size-badge: 10px;
 
   /* Display scale */
   --font-size-h1: clamp(40px, 3.5vw, 48px);
-  --font-size-h2: 30px;
-  --font-size-h3: 23px;
-  --font-size-kpi-lg: 40px;
-  --font-size-kpi-md: 27px;
+  --font-size-h2: clamp(36px, 3vw, 40px);
+  --font-size-h3: clamp(28px, 2.5vw, 32px);
+  --font-size-h4: clamp(24px, 2.2vw, 28px);
+  --font-size-h5: 24px;
+  --font-size-kpi-lg: clamp(36px, 3vw, 48px);
+  --font-size-kpi-md: clamp(28px, 2.5vw, 40px);
 
   /* Semantic aliases */
-  --font-size-xs: var(--font-size-12);
+  --font-size-xs: var(--font-size-11);
   --font-size-sm: var(--font-size-12);
-  --font-size-md: var(--font-size-12);
+  --font-size-md: var(--font-size-13);
   --font-size-base-sm: var(--font-size-12);
   --font-size-base: var(--font-size-14);
   --font-size-lg: var(--font-size-16);
@@ -209,12 +213,12 @@ html[data-theme="obsidian"] {
   --folio-bar-height: 56px;
   --app-header-stack-height: calc(var(--top-header-height) + var(--folio-bar-height));
 
-  /* Typography */
-  --font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
-  --font-family-display: var(--font-display), "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-family-mono: var(--font-mono), ui-monospace, "JetBrains Mono", monospace;
+  /* Typography — Cormorant Garamond · Inter · JetBrains Mono */
+  --font-family: var(--font-sans);
+  --font-family-display: var(--font-display);
+  --font-family-mono: var(--font-mono);
   --line-height-display: 1.18;
-  --line-height-body: 1.55;
+  --line-height-body: 1.5;
   --letter-spacing-kpi: -0.025em;
 
   /* Canvas glow */
@@ -243,7 +247,9 @@ body {
 /* ── Premium Typography System ── */
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5 {
   font-family: var(--font-family-display);
   color: var(--text-primary);
   font-style: normal;
@@ -251,23 +257,37 @@ h3 {
 
 h1 {
   font-size: var(--font-size-h1);
-  font-weight: 600;
+  font-weight: 700;
   line-height: var(--line-height-display);
   letter-spacing: 0.01em;
 }
 
 h2 {
   font-size: var(--font-size-h2);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.008em;
 }
 
 h3 {
   font-size: var(--font-size-h3);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.25;
   letter-spacing: 0.006em;
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.004em;
+}
+
+h5 {
+  font-size: var(--font-size-h5);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.003em;
 }
 
 /* Display — Cormorant Garamond */
@@ -294,7 +314,6 @@ h3 {
 .training-detail-resource-title,
 .training-scribe-step-title,
 .send-center-section-title,
-.notification-card-title,
 .owner-quick-actions-section-title,
 .avatar-profile-section-title,
 .intake-form-card-title,
@@ -323,13 +342,13 @@ h3 {
   font-feature-settings: "lnum" 1;
 }
 
-/* Korean department — Send Center Korean content */
+/* Korean department — Inter (global body stack) */
 .send-center-korean,
 [lang="ko"] {
-  font-family: var(--font-korean), var(--font-sans), sans-serif;
+  font-family: var(--font-family);
 }
 
-/* Mono — JetBrains Mono */
+/* Mono — JetBrains Mono (data only) */
 .badge,
 .pill,
 .lob-tag,
@@ -350,18 +369,9 @@ h3 {
 .folio-progress-badge,
 .folio-progress-urgency,
 .folio-progress-pct,
-.folio-progress-stat-label,
-.folio-progress-metric-label,
-.folio-progress-tooltip-label,
 .folio-progress-tooltip-value,
 .folio-progress-tooltip-delta,
 .folio-progress-tooltip-status,
-.va-ops-kpi-label,
-.kpi-label,
-.coverage-risk-score-card-label,
-.coverage-risk-flags-card-label,
-.system-health-summary-label,
-.avatar-profile-kpi-label,
 .cmd-palette-footer kbd,
 .notification-card-time {
   font-family: var(--font-family-mono);
@@ -1177,10 +1187,9 @@ table.production tr.pipeline-kpi-totals-row td {
   font-size: var(--font-size-micro);
   font-weight: 500;
   color: var(--text-muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-family: var(--font-family-mono);
-  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+  text-transform: none;
+  font-family: var(--font-family);
   margin-bottom: 6px;
 }
 
@@ -4321,7 +4330,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @media (max-width: 1100px) {
-  .folio-progress-bar {
+  .folio-progress-bar:not(.global-folio-strip) {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
     height: auto;
@@ -4331,20 +4340,20 @@ tbody tr:last-child td { border-bottom: none; }
     row-gap: 8px;
   }
 
-  .folio-progress-left {
+  .folio-progress-bar:not(.global-folio-strip) .folio-progress-left {
     justify-content: flex-start;
     flex-wrap: wrap;
   }
 
-  .folio-progress-center {
+  .folio-progress-bar:not(.global-folio-strip) .folio-progress-center {
     width: 100%;
   }
 
-  .folio-progress-track-wrap {
+  .folio-progress-bar:not(.global-folio-strip) .folio-progress-track-wrap {
     width: 100%;
   }
 
-  .folio-progress-right {
+  .folio-progress-bar:not(.global-folio-strip) .folio-progress-right {
     justify-content: flex-start;
     padding-top: 2px;
   }
@@ -4893,7 +4902,7 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
   margin: 0;
   font-family: var(--font-family-display);
   font-size: var(--font-size-h2);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.01em;
   line-height: var(--line-height-display);
@@ -5120,11 +5129,11 @@ html[data-theme="obsidian"] .module-commercial .kpi-card.yellow {
 }
 
 .va-ops-kpi-label {
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family);
   font-size: var(--font-size-micro);
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--text-muted);
   margin-bottom: 8px;
 }
@@ -6668,8 +6677,9 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
 }
 
 .va-ops-drawer-name {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -17450,9 +17460,9 @@ html[data-theme="obsidian"] .cmd-palette {
 }
 
 .notification-card-title {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--font-size-h3);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-primary);
   line-height: 1.25;
 }

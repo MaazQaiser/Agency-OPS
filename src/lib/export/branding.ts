@@ -32,7 +32,7 @@ export const exportDocumentStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 11pt;
     line-height: 1.5;
     color: #1C2B35;
@@ -58,7 +58,7 @@ export const exportDocumentStyles = `
   }
   .export-doc-org { font-size: 10pt; color: #7AAFC8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
   .export-doc-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 28pt;
     font-weight: 700;
     color: #1C2B35;
@@ -72,7 +72,7 @@ export const exportDocumentStyles = `
   .export-doc-meta .mono { font-family: 'JetBrains Mono', monospace; font-size: 8pt; }
   .export-section { margin-bottom: 28px; }
   .export-section-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 16pt;
     font-weight: 600;
     color: #1C2B35;
@@ -92,9 +92,9 @@ export const exportDocumentStyles = `
     padding: 14px 16px;
     background: #fff;
   }
-  .export-kpi-label { font-size: 8pt; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #7AAFC8; }
+  .export-kpi-label { font-family: 'Inter', sans-serif; font-size: 8pt; font-weight: 500; color: #7AAFC8; }
   .export-kpi-value {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 22pt;
     font-weight: 700;
     color: #1C2B35;
@@ -157,7 +157,7 @@ export const exportDocumentStyles = `
     letter-spacing: 0.02em;
   }
   .export-invoice-total {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 24pt;
     font-weight: 700;
     color: #1C2B35;

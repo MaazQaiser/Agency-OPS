@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useAvatarProfile } from "@/components/user-profile/AvatarProfileProvider";
 import { cn } from "@/lib/cn";
-import { getNameInitials } from "@/lib/nameInitials";
 import {
-  resolveTeamIdentity,
+  getGeneratedInitialAvatar,
+  resolveAvatarVisual,
   resolveRoleRingGradient,
+  resolveTeamIdentity,
   type TeamAvatarStatus,
   type TeamIdentity,
 } from "@/lib/teamIdentity";
@@ -20,7 +22,10 @@ type TeamAvatarProps = {
   showStatus?: boolean;
   showTooltip?: boolean;
   interactive?: boolean;
+  openProfileOnClick?: boolean;
   preferVa?: boolean;
+  muted?: boolean;
+  pulse?: boolean;
   className?: string;
   imageSrc?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -28,11 +33,11 @@ type TeamAvatarProps = {
 };
 
 const sizeClass: Record<TeamAvatarSize, string> = {
-  xs: "team-avatar-xs",
-  sm: "team-avatar-sm",
-  md: "team-avatar-md",
-  lg: "team-avatar-lg",
-  xl: "team-avatar-xl",
+  xs: "team-avatar-size-xs",
+  sm: "team-avatar-size-sm",
+  md: "team-avatar-size-md",
+  lg: "team-avatar-size-lg",
+  xl: "team-avatar-size-lg",
 };
 
 const statusClass: Record<TeamAvatarStatus, string> = {
@@ -63,12 +68,16 @@ export function TeamAvatar({
   showStatus = true,
   showTooltip = true,
   interactive = false,
+  openProfileOnClick = false,
   preferVa = false,
+  muted = false,
+  pulse = false,
   className,
   imageSrc,
   onClick,
   "aria-label": ariaLabel,
 }: TeamAvatarProps) {
+  const { openProfile } = useAvatarProfile();
   const identity = useMemo(
     () => resolveIdentity(userId, name, preferVa),
     [userId, name, preferVa],
@@ -76,36 +85,67 @@ export function TeamAvatar({
   const label = name ?? identity?.name ?? userId ?? "Team member";
   const [imgError, setImgError] = useState(false);
   const photo = imageSrc ?? identity?.photoUrl;
+  const visualMode = resolveAvatarVisual(identity, imgError, imageSrc);
+  const ring = identity?.ringGradient ?? (identity ? resolveRoleRingGradient(identity.role) : undefined);
+  const resolvedStatus = status ?? identity?.defaultStatus ?? "offline";
+  const generated = getGeneratedInitialAvatar(label, ring);
 
   useEffect(() => {
     setImgError(false);
   }, [photo]);
-  const ring = identity?.ringGradient ?? (identity ? resolveRoleRingGradient(identity.role) : undefined);
-  const resolvedStatus = status ?? identity?.defaultStatus ?? "offline";
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(event);
+      return;
+    }
+    if (openProfileOnClick || interactive) {
+      event.stopPropagation();
+      openProfile(userId ?? name ?? label);
+    }
+  };
 
   const avatarVisual = (
     <span
-      className={cn("team-avatar", sizeClass[size], interactive && "interactive", className)}
+      className={cn(
+        "team-avatar-root",
+        sizeClass[size],
+        muted && "team-avatar-root--muted",
+        pulse && resolvedStatus === "online" && "team-avatar-root--pulse",
+        (interactive || openProfileOnClick || onClick) && "team-avatar-root--interactive",
+        className,
+      )}
       style={ring ? ({ "--team-ring": ring } as React.CSSProperties) : undefined}
     >
-      {showTooltip && !interactive && !onClick && (
+      {showTooltip && !interactive && !onClick && !openProfileOnClick && (
         <span className="team-avatar-tooltip" role="tooltip">
           {label}
           {identity?.role ? ` · ${identity.role}` : ""}
         </span>
       )}
-      <span className="team-avatar-inner">
-        {photo && !imgError ? (
-          <img
-            src={photo}
-            alt=""
-            className="team-avatar-photo"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          /* M2 correction: real photos only — fallback is shimmer, never initials */
-          <span className="team-avatar-shimmer ops-skeleton-shimmer" aria-hidden="true" />
-        )}
+      <span className="team-avatar-ring" aria-hidden="true">
+        <span className="team-avatar-gap">
+          <span className="team-avatar-inner">
+            {visualMode === "photo" && photo && !imgError ? (
+              <img
+                src={photo}
+                alt=""
+                className="team-avatar-photo"
+                onError={() => setImgError(true)}
+              />
+            ) : visualMode === "animated" && identity?.animatedAvatarUrl ? (
+              <img src={identity.animatedAvatarUrl} alt="" className="team-avatar-photo team-avatar-photo--animated" />
+            ) : (
+              <span
+                className="team-avatar-initials"
+                style={{ background: generated.gradient }}
+                aria-hidden="true"
+              >
+                {generated.initials}
+              </span>
+            )}
+          </span>
+        </span>
       </span>
       {showStatus && (
         <span
@@ -116,16 +156,16 @@ export function TeamAvatar({
     </span>
   );
 
-  if (!interactive && !onClick) {
+  if (!interactive && !onClick && !openProfileOnClick) {
     return avatarVisual;
   }
 
   return (
     <button
       type="button"
-      className={cn("team-avatar-btn", interactive && "team-avatar-btn-interactive")}
+      className="team-avatar-btn"
       aria-label={ariaLabel ?? `View profile for ${label}`}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {showTooltip && (
         <span className="team-avatar-tooltip" role="tooltip">

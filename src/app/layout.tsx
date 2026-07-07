@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
+import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "./notification-drawer.css";
 import "./audit-log.css";
@@ -11,6 +11,8 @@ import "./global-search-command-center.css";
 import "./folio-global.css";
 import "./mobile-first.css";
 import "./global-utility-strip.css";
+import "./sidebar-nav.css";
+import "./avatar-system.css";
 import "./va-operations-refine.css";
 import "./commercial-hub-refine.css";
 import "./intake-forms-refine.css";
@@ -25,6 +27,8 @@ import "./farmers-edge.css";
 import "./signature-elements.css";
 import "./analytics.css";
 import "./analytics-refine.css";
+import "./typography-system.css";
+import "./universal-search-overlay.css";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -32,18 +36,10 @@ const display = Cormorant_Garamond({
   weight: ["500", "600", "700"],
 });
 
-const sans = DM_Sans({
+const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "500", "600"],
-});
-
-const korean = Noto_Sans_KR({
-  subsets: ["latin"],
-  variable: "--font-korean",
-  weight: ["400", "500", "600"],
-  display: "swap",
-  preload: false,
+  weight: ["400", "500", "600", "700"],
 });
 
 const mono = JetBrains_Mono({
@@ -71,7 +67,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable} ${mono.variable} ${korean.variable}`}
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
       data-theme="obsidian"
       suppressHydrationWarning
     >

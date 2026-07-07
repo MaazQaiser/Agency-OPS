@@ -1,0 +1,416 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Official Typography System
+   Display: Cormorant Garamond · Body: Inter · Data: JetBrains Mono
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Body scale */
+  --font-size-11: 11px;
+  --font-size-12: 12px;
+  --font-size-13: 13px;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+
+  /* Display scale */
+  --font-size-24: 24px;
+  --font-size-28: 28px;
+  --font-size-32: 32px;
+  --font-size-40: 40px;
+  --font-size-48: 48px;
+
+  --font-size-h1: clamp(40px, 3.5vw, 48px);
+  --font-size-h2: clamp(36px, 3vw, 40px);
+  --font-size-h3: clamp(28px, 2.5vw, 32px);
+  --font-size-h4: clamp(24px, 2.2vw, 28px);
+  --font-size-h5: 24px;
+
+  --font-size-kpi-lg: clamp(36px, 3vw, 48px);
+  --font-size-kpi-md: clamp(28px, 2.5vw, 40px);
+
+  --font-size-micro: var(--font-size-11);
+  --font-size-xs: var(--font-size-11);
+  --font-size-sm: var(--font-size-12);
+  --font-size-md: var(--font-size-13);
+  --font-size-base-sm: var(--font-size-12);
+  --font-size-base: var(--font-size-14);
+  --font-size-lg: var(--font-size-16);
+  --font-size-xl: var(--font-size-18);
+
+  /* Font stacks — official fonts only */
+  --font-family: var(--font-sans);
+  --font-family-display: var(--font-display);
+  --font-family-mono: var(--font-mono);
+
+  --line-height-body: 1.5;
+  --line-height-display: 1.18;
+  --letter-spacing-kpi: -0.02em;
+
+  /* Semantic utilities */
+  --font-weight-display-bold: 700;
+  --font-weight-display-semibold: 600;
+  --font-weight-body-medium: 500;
+  --font-weight-body-regular: 400;
+}
+
+/* ── Base body ── */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-body);
+}
+
+/* ── Display headings (Cormorant Garamond) ── */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-family-display);
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-display-bold);
+  line-height: var(--line-height-display);
+  letter-spacing: 0.01em;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-display-bold);
+  line-height: 1.2;
+  letter-spacing: 0.008em;
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-display-semibold);
+  line-height: 1.25;
+  letter-spacing: 0.006em;
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-display-semibold);
+  line-height: 1.25;
+  letter-spacing: 0.004em;
+}
+
+h5 {
+  font-size: var(--font-size-h5);
+  font-weight: var(--font-weight-display-semibold);
+  line-height: 1.3;
+  letter-spacing: 0.003em;
+}
+
+/* ── Display content (24px+ titles, hero values, empty states) ── */
+.type-display,
+.app-header h1,
+.page-module-header h1,
+.va-ops-page-title,
+.system-health-title,
+.va-ops-role-title,
+.kpi-value,
+.kpi-val,
+.va-ops-kpi-value,
+.system-health-summary-value,
+.avatar-profile-kpi-value,
+.card-title,
+.section-title,
+.va-ops-section-title,
+.sl-text,
+.sh-label,
+.h-tag,
+.commercial-hub-empty-state-title,
+.training-dept-card-title,
+.training-format-title,
+.training-resource-title,
+.training-detail-resource-title,
+.training-scribe-step-title,
+.send-center-section-title,
+.owner-quick-actions-section-title,
+.avatar-profile-section-title,
+.intake-form-card-title,
+.coverage-risk-score-card-value,
+.producer-card .pc-score,
+.roi-mini .rmv,
+.race-pts,
+.cmd-palette-section-title,
+.ops-shortcut-help-section-title,
+.global-search-explorer-title,
+.global-search-command-section-title,
+.folio-progress-metric-value,
+.folio-progress-metric-pace,
+.folio-progress-stat-value,
+.folio-progress-stat-pace,
+.fe-vertical-name,
+.fe-c-card-title,
+.fe-intel-drawer-title,
+.help-drawer-title,
+.folio-drawer-section-title,
+.va-ops-modal-title,
+.va-ops-drawer-name,
+.audit-log-header h2,
+.audit-log-metric-value,
+.intake-form-section-title,
+.permission-denied-page-title,
+.ops-skeleton-drawer-title,
+.send-center-new-draft-section-title {
+  font-family: var(--font-family-display);
+}
+
+.va-ops-kpi-value,
+.kpi-value,
+.kpi-val,
+.folio-progress-metric-value,
+.folio-progress-stat-value,
+.system-health-summary-value,
+.avatar-profile-kpi-value {
+  font-feature-settings: "lnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Body typography (Inter) ── */
+.type-body,
+button,
+input,
+select,
+textarea,
+label,
+.agency-sidebar,
+.agency-sidebar-brand-title,
+.agency-sidebar-tenant-label,
+.agency-sidebar-tenant-name,
+.agency-sidebar-nav-section-label,
+.sidebar-nav-item,
+.sidebar-nav-item-label,
+.mobile-bottom-nav-item,
+.notification-card-title,
+.notification-card-desc,
+.va-ops-modal-subtitle,
+.va-ops-section-sub,
+.va-ops-page-subtitle,
+.analytics-kpi-label,
+.kpi-label,
+.va-ops-kpi-label,
+.kpi-sub,
+.va-ops-kpi-sub,
+.va-ops-kpi-helper,
+.system-health-summary-label,
+.avatar-profile-kpi-label,
+.coverage-risk-score-card-label,
+.coverage-risk-flags-card-label,
+.folio-progress-metric-label,
+.folio-progress-stat-label,
+.folio-progress-tooltip-label,
+.form-label,
+.field-label {
+  font-family: var(--font-family);
+}
+
+/* ── Data typography (JetBrains Mono) ── */
+.type-data,
+.type-mono,
+.badge,
+.pill,
+.lob-tag,
+.tier-badge,
+.version-pill,
+.system-health-refresh-label,
+.cmd-palette-kbd,
+.cmd-palette-result-time,
+.cmd-palette-result-meta,
+.send-center-proposal-summary-grid dt,
+.send-center-proposal-engagement-grid dt,
+.va-ops-pipeline-meta,
+.permission-audit-log,
+.top-header-kbd,
+.folio-progress-folio,
+.folio-progress-dates,
+.folio-progress-days,
+.folio-progress-badge,
+.folio-progress-urgency,
+.folio-progress-pct,
+.folio-progress-tooltip-value,
+.folio-progress-tooltip-delta,
+.folio-progress-tooltip-status,
+.cmd-palette-footer kbd,
+.notification-card-time,
+.notification-card-meta,
+.kpi-trend,
+.kpi-delta,
+.va-ops-kpi-trend,
+.audit-log-record-id,
+.audit-log-timestamp,
+.audit-log-meta,
+.audit-log-metric-label,
+.audit-log-footer-meta,
+.record-id,
+.policy-id,
+.submission-id,
+.reference-id,
+.table-id,
+.commercial-hub-table td[data-type="id"],
+.commercial-hub-table .cell-id,
+.global-search-command-kbd,
+.global-search-result-meta,
+.search-shortcut-badge {
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Buttons — Inter Medium, never uppercase ── */
+button,
+.btn,
+.va-ops-btn,
+.va-ops-action-btn,
+.retention-lang-toggle-btn,
+.agency-sidebar-footer-btn,
+.sidebar-profile-menu-item,
+.mobile-more-sheet-item {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-body-medium);
+  text-transform: none;
+}
+
+/* ── Forms ── */
+label,
+.form-label,
+.field-label,
+.va-ops-form-label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-body-medium);
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: var(--font-family);
+}
+
+.va-ops-form-error,
+.field-error,
+.form-hint {
+  font-family: var(--font-family);
+}
+
+/* ── Tables ── */
+.va-ops-priority-table th,
+.va-ops-lead-table th,
+.va-ops-logs-table th,
+.va-ops-handoff-table th,
+.va-ops-producer-table th,
+.commercial-hub-table th,
+.submission-tracker-table th,
+.send-center-table th,
+.analytics-leaderboard-table th,
+.analytics-carrier-table th,
+.carrier-search-table th,
+.lead-velocity-table th,
+.fe-intel-table th,
+.fe-edge-table th,
+.granular-docs-table th,
+.submission-history-table th {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-body-medium);
+}
+
+.va-ops-priority-table td,
+.va-ops-lead-table td,
+.va-ops-logs-table td,
+.va-ops-handoff-table td,
+.va-ops-producer-table td,
+.commercial-hub-table td,
+.submission-tracker-table td,
+.send-center-table td,
+.analytics-leaderboard-table td,
+.analytics-carrier-table td,
+.carrier-search-table td,
+.lead-velocity-table td,
+.fe-intel-table td,
+.fe-edge-table td,
+.granular-docs-table td,
+.submission-history-table td {
+  font-family: var(--font-family);
+}
+
+/* ── Sidebar ── */
+.agency-sidebar-nav-section-label {
+  font-weight: var(--font-weight-body-medium);
+}
+
+.agency-sidebar-brand-title,
+.agency-sidebar-tenant-name,
+.sidebar-nav-item-label {
+  font-weight: var(--font-weight-body-medium);
+}
+
+/* ── Notifications ── */
+.notification-card-title {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-body-medium);
+}
+
+/* ── KPI cards ── */
+.kpi-label,
+.va-ops-kpi-label,
+.system-health-summary-label,
+.avatar-profile-kpi-label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-body-medium);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.kpi-trend,
+.kpi-delta,
+.va-ops-kpi-trend,
+.kpi-sub.mono,
+.va-ops-kpi-sub[data-type="meta"] {
+  font-family: var(--font-family-mono);
+}
+
+/* ── Search / command palette ── */
+.cmd-palette-input,
+.global-search-command-input,
+.va-ops-search input {
+  font-family: var(--font-family);
+}
+
+.cmd-palette-result-title,
+.global-search-result-title {
+  font-family: var(--font-family);
+}
+
+/* ── Korean / bilingual — Inter only (global stack) ── */
+.send-center-korean,
+[lang="ko"],
+.retention-locale-root[data-retention-locale="en"] .retention-locale-surface,
+.retention-locale-root[data-retention-locale="kr"] .retention-locale-surface {
+  font-family: var(--font-family);
+}
+
+/* ── Responsive display scale ── */
+@media (max-width: 1023px) {
+  :root {
+    --font-size-h1: clamp(36px, 5vw, 44px);
+    --font-size-h2: clamp(32px, 4.5vw, 38px);
+    --font-size-h3: clamp(26px, 4vw, 30px);
+    --font-size-h4: clamp(22px, 3.5vw, 26px);
+    --font-size-kpi-lg: clamp(32px, 5vw, 42px);
+    --font-size-kpi-md: clamp(26px, 4vw, 34px);
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --font-size-h1: clamp(32px, 7vw, 40px);
+    --font-size-h2: clamp(28px, 6vw, 36px);
+    --font-size-h3: clamp(24px, 5.5vw, 28px);
+    --font-size-h4: 24px;
+    --font-size-kpi-lg: clamp(28px, 7vw, 36px);
+    --font-size-kpi-md: clamp(24px, 6vw, 32px);
+  }
+}

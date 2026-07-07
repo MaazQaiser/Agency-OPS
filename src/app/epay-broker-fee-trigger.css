@@ -182,7 +182,7 @@
 
 .epay-broker-fee-trigger-status {
   flex-shrink: 0;
-  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-family: var(--font-family-mono);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -213,14 +213,14 @@
 .epay-broker-fee-trigger-time {
   display: block;
   margin-top: 4px;
-  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-family: var(--font-family-mono);
   font-size: 10px;
   color: var(--text-muted);
 }
 
 .epay-broker-fee-trigger-detail {
   margin: 4px 0 0;
-  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-family: var(--font-family-mono);
   font-size: 10px;
   line-height: 1.4;
   color: var(--text-secondary);
@@ -235,7 +235,7 @@
   border-radius: var(--radius);
   background: color-mix(in srgb, var(--warning-amber) 8%, var(--surface-card));
   border: 1px solid color-mix(in srgb, var(--warning-amber) 22%, transparent);
-  font-family: var(--font-family-mono, var(--font-mono), monospace);
+  font-family: var(--font-family-mono);
   font-size: 10px;
   font-weight: 600;
   color: var(--warning-amber);

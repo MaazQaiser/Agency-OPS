@@ -823,10 +823,8 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
   text-align: right;
 }
 
-.module-commercial-hub .commercial-hub-table .team-avatar,
-.module-commercial-hub .commercial-hub-table .user-chip-avatar {
-  width: 24px;
-  height: 24px;
+.module-commercial-hub .commercial-hub-table .team-avatar-root {
+  --avatar-size: var(--avatar-size-sm);
 }
 
 .module-commercial-hub .commercial-hub-table .lead-source-chip,
@@ -920,7 +918,7 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
   gap: 20px;
 }
 
-/* Typography — Cormorant strategic, DM Sans operational */
+/* Typography — Cormorant Garamond display · Inter body */
 .module-commercial-hub .commercial-hub-tab-title {
   font-family: var(--font-family);
   font-size: 1.35rem;

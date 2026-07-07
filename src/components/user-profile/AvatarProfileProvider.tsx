@@ -39,7 +39,7 @@ export function AvatarProfileProvider({ children }: { children: ReactNode }) {
     }
     setActiveProfile(profile);
     setLoading(true);
-    window.setTimeout(() => setLoading(false), 380);
+    window.setTimeout(() => setLoading(false), 120);
   }, [toast]);
 
   const closeProfile = useCallback(() => {

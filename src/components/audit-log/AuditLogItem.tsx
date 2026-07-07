@@ -12,6 +12,7 @@ import {
   type AuditSeverity,
 } from "@/data/auditLog";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
 import { cn } from "@/lib/cn";
 
 type AuditLogItemProps = {
@@ -62,6 +63,15 @@ export function AuditLogItem({ entry, className, onNavigate }: AuditLogItemProps
         <div className="audit-log-meta-row">
           <dt>Who</dt>
           <dd>
+            <TeamAvatar
+              name={entry.actor}
+              size="xs"
+              showStatus={false}
+              showTooltip={false}
+              interactive
+              openProfileOnClick
+              className="audit-log-actor-avatar"
+            />
             {entry.actor}
             <span className="audit-log-role"> · {getRoleLabel(entry.actorRole)}</span>
           </dd>

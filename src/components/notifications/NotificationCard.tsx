@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
 import {
   getModuleSourceClass,
   getNotificationActions,
@@ -158,7 +159,17 @@ export function NotificationCard({
             <AppIcon name={iconName} size={16} strokeWidth={2.25} />
           </span>
 
-          <span className="notification-card-content">
+          <span className="notification-card-content notification-card-avatar-row">
+            {notification.relatedUserName && (
+              <TeamAvatar
+                name={notification.relatedUserName}
+                size="sm"
+                showStatus={false}
+                showTooltip={false}
+                className="notification-card-avatar"
+              />
+            )}
+            <span className="notification-card-content-inner">
             <span className="notification-card-top">
               <span className={cn("badge notification-card-type-badge", typeBadgeClass[notification.type])}>
                 {notificationTypeLabels[notification.type]}
@@ -193,7 +204,9 @@ export function NotificationCard({
                 {notification.timestamp}
               </time>
               {notification.relatedUserName && (
-                <span className="notification-card-assignee">{notification.relatedUserName}</span>
+                <span className="notification-card-assignee-chip">
+                  <span className="notification-card-assignee">{notification.relatedUserName}</span>
+                </span>
               )}
               <span
                 className={cn(
@@ -203,6 +216,7 @@ export function NotificationCard({
               >
                 {notification.module}
               </span>
+            </span>
             </span>
           </span>
         </button>

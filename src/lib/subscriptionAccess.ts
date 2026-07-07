@@ -50,6 +50,8 @@ export function pathnameToAccessTarget(pathname: string): AccessTarget | null {
   if (pathname.startsWith("/carrier-library")) return "carrier-library";
   if (pathname.startsWith("/epay-policy")) return "epay-policy";
   if (pathname.startsWith("/send-center")) return "send-center";
+  if (pathname.startsWith("/farmers-edge")) return "farmers-edge";
+  if (pathname.startsWith("/analytics")) return "analytics";
   if (pathname.startsWith("/global-search")) return "global-search";
   if (pathname.startsWith("/retention")) return "retention";
   if (pathname.startsWith("/producer") || pathname.startsWith("/production")) return "producer";

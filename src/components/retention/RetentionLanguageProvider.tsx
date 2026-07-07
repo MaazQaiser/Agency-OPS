@@ -9,7 +9,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DM_Sans, Noto_Sans_KR } from "next/font/google";
 import {
   RETENTION_LOCALE_STORAGE_KEY,
   getRetentionCopy,
@@ -17,18 +16,6 @@ import {
   type RetentionLocale,
 } from "@/data/retentionI18n";
 import { useSubscription } from "@/components/subscription/SubscriptionProvider";
-
-const retentionEnFont = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-retention-en",
-  weight: ["400", "500", "600", "700"],
-});
-
-const retentionKrFont = Noto_Sans_KR({
-  subsets: ["latin"],
-  variable: "--font-retention-kr",
-  weight: ["400", "500", "600", "700"],
-});
 
 type RetentionLanguageContextValue = {
   locale: RetentionLocale;
@@ -103,7 +90,7 @@ export function RetentionLanguageProvider({ children }: { children: ReactNode })
   if (!hydrated) {
     return (
       <div
-        className={`${retentionEnFont.variable} ${retentionKrFont.variable} module-retention retention-locale-root`}
+        className="module-retention retention-locale-root"
         data-retention-locale="en"
       >
         {children}
@@ -114,7 +101,7 @@ export function RetentionLanguageProvider({ children }: { children: ReactNode })
   return (
     <RetentionLanguageContext.Provider value={value}>
       <div
-        className={`${retentionEnFont.variable} ${retentionKrFont.variable} module-retention retention-locale-root`}
+        className="module-retention retention-locale-root"
         data-retention-locale={locale}
         data-retention-switching={switching ? "true" : undefined}
       >

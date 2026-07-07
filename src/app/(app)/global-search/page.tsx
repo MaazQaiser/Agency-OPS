@@ -1,9 +1,10 @@
-import { GlobalSearchModuleShell } from "@/components/global-search/GlobalSearchModule";
+import { Suspense } from "react";
+import GlobalSearchRedirectPage from "./GlobalSearchRedirectClient";
 
 export default function GlobalSearchPage() {
   return (
-    <div className="module-global-search">
-      <GlobalSearchModuleShell />
-    </div>
+    <Suspense fallback={null}>
+      <GlobalSearchRedirectPage />
+    </Suspense>
   );
 }

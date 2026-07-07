@@ -87,7 +87,7 @@ export function KeyboardShortcutsProvider({ children }: { children: ReactNode })
         return;
       }
       if (actionId === "focus-search") {
-        if (!focusPageSearchInput()) dispatchFocusSearch();
+        if (!focusPageSearchInput()) openSearch();
         return;
       }
       if (actionId === "refresh-module") {
