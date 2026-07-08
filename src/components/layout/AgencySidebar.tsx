@@ -9,7 +9,6 @@ import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useEntitlements } from "@/hooks/useEntitlements";
 import { canOpenFarmersEdgeIntel } from "@/lib/farmersEdgeAccess";
 import { useSubscription } from "@/components/subscription/SubscriptionProvider";
-import { useGlobalSearch } from "@/components/global-search/GlobalSearchProvider";
 import { routes } from "@/lib/routes";
 import {
   isSidebarNavActive,
@@ -94,7 +93,6 @@ export function AgencySidebar() {
   const { canAccessModule } = useEntitlements();
   const { role } = usePermissions();
   const { toggle: toggleAuditLog, canView: canViewAuditLog } = useAuditLog();
-  const { open: openGlobalSearch } = useGlobalSearch();
 
   const visibleItems = useMemo(
     () =>
@@ -118,23 +116,40 @@ export function AgencySidebar() {
     >
       <div className="agency-sidebar-inner">
         <div className="agency-sidebar-top">
-          <Link href={routes.vaOperations} className="agency-sidebar-brand" aria-label="Agency OS home">
-            <span className="agency-sidebar-brand-mark" aria-hidden="true">
-              <img
-                src="/brand/agency-os-mark.png"
-                srcSet="/brand/agency-os-mark@2x.png 2x"
-                alt=""
-                width={32}
-                height={16}
-                className="agency-sidebar-brand-img"
-              />
-            </span>
-            {!collapsed && (
-              <span className="agency-sidebar-brand-text">
-                <span className="agency-sidebar-brand-title">Agency OS</span>
+          <div className="agency-sidebar-brand-row">
+            <Link href={routes.vaOperations} className="agency-sidebar-brand" aria-label="Agency OS home">
+              <span className="agency-sidebar-brand-mark" aria-hidden="true">
+                <img
+                  src="/brand/agency-os-mark.png"
+                  srcSet="/brand/agency-os-mark@2x.png 2x"
+                  alt=""
+                  width={32}
+                  height={16}
+                  className="agency-sidebar-brand-img"
+                />
               </span>
-            )}
-          </Link>
+              {!collapsed && (
+                <span className="agency-sidebar-brand-text">
+                  <span className="agency-sidebar-brand-title">Agency OS</span>
+                </span>
+              )}
+            </Link>
+
+            <button
+              type="button"
+              className="agency-sidebar-collapse-btn"
+              onClick={toggleCollapsed}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-expanded={!collapsed}
+            >
+              <AppIcon
+                name="chevron-down"
+                size={16}
+                strokeWidth={2.25}
+                className={cn("agency-sidebar-collapse-icon", !collapsed && "agency-sidebar-collapse-icon--expanded")}
+              />
+            </button>
+          </div>
 
           <button
             type="button"
@@ -152,37 +167,6 @@ export function AgencySidebar() {
               </>
             )}
             {collapsed && <AppIcon name="globe" size={16} strokeWidth={2} aria-hidden="true" />}
-          </button>
-
-          <button
-            type="button"
-            className="agency-sidebar-search"
-            onClick={() => openGlobalSearch()}
-            aria-label="Open global search"
-            data-tooltip={collapsed ? "Search" : undefined}
-          >
-            <AppIcon name="search" size={16} strokeWidth={2} />
-            {!collapsed && (
-              <>
-                <span className="agency-sidebar-search-label">Search…</span>
-                <kbd aria-hidden="true">⌘K</kbd>
-              </>
-            )}
-          </button>
-
-          <button
-            type="button"
-            className="agency-sidebar-collapse-btn"
-            onClick={toggleCollapsed}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            aria-expanded={!collapsed}
-          >
-            <AppIcon
-              name="chevron-down"
-              size={16}
-              strokeWidth={2.25}
-              className={cn("agency-sidebar-collapse-icon", !collapsed && "agency-sidebar-collapse-icon--expanded")}
-            />
           </button>
         </div>
 

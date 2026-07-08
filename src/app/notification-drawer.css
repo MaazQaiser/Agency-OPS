@@ -11,7 +11,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: min(420px, 100vw);
+  width: min(560px, 100vw);
   height: 100dvh;
   max-height: 100dvh;
   border-left: 1px solid var(--border-default);
@@ -133,7 +133,15 @@
 
 .notification-card.unread .notification-card-title {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.notification-card-title {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: normal;
 }
 
 .notification-card.unread .notification-card-unread-dot {
@@ -160,7 +168,7 @@
 
 .notification-card.read .notification-card-title {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .notification-card.read .notification-card-unread-dot {

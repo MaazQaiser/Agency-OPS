@@ -350,7 +350,9 @@ textarea::placeholder {
 /* ── Notifications ── */
 .notification-card-title {
   font-family: var(--font-family);
+  font-size: 14px;
   font-weight: var(--font-weight-body-medium);
+  line-height: 1.35;
 }
 
 /* ── KPI cards ── */
