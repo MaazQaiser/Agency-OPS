@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { logoutAction } from "@/app/login/actions";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { vaOperationsRoles } from "@/data/vaOperations";
 import { routes } from "@/lib/routes";
@@ -236,16 +235,6 @@ export function SidebarProfileMenu({
             <AppIcon name="settings" size={15} strokeWidth={2.25} />
             Profile Settings
           </button>
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className="top-header-profile-dropdown-item top-header-profile-dropdown-item-danger"
-              role="menuitem"
-            >
-              <AppIcon name="log-out" size={15} strokeWidth={2.25} />
-              Logout
-            </button>
-          </form>
         </div>
       )}
     </div>

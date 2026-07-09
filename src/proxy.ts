@@ -1,33 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { AUTH_COOKIE, isAuthenticatedCookie } from "@/lib/auth";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const authed = isAuthenticatedCookie(request.cookies.get(AUTH_COOKIE)?.value);
 
   if (pathname.startsWith("/login")) {
-    if (authed) {
-      return NextResponse.redirect(new URL("/va-operations", request.url));
-    }
-    return NextResponse.next();
+    return NextResponse.redirect(new URL("/va-operations", request.url));
   }
 
   if (pathname === "/") {
-    if (!authed) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
     return NextResponse.redirect(new URL("/va-operations", request.url));
   }
 
   if (pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/va-operations", request.url));
-  }
-
-  if (!authed) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("from", pathname);
-    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
