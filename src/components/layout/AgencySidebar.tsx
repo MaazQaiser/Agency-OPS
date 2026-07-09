@@ -172,36 +172,17 @@ export function AgencySidebar() {
 
         <nav className="agency-sidebar-nav" aria-label="Hub navigation">
           <ul className="agency-sidebar-nav-list">
-            {visibleItems
-              .filter((item) => !item.ownerOnly)
-              .map((item) => (
-                <li key={item.key}>
-                  <SidebarNavLink
-                    item={item}
-                    collapsed={collapsed}
-                    active={isSidebarNavActive(pathname, searchParams, item)}
-                    onAuditOpen={toggleAuditLog}
-                  />
-                </li>
-              ))}
+            {visibleItems.map((item) => (
+              <li key={item.key}>
+                <SidebarNavLink
+                  item={item}
+                  collapsed={collapsed}
+                  active={isSidebarNavActive(pathname, searchParams, item)}
+                  onAuditOpen={toggleAuditLog}
+                />
+              </li>
+            ))}
           </ul>
-
-          {visibleItems.some((item) => item.ownerOnly) && (
-            <ul className="agency-sidebar-nav-list agency-sidebar-nav-list--utilities">
-              {visibleItems
-                .filter((item) => item.ownerOnly)
-                .map((item) => (
-                  <li key={item.key}>
-                    <SidebarNavLink
-                      item={item}
-                      collapsed={collapsed}
-                      active={isSidebarNavActive(pathname, searchParams, item)}
-                      onAuditOpen={toggleAuditLog}
-                    />
-                  </li>
-                ))}
-            </ul>
-          )}
         </nav>
       </div>
     </aside>
