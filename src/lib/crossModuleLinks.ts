@@ -253,7 +253,7 @@ export function resolveSearchNavigation(result: GlobalSearchResult): SearchNavig
   }
 
   if (result.type === "submission") {
-    const clientName = result.title.split(" — ")[0] ?? result.title;
+    const clientName = result.title.split(": ")[0] ?? result.title;
     const submissionId = resolveSubmissionId(clientName);
     if (submissionId) {
       return { kind: "submission", submissionId, client: clientName };
@@ -277,7 +277,7 @@ export function resolveSearchNavigation(result: GlobalSearchResult): SearchNavig
   }
 
   if (result.id.startsWith("sr-") && result.title.includes("Proposal")) {
-    const proposalId = resolveProposalId(result.title.split(" — ")[0] ?? "");
+    const proposalId = resolveProposalId(result.title.split(": ")[0] ?? "");
     if (proposalId) {
       return { kind: "route", href: crossModuleRoutes.sendCenterProposal(proposalId, "sent") };
     }

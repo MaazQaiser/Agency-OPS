@@ -65,7 +65,7 @@ export function ProductionTab({ period }: { period: AnalyticsTimeFilterId }) {
                           row.rankMovement < 0 && "analytics-rank-movement--down",
                         )}
                       >
-                        {row.rankMovement > 0 ? `↑ ${row.rankMovement}` : row.rankMovement < 0 ? `↓ ${Math.abs(row.rankMovement)}` : "—"}
+                        {row.rankMovement > 0 ? `↑ ${row.rankMovement}` : row.rankMovement < 0 ? `↓ ${Math.abs(row.rankMovement)}` : "-"}
                       </span>
                     </td>
                   </tr>

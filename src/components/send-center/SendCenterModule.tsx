@@ -72,7 +72,7 @@ export function SendCenterModule() {
       internalNotes: payload.quote ? `Imported from Quote Review: ${payload.quote}` : "",
     });
     setNewDraftOpen(true);
-    showToast(`Quote loaded for ${payload.client ?? "client"} — review draft`, "success");
+    showToast(`Quote loaded for ${payload.client ?? "client"}: review draft`, "success");
   });
 
   useCrossModuleHandoff("revise-proposal", (payload) => {

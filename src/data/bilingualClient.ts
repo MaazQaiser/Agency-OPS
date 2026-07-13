@@ -163,7 +163,7 @@ export const seedBilingualQueue: BilingualQueueItem[] = [
     status: "Waiting",
     priority: "High",
     module: "Commercial Hub",
-    notes: "No bilingual VA assigned — interpreter needed for intake.",
+    notes: "No bilingual VA assigned: interpreter needed for intake.",
   },
   {
     id: "bq-2",
@@ -174,7 +174,7 @@ export const seedBilingualQueue: BilingualQueueItem[] = [
     status: "In Progress",
     priority: "High",
     module: "Intake Forms",
-    notes: "Intake incomplete — Korean labels required for signed app.",
+    notes: "Intake incomplete: Korean labels required for signed app.",
   },
   {
     id: "bq-3",
@@ -196,7 +196,7 @@ export const seedBilingualQueue: BilingualQueueItem[] = [
     status: "New",
     priority: "Medium",
     module: "VA Operations",
-    notes: "New lead — Vietnamese preferred, no bilingual VA assigned.",
+    notes: "New lead: Vietnamese preferred, no bilingual VA assigned.",
   },
   {
     id: "bq-5",
@@ -218,7 +218,7 @@ export const seedBilingualQueue: BilingualQueueItem[] = [
     status: "New",
     priority: "High",
     module: "Commercial Hub",
-    notes: "New Ricochet lead — Spanish preferred, unassigned 45+ mins.",
+    notes: "New Ricochet lead: Spanish preferred, unassigned 45+ mins.",
   },
 ];
 
@@ -254,7 +254,7 @@ export const bilingualAlerts: BilingualAlert[] = [
   {
     id: "bl-1",
     title: "Client has no bilingual support assigned",
-    detail: "Atlas Roofing requires Mandarin support — no bilingual VA assigned.",
+    detail: "Atlas Roofing requires Mandarin support: no bilingual VA assigned.",
     severity: "critical",
     clientKey: normalizeClientKey("Atlas Roofing"),
     module: "VA Operations",
@@ -262,7 +262,7 @@ export const bilingualAlerts: BilingualAlert[] = [
   {
     id: "bl-2",
     title: "Proposal sent in wrong language",
-    detail: "Martinez Landscaping proposal sent in English — client prefers Spanish.",
+    detail: "Martinez Landscaping proposal sent in English: client prefers Spanish.",
     severity: "critical",
     clientKey: normalizeClientKey("Martinez Landscaping"),
     module: "Send Center",
@@ -270,7 +270,7 @@ export const bilingualAlerts: BilingualAlert[] = [
   {
     id: "bl-3",
     title: "Intake incomplete due to language mismatch",
-    detail: "Kim Auto Shop intake blocked — Korean labels needed for signed application.",
+    detail: "Kim Auto Shop intake blocked: Korean labels needed for signed application.",
     severity: "warning",
     clientKey: normalizeClientKey("Kim Auto Shop"),
     module: "Intake Forms",
@@ -278,7 +278,7 @@ export const bilingualAlerts: BilingualAlert[] = [
   {
     id: "bl-4",
     title: "Payment reminder not localized",
-    detail: "Greenline Logistics payment reminder sent in English — billing language is Portuguese.",
+    detail: "Greenline Logistics payment reminder sent in English: billing language is Portuguese.",
     severity: "warning",
     clientKey: normalizeClientKey("Greenline Logistics"),
     module: "ePayPolicy",

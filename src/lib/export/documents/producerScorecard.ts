@@ -27,7 +27,7 @@ export function exportProducerScorecardPdf(producerId = "sarah"): void {
 
   const body = `
     <section class="export-section">
-      <h2 class="export-section-title">${producer.name} — ${producer.role}</h2>
+      <h2 class="export-section-title">${producer.name}: ${producer.role}</h2>
       <p style="margin-bottom:16px;color:#5a6f7d">Score: <strong>${producer.score}</strong> · Folio period May 20–Jun 18</p>
       <div class="export-kpi-grid">${kpiHtml}</div>
     </section>
@@ -45,7 +45,7 @@ export function exportProducerScorecardPdf(producerId = "sarah"): void {
     </section>`;
 
   exportHtmlAsPdf(
-    getExportMeta("Producer Scorecard", `${producer.name} — ${producer.role}`),
+    getExportMeta("Producer Scorecard", `${producer.name}: ${producer.role}`),
     body,
   );
 }

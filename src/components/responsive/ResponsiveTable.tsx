@@ -8,7 +8,7 @@ type ResponsiveTableWrapProps = {
   className?: string;
 };
 
-/** Wraps hub tables — horizontal scroll on mobile (≤767px), full table on desktop. */
+/** Wraps hub tables: horizontal scroll on mobile (≤767px), full table on desktop. */
 export function ResponsiveTableWrap({ children, className }: ResponsiveTableWrapProps) {
   return (
     <div className={cn("commercial-hub-table-wrap ops-responsive-table-wrap ops-table-scroll", className)}>

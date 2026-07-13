@@ -83,7 +83,7 @@ export function SubmissionDocumentDrawer({ doc, onClose }: SubmissionDocumentDra
               <ul className="submission-doc-history-list">
                 {drawer.uploadHistory.map((entry) => (
                   <li key={entry.id}>
-                    <strong>{entry.action}</strong> — {entry.by} · {entry.date}
+                    <strong>{entry.action}</strong>: {entry.by} · {entry.date}
                   </li>
                 ))}
               </ul>
@@ -96,7 +96,7 @@ export function SubmissionDocumentDrawer({ doc, onClose }: SubmissionDocumentDra
               <ul className="va-ops-gap-list">
                 {drawer.versionHistory.map((entry) => (
                   <li key={entry.id}>
-                    {entry.version} — {entry.date}
+                    {entry.version}: {entry.date}
                   </li>
                 ))}
               </ul>

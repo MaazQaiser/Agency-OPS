@@ -23,7 +23,7 @@ export type SidebarNavItem = {
   key: SidebarNavKey;
   label: string;
   icon: AppIconName;
-  /** Hub accent hex — drives active state */
+  /** Hub accent hex: drives active state */
   accent: string;
   accentClass: string;
   href?: string;

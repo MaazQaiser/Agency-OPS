@@ -157,7 +157,7 @@ export function SystemHealthModule() {
           break;
         }
         case "Test Connection":
-          toast.success(`Connection test passed — ${system.name} (${system.responseTime})`);
+          toast.success(`Connection test passed: ${system.name} (${system.responseTime})`);
           break;
         case "View Dependencies":
           setSelected(system);
@@ -166,13 +166,13 @@ export function SystemHealthModule() {
           if (!canManage) return;
           const pausing = !system.syncPaused;
           persistSystem({ ...system, syncPaused: pausing });
-          toast.success(pausing ? `Sync paused — ${system.name}` : `Sync resumed — ${system.name}`);
+          toast.success(pausing ? `Sync paused: ${system.name}` : `Sync resumed: ${system.name}`);
           break;
         }
         case "Force full sync":
           if (!canManage) return;
           persistSystem({ ...system, status: "Healthy", lastSync: "Just now", healthScore: Math.min(100, system.healthScore + 10) });
-          toast.success(`Full sync started — ${system.name}`);
+          toast.success(`Full sync started: ${system.name}`);
           break;
         case "Clear queue":
           if (!canManage) return;
@@ -182,15 +182,15 @@ export function SystemHealthModule() {
         case "View audit logs":
           if (canViewAuditLog) {
             openAuditLog();
-            toast.success(`Audit log opened — ${system.name}`);
+            toast.success(`Audit log opened: ${system.name}`);
           }
           break;
         case "Escalate incident":
           if (!canManage) return;
-          toast.error(`Incident escalated — ${system.name}`);
+          toast.error(`Incident escalated: ${system.name}`);
           break;
         default:
-          toast.success(`${action} — ${system.name}`);
+          toast.success(`${action}: ${system.name}`);
       }
     },
     [canManage, canViewAuditLog, openAuditLog, persistSystem, toast],
@@ -232,7 +232,7 @@ export function SystemHealthModule() {
             <span className="badge badge-red system-health-alert-badge">{criticalAlerts} critical</span>
           )}
           <span className="system-health-refresh-label">
-            Last refresh: {refreshTimeLabel ?? "—"}
+            Last refresh: {refreshTimeLabel ?? "-"}
           </span>
           <button
             type="button"
@@ -294,7 +294,7 @@ export function SystemHealthModule() {
       <section className="va-ops-panel system-health-dep-panel" aria-label="Global dependency map">
         <div className="va-ops-panel-header">
           <h2 className="va-ops-section-title">Dependency Map</h2>
-          <p className="va-ops-section-sub">Cross-module service relationships — broken paths highlighted.</p>
+          <p className="va-ops-section-sub">Cross-module service relationships: broken paths highlighted.</p>
         </div>
         {loading ? (
           <CardSkeletonGrid count={4} label="Loading dependency map" />

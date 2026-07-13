@@ -41,7 +41,7 @@ export function LeadVelocityStepper({ stages, compact = false }: LeadVelocitySte
                 <>
                   <span className="lead-velocity-label">{step?.label ?? key}</span>
                   {step?.timestamp && <span className="lead-velocity-time">{step.timestamp}</span>}
-                  {step?.gapFromPrev && step.gapFromPrev !== "—" && (
+                  {step?.gapFromPrev && step.gapFromPrev !== "-" && (
                     <span className={cn("lead-velocity-gap", step.isSlowest && "slowest")}>{step.gapFromPrev}</span>
                   )}
                   {step?.owner && <span className="lead-velocity-owner">{step.owner}</span>}

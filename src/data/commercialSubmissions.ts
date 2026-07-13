@@ -1,18 +1,18 @@
 import type { Submission } from "@/types/submission";
 
 export const submissions: Submission[] = [
-  { id: "CS-001", client: "Martinez Landscaping", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-04-30", markets: 4, quotes: 1, declines: 2, carrier: "", premium: 8700, followUp: "2026-05-11", daysOpen: 32, status: "Overdue", missingDocs: "Loss runs, Signed app", uw: "M. Torres", notes: "Stalled at Markel — escalate", binding: "" },
+  { id: "CS-001", client: "Martinez Landscaping", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-04-30", markets: 4, quotes: 1, declines: 2, carrier: "", premium: 8700, followUp: "2026-05-11", daysOpen: 32, status: "Overdue", missingDocs: "Loss runs, Signed app", uw: "M. Torres", notes: "Stalled at Markel: escalate", binding: "" },
   { id: "CS-002", client: "Kim Auto Shop", producer: "Pedro", va: "Tracie", lob: "Comm Auto", subDate: "2026-05-07", markets: 3, quotes: 1, declines: 1, carrier: "Travelers", premium: 5800, followUp: "2026-05-14", daysOpen: 7, status: "Pending", missingDocs: "5yr loss runs", uw: "A. Nguyen", notes: "Final chase today", binding: "" },
   { id: "CS-003", client: "Rivera Construction", producer: "Sarah", va: "Valerie", lob: "WC", subDate: "2026-05-05", markets: 3, quotes: 1, declines: 1, carrier: "ICW", premium: 18900, followUp: "2026-05-14", daysOpen: 9, status: "Pending", missingDocs: "Signed app", uw: "R. Park", notes: "Needs signed app to bind", binding: "" },
   { id: "CS-004", client: "Greenline Logistics", producer: "Eva", va: "JoJo", lob: "BOP", subDate: "2026-05-10", markets: 4, quotes: 2, declines: 1, carrier: "CNA", premium: 14500, followUp: "2026-05-14", daysOpen: 4, status: "Quoted", missingDocs: "None", uw: "J. Kim", notes: "Quote received, pending producer approval", binding: "" },
-  { id: "CS-005", client: "Atlas Roofing", producer: "Pedro", va: "Tracie", lob: "GL", subDate: "2026-05-08", markets: 4, quotes: 3, declines: 1, carrier: "Kingsway", premium: 5600, followUp: "2026-05-15", daysOpen: 6, status: "Quoted", missingDocs: "None", uw: "L. Chen", notes: "Best quote from Travelers — presenting to client", binding: "" },
+  { id: "CS-005", client: "Atlas Roofing", producer: "Pedro", va: "Tracie", lob: "GL", subDate: "2026-05-08", markets: 4, quotes: 3, declines: 1, carrier: "Kingsway", premium: 5600, followUp: "2026-05-15", daysOpen: 6, status: "Quoted", missingDocs: "None", uw: "L. Chen", notes: "Best quote from Travelers: presenting to client", binding: "" },
 ];
 
 export const executiveKpis = [
   { label: "Active Pipeline", value: "5", sub: "open submissions", variant: "primary" as const },
   { label: "Quoted This Week", value: "3", sub: "awaiting decision", variant: "green" as const },
   { label: "Follow-Up Due", value: "3", sub: "today or overdue", variant: "yellow" as const },
-  { label: "Overdue (48h+)", value: "1", sub: "stale — needs action", variant: "red" as const },
+  { label: "Overdue (48h+)", value: "1", sub: "stale: needs action", variant: "red" as const },
   { label: "Avg Days Open", value: "8.0", sub: "across open subs", variant: "default" as const },
   { label: "Quote Rate", value: "73%", sub: "markets → quote", variant: "default" as const },
   { label: "Bind Rate", value: "41%", sub: "quoted → bound", variant: "default" as const },
@@ -42,7 +42,7 @@ export const chartAgingData = {
 };
 
 export const executiveAlerts = [
-  { variant: "red" as const, title: "Overdue — No Update in 48h+", body: "Martinez Landscaping (JoJo · BOP) — 3 days no update · Follow-up was May 11 · Markets: 4 submitted, 1 quoted" },
+  { variant: "red" as const, title: "Overdue: No Update in 48h+", body: "Martinez Landscaping (JoJo · BOP): 3 days no update · Follow-up was May 11 · Markets: 4 submitted, 1 quoted" },
   { variant: "yellow" as const, title: "Follow-Up Due Today", body: "3 submissions have follow-up dates of May 14. Greenline Logistics (JoJo), Kim Auto Shop (Tracie), Rivera Construction (Valerie)" },
   { variant: "blue" as const, title: "Missing Documents", body: "2 submissions have open doc requirements: Kim Auto Shop (Loss runs 5yr), Rivera Construction (Signed app). Cannot bind without these." },
 ];
@@ -98,7 +98,7 @@ export const dailyAccountability = [
 ];
 
 export const priorityQueue = [
-  { variant: "red" as const, title: "P1 — Martinez Landscaping (JoJo)", body: "14 days open · Escalate to Eva if no UW response by 2pm today. BOP quote stalled at Markel." },
-  { variant: "yellow" as const, title: "P2 — Greenline Logistics (JoJo) — Follow-Up Due", body: "BOP renewal — CNA quote received. Pending producer approval. Follow up with client." },
-  { variant: "yellow" as const, title: "P2 — Kim Auto Shop (Tracie) — Missing Loss Runs", body: "5-year loss runs still outstanding. Cannot bind without them. Send final request email to client today." },
+  { variant: "red" as const, title: "P1: Martinez Landscaping (JoJo)", body: "14 days open · Escalate to Eva if no UW response by 2pm today. BOP quote stalled at Markel." },
+  { variant: "yellow" as const, title: "P2: Greenline Logistics (JoJo): Follow-Up Due", body: "BOP renewal: CNA quote received. Pending producer approval. Follow up with client." },
+  { variant: "yellow" as const, title: "P2: Kim Auto Shop (Tracie): Missing Loss Runs", body: "5-year loss runs still outstanding. Cannot bind without them. Send final request email to client today." },
 ];

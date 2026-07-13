@@ -119,7 +119,7 @@ export function DepartmentOverviewTab() {
 
       <div className="va-ops-panel-header">
         <h3 className="va-ops-section-title">Live Training Pods</h3>
-        <p className="va-ops-section-sub">Operational department views — assignments, overdue items, and certification health.</p>
+        <p className="va-ops-section-sub">Operational department views: assignments, overdue items, and certification health.</p>
       </div>
       <div className="training-dept-card-grid">
         {trainingDepartments.map((dept) => (
@@ -180,7 +180,7 @@ export function DepartmentOverviewTab() {
       <section className="va-ops-panel training-certifications-panel" aria-label="Team certifications">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Certifications</h3>
-          <p className="va-ops-section-sub">Active, expiring, expired, and required certifications across the team.</p>
+          <p className="va-ops-section-sub">Active, expiring, expired, and required certifications across Insurance Town.</p>
         </div>
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
@@ -205,7 +205,7 @@ export function DepartmentOverviewTab() {
                   <td>
                     <span className={cn("badge", certificationStatusClass[cert.status])}>{cert.status}</span>
                   </td>
-                  <td>{cert.expires ?? "—"}</td>
+                  <td>{cert.expires ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -339,7 +339,7 @@ export function DepartmentOverviewTab() {
       <section className="va-ops-panel" aria-label="Training activity">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Training Activity</h3>
-          <p className="va-ops-section-sub">Team learning visibility.</p>
+          <p className="va-ops-section-sub">Insurance Town learning visibility.</p>
         </div>
         <ol className="outreach-activity-timeline">
           {trainingActivity.map((item) => {

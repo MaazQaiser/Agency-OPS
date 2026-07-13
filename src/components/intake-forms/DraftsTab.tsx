@@ -119,7 +119,7 @@ export function DraftsTab() {
       toast.success(`Draft for ${draft.client} archived`);
       return;
     }
-    toast.success(`${actionId} — ${draft.client}`);
+    toast.success(`${actionId}: ${draft.client}`);
   };
 
   const updateFilter = (key: keyof DraftFilterState, value: string) => {
@@ -192,7 +192,7 @@ export function DraftsTab() {
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Draft Submissions</h3>
             <p className="va-ops-section-sub">
-              {filteredDrafts.length} draft{filteredDrafts.length === 1 ? "" : "s"} — resume, assign, or resolve blockers.
+              {filteredDrafts.length} draft{filteredDrafts.length === 1 ? "" : "s"}: resume, assign, or resolve blockers.
             </p>
           </div>
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">

@@ -17,7 +17,7 @@ const iconMap: Record<string, AppIconName> = {
   search: "search",
 };
 
-/** @deprecated Use HubEmptyState — kept for backward compatibility */
+/** @deprecated Use HubEmptyState: kept for backward compatibility */
 export function CommercialHubEmptyState({
   icon = "folder",
   title,

@@ -425,7 +425,7 @@ export function TrainingDetailTab() {
         <section className="va-ops-panel" aria-label="Team completion leaderboard">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Team Completion Leaderboard</h3>
-            <p className="va-ops-section-sub">Completion rates and quiz performance across the team.</p>
+            <p className="va-ops-section-sub">Completion rates and quiz performance across Insurance Town.</p>
           </div>
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table training-leaderboard-table">

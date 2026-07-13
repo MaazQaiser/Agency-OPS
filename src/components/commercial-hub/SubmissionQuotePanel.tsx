@@ -21,7 +21,7 @@ export function SubmissionQuotePanel({
     return (
       <div className="submission-quote-panel empty">
         <div className="submission-tracker-detail-label">Quote Comparison</div>
-        <p className="va-ops-section-sub">No quotes received yet — awaiting carrier responses.</p>
+        <p className="va-ops-section-sub">No quotes received yet: awaiting carrier responses.</p>
       </div>
     );
   }

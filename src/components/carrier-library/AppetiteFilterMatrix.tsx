@@ -11,7 +11,7 @@ import {
 } from "@/data/appetiteMatrix";
 
 /**
- * Carrier Library Signature Element — Appetite Filter Matrix
+ * Carrier Library Signature Element: Appetite Filter Matrix
  * Rows = carriers, columns = verticals.
  * Filter by vertical collapses to a single column view.
  */
@@ -71,7 +71,9 @@ export function AppetiteFilterMatrix() {
           <tbody>
             {appetiteMatrixCarriers.map((carrier) => (
               <tr key={carrier.id}>
-                <td className="appetite-matrix-carrier-name">{carrier.name}</td>
+                <th scope="row" className="appetite-matrix-carrier-name">
+                  {carrier.name}
+                </th>
                 {shownVerticals.map((v) => {
                   const level: AppetiteLevel = carrier.appetite[v] ?? "unknown";
                   const cellKey = `${carrier.id}-${v}`;

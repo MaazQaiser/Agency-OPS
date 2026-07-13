@@ -9,7 +9,7 @@ import {
 
 export const trainingDetailHeader = {
   title: "Training Detail",
-  subtitle: "Review the resource, complete steps, and track progress.",
+  subtitle: "Review the Insurance Town resource, complete steps, and track progress.",
   quickActions: [
     { id: "complete", label: "Mark Complete", icon: "check" as const },
     { id: "assign", label: "Assign to Team", icon: "user-plus" as const },
@@ -184,7 +184,7 @@ const detailOverrides: Partial<Record<string, Partial<Omit<TrainingDetail, "reso
     estimatedCompletionTime: "8 min",
     playbackProgress: 45,
     readProgress: 45,
-    resumeLabel: "Resume at 3:36 — Follow-up call structure",
+    resumeLabel: "Resume at 3:36: Follow-up call structure",
     sopSteps: defaultSopSteps,
     quiz: defaultQuiz,
     relatedTraining: relatedTrainingCatalog,
@@ -197,7 +197,7 @@ const detailOverrides: Partial<Record<string, Partial<Omit<TrainingDetail, "reso
     requiredFor: "Brokerage Team",
     estimatedCompletionTime: "15 min",
     readProgress: 58,
-    resumeLabel: "Resume at Section 4 — Log submission in AgencyZoom",
+    resumeLabel: "Resume at Section 4: Log submission in AgencyZoom",
     documentSections: [
       "Gather client and coverage information",
       "Select appropriate markets (minimum 3)",
@@ -234,7 +234,7 @@ const detailOverrides: Partial<Record<string, Partial<Omit<TrainingDetail, "reso
     relatedTraining: relatedTrainingCatalog.slice(0, 2),
     teamLeaderboard: defaultLeaderboard,
     readProgress: 25,
-    resumeLabel: "Resume at Step 3 — Check red flags",
+    resumeLabel: "Resume at Step 3: Check red flags",
     nextTrainingId: "lib-lead-qual",
   },
 };

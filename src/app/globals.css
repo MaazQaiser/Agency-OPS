@@ -1157,8 +1157,8 @@ table.production tr.pipeline-kpi-totals-row td {
 }
 
 .kpi-grid.retention {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+  gap: 12px;
   margin-bottom: 16px;
 }
 
@@ -1177,8 +1177,11 @@ table.production tr.pipeline-kpi-totals-row td {
 }
 
 .kpi-card.retention {
+  display: flex;
+  flex-direction: column;
+  min-height: 118px;
   border-radius: var(--radius-lg);
-  padding: 14px 12px;
+  padding: 14px 14px 12px;
   border: none;
   background: var(--surface-card);
   box-shadow:
@@ -1213,8 +1216,11 @@ table.production tr.pipeline-kpi-totals-row td {
 .kpi-label.retention {
   font-size: var(--font-size-xs);
   font-weight: 700;
-  letter-spacing: 0.03em;
-  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  margin-bottom: 8px;
+  max-width: 100%;
+  text-wrap: balance;
 }
 
 .kpi-value, .kpi-val {
@@ -1263,7 +1269,11 @@ table.production tr.pipeline-kpi-totals-row td {
 }
 
 .kpi-sub.production { margin-top: 6px; }
-.kpi-sub.retention { font-size: var(--font-size-sm); margin-top: 4px; }
+.kpi-sub.retention {
+  font-size: var(--font-size-sm);
+  line-height: 1.35;
+  margin-top: 6px;
+}
 
 .progress-bar {
   height: 6px;
@@ -1796,6 +1806,14 @@ table.production td, table.retention td {
   vertical-align: top;
 }
 
+table.retention tbody td:first-child {
+  min-width: 188px;
+  max-width: 240px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+}
+
 tbody tr:last-child td { border-bottom: none; }
 
 .row-green { background: var(--success-green-bg); }
@@ -2070,7 +2088,9 @@ tbody tr:last-child td { border-bottom: none; }
 .alert p,
 .alert li {
   font-size: var(--font-size-base-sm);
+  line-height: 1.5;
   color: rgba(255, 255, 255, 0.9);
+  text-wrap: pretty;
 }
 
 .alert ul { margin-top: 6px; padding-left: 16px; }
@@ -5435,7 +5455,9 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
 .va-ops-section-sub {
   margin: 4px 0 0;
   font-size: var(--font-size-sm);
+  line-height: 1.45;
   color: var(--text-muted);
+  text-wrap: pretty;
 }
 
 .va-ops-team-row {
@@ -14025,6 +14047,15 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   padding-left: var(--space-md);
 }
 
+.epay-broker-fee-note .va-ops-drawer-section-label {
+  letter-spacing: 0.02em;
+}
+
+.epay-broker-fee-note .va-ops-drawer-text {
+  margin-top: 6px;
+  line-height: 1.45;
+}
+
 .epay-payment-tracker {
   display: flex;
   flex-direction: column;
@@ -18967,7 +18998,10 @@ html[data-theme="obsidian"] .cmd-palette {
 .avatar-profile-role {
   margin: 2px 0 8px;
   font-size: var(--font-size-sm);
+  line-height: 1.4;
   color: var(--text-muted);
+  text-wrap: pretty;
+  max-width: 100%;
 }
 
 .avatar-profile-status-row {

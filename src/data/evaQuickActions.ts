@@ -209,7 +209,7 @@ export const evaActionModalConfig: Record<
       },
     ],
     successMessage: (v) =>
-      `Transfer ${v.decision === "approve" ? "approved" : "rejected"} — ${transferOptions.find((t) => t.value === v.request)?.label ?? "request"}`,
+      `Transfer ${v.decision === "approve" ? "approved" : "rejected"}: ${transferOptions.find((t) => t.value === v.request)?.label ?? "request"}`,
   },
   "trigger-workflow": {
     title: "Trigger Workflow",

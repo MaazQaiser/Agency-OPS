@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./table-scrollbars.css";
 import "./notification-drawer.css";
 import "./audit-log.css";
 import "./epay-broker-fee-trigger.css";
 import "./retention-language.css";
+import "./retention-scorecard-refine.css";
 import "./subscription.css";
 import "./command-palette.css";
 import "./global-search-command-center.css";
@@ -29,6 +31,7 @@ import "./analytics.css";
 import "./analytics-refine.css";
 import "./typography-system.css";
 import "./universal-search-overlay.css";
+import "./card-hierarchy.css";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -49,8 +52,8 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agency OS — Insurance Town",
-  description: "Insurance Town Agency OS — Dashboard, Production, Retention, Commercial, and Prime Agency",
+  title: "Agency OS: Insurance Town",
+  description: "Insurance Town Agency OS: Dashboard, Production, Retention, Commercial, and Prime Agency",
 };
 
 export const viewport = {

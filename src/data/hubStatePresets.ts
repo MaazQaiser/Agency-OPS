@@ -51,7 +51,7 @@ export const hubEmptyPresets: Record<HubEmptyPresetId, HubEmptyPreset> = {
     id: "commercial-missing-docs",
     icon: "check",
     title: "No missing documents",
-    description: "All required documents are received — queue is clear.",
+    description: "All required documents are received: queue is clear.",
   },
   "commercial-ready-bind": {
     id: "commercial-ready-bind",
@@ -114,7 +114,7 @@ export const hubEmptyPresets: Record<HubEmptyPresetId, HubEmptyPreset> = {
   "training-content": {
     id: "training-content",
     icon: "trophy",
-    title: "No training content available for your role",
+    title: "No Insurance Town training available for your role",
     description: "Resources assigned to your department will appear here.",
     ctaLabel: "Upload Training",
     hub: "training-hub",

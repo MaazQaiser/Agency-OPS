@@ -194,15 +194,15 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
     slaStatus: "Delayed",
     bindProbability: 72,
     slaPaused: false,
-    internalNotes: ["Markel UW silent 3 days — escalation sent."],
+    internalNotes: ["Markel UW silent 3 days: escalation sent."],
     stages: [
       stage("intake-started", "May 12, 2026 · 9:00 AM", now - 8 * day - 4 * hour, "1h 20m", 80 * 60 * 1000, "JoJo", "completed"),
       stage("docs-completed", "May 12, 2026 · 4:30 PM", now - 7 * day - 20 * hour, "7h 30m", 7.5 * hour, "JoJo", "completed"),
       stage("submitted-to-market", "May 13, 2026 · 10:00 AM", now - 7 * day - 14 * hour, "17h 30m", 17.5 * hour, "Pedro", "completed"),
       stage("carrier-response", "May 15, 2026 · 2:00 PM", now - 5 * day - 10 * hour, "2d 6h", 2 * day + 6 * hour, "JoJo", "current", true),
-      stage("producer-review", null, null, "—", null, "Eva", "pending"),
-      stage("client-sent", null, null, "—", null, "Eva", "pending"),
-      stage("bound", null, null, "—", null, "Eva", "pending"),
+      stage("producer-review", null, null, "-", null, "Eva", "pending"),
+      stage("client-sent", null, null, "-", null, "Eva", "pending"),
+      stage("bound", null, null, "-", null, "Eva", "pending"),
     ],
   },
   {
@@ -225,12 +225,12 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
     internalNotes: ["Missing signed app and loss runs blocking market submit."],
     stages: [
       stage("intake-started", "May 14, 2026 · 8:00 AM", now - 6 * day - 2 * hour, "45m", 45 * 60 * 1000, "Pedro", "completed"),
-      stage("docs-completed", "May 14, 2026 · 6:00 PM", now - 5 * day - 8 * hour, "—", null, "Pedro", "blocked", true),
-      stage("submitted-to-market", null, null, "—", null, "Pedro", "pending"),
-      stage("carrier-response", null, null, "—", null, "Pedro", "pending"),
-      stage("producer-review", null, null, "—", null, "Eva", "pending"),
-      stage("client-sent", null, null, "—", null, "Eva", "pending"),
-      stage("bound", null, null, "—", null, "Eva", "pending"),
+      stage("docs-completed", "May 14, 2026 · 6:00 PM", now - 5 * day - 8 * hour, "-", null, "Pedro", "blocked", true),
+      stage("submitted-to-market", null, null, "-", null, "Pedro", "pending"),
+      stage("carrier-response", null, null, "-", null, "Pedro", "pending"),
+      stage("producer-review", null, null, "-", null, "Eva", "pending"),
+      stage("client-sent", null, null, "-", null, "Eva", "pending"),
+      stage("bound", null, null, "-", null, "Eva", "pending"),
     ],
   },
   {
@@ -257,8 +257,8 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
       stage("submitted-to-market", "May 17, 2026 · 9:00 AM", now - 3 * day - 14 * hour, "16h", 16 * hour, "JoJo", "completed"),
       stage("carrier-response", "May 18, 2026 · 3:00 PM", now - 2 * day - 8 * hour, "1d 6h", day + 6 * hour, "JoJo", "completed"),
       stage("producer-review", "May 20, 2026 · 10:15 AM", now - 105 * 60 * 1000, "1h 45m", 105 * 60 * 1000, "Tracie", "current"),
-      stage("client-sent", null, null, "—", null, "Tracie", "pending"),
-      stage("bound", null, null, "—", null, "Tracie", "pending"),
+      stage("client-sent", null, null, "-", null, "Tracie", "pending"),
+      stage("bound", null, null, "-", null, "Tracie", "pending"),
     ],
   },
   {
@@ -278,7 +278,7 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
     slaStatus: "Healthy",
     bindProbability: 100,
     slaPaused: false,
-    internalNotes: ["Bound — COI pending for GC contract."],
+    internalNotes: ["Bound: COI pending for GC contract."],
     stages: [
       stage("intake-started", "May 8, 2026 · 8:00 AM", now - 12 * day - 2 * hour, "1h 10m", 70 * 60 * 1000, "Pedro", "completed"),
       stage("docs-completed", "May 8, 2026 · 3:00 PM", now - 11 * day - 19 * hour, "7h", 7 * hour, "Pedro", "completed"),
@@ -306,15 +306,15 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
     slaStatus: "Overdue",
     bindProbability: 45,
     slaPaused: false,
-    internalNotes: ["Stuck at market submit — no carrier response."],
+    internalNotes: ["Stuck at market submit: no carrier response."],
     stages: [
       stage("intake-started", "May 17, 2026 · 7:00 AM", now - 3 * day - 8 * hour, "1h 30m", 90 * 60 * 1000, "Hamad", "completed"),
       stage("docs-completed", "May 17, 2026 · 2:00 PM", now - 3 * day - 1 * hour, "7h", 7 * hour, "Hamad", "completed"),
       stage("submitted-to-market", "May 17, 2026 · 4:00 PM", now - 3 * day + 1 * hour, "3d 8h", 3 * day + 8 * hour, "Hamad", "delayed", true),
-      stage("carrier-response", null, null, "—", null, "Hamad", "pending"),
-      stage("producer-review", null, null, "—", null, "Eva", "pending"),
-      stage("client-sent", null, null, "—", null, "Eva", "pending"),
-      stage("bound", null, null, "—", null, "Eva", "pending"),
+      stage("carrier-response", null, null, "-", null, "Hamad", "pending"),
+      stage("producer-review", null, null, "-", null, "Eva", "pending"),
+      stage("client-sent", null, null, "-", null, "Eva", "pending"),
+      stage("bound", null, null, "-", null, "Eva", "pending"),
     ],
   },
   {
@@ -342,7 +342,7 @@ export const seedSubmissionClockRecords: SubmissionClockRecord[] = [
       stage("carrier-response", "May 17, 2026 · 11:00 AM", now - 3 * day - 11 * hour, "1d 2h", day + 2 * hour, "JoJo", "completed"),
       stage("producer-review", "May 18, 2026 · 10:00 AM", now - 2 * day - 12 * hour, "23h", 23 * hour, "Eva", "completed"),
       stage("client-sent", "May 20, 2026 · 6:00 PM", now - 18 * hour, "18h", 18 * hour, "Eva", "current"),
-      stage("bound", null, null, "—", null, "Eva", "pending"),
+      stage("bound", null, null, "-", null, "Eva", "pending"),
     ],
   },
 ];
@@ -359,7 +359,7 @@ export const clockComplianceAlerts: ClockComplianceAlert[] = [
   {
     id: "ca-2",
     title: "Producer review delayed > 1 hour",
-    detail: "Greenline Logistics producer review approaching SLA limit — 1h 45m elapsed.",
+    detail: "Greenline Logistics producer review approaching SLA limit: 1h 45m elapsed.",
     severity: "warning",
     recordId: "clk-seoul",
     timestamp: "1h ago",
@@ -367,7 +367,7 @@ export const clockComplianceAlerts: ClockComplianceAlert[] = [
   {
     id: "ca-3",
     title: "Missing docs > 24h",
-    detail: "Kim Auto Shop docs stage blocked — signed app and loss runs outstanding for 42 hours.",
+    detail: "Kim Auto Shop docs stage blocked: signed app and loss runs outstanding for 42 hours.",
     severity: "critical",
     recordId: "clk-kim",
     timestamp: "2h ago",
@@ -422,7 +422,7 @@ export function mergeClockRecords(base: SubmissionClockRecord[], overrides: Cloc
 }
 
 export function formatDurationMs(ms: number): string {
-  if (ms < 0) return "—";
+  if (ms < 0) return "-";
   const days = Math.floor(ms / day);
   const hours = Math.floor((ms % day) / hour);
   const mins = Math.floor((ms % hour) / (60 * 1000));
@@ -490,11 +490,11 @@ export function computeClockSummaryCards(records: SubmissionClockRecord[]): Cloc
 
   return [
     { id: "avg-age", label: "Average Submission Age", value: formatDurationMs(avgMs), filterKey: "avgAge" },
-    { id: "fastest", label: "Fastest Bound Time", value: fastestBind ? formatDurationMs(fastestBind.totalAgeMs) : "—", filterKey: "fastestBind" },
-    { id: "slowest", label: "Slowest Submission", value: slowest ? slowest.clientName.split(" ")[0] : "—", filterKey: "slowest" },
+    { id: "fastest", label: "Fastest Bound Time", value: fastestBind ? formatDurationMs(fastestBind.totalAgeMs) : "-", filterKey: "fastestBind" },
+    { id: "slowest", label: "Slowest Submission", value: slowest ? slowest.clientName.split(" ")[0] : "-", filterKey: "slowest" },
     { id: "breaches", label: "SLA Breaches", value: String(breaches), filterKey: "slaBreaches" },
-    { id: "review", label: "Pending Review Time", value: pendingReview.length ? formatDurationMs(pendingReviewAvg) : "—", filterKey: "pendingReview" },
-    { id: "ttb", label: "Time-to-Bind Average", value: bound.length ? formatDurationMs(timeToBindAvg) : "—", filterKey: "timeToBind" },
+    { id: "review", label: "Pending Review Time", value: pendingReview.length ? formatDurationMs(pendingReviewAvg) : "-", filterKey: "pendingReview" },
+    { id: "ttb", label: "Time-to-Bind Average", value: bound.length ? formatDurationMs(timeToBindAvg) : "-", filterKey: "timeToBind" },
   ];
 }
 

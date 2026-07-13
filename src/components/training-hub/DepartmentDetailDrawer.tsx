@@ -101,7 +101,7 @@ export function DepartmentDetailDrawer({
               <ul className="training-drawer-assignments">
                 {drawer.pendingAssignments.map((a) => (
                   <li key={`${a.name}-${a.training}`}>
-                    <strong>{a.name}</strong> — {a.training}
+                    <strong>{a.name}</strong>: {a.training}
                     <span>Due: {a.due}</span>
                   </li>
                 ))}

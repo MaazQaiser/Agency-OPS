@@ -39,7 +39,7 @@ export function commitChecklistUpdate(
         nextAction: "Producer Approval",
         producerNotes: [
           ...row.producerNotes,
-          `Coverage checklist sent to producer — ${nextClient.clientName}`,
+          `Coverage checklist sent to producer: ${nextClient.clientName}`,
         ],
         binding: {
           quoteSelected: row.binding?.quoteSelected ?? false,

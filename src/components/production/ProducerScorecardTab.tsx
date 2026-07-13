@@ -67,7 +67,7 @@ export function ProducerScorecardTab() {
             ))}
           </KpiGrid>
           <div className="section-hdr">
-            <div className="sh-label">Lines of Business — Sarah (Personal + Life Only)</div>
+            <div className="sh-label">Lines of Business: Sarah (Personal + Life Only)</div>
           </div>
           <DataTable variant="production">
             <thead>
@@ -101,7 +101,7 @@ export function ProducerScorecardTab() {
           <div style={{ fontSize: "var(--font-size-12)" }}>
             Populates from Kyle&apos;s Sales_Scorecard Sheets tab.
             <br />
-            Monthly reports align to folio period dates — not calendar month.
+            Monthly reports align to folio period dates. Not calendar month.
           </div>
         </div>
       )}

@@ -33,7 +33,7 @@ export function SubmissionClockStepper({ stages, compact = false }: SubmissionCl
                 <>
                   <span className="submission-clock-label">{step?.label ?? key}</span>
                   {step?.timestamp && <span className="submission-clock-time">{step.timestamp}</span>}
-                  {step?.timeSpent && step.timeSpent !== "—" && (
+                  {step?.timeSpent && step.timeSpent !== "-" && (
                     <span className="submission-clock-spent">{step.timeSpent}</span>
                   )}
                   {step?.owner && <span className="submission-clock-owner">{step.owner}</span>}

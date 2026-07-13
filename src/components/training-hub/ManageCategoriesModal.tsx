@@ -111,7 +111,7 @@ export function ManageCategoriesModal({ open, onClose, onSave }: ManageCategorie
         <div className="va-ops-modal-header">
           <div>
             <h2 className="va-ops-modal-title">Manage Categories</h2>
-            <p className="va-ops-modal-subtitle">Create, rename, or delete department categories.</p>
+            <p className="va-ops-modal-subtitle">Create, rename, or delete Insurance Town department categories.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

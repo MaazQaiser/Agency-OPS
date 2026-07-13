@@ -101,7 +101,7 @@ export function TrainingResourceDrawer({ resource, onClose, onOpenResource }: Tr
               <ul className="training-completion-log">
                 {drawer.completionLogs.map((log) => (
                   <li key={`${log.user}-${log.date}`}>
-                    <strong>{log.user}</strong> — {log.status}
+                    <strong>{log.user}</strong>: {log.status}
                     <span>{log.date}</span>
                   </li>
                 ))}

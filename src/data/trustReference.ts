@@ -149,7 +149,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$42,600",
     drawer: {
       invoiceReference: "INV-2048",
-      clientInfo: "Martinez Landscaping — BOP + Workers Comp",
+      clientInfo: "Martinez Landscaping: BOP + Workers Comp",
       policyType: "BOP + Workers Comp",
       carrier: "Markel",
       brokerFee: "$500",
@@ -157,9 +157,9 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
       paymentMethod: "ACH",
       carrierPaymentHistory: [],
       trustAccountLogs: [
-        { id: "tal-1", entry: "Deposit initiated — ACH pending settlement", date: "June 20, 2026" },
+        { id: "tal-1", entry: "Deposit initiated: ACH pending settlement", date: "June 20, 2026" },
       ],
-      reconciliationNotes: ["Awaiting ACH settlement — expected today."],
+      reconciliationNotes: ["Awaiting ACH settlement: expected today."],
     },
   },
   {
@@ -174,7 +174,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$37,780",
     drawer: {
       invoiceReference: "INV-2045",
-      clientInfo: "Kim Auto Shop — Commercial Auto + GL",
+      clientInfo: "Kim Auto Shop: Commercial Auto + GL",
       policyType: "Commercial Auto + GL",
       carrier: "Travelers",
       brokerFee: "$450",
@@ -185,7 +185,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
         { id: "cph-2", action: "Deposit cleared", date: "June 18, 2026" },
       ],
       trustAccountLogs: [
-        { id: "tal-2", entry: "Release TR-88310 — Travelers", date: "June 19, 2026" },
+        { id: "tal-2", entry: "Release TR-88310: Travelers", date: "June 19, 2026" },
       ],
       reconciliationNotes: ["Carrier payment confirmed."],
     },
@@ -202,7 +202,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$42,980",
     drawer: {
       invoiceReference: "INV-2042",
-      clientInfo: "Greenline Logistics — BOP + Liquor Liability",
+      clientInfo: "Greenline Logistics: BOP + Liquor Liability",
       policyType: "BOP + Liquor Liability",
       carrier: "Nationwide",
       brokerFee: "$500",
@@ -210,7 +210,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
       paymentMethod: "Card",
       carrierPaymentHistory: [],
       trustAccountLogs: [
-        { id: "tal-3", entry: "Broker fee held separately — compliance", date: "June 18, 2026" },
+        { id: "tal-3", entry: "Broker fee held separately: compliance", date: "June 18, 2026" },
       ],
       reconciliationNotes: ["Broker fee separated from premium per compliance."],
     },
@@ -227,7 +227,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$43,480",
     drawer: {
       invoiceReference: "INV-2039",
-      clientInfo: "ABC Logistics — Commercial Auto",
+      clientInfo: "ABC Logistics: Commercial Auto",
       policyType: "Commercial Auto",
       carrier: "Liberty Mutual",
       brokerFee: "$350",
@@ -235,9 +235,9 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
       paymentMethod: "Card",
       carrierPaymentHistory: [],
       trustAccountLogs: [
-        { id: "tal-4", entry: "Deposit failed — card declined", date: "June 17, 2026" },
+        { id: "tal-4", entry: "Deposit failed: card declined", date: "June 17, 2026" },
       ],
-      reconciliationNotes: ["Payment failed — no funds deposited to trust."],
+      reconciliationNotes: ["Payment failed: no funds deposited to trust."],
     },
   },
   {
@@ -252,7 +252,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$43,480",
     drawer: {
       invoiceReference: "INV-2040",
-      clientInfo: "Coastal Bistro — BOP",
+      clientInfo: "Coastal Bistro: BOP",
       policyType: "BOP",
       carrier: "Guard",
       brokerFee: "$300",
@@ -277,7 +277,7 @@ export const trustLedgerEntries: TrustLedgerEntry[] = [
     balanceAfter: "$40,280",
     drawer: {
       invoiceReference: "INV-2046",
-      clientInfo: "Rivera Construction — GL + Umbrella",
+      clientInfo: "Rivera Construction: GL + Umbrella",
       policyType: "GL + Umbrella",
       carrier: "CNA",
       brokerFee: "$400",
@@ -383,7 +383,7 @@ export const brokerFeeLedger: BrokerFeeEntry[] = [
     brokerFee: "$550",
     status: "Held",
     collected: "No",
-    holdReason: "Overdue invoice — broker fee held pending payment",
+    holdReason: "Overdue invoice: broker fee held pending payment",
   },
   {
     id: "bf-coastal",

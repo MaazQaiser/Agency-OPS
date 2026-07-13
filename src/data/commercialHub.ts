@@ -103,7 +103,7 @@ export const operationalAlerts: OperationalAlert[] = [
   {
     id: "alert-1",
     client: "Kim Auto Shop",
-    message: "Missing docs — loss runs required",
+    message: "Missing docs: loss runs required",
     variant: "red",
     linkTab: "missing-docs",
   },
@@ -124,7 +124,7 @@ export const operationalAlerts: OperationalAlert[] = [
   {
     id: "alert-4",
     client: "Atlas Roofing",
-    message: "Submission aging — 9 days open",
+    message: "Submission aging: 9 days open",
     variant: "yellow",
     linkTab: "submissions",
   },
@@ -174,7 +174,7 @@ export const activeSubmissions: HubSubmission[] = [
     status: "Overdue",
     nextAction: "Escalate carrier follow-up",
     stage: "Quoted",
-    coverageRequested: "BOP — landscaping operations, 12 employees",
+    coverageRequested: "BOP: landscaping operations, 12 employees",
     carrierSubmissions: [
       { carrier: "Markel", status: "Declined" },
       { carrier: "Kingsway", status: "Declined" },
@@ -183,7 +183,7 @@ export const activeSubmissions: HubSubmission[] = [
     quoteComparison: [],
     missingDocs: ["Loss runs", "Signed application"],
     producerNotes: ["Client comparing against incumbent State Farm renewal."],
-    brokerNotes: ["Stalled at Markel — no UW update in 3 days."],
+    brokerNotes: ["Stalled at Markel: no UW update in 3 days."],
   },
   {
     id: "sub-kim",
@@ -205,7 +205,7 @@ export const activeSubmissions: HubSubmission[] = [
     ],
     quoteComparison: [{ carrier: "Travelers", premium: "$5,800", notes: "GL limits at minimum" }],
     missingDocs: ["5-year loss runs"],
-    producerNotes: ["Referred by JoJo — existing brokerage relationship."],
+    producerNotes: ["Referred by JoJo: existing brokerage relationship."],
     brokerNotes: ["Final chase on loss runs today."],
   },
   {
@@ -221,7 +221,7 @@ export const activeSubmissions: HubSubmission[] = [
     status: "Negotiation",
     nextAction: "Review quote options with client",
     stage: "Negotiation",
-    coverageRequested: "BOP — multi-location restaurant group",
+    coverageRequested: "BOP: multi-location restaurant group",
     carrierSubmissions: [
       { carrier: "Markel", status: "Quoted", premium: "$14,200" },
       { carrier: "CNA", status: "Quoted", premium: "$14,500" },
@@ -231,7 +231,7 @@ export const activeSubmissions: HubSubmission[] = [
       { carrier: "Markel", premium: "$14,200", notes: "Lower premium, tighter limits" },
     ],
     missingDocs: ["Health permit copy"],
-    producerNotes: ["Renewal — incumbent Hartford at $14,500."],
+    producerNotes: ["Renewal: incumbent Hartford at $14,500."],
     brokerNotes: ["Presenting both quotes Friday."],
   },
   {
@@ -247,11 +247,11 @@ export const activeSubmissions: HubSubmission[] = [
     status: "Ready to Bind",
     nextAction: "Obtain signed application",
     stage: "Ready to Bind",
-    coverageRequested: "Workers comp — 28 employees, CA contractor class",
+    coverageRequested: "Workers comp: 28 employees, CA contractor class",
     carrierSubmissions: [{ carrier: "ICW", status: "Quoted", premium: "$18,900" }],
     quoteComparison: [{ carrier: "ICW", premium: "$18,900", notes: "Ready to bind pending signed app" }],
     missingDocs: ["Signed application"],
-    producerNotes: ["High-value WC opportunity — bind target this week."],
+    producerNotes: ["High-value WC opportunity: bind target this week."],
     brokerNotes: ["Client verbally accepted ICW terms."],
   },
 ];

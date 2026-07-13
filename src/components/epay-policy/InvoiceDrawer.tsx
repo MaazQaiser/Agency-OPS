@@ -92,7 +92,7 @@ export function InvoiceDrawer({ invoice, onClose }: InvoiceDrawerProps) {
               <ul className="submission-doc-history-list">
                 {drawer.paymentHistory.map((entry) => (
                   <li key={entry.id}>
-                    <strong>{entry.action}</strong> — {entry.date}
+                    <strong>{entry.action}</strong>: {entry.date}
                   </li>
                 ))}
               </ul>
@@ -105,7 +105,7 @@ export function InvoiceDrawer({ invoice, onClose }: InvoiceDrawerProps) {
               <ul className="va-ops-gap-list">
                 {drawer.trustAccountLogs.map((entry) => (
                   <li key={entry.id}>
-                    {entry.entry} — {entry.date}
+                    {entry.entry}: {entry.date}
                   </li>
                 ))}
               </ul>

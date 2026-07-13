@@ -14,13 +14,17 @@ export function InvoiceReadinessPanel({ items, ready }: InvoiceReadinessPanelPro
 
   return (
     <section
-      className={cn("va-ops-panel epay-readiness-panel", !ready && "epay-readiness-panel--blocked")}
+      className={cn(
+        "va-ops-panel epay-readiness-panel",
+        !ready && "epay-readiness-panel--blocked aos-card--action",
+        ready && "aos-card--info",
+      )}
       aria-label="Invoice readiness pre-flight"
     >
       <div className="epay-readiness-header">
         <div>
           <h3 className="va-ops-section-title">Invoice Readiness</h3>
-          <p className="va-ops-section-sub">Pre-flight validation — all checks must pass before send.</p>
+          <p className="va-ops-section-sub">Pre-flight validation: all checks must pass before send.</p>
         </div>
         <span className={cn("badge epay-readiness-badge", ready ? "badge-green" : "badge-red")}>
           {completeCount}/{items.length} ready

@@ -116,7 +116,7 @@ export function buildProducerReviewCases(
         producerApproved: Boolean(submission.binding?.producerApproved),
         quoteSelectedDate: submission.followUpDate || submission.submissionDate,
         targetPremium,
-        deltaFromTarget: selectedQuote ? formatDelta(selectedAmount, targetAmount) : "—",
+        deltaFromTarget: selectedQuote ? formatDelta(selectedAmount, targetAmount) : "-",
         coverageGapsWarning: getCoverageGaps(submission),
         coverageGaps,
         recommendation: selectedQuote?.notes ?? "Select a quote to generate recommendation",

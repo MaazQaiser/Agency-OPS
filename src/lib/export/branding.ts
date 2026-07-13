@@ -224,7 +224,7 @@ export function wrapExportDocument(meta: ExportMeta, bodyHtml: string): string {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${meta.title} — Insurance Town</title>
+  <title>${meta.title}: Insurance Town</title>
   <style>${exportDocumentStyles}</style>
 </head>
 <body>
@@ -247,7 +247,7 @@ export function wrapExportDocument(meta: ExportMeta, bodyHtml: string): string {
     </header>
     ${bodyHtml}
     <footer class="export-footer">
-      Confidential — Insurance Town Agency OS · Patent Pending USPTO #64/053,057
+      Confidential: Insurance Town Agency OS · Patent Pending USPTO #64/053,057
     </footer>
   </div>
 </body>

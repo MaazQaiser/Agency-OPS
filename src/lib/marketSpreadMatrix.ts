@@ -34,7 +34,7 @@ export function buildMarketSpreadMatrix(submissions: HubSubmission[]): MarketSpr
         ).premium
       : submission.quotesReceived > 0
         ? submission.premium
-        : "—";
+        : "-";
 
     return {
       id: submission.id,

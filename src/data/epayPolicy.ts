@@ -65,7 +65,7 @@ export const brokerFeeTriggerStepOrder: BrokerFeeTriggerStepId[] = [
 export const brokerFeeTriggerStepLabels: Record<BrokerFeeTriggerStepId, string> = {
   "make-webhook": "Make.com webhook fired",
   "epay-invoice": "ePayPolicy invoice created",
-  "az-esign": "AZ E-sign disclosure sent",
+  "az-esign": "AZ E-Sign disclosure sent",
 };
 
 export function isAgencyBillRecord(billingType: BillingType): boolean {
@@ -164,9 +164,9 @@ const martinezClient: InvoiceClient = {
   status: "Ready to Invoice",
   billingType: "Agency Bill",
   brokerFeeTrigger: [
-    { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "Today, 11:18 AM", detail: "Scenario #482 — broker_fee_trigger" },
+    { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "Today, 11:18 AM", detail: "Scenario #482: broker_fee_trigger" },
     { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "Today, 11:20 AM", detail: "INV-2048 synced to ePayPolicy" },
-    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "pending", updatedAt: "Awaiting", detail: "DocuSign envelope queued" },
+    { id: "az-esign", label: "AZ E-Sign disclosure sent", status: "pending", updatedAt: "Awaiting", detail: "Waiting for client signature via AZ E-Sign" },
   ],
   invoice: {
     invoiceNumber: "INV-2048",
@@ -227,7 +227,7 @@ const kimClient: InvoiceClient = {
   brokerFeeTrigger: [
     { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "June 18, 9:12 AM" },
     { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "June 18, 9:14 AM" },
-    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "success", updatedAt: "June 18, 9:16 AM" },
+    { id: "az-esign", label: "AZ E-Sign disclosure sent", status: "success", updatedAt: "June 18, 9:16 AM", detail: "Client signed via AZ E-Sign" },
   ],
   invoice: {
     invoiceNumber: "INV-2045",
@@ -331,7 +331,7 @@ const greenlineClient: InvoiceClient = {
   brokerFeeTrigger: [
     { id: "make-webhook", label: "Make.com webhook fired", status: "success", updatedAt: "June 15, 8:40 AM" },
     { id: "epay-invoice", label: "ePayPolicy invoice created", status: "success", updatedAt: "June 15, 8:42 AM" },
-    { id: "az-esign", label: "AZ E-sign disclosure sent", status: "failed", updatedAt: "June 15, 8:45 AM", detail: "DocuSign API timeout — retry required" },
+    { id: "az-esign", label: "AZ E-Sign disclosure sent", status: "failed", updatedAt: "June 15, 8:45 AM", detail: "AZ E-Sign timed out. Retry required." },
   ],
   invoice: {
     invoiceNumber: "INV-2042",
@@ -341,7 +341,7 @@ const greenlineClient: InvoiceClient = {
     paymentDueDate: "June 18, 2026",
     paymentMethod: "Card",
     installmentOption: "Full Pay",
-    notes: "Renewal BOP — payment overdue.",
+    notes: "Renewal BOP: payment overdue.",
   },
   paymentRequest: {
     linkGenerated: true,
@@ -391,7 +391,7 @@ const atlasClient: InvoiceClient = {
     paymentDueDate: "June 15, 2026",
     paymentMethod: "ACH",
     installmentOption: "Full Pay",
-    notes: "GL renewal — paid in full.",
+    notes: "GL renewal: paid in full.",
   },
   paymentRequest: {
     linkGenerated: true,
@@ -448,9 +448,9 @@ export const pendingInvoices: PendingInvoice[] = [
         { id: "ph-1", action: "Invoice sent", date: "June 18, 2026" },
         { id: "ph-2", action: "Reminder sent", date: "June 20, 2026" },
       ],
-      brokerFeeNote: "Broker fee listed separately per compliance — $450 agency fee.",
+      brokerFeeNote: "Broker fee listed separately per compliance: $450 agency fee.",
       trustAccountLogs: [
-        { id: "tl-1", entry: "Pending deposit — TR-88338", date: "June 18, 2026" },
+        { id: "tl-1", entry: "Pending deposit: TR-88338", date: "June 18, 2026" },
       ],
       clientNotes: ["Follow up on auto dec page before bind."],
     },
@@ -474,11 +474,11 @@ export const pendingInvoices: PendingInvoice[] = [
         { id: "ph-4", action: "Payment link opened", date: "June 17, 2026" },
         { id: "ph-5", action: "Reminder sent", date: "June 19, 2026" },
       ],
-      brokerFeeNote: "Broker fee separated — logistics BOP package.",
+      brokerFeeNote: "Broker fee separated: logistics BOP package.",
       trustAccountLogs: [
-        { id: "tl-2", entry: "Overdue — no deposit received", date: "June 20, 2026" },
+        { id: "tl-2", entry: "Overdue: no deposit received", date: "June 20, 2026" },
       ],
-      clientNotes: ["Owner requested payment plan — follow up with producer."],
+      clientNotes: ["Owner requested payment plan: follow up with producer."],
     },
   },
   {
@@ -541,7 +541,7 @@ export function getInvoiceReadinessItems(
     { id: "broker", label: "Broker fee separated", complete: Boolean(complianceMap["c-broker"]) && form.brokerFee > 0 },
     { id: "carrier", label: "Carrier confirmed", complete: Boolean(complianceMap["c-carrier"]) },
     { id: "method", label: "Payment method selected", complete: Boolean(complianceMap["c-method"]) && Boolean(form.paymentMethod) },
-    { id: "disclosures", label: "Compliance disclosures sent", complete: disclosuresComplete },
+    { id: "disclosures", label: "AZ E-Sign disclosure completed", complete: disclosuresComplete },
     { id: "contact", label: "Client contact verified", complete: Boolean(complianceMap["c-client"]) && Boolean(client.paymentRequest.sentTo) },
   ];
 }

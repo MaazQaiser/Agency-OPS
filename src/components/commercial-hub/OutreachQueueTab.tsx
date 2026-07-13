@@ -166,7 +166,7 @@ export function OutreachQueueTab() {
         <div className="add-market-alert add-market-alert-warn outreach-upcoming-reminder" role="status">
           <strong>Upcoming Reminder</strong>
           <span>
-            {upcomingReminder.reminderType} — {upcomingReminder.date} at {upcomingReminder.time} · Assigned to {upcomingReminder.assignedTo}
+            {upcomingReminder.reminderType}: {upcomingReminder.date} at {upcomingReminder.time} · Assigned to {upcomingReminder.assignedTo}
           </span>
         </div>
       )}
@@ -248,7 +248,7 @@ export function OutreachQueueTab() {
                       {row.status}
                     </span>
                   </td>
-                  <td>—</td>
+                  <td>-</td>
                   <td>{row.sent}</td>
                   <td className="commercial-hub-client-cell">{row.client}</td>
                   <td>Quote Follow-Up</td>

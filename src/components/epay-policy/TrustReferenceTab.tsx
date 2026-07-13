@@ -179,7 +179,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
                   <td className="commercial-hub-client-cell">{row.client}</td>
                   <td className="epay-broker-fee-highlight">{row.brokerFee}</td>
                   <td><span className={cn("badge", brokerFeeStatusClass[row.status])}>{row.status}</span></td>
-                  <td className="epay-broker-fee-reason">{row.holdReason ?? "—"}</td>
+                  <td className="epay-broker-fee-reason">{row.holdReason ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -191,7 +191,7 @@ export function TrustReferenceTab({ onToast }: TrustReferenceTabProps) {
         <section className="va-ops-panel" aria-label="Trust ledger activity">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Trust Ledger Activity</h3>
-            <p className="va-ops-section-sub">Main money movement log — click a row for transaction details.</p>
+            <p className="va-ops-section-sub">Main money movement log: click a row for transaction details.</p>
           </div>
           <div className="commercial-hub-table-wrap epay-trust-ledger-wrap">
             <table className="commercial-hub-table epay-trust-ledger-table">

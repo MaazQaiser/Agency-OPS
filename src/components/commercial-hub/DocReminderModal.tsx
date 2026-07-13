@@ -32,7 +32,7 @@ export function DocReminderModal({ open, item, onClose, onSend }: DocReminderMod
 
   if (!open || !item) return null;
 
-  const message = `Reminder: ${item.client} — please send ${item.missing}. Requested ${item.requested}.`;
+  const message = `Reminder: ${item.client}: please send ${item.missing}. Requested ${item.requested}.`;
 
   return (
     <div className="va-ops-modal-root" role="presentation">

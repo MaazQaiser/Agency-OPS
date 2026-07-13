@@ -117,7 +117,7 @@ function buildVaProfile(member: TeamMember): UserProfile {
     kpis: mapVaKpis(member),
     workload: [
       { id: "w1", label: "Active tasks", detail: `${Math.max(3, member.recentActions.length + 2)} open`, route: `${routes.vaOperations}?view=tasks` },
-      { id: "w2", label: "Assigned submissions", detail: member.roleType === "brokerage" ? "3 submissions" : "—", route: `${routes.commercialHub}?view=submissions`, overdue: member.roleType === "brokerage" },
+      { id: "w2", label: "Assigned submissions", detail: member.roleType === "brokerage" ? "3 submissions" : "-", route: `${routes.commercialHub}?view=submissions`, overdue: member.roleType === "brokerage" },
       { id: "w3", label: "Pending approvals", detail: "1 awaiting review", route: `${routes.vaOperations}?view=approvals` },
       { id: "w4", label: "Follow-ups due", detail: "2 due today", route: `${routes.commercialHub}?view=follow-ups` },
       { id: "w5", label: "Overdue items", detail: member.status === "away" ? "0 overdue" : "1 overdue", route: `${routes.vaOperations}?view=tasks`, overdue: member.status !== "away" },
@@ -239,7 +239,7 @@ const producerProfiles: UserProfile[] = [
       week: { completion: 88, sla: 93, responseTime: "21m" },
       month: { completion: 85, sla: 91, responseTime: "24m" },
     },
-    managerNotes: "WC specialist — prioritize bind queue and COI requests.",
+    managerNotes: "WC specialist: prioritize bind queue and COI requests.",
     avatarUrl: getTeamPhotoUrl("kyle-nguyen"),
   },
   {
@@ -307,7 +307,7 @@ const producerProfiles: UserProfile[] = [
       week: { completion: 85, sla: 90, responseTime: "23m" },
       month: { completion: 83, sla: 88, responseTime: "26m" },
     },
-    managerNotes: "Korean retention queue — restaurant program renewals.",
+    managerNotes: "Korean retention queue: restaurant program renewals.",
   },
   {
     id: "valerie-martinez",
@@ -340,7 +340,7 @@ const producerProfiles: UserProfile[] = [
       week: { completion: 89, sla: 93, responseTime: "16m" },
       month: { completion: 87, sla: 91, responseTime: "18m" },
     },
-    managerNotes: "English retention lead — cross-sell focus this month.",
+    managerNotes: "English retention lead: cross-sell focus this month.",
   },
   {
     id: "sarah-chen",
@@ -360,7 +360,7 @@ const producerProfiles: UserProfile[] = [
     ],
     workload: [
       { id: "w1", label: "Active tasks", detail: "2 life referrals", route: routes.production },
-      { id: "w2", label: "Assigned submissions", detail: "—", route: routes.commercialHub },
+      { id: "w2", label: "Assigned submissions", detail: "-", route: routes.commercialHub },
       { id: "w3", label: "Pending approvals", detail: "0 pending", route: routes.sendCenter },
       { id: "w4", label: "Follow-ups due", detail: "1 callback", route: routes.production },
       { id: "w5", label: "Overdue items", detail: "0 overdue", route: routes.production },
@@ -373,40 +373,40 @@ const producerProfiles: UserProfile[] = [
       week: { completion: 82, sla: 88, responseTime: "21m" },
       month: { completion: 80, sla: 86, responseTime: "24m" },
     },
-    managerNotes: "Life sales pipeline — prioritize retention referrals.",
+    managerNotes: "Life sales pipeline: prioritize retention referrals.",
   },
   {
     id: "arminda-ops",
     name: "Arminda",
-    role: "AZ Operations",
+    role: "AgencyZoom Operations",
     roleType: "va",
-    department: "Arizona Operations",
+    department: "Operations Support",
     shiftStatus: "On shift",
-    currentQueue: "AZ service queue",
+    currentQueue: "Back-office data entry",
     status: "online",
     avatarUrl: getTeamPhotoUrl("arminda-ops"),
     kpis: [
-      { id: "k1", label: "Service tickets", value: 6, route: routes.vaOperations },
-      { id: "k2", label: "COI requests", value: 3, route: routes.commercialHub },
-      { id: "k3", label: "Endorsements", value: 2, route: routes.commercialHub },
+      { id: "k1", label: "AgencyZoom updates", value: 14, route: routes.vaOperations },
+      { id: "k2", label: "Data entry tasks", value: 8, route: routes.vaOperations },
+      { id: "k3", label: "Ops support items", value: 5, route: routes.vaOperations },
       { id: "k4", label: "SLA compliance", value: "96%", route: routes.vaOperations },
     ],
     workload: [
-      { id: "w1", label: "Active tasks", detail: "4 AZ service items", route: routes.vaOperations },
-      { id: "w2", label: "Assigned submissions", detail: "1 endorsement", route: routes.commercialHub },
-      { id: "w3", label: "Pending approvals", detail: "0 pending", route: routes.sendCenter },
-      { id: "w4", label: "Follow-ups due", detail: "1 COI due", route: routes.commercialHub },
+      { id: "w1", label: "Active tasks", detail: "4 AgencyZoom updates", route: routes.vaOperations },
+      { id: "w2", label: "Data entry queue", detail: "3 records pending", route: routes.vaOperations },
+      { id: "w3", label: "Ops support", detail: "2 assist requests", route: routes.vaOperations },
+      { id: "w4", label: "Follow-ups due", detail: "1 AgencyZoom sync check", route: routes.vaOperations },
       { id: "w5", label: "Overdue items", detail: "0 overdue", route: routes.vaOperations },
     ],
     recentActivity: [
-      { id: "a1", text: "Processed AZ COI request", timestamp: "2h ago", module: "Commercial Hub", route: routes.commercialHub },
+      { id: "a1", text: "Completed AgencyZoom data entry batch", timestamp: "2h ago", module: "VA Operations", route: routes.vaOperations },
     ],
     performanceTrend: {
       today: { completion: 88, sla: 94, responseTime: "16m" },
       week: { completion: 86, sla: 92, responseTime: "18m" },
       month: { completion: 84, sla: 90, responseTime: "20m" },
     },
-    managerNotes: "AZ ops coverage — COI and endorsement priority.",
+    managerNotes: "AgencyZoom operations · Back-office data entry · Operations support.",
   },
 ];
 
@@ -418,7 +418,7 @@ const vaProfiles = teamMembers.map((member) => {
   return profile;
 });
 
-/** Brokerage VA Pedro vs producer Pedro Alvarez — separate profile ids */
+/** Brokerage VA Pedro vs producer Pedro Alvarez: separate profile ids */
 
 export const userProfiles: UserProfile[] = [...producerProfiles, ...vaProfiles];
 

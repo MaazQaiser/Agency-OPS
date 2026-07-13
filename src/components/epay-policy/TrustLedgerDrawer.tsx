@@ -84,7 +84,7 @@ export function TrustLedgerDrawer({ entry, onClose }: TrustLedgerDrawerProps) {
           <div className="va-ops-drawer-section">
             <div className="va-ops-drawer-section-label">Invoice Reference</div>
             <p className="va-ops-drawer-text">
-              {drawer.invoiceReference} — {drawer.clientInfo}
+              {drawer.invoiceReference}: {drawer.clientInfo}
             </p>
           </div>
 
@@ -112,7 +112,7 @@ export function TrustLedgerDrawer({ entry, onClose }: TrustLedgerDrawerProps) {
               <ul className="submission-doc-history-list">
                 {drawer.carrierPaymentHistory.map((item) => (
                   <li key={item.id}>
-                    <strong>{item.action}</strong> — {item.date}
+                    <strong>{item.action}</strong>: {item.date}
                   </li>
                 ))}
               </ul>
@@ -125,7 +125,7 @@ export function TrustLedgerDrawer({ entry, onClose }: TrustLedgerDrawerProps) {
               <ul className="va-ops-gap-list">
                 {drawer.trustAccountLogs.map((log) => (
                   <li key={log.id}>
-                    {log.entry} — {log.date}
+                    {log.entry}: {log.date}
                   </li>
                 ))}
               </ul>

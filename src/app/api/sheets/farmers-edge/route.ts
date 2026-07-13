@@ -3,13 +3,13 @@
  * Returns content for a specific vertical from the Farmers Edge Sheet ranges.
  *
  * Sheet range mapping (all relative to the Farmers Edge spreadsheet):
- *   'FE Benefits'!A2:A100     — benefits rows
- *   'FE Gaps'!A2:A100         — coverage gaps
- *   'FE Equipment'!A2:C100   — equipment intel (equipment, exposure, itaRec)
- *   'FE Objections'!A2:B100  — objections + reframes
- *   'FE Scripts'!A2:B100     — cue + line
- *   'FE CrossSell'!A2:B100   — trigger + action
- *   'FE Edge'!A2:D100        — feature + ITA+Farmers + Standard + Competitors
+ *   'FE Benefits'!A2:A100    : benefits rows
+ *   'FE Gaps'!A2:A100        : coverage gaps
+ *   'FE Equipment'!A2:C100  : equipment intel (equipment, exposure, itaRec)
+ *   'FE Objections'!A2:B100 : objections + reframes
+ *   'FE Scripts'!A2:B100    : cue + line
+ *   'FE CrossSell'!A2:B100  : trigger + action
+ *   'FE Edge'!A2:D100       : feature + ITA+Farmers + Standard + Competitors
  *
  * Returns static placeholder data when Sheets is not configured.
  */

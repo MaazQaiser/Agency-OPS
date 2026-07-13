@@ -145,12 +145,12 @@ export function LeadVelocityTab() {
             assignedVa: vaOptions[(vaIdx + 1) % vaOptions.length],
             assignedProducer: producerOptions[(prodIdx + 1) % producerOptions.length],
             internalNotes: [
-              `Reassigned ${new Date().toLocaleString()} — VA and producer rotated by owner.`,
+              `Reassigned ${new Date().toLocaleString()}: VA and producer rotated by owner.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          toast.success(`Reassigned — ${record.leadName}`);
+          toast.success(`Reassigned: ${record.leadName}`);
           });
           break;
         }
@@ -161,12 +161,12 @@ export function LeadVelocityTab() {
             priority: "High",
             escalated: true,
             internalNotes: [
-              `Priority escalated ${new Date().toLocaleString()} — owner flagged for immediate follow-up.`,
+              `Priority escalated ${new Date().toLocaleString()}: owner flagged for immediate follow-up.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          toast.warning(`Escalated — ${record.leadName}`);
+          toast.warning(`Escalated: ${record.leadName}`);
           });
           break;
         }
@@ -175,12 +175,12 @@ export function LeadVelocityTab() {
           updated = {
             ...record,
             internalNotes: [
-              `Follow-up triggered ${new Date().toLocaleString()} — owner requested outreach.`,
+              `Follow-up triggered ${new Date().toLocaleString()}: owner requested outreach.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          toast.success(`Follow-up triggered — ${record.leadName}`);
+          toast.success(`Follow-up triggered: ${record.leadName}`);
           });
           break;
         }
@@ -190,13 +190,13 @@ export function LeadVelocityTab() {
             ...record,
             assignedProducer: "Eva",
             internalNotes: [
-              `Owner override ${new Date().toLocaleString()} — Eva assigned as lead owner.`,
+              `Owner override ${new Date().toLocaleString()}: Eva assigned as lead owner.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          logAudit("override-used", `Owner override — ${record.leadName}`);
-          toast.success(`Owner override applied — ${record.leadName}`);
+          logAudit("override-used", `Owner override: ${record.leadName}`);
+          toast.success(`Owner override applied: ${record.leadName}`);
           });
           break;
         }
@@ -217,7 +217,7 @@ export function LeadVelocityTab() {
             ),
           };
           persistRecord(updated);
-          toast.warning(`Marked lost — ${record.leadName}`);
+          toast.warning(`Marked lost: ${record.leadName}`);
           });
           break;
         }
@@ -225,7 +225,7 @@ export function LeadVelocityTab() {
           setSelected(record);
           return;
         default:
-          toast.success(`${action} — ${record.leadName}`);
+          toast.success(`${action}: ${record.leadName}`);
       }
     },
     [logAudit, persistRecord, requirePermission, toast],
@@ -356,7 +356,7 @@ export function LeadVelocityTab() {
                       <td>
                         <UserChip name={row.assignedProducer} />
                       </td>
-                      <td className={cn(isSlow && "lead-velocity-slow-text")}>{row.firstResponseTime || "—"}</td>
+                      <td className={cn(isSlow && "lead-velocity-slow-text")}>{row.firstResponseTime || "-"}</td>
                       <td>{row.totalCycleTime}</td>
                       <td>
                         <span className={cn("lead-velocity-conversion", row.conversionProbability >= 70 && "high")}>
@@ -375,9 +375,9 @@ export function LeadVelocityTab() {
                       <td>
                         <LeadSourceChip source={row.leadSource} />
                       </td>
-                      <td>{row.timeToIntake || "—"}</td>
-                      <td>{row.timeToQuote || "—"}</td>
-                      <td>{row.timeToProposal || "—"}</td>
+                      <td>{row.timeToIntake || "-"}</td>
+                      <td>{row.timeToQuote || "-"}</td>
+                      <td>{row.timeToProposal || "-"}</td>
                       <td onClick={(e) => e.stopPropagation()}>
                         <div className="send-center-row-actions">
                           <button

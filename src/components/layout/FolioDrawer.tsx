@@ -95,7 +95,7 @@ export function FolioDrawer({ metrics, open, onClose }: FolioDrawerProps) {
             <ul className="folio-drawer-list">
               {folioDrawerBlockedDocs.map((item) => (
                 <li key={item.id}>
-                  <strong>{item.client}</strong> — {item.missing}
+                  <strong>{item.client}</strong>: {item.missing}
                 </li>
               ))}
             </ul>

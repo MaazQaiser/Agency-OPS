@@ -80,7 +80,7 @@ export function BrokerFeeTriggerConfirmation({
       <div className="epay-broker-fee-trigger-header">
         <div>
           <h4 className="epay-broker-fee-trigger-title">Broker Fee Trigger</h4>
-          <p className="epay-broker-fee-trigger-sub">Agency Bill compliance sequence</p>
+          <p className="epay-broker-fee-trigger-sub">Agency Bill compliance sequence · AZ E-Sign</p>
         </div>
         <span className={cn("epay-broker-fee-trigger-summary badge", summaryStatusClass[summary])}>
           {statusLabels[summary]}

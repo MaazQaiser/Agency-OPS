@@ -160,7 +160,7 @@ export function ExecutiveDashboardTab() {
       <CommercialHubWorkspace
         ariaLabel="Active submissions"
         title="Active Submissions"
-        subtitle="Main working pipeline — click a row for full details."
+        subtitle="Main working pipeline: click a row for full details."
         strategicTitle
       >
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
@@ -286,7 +286,7 @@ export function ExecutiveDashboardTab() {
 
         <CommercialHubIntelPanel
           title="High Exposure Queue"
-          subtitle="E&O risk intelligence — highest exposure submissions first."
+          subtitle="E&O risk intelligence: highest exposure submissions first."
           className="commercial-hub-intel-tall"
         >
           <ul className="eo-high-exposure-list">

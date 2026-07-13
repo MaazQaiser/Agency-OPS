@@ -205,10 +205,10 @@ export function MissingDocsQueueTab() {
                         <div className="granular-docs-panel-title">Reminder Log</div>
                         <ul className="va-ops-gap-list">
                           {item.documents
-                            .filter((doc) => doc.lastReminder !== "—")
+                            .filter((doc) => doc.lastReminder !== "-")
                             .map((doc) => (
                               <li key={doc.id}>
-                                <strong>{doc.name}</strong> — last reminder {doc.lastReminder}
+                                <strong>{doc.name}</strong>: last reminder {doc.lastReminder}
                               </li>
                             ))}
                         </ul>
@@ -264,7 +264,7 @@ export function MissingDocsQueueTab() {
             <ul className="va-ops-gap-list">
               {criticalItems.map((item) => (
                 <li key={item.id}>
-                  <strong>{item.client}</strong> — {item.missing} · Owner: {item.assigned}
+                  <strong>{item.client}</strong>: {item.missing} · Owner: {item.assigned}
                 </li>
               ))}
             </ul>

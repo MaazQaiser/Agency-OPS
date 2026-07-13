@@ -87,7 +87,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           });
         }
       }
-      toast.success(`Invoice pre-filled from proposal — ${payload.client ?? "client"}`);
+      toast.success(`Invoice pre-filled from proposal: ${payload.client ?? "client"}`);
     },
     [toast],
   );
@@ -310,7 +310,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
             />
           </section>
 
-          <section className="va-ops-panel epay-send-gate-panel" aria-label="Send gate — validation and compliance">
+          <section className="va-ops-panel epay-send-gate-panel" aria-label="Send gate: validation and compliance">
             <div className="epay-send-gate-flow" aria-hidden="true">
               <span className="active">Build</span>
               <span className={isReady ? "active" : ""}>Validate</span>
@@ -320,7 +320,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
             <div className="epay-compliance-header">
               <div>
                 <h3 className="va-ops-section-title">Compliance Check</h3>
-                <p className="va-ops-section-sub">Hard gate before invoice send — all requirements must pass.</p>
+                <p className="va-ops-section-sub">Hard gate before invoice send: all requirements must pass.</p>
               </div>
               <span className={cn("badge epay-compliance-badge", isReady ? epayStatusClass.Paid : epayStatusClass.Failed)}>
                 {isReady ? "Ready" : "Blocked"}
@@ -348,7 +348,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
             </div>
             {!isReady && (
               <p className="epay-send-gate-blocked" role="alert">
-                Send blocked — complete all readiness checks before sending invoice.
+                Send blocked: complete all readiness checks before sending invoice.
               </p>
             )}
             <div className="epay-compliance-actions">
@@ -432,7 +432,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
 
         <EPayAccordion
           title="Pending Payments"
-          subtitle="Collections visibility — click a row for full invoice details."
+          subtitle="Collections visibility: click a row for full invoice details."
           countBadge={pendingInvoices.length}
           statusSummary={`${formatMoney(pendingTotal)} outstanding${overduePendingCount > 0 ? ` · ${overduePendingCount} overdue` : ""}`}
           preview={
@@ -453,7 +453,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
           {pendingInvoices.length === 0 ? (
             <div className="epay-empty-state">
               <AppIcon name="folder" size={28} strokeWidth={1.5} />
-              <p>No pending invoices — all caught up.</p>
+              <p>No pending invoices: all caught up.</p>
             </div>
           ) : (
             <div className="commercial-hub-table-wrap ops-responsive-table-wrap">

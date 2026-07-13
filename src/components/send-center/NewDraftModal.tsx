@@ -515,11 +515,11 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
           >
             <h3 className="send-center-new-draft-preview-title">Draft Summary</h3>
             <dl className="send-center-new-draft-preview-list">
-              <div><dt>Client</dt><dd>{form.clientName || "—"}</dd></div>
-              <div><dt>Policy</dt><dd>{form.policyType || "—"}</dd></div>
-              <div><dt>Carrier</dt><dd>{form.carrier || "—"}</dd></div>
-              <div><dt>Premium</dt><dd>{form.premiumEstimate ? formatCurrency(parseCurrency(form.premiumEstimate)) : "—"}</dd></div>
-              <div><dt>Fees</dt><dd>{form.brokerFee ? formatCurrency(parseCurrency(form.brokerFee)) : "—"}</dd></div>
+              <div><dt>Client</dt><dd>{form.clientName || "-"}</dd></div>
+              <div><dt>Policy</dt><dd>{form.policyType || "-"}</dd></div>
+              <div><dt>Carrier</dt><dd>{form.carrier || "-"}</dd></div>
+              <div><dt>Premium</dt><dd>{form.premiumEstimate ? formatCurrency(parseCurrency(form.premiumEstimate)) : "-"}</dd></div>
+              <div><dt>Fees</dt><dd>{form.brokerFee ? formatCurrency(parseCurrency(form.brokerFee)) : "-"}</dd></div>
               <div><dt>Total Cost</dt><dd className="send-center-new-draft-preview-total">{formatCurrency(totalCost)}</dd></div>
               <div><dt>Priority</dt><dd><span className={cn("badge", form.priority === "High" ? "badge-red" : form.priority === "Medium" ? "badge-yellow" : "badge-blue")}>{form.priority}</span></dd></div>
             </dl>

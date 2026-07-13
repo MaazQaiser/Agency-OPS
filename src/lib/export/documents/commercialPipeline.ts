@@ -31,7 +31,7 @@ function pipelinePdfBody(): string {
       <div class="export-kpi-label">${k.label}</div>
       <div class="export-kpi-value">${k.value}</div>
       <div class="export-kpi-sub">${k.sub}</div>
-      <span class="export-sparkline">▁▂▃▅▆▇ — 7d trend</span>
+      <span class="export-sparkline">▁▂▃▅▆▇: 7d trend</span>
     </div>`,
     )
     .join("");
@@ -41,7 +41,7 @@ function pipelinePdfBody(): string {
       const rows = subs
         .map((s) => {
           const risk = eoRiskFromHubSubmission(s);
-          const carrier = s.carrierSubmissions[0]?.carrier ?? "—";
+          const carrier = s.carrierSubmissions[0]?.carrier ?? "-";
           return `<tr>
             <td class="mono" style="font-family:'JetBrains Mono',monospace;font-size:8pt">${s.id}</td>
             <td><strong>${s.client}</strong></td>

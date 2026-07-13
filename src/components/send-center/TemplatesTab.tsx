@@ -69,7 +69,7 @@ export function TemplatesTab({ onToast }: TemplatesTabProps) {
     <div className="va-ops-role-view send-center-tab">
       <RoleTabHeader
         title="Templates"
-        subtitle="Reusable proposal templates — edit, duplicate, or start a new draft."
+        subtitle="Reusable proposal templates: edit, duplicate, or start a new draft."
         quickActions={[{ id: "new-template", label: "New Template", icon: "plus" }]}
         onQuickActionClick={() => onToast("Template builder opened")}
       />

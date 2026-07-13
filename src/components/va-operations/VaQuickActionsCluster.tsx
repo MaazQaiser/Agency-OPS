@@ -49,7 +49,7 @@ export function VaQuickActionsCluster({ open, onToggle, onClose }: VaQuickAction
     if (action.href) {
       router.push(action.href);
     }
-    toast.success(`${action.label} — opening`);
+    toast.success(`${action.label}: opening`);
   };
 
   return (

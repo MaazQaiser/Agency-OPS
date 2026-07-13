@@ -35,43 +35,58 @@ export function RetentionPageContent() {
           {copy.departmentName}
         </div>
 
-        <SectionLabel>{copy.sectionArchitecture}</SectionLabel>
+        <section className="retention-scorecard-section retention-scorecard-section--context" aria-label={copy.sectionArchitecture}>
+          <SectionLabel>{copy.sectionArchitecture}</SectionLabel>
 
-        <div className="two-col">
-          <Alert variant="blue" title={copy.ecosystemNewBusiness.title}>
+          <div className="two-col">
+            <Alert variant="blue" title={copy.ecosystemNewBusiness.title} className="aos-card--info">
+              <ul>
+                {copy.ecosystemNewBusiness.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className="retention-alert-note">{copy.ecosystemNewBusiness.footer}</p>
+            </Alert>
+            <Alert variant="purple" title={copy.ecosystemRetention.title} className="aos-card--info">
+              <ul>
+                {copy.ecosystemRetention.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className="retention-alert-note">{copy.ecosystemRetention.footer}</p>
+            </Alert>
+          </div>
+
+          <Alert variant="green" title={copy.valerieTracieTitles.title} className="aos-card--info">
             <ul>
-              {copy.ecosystemNewBusiness.items.map((item) => (
+              {copy.valerieTracieTitles.items.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-            <p style={{ marginTop: 8, fontSize: "var(--font-size-12)" }}>{copy.ecosystemNewBusiness.footer}</p>
+            <p className="retention-alert-note">{copy.valerieTracieTitles.footer}</p>
           </Alert>
-          <Alert variant="purple" title={copy.ecosystemRetention.title}>
-            <ul>
-              {copy.ecosystemRetention.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p style={{ marginTop: 8, fontSize: "var(--font-size-12)" }}>{copy.ecosystemRetention.footer}</p>
-          </Alert>
-        </div>
+        </section>
 
-        <Alert variant="green" title={copy.valerieTracieTitles.title}>
-          <ul>
-            {copy.valerieTracieTitles.items.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <p style={{ marginTop: 6, fontSize: "var(--font-size-12)" }}>{copy.valerieTracieTitles.footer}</p>
-        </Alert>
+        <section className="retention-scorecard-section retention-scorecard-section--primary" aria-label={copy.sectionScorecard}>
+          <SectionLabel>{copy.sectionScorecard}</SectionLabel>
+          <RetentionKpiTabs />
+        </section>
 
-        <SectionLabel>{copy.sectionScorecard}</SectionLabel>
+        <section className="retention-scorecard-section" aria-label={copy.compensation.section}>
+          <CompensationSection />
+        </section>
 
-        <RetentionKpiTabs />
-        <CompensationSection />
-        <AgencyZoomSection />
-        <SystemOwnershipSection />
-        <FutureRoadmapSection />
+        <section className="retention-scorecard-section" aria-label={copy.agencyZoom.section}>
+          <AgencyZoomSection />
+        </section>
+
+        <section className="retention-scorecard-section" aria-label={copy.systemOwnership.section}>
+          <SystemOwnershipSection />
+        </section>
+
+        <section className="retention-scorecard-section" aria-label={copy.futureRoadmap.section}>
+          <FutureRoadmapSection />
+        </section>
       </div>
       <AppFooter text={copy.footer} />
     </>

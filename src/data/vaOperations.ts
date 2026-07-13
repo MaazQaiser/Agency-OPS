@@ -161,7 +161,7 @@ export const teamMembers: TeamMember[] = [
     roleType: "dialer",
     status: "active",
     stats: { callsMade: 18, speedToLead: "2m 11s", transfers: 3, dncFlags: 1 },
-    recentNotes: ["Follow-up scheduled for Martinez Landscaping at 11:30 AM.", "Inbound lead from Ricochet — callback completed."],
+    recentNotes: ["Follow-up scheduled for Martinez Landscaping at 11:30 AM.", "Inbound lead from Ricochet: callback completed."],
     recentActions: [
       { text: "Called new inbound lead", time: "2 minutes ago" },
       { text: "Logged follow-up task", time: "18 minutes ago" },
@@ -213,7 +213,7 @@ export const teamMembers: TeamMember[] = [
     roleType: "retention",
     status: "active",
     stats: { renewalsSaved: 5, pifRetention: "92%", cancellationSaves: 2, crossSells: 1 },
-    recentNotes: ["Saved cancellation for Lopez Family Auto — payment plan offered.", "Renewal reminder sent for Kim Auto Shop."],
+    recentNotes: ["Saved cancellation for Lopez Family Auto: payment plan offered.", "Renewal reminder sent for Kim Auto Shop."],
     recentActions: [
       { text: "Completed retention save call", time: "14 minutes ago" },
       { text: "Queued renewal follow-up", time: "35 minutes ago" },
@@ -277,10 +277,10 @@ export type TodayTimelineEvent = {
 };
 
 export const todayTimeline: TodayTimelineEvent[] = [
-  { id: "tl-1", time: "9:00 AM", type: "call", label: "Outbound dial block — Kat" },
+  { id: "tl-1", time: "9:00 AM", type: "call", label: "Outbound dial block: Kat" },
   { id: "tl-2", time: "11:30 AM", type: "follow-up", label: "Martinez Landscaping callback" },
-  { id: "tl-3", time: "2:00 PM", type: "appointment", label: "Producer review — Kim Auto Shop" },
-  { id: "tl-4", time: "4:00 PM", type: "deadline", label: "Loss runs due — Rivera Construction" },
+  { id: "tl-3", time: "2:00 PM", type: "appointment", label: "Producer review: Kim Auto Shop" },
+  { id: "tl-4", time: "4:00 PM", type: "deadline", label: "Loss runs due: Rivera Construction" },
 ];
 
 export type PriorityTaskStatus = "urgent" | "pending" | "critical";
@@ -379,7 +379,7 @@ export const priorityQueue: PriorityTask[] = [
   },
   {
     id: "task-4",
-    title: "Producer approval — BOP quote draft",
+    title: "Producer approval: BOP quote draft",
     assignedTo: "Pedro",
     assignedBy: "Sarah Chen",
     due: "3:00 PM",
@@ -393,7 +393,7 @@ export const priorityQueue: PriorityTask[] = [
   },
   {
     id: "task-5",
-    title: "Retention save — Lopez Family Auto",
+    title: "Retention save: Lopez Family Auto",
     assignedTo: "Sarah",
     assignedBy: "Eva",
     due: "4:30 PM",
@@ -407,7 +407,7 @@ export const priorityQueue: PriorityTask[] = [
   },
   {
     id: "task-6",
-    title: "Carrier follow-up — Greenline GL quote",
+    title: "Carrier follow-up: Greenline GL quote",
     assignedTo: "Pedro",
     assignedBy: "Jaffer",
     due: "Yesterday 5:00 PM",
@@ -421,7 +421,7 @@ export const priorityQueue: PriorityTask[] = [
   },
   {
     id: "task-7",
-    title: "Handoff bilingual intake — Kim Auto Shop",
+    title: "Handoff bilingual intake: Kim Auto Shop",
     assignedTo: "Kat",
     assignedBy: "Pedro",
     due: "1:15 PM",
@@ -639,7 +639,7 @@ export const approvalQueue: ApprovalDraft[] = [
   },
   {
     id: "draft-3",
-    title: "BOP Proposal — Send Center",
+    title: "BOP Proposal: Send Center",
     preparedBy: "Pedro",
     client: "Martinez Landscaping",
     submitted: "32 min ago",
@@ -830,10 +830,10 @@ export type PlaceholderTabId = "brokerage" | "retention";
 export const tabPlaceholders: Record<PlaceholderTabId, { title: string; description: string }> = {
   brokerage: {
     title: "Brokerage Team",
-    description: "JoJo and Pedro's brokerage workspace — quotes, documents, and client follow-ups.",
+    description: "JoJo and Pedro's brokerage workspace: quotes, documents, and client follow-ups.",
   },
   retention: {
     title: "Retention VA",
-    description: "Sarah's retention workspace — renewals, cancellation saves, and cross-sell follow-ups.",
+    description: "Sarah's retention workspace: renewals, cancellation saves, and cross-sell follow-ups.",
   },
 };

@@ -102,7 +102,7 @@ export function ViewLogsModal({ open, logs, onClose }: ViewLogsModalProps) {
                       <td>{log.executedAt}</td>
                       <td className="va-ops-lead-time">{log.duration}</td>
                       <td>{log.result}</td>
-                      <td className="va-ops-logs-error">{log.errors ?? "—"}</td>
+                      <td className="va-ops-logs-error">{log.errors ?? "-"}</td>
                     </tr>
                   ))
                 )}

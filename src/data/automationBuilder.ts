@@ -73,7 +73,7 @@ export const activeWorkflows: AutomationWorkflow[] = [
     actions: ["Route to available Dialer VA", "Create follow-up task", "Log assignment in AgencyZoom"],
     dependencies: ["AgencyZoom API", "VA availability table"],
     connectedTools: ["AgencyZoom", "Google Sheets", "Slack"],
-    lastExecution: "2 minutes ago — success",
+    lastExecution: "2 minutes ago: success",
     failureLogs: [],
   },
   {
@@ -89,7 +89,7 @@ export const activeWorkflows: AutomationWorkflow[] = [
     actions: ["Send Slack alert to #ops-alerts", "Flag lead in dashboard", "Ping assigned Dialer VA"],
     dependencies: ["Slack webhook", "Lead queue timer"],
     connectedTools: ["Slack", "AgencyZoom"],
-    lastExecution: "8 minutes ago — success",
+    lastExecution: "8 minutes ago: success",
     failureLogs: [],
   },
   {
@@ -105,7 +105,7 @@ export const activeWorkflows: AutomationWorkflow[] = [
     actions: ["Email broker team", "Create callback task", "Update Monday board"],
     dependencies: ["Monday.com API", "Email service"],
     connectedTools: ["Monday", "Google Sheets", "Make.com"],
-    lastExecution: "Paused — last run 2 days ago",
+    lastExecution: "Paused: last run 2 days ago",
     failureLogs: [{ error: "Monday API rate limit", time: "2 days ago" }],
   },
 ];

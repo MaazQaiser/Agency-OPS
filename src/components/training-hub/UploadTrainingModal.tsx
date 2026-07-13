@@ -74,7 +74,7 @@ export function UploadTrainingModal({ open, onClose, onPublish }: UploadTraining
         <div className="va-ops-modal-header">
           <div>
             <h2 className="va-ops-modal-title">Upload Training</h2>
-            <p className="va-ops-modal-subtitle">Add a file or video resource to the training library.</p>
+            <p className="va-ops-modal-subtitle">Add a file or video resource to the Insurance Town training library.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

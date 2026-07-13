@@ -142,7 +142,7 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
             ],
           };
           persistRecord(updated, "Override requested");
-          toast.success(`Override requested — ${record.leadName}`);
+          toast.success(`Override requested: ${record.leadName}`);
           break;
         case "Approve Override":
           if (!canApproveOverride) {
@@ -158,7 +158,7 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
             ],
           };
           persistRecord(updated, "Override approved", "Eva Chong");
-          logAudit("approval-made", `DNC override approved — ${record.leadName}`);
+          logAudit("approval-made", `DNC override approved: ${record.leadName}`);
           toast.success(toastMessages.vaOps.dncOverrideApproved);
           break;
         case "Deny Override":
@@ -175,7 +175,7 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
             ],
           };
           persistRecord(updated, "Override denied", "Eva Chong");
-          toast.warning(`Override denied — ${record.leadName}`);
+          toast.warning(`Override denied: ${record.leadName}`);
           break;
         case "Clear DNC":
           if (!canClearDnc) {
@@ -192,8 +192,8 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
             ],
           };
           persistRecord(updated, "DNC cleared", "Eva Chong");
-          logAudit("dnc-cleared", `DNC cleared — ${record.leadName}`);
-          toast.success(`DNC cleared — ${record.leadName}`);
+          logAudit("dnc-cleared", `DNC cleared: ${record.leadName}`);
+          toast.success(`DNC cleared: ${record.leadName}`);
           break;
         case "Add Note":
           updated = {
@@ -204,10 +204,10 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
           toast.success("Note added");
           break;
         case "Export Record":
-          toast.info(`Export started — ${record.id}`);
+          toast.info(`Export started: ${record.id}`);
           break;
         default:
-          toast.success(`${action} — ${record.leadName}`);
+          toast.success(`${action}: ${record.leadName}`);
       }
     },
     [canApproveOverride, canClearDnc, logAudit, persistRecord, requirePermission, toast],
@@ -222,7 +222,7 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
     <div className="dnc-log-view">
       <RoleTabHeader
         title="DNC Compliance Log"
-        subtitle="Do Not Contact governance — lead protection, override tracking, and compliance audit trail."
+        subtitle="Do Not Contact governance: lead protection, override tracking, and compliance audit trail."
       />
 
       <section className="dnc-summary-strip" aria-label="DNC summary">

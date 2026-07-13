@@ -181,7 +181,7 @@ export function SubmissionTrackerDrawer({ submission, onClose }: SubmissionTrack
                 <ul className="va-ops-drawer-list">
                   {submission.coverageChecklist.map((item) => (
                     <li key={item.label}>
-                      {item.label} — {item.status}
+                      {item.label}: {item.status}
                     </li>
                   ))}
                 </ul>

@@ -543,6 +543,16 @@
 .analytics-carrier-table th,
 .analytics-carrier-table td {
   font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.analytics-carrier-table-wrap {
+  margin-top: 2px;
+}
+
+.analytics-carrier-table .commercial-hub-carrier-name {
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .analytics-concentration {
@@ -725,4 +735,19 @@
   .module-analytics .analytics-kpi-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Analytics help affordance polish ── */
+.module-analytics .va-ops-page-subtitle {
+  max-width: 52rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.help-drawer--analytics .help-drawer-header-icon {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--help-accent) 22%, transparent);
+}
+
+.help-drawer--analytics .help-drawer-card-title {
+  color: color-mix(in srgb, var(--help-text, var(--text-primary)) 92%, var(--help-accent));
 }

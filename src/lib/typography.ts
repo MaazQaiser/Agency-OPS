@@ -1,4 +1,4 @@
-/** Agency OS typography scale — matches :root tokens in globals.css */
+/** Agency OS typography scale: matches :root tokens in globals.css */
 export const fontSizes = {
   badge: "10px",
   "12": "12px",

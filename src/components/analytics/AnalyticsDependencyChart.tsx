@@ -46,7 +46,7 @@ export function AnalyticsDependencyChart({ data }: { data: DependencyItem[] }) {
         ))}
       </div>
       <p className="analytics-dependency-caption">
-        Premium concentration by carrier — identifies over-reliance risk
+        Premium concentration by carrier: identifies over-reliance risk
       </p>
     </div>
   );

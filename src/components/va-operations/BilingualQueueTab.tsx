@@ -107,21 +107,21 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
               q.id === item.id ? { ...q, assignedVa: nextVa, status: "Assigned" as const } : q,
             ),
           );
-          toast.success(`Assigned ${nextVa} — ${item.client}`);
+          toast.success(`Assigned ${nextVa}: ${item.client}`);
           });
           break;
         }
         case "Override language": {
           requirePermission("action:override-owner", () => {
           persistProfile(item.clientKey, { preferredLanguage: "Spanish", proposalLanguagePreference: "Spanish" });
-          logAudit("override-used", `Language override — ${item.client}`);
-          toast.success(`Language overridden — ${item.client}`);
+          logAudit("override-used", `Language override: ${item.client}`);
+          toast.success(`Language overridden: ${item.client}`);
           });
           break;
         }
         case "Force translation": {
           requirePermission("action:override-owner", () => {
-          toast.info(`Translation queued — ${item.client}`);
+          toast.info(`Translation queued: ${item.client}`);
           });
           break;
         }
@@ -129,7 +129,7 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
           toast.info(`Bilingual workload: ${needsSupportCount} clients need support`);
           break;
         default:
-          toast.success(`${action} — ${item.client}`);
+          toast.success(`${action}: ${item.client}`);
       }
     },
     [logAudit, needsSupportCount, persistProfile, profiles, requirePermission, toast],
@@ -141,7 +141,7 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
     <div className="bilingual-queue-view">
       <RoleTabHeader
         title="Bilingual Queue"
-        subtitle="Language preference routing — assign bilingual VAs and resolve language support gaps."
+        subtitle="Language preference routing: assign bilingual VAs and resolve language support gaps."
       />
 
       <section className="bilingual-summary-strip" aria-label="Bilingual summary">
@@ -163,7 +163,7 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
         </div>
       </section>
 
-      <section className="va-ops-panel bilingual-alerts-panel" aria-label="Bilingual alerts">
+      <section className="va-ops-panel bilingual-alerts-panel aos-card--action" aria-label="Bilingual alerts">
         <div className="va-ops-panel-header">
           <h2 className="va-ops-section-title">Language Alerts</h2>
           <p className="va-ops-section-sub">Missing support, translation mismatches, and localization gaps.</p>

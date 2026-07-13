@@ -11,16 +11,16 @@ type ComplianceLockRingProps = {
 };
 
 /**
- * Send Center Signature Element — Compliance Lock Ring
+ * Send Center Signature Element: Compliance Lock Ring
  * VA send button has an animated dashed rose ring when compliance gate is active.
- * The ring is NOT just a gray-out — it is visually distinct.
+ * The ring is NOT just a gray-out: it is visually distinct.
  * When gate clears, ring disappears with 200ms fade and button becomes active.
  */
 export function ComplianceLockRing({
   locked,
   onSend,
   label = "Send",
-  lockReason = "Compliance gate active — producer approval required before send",
+  lockReason = "Compliance gate active: producer approval required before send",
   className,
 }: ComplianceLockRingProps) {
   return (
@@ -34,7 +34,7 @@ export function ComplianceLockRing({
         disabled={locked}
         onClick={!locked ? onSend : undefined}
         aria-disabled={locked}
-        aria-label={locked ? "Send blocked — compliance gate active" : label}
+        aria-label={locked ? "Send blocked: compliance gate active" : label}
       >
         {locked && (
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className="compliance-lock-icon">

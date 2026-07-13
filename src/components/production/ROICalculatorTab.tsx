@@ -19,13 +19,13 @@ export function ROICalculatorTab() {
   return (
     <>
       <div className="section-hdr">
-        <div className="sh-label">Internet Lead ROI Calculator — Internal</div>
+        <div className="sh-label">Internet Lead ROI Calculator: Internal</div>
       </div>
       <div className="roi-section">
         <div className="roi-grid">
           <div>
             <p style={{ fontSize: "var(--font-size-12)", color: "var(--muted)", marginBottom: 18 }}>
-              Adjust inputs to see exactly what lead spend is returning — and what improving close rate is worth.
+              Adjust inputs to see exactly what lead spend is returning: and what improving close rate is worth.
             </p>
             <div className="roi-input-group">
               <label>Monthly Lead Spend <span>${spend.toLocaleString()}</span></label>

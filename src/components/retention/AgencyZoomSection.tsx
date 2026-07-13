@@ -20,7 +20,7 @@ export function AgencyZoomSection() {
     <>
       <SectionLabel>{agencyZoom.section}</SectionLabel>
 
-      <div className="alert alert-amber">
+      <div className="alert alert-amber aos-card--action">
         <div className="alert-title alert-title-with-icon">
           <AppIcon name="triangle-alert" size={14} strokeWidth={2.25} />
           {agencyZoom.alertTitle}
@@ -44,25 +44,27 @@ export function AgencyZoomSection() {
           />
         }
       >
-        <table className="retention">
-          <thead>
-            <tr>
-              {agencyZoom.headers.map((header) => (
-                <th key={header}>{header}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {agencyZoom.pipelines.map((row) => (
-              <tr key={row.pipeline}>
-                <td>{row.pipeline}</td>
-                <td>{row.owner}</td>
-                <td>{row.automation}</td>
-                <td>{row.monday}</td>
+        <div className="retention-table-wrap">
+          <table className="retention">
+            <thead>
+              <tr>
+                {agencyZoom.headers.map((header) => (
+                  <th key={header}>{header}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {agencyZoom.pipelines.map((row) => (
+                <tr key={row.pipeline}>
+                  <td>{row.pipeline}</td>
+                  <td>{row.owner}</td>
+                  <td>{row.automation}</td>
+                  <td>{row.monday}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </DataStateView>
     </>
   );

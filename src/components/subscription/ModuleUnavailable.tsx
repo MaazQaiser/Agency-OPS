@@ -4,7 +4,7 @@ import { usePermissions } from "@/components/permissions/PermissionProvider";
 import { useSubscription } from "@/components/subscription/SubscriptionProvider";
 import { UpgradePrompt } from "@/components/subscription/UpgradePrompt";
 
-/** Generic unavailable state — no tier names or locked feature labels. */
+/** Generic unavailable state: no tier names or locked feature labels. */
 export function ModuleUnavailable() {
   const { isOwner } = usePermissions();
   const { tenant, showUpgradePrompts } = useSubscription();

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { isFinancialDisplayValue } from "@/lib/isFinancialDisplayValue";
 import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
 import { KpiSparklineIntelligence } from "./KpiSparklineIntelligence";
 
@@ -27,11 +28,12 @@ export function VaOpsKpiCard({
   polarity,
   sparkline = true,
 }: VaOpsKpiCardProps) {
-  const tooltip = `${label}: ${value} — ${sub}${helper ? ` (${helper})` : ""}`;
+  const tooltip = `${label}: ${value}: ${sub}${helper ? ` (${helper})` : ""}`;
+  const financial = isFinancialDisplayValue(label, value);
 
   return (
     <article
-      className={cn("va-ops-kpi-card", color, className)}
+      className={cn("va-ops-kpi-card aos-card--info", color, className)}
       tabIndex={0}
       title={tooltip}
       aria-label={tooltip}
@@ -40,7 +42,7 @@ export function VaOpsKpiCard({
         {tooltip}
       </div>
       <div className="va-ops-kpi-label">{label}</div>
-      <div className="va-ops-kpi-value">{value}</div>
+      <div className={cn("va-ops-kpi-value", financial && "aos-finance")}>{value}</div>
       {sparkline && (
         <KpiSparklineIntelligence label={label} trend={trend} polarity={polarity} />
       )}

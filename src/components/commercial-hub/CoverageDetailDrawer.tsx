@@ -86,7 +86,7 @@ export function CoverageDetailDrawer({ coverage, clientName, onClose }: Coverage
             <ul className="coverage-drawer-premium-list">
               {drawer.premiumOptions.map((option) => (
                 <li key={option.carrier}>
-                  <strong>{option.carrier}</strong> — {option.premium}
+                  <strong>{option.carrier}</strong>: {option.premium}
                 </li>
               ))}
             </ul>

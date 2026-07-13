@@ -571,7 +571,8 @@ button.sidebar-nav-item {
 .top-nav-profile-role {
   font-size: 10px;
   color: var(--text-muted);
-  line-height: 1.2;
+  line-height: 1.3;
+  text-wrap: pretty;
 }
 
 .top-nav-profile-chevron {
@@ -731,7 +732,8 @@ button.sidebar-nav-item {
 .sidebar-profile-role {
   font-size: 10px;
   color: var(--text-muted);
-  line-height: 1.2;
+  line-height: 1.3;
+  text-wrap: pretty;
 }
 
 .sidebar-profile-chevron {

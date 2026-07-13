@@ -49,9 +49,9 @@ export const aiSubmissionGuidance = {
     reason: "Preferred auto repair appetite with 1.8-day avg turnaround and 38% hit ratio.",
   },
   declineRisks: [
-    "Liberty Mutual — liquor-heavy restaurant operations",
-    "Liberty Mutual — logistics fleets over 15 units in CA",
-    "ICW — roofing without documented safety program",
+    "Liberty Mutual: liquor-heavy restaurant operations",
+    "Liberty Mutual: logistics fleets over 15 units in CA",
+    "ICW: roofing without documented safety program",
   ],
   requiredDocs: [
     "Signed Application",
@@ -322,7 +322,7 @@ export const declineTriggers = [
     id: "decl-1",
     trigger: "Loss ratio exceeds 65% on prior term",
     severity: "Hard Decline" as DeclineSeverity,
-    action: "Refer to underwriter — do not auto-submit",
+    action: "Refer to underwriter: do not auto-submit",
     status: "Blocked" as RuleStatus,
   },
   {
@@ -431,7 +431,7 @@ export const specialCarrierConditions = [
   {
     id: "cond-cna",
     carrier: "CNA",
-    condition: "New commercial auto product — requires 3 markets minimum",
+    condition: "New commercial auto product: requires 3 markets minimum",
     effective: "June 2026",
     status: "Conditional" as RuleStatus,
   },

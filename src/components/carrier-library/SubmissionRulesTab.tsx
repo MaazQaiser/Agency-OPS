@@ -267,7 +267,7 @@ export function SubmissionRulesTab() {
         </div>
       </section>
 
-      <section className="va-ops-panel carrier-rules-decline" aria-label="Decline triggers">
+      <section className="va-ops-panel carrier-rules-decline aos-card--action" aria-label="Decline triggers">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Decline Triggers</h3>
           <p className="va-ops-section-sub">Severity-ranked conditions that block or restrict submission.</p>

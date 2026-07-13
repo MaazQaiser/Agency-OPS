@@ -1,6 +1,7 @@
 import type { KpiColor } from "@/types";
 import { cn } from "@/lib/cn";
 import { emphasizeKpiSub } from "@/lib/emphasizeKpiSub";
+import { isFinancialDisplayValue } from "@/lib/isFinancialDisplayValue";
 import { KpiSparklineIntelligence } from "@/components/kpi/KpiSparklineIntelligence";
 import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
 
@@ -43,12 +44,14 @@ export function KpiCard({
       ? color
       : undefined;
 
+  const financial = isFinancialDisplayValue(label, value);
+
   const valueClassName =
     variant === "production"
-      ? cn("kpi-val production", color)
+      ? cn("kpi-val production", color, financial && "aos-finance")
       : variant === "retention"
-        ? "kpi-val retention"
-        : "kpi-value";
+        ? cn("kpi-val retention", financial && "aos-finance")
+        : cn("kpi-value", financial && "aos-finance");
 
   const labelClassName =
     variant === "production"
@@ -68,6 +71,7 @@ export function KpiCard({
     <div
       className={cn(
         "kpi-card",
+        "aos-card--info",
         moduleClass,
         borderVariant,
         featured && "featured",
@@ -79,7 +83,7 @@ export function KpiCard({
         className={valueClassName}
         style={
           variant === "retention" && color
-            ? { color: `var(--${color})`, ...valueStyle }
+            ? { color: financial ? undefined : `var(--${color})`, ...valueStyle }
             : valueStyle
         }
       >

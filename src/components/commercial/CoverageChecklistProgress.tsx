@@ -175,7 +175,7 @@ export function CoverageChecklistProgress({
         <div className="coverage-checklist-progress-list-block">
           <div className="coverage-checklist-progress-list-label">Missing docs</div>
           {progress.missingDocs.length === 0 ? (
-            <p className="coverage-checklist-progress-empty">None — checklist clear for bind</p>
+            <p className="coverage-checklist-progress-empty">None: checklist clear for bind</p>
           ) : (
             <ul className="coverage-checklist-progress-doc-list missing-only">
               {progress.missingDocs.map((doc) => (

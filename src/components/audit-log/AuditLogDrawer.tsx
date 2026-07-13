@@ -106,7 +106,7 @@ export function AuditLogDrawer({ entries, loading = false, onClose }: AuditLogDr
         <header className="audit-log-header">
           <div>
             <h2>Audit Log</h2>
-            <p>Cross-hub activity trail — owner view</p>
+            <p>Cross-hub activity trail: owner view</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close audit log" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

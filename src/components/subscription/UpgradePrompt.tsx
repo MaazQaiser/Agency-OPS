@@ -6,7 +6,7 @@ type UpgradePromptProps = {
   tenant: TenantSubscriptionConfig;
 };
 
-/** Owner-only CTA — generic copy with no tier or feature names. */
+/** Owner-only CTA: generic copy with no tier or feature names. */
 export function UpgradePrompt({ tenant }: UpgradePromptProps) {
   if (!tenant.showUpgradePrompts) return null;
 

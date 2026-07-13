@@ -31,7 +31,7 @@ export function PaymentLifecycleStepper({ client }: PaymentLifecycleStepperProps
               {stage.timestamp ? (
                 <time className="epay-extended-lifecycle-time">{stage.timestamp}</time>
               ) : (
-                <span className="epay-extended-lifecycle-time epay-extended-lifecycle-time--pending">—</span>
+                <span className="epay-extended-lifecycle-time epay-extended-lifecycle-time--pending">-</span>
               )}
             </div>
           </li>

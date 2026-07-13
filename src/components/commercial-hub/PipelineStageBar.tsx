@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { pipelineStages } from "@/data/commercialHub";
 
 /**
- * Commercial Hub Signature Element — Animated Pipeline Stage Bar
+ * Commercial Hub Signature Element: Animated Pipeline Stage Bar
  * Horizontal bar across top of pipeline view. Each segment proportional to count.
  * Segments expand left-to-right over 400ms on mount.
  */

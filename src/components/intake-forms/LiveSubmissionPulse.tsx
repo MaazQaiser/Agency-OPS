@@ -17,7 +17,7 @@ type LiveSubmissionPulseProps = {
 };
 
 /**
- * Intake Forms Signature Element — Live submission pulse card
+ * Intake Forms Signature Element: Live submission pulse card
  * When a new form submission arrives via webhook, the card pulses once in hub amber.
  * A "LIVE" badge appears for 10 seconds then fades.
  */

@@ -300,7 +300,7 @@ export function resolveAiInsight(query: string): AiInsight | null {
   if (q.includes("high risk") && q.includes("renewal")) {
     return {
       id: "ai-high-risk-renewals",
-      summary: "4 renewals flagged high-risk this month — Rivera Construction and Metro Auto Repair need intervention.",
+      summary: "4 renewals flagged high-risk this month: Rivera Construction and Metro Auto Repair need intervention.",
       links: [
         { label: "Retention Hub", href: routes.retention },
         { label: "At-Risk Accounts", href: `${routes.commercialHub}?view=executive` },
@@ -312,7 +312,7 @@ export function resolveAiInsight(query: string): AiInsight | null {
   if (q.includes("lowest retention") || q.includes("retention producer")) {
     return {
       id: "ai-low-retention",
-      summary: "Mike Torres has the lowest save rate at 63% — 3 lost accounts this month.",
+      summary: "Mike Torres has the lowest save rate at 63%: 3 lost accounts this month.",
       links: [
         { label: "Producer Scorecard", href: routes.producer },
         { label: "Retention Analytics", href: `${routes.analytics}?view=retention` },
@@ -324,7 +324,7 @@ export function resolveAiInsight(query: string): AiInsight | null {
   if (q.includes("martinez")) {
     return {
       id: "ai-martinez",
-      summary: "Martinez Landscaping — pending docs, E&O exposure score 6, Workers Comp quote in flight.",
+      summary: "Martinez Landscaping: pending docs, E&O exposure score 6, Workers Comp quote in flight.",
       links: [
         { label: "Open Client", href: `${routes.commercialHub}?view=submissions` },
         { label: "Missing Docs", href: `${routes.commercialHub}?view=missing-docs` },
@@ -348,7 +348,7 @@ export function resolveAiInsight(query: string): AiInsight | null {
   if (q.includes("missing loss run") || q.includes("loss runs")) {
     return {
       id: "ai-loss-runs",
-      summary: "2 submissions are blocked due to missing loss runs — Kim Auto Shop and Martinez Landscaping.",
+      summary: "2 submissions are blocked due to missing loss runs: Kim Auto Shop and Martinez Landscaping.",
       links: [
         { label: "Missing Docs Queue", href: `${routes.commercialHub}?view=missing-docs` },
         { label: "Submission Tracker", href: `${routes.commercialHub}?view=submissions` },
@@ -372,7 +372,7 @@ export function resolveAiInsight(query: string): AiInsight | null {
   if (q.includes("bind") && q.includes("producer")) {
     return {
       id: "ai-bind-producer",
-      summary: "2 binds are pending producer review — Martinez Landscaping and Rivera Construction.",
+      summary: "2 binds are pending producer review: Martinez Landscaping and Rivera Construction.",
       links: [
         { label: "Ready to Bind", href: `${routes.commercialHub}?view=ready-to-bind` },
         { label: "Quote Review", href: `${routes.commercialHub}?view=quotes` },

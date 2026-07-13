@@ -3,14 +3,14 @@ import { routes } from "@/lib/routes";
 
 export const trainingLibraryHeader = {
   title: "Training Library",
-  subtitle: "Browse and access training resources across your department.",
+  subtitle: "Browse Insurance Town training resources for your department.",
   quickActions: [
     { id: "assign", label: "Assign Training", icon: "user-plus" as const },
     { id: "categories", label: "Manage Categories", icon: "clipboard" as const },
   ],
 };
 
-export const librarySearchPlaceholder = "Search training by title, keyword, or tag";
+export const librarySearchPlaceholder = "Search Insurance Town training by title, keyword, or tag";
 
 export const libraryFilterOptions = {
   department: [

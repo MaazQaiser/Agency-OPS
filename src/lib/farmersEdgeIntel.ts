@@ -27,13 +27,13 @@ const modeLabels: Record<FarmersEdgeIntelMode, string> = {
 
 const modeDescriptions: Record<FarmersEdgeIntelMode, string> = {
   "submission-analysis":
-    "Advisory context for this submission — gaps, objections, and recommended coverage stack.",
+    "Advisory context for this submission: gaps, objections, and recommended coverage stack.",
   "coverage-gap":
     "Compare quoted coverage against Farmers recommended stack for this vertical.",
   "risk-exposure":
     "Surface E&O and bind risk from missing documentation or incomplete coverage.",
   "cross-sell":
-    "Upsell opportunities before bind — umbrella, cyber, EPLI, inland marine, and more.",
+    "Upsell opportunities before bind: umbrella, cyber, EPLI, inland marine, and more.",
 };
 
 export function farmersEdgeIntelModeLabel(mode: FarmersEdgeIntelMode): string {

@@ -187,7 +187,7 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Recommended Markets</h3>
           <p className="va-ops-section-sub">
-            Intelligent decision cards — appetite match, turnaround, bind rate, and team usage signals.
+            Intelligent decision cards: appetite match, turnaround, bind rate, and team usage signals.
           </p>
         </div>
         <div className="carrier-market-rec-grid">
@@ -205,7 +205,7 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Carrier Results</h3>
           <p className="va-ops-section-sub">
-            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"} — ranked by fit, speed, and appetite status.
+            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"}: ranked by fit, speed, and appetite status.
           </p>
         </div>
         <div className="commercial-hub-table-wrap carrier-search-table-wrap">
@@ -258,27 +258,23 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
                   </td>
                   <td className="carrier-search-state-cell">{row.states}</td>
                   <td>{row.submissionMethod}</td>
-                  <td className="carrier-search-action-cell">
-                    <button
-                      type="button"
-                      className="va-ops-action-btn carrier-search-profile-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openProfile(row.id);
-                      }}
-                    >
-                      View Profile
-                    </button>
-                    <button
-                      type="button"
-                      className="va-ops-action-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        useCarrier(row);
-                      }}
-                    >
-                      Use Carrier
-                    </button>
+                  <td className="carrier-search-action-cell" onClick={(e) => e.stopPropagation()}>
+                    <div className="carrier-search-row-actions">
+                      <button
+                        type="button"
+                        className="va-ops-action-btn carrier-search-profile-btn"
+                        onClick={() => openProfile(row.id)}
+                      >
+                        View Profile
+                      </button>
+                      <button
+                        type="button"
+                        className="va-ops-action-btn"
+                        onClick={() => useCarrier(row)}
+                      >
+                        Use Carrier
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -312,7 +308,7 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
         <section className="va-ops-panel" aria-label="Favorite carrier stack">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Favorite Carrier Stack</h3>
-            <p className="va-ops-section-sub">Reusable broker memory — your team&apos;s go-to markets.</p>
+            <p className="va-ops-section-sub">Reusable broker memory: your team&apos;s go-to markets.</p>
           </div>
           <div className="carrier-stack-list">
             {favoriteCarrierStack.map((item) => (

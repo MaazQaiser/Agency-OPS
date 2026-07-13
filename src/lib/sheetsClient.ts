@@ -1,9 +1,9 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Google Sheets API Client — Agency OS
+   Google Sheets API Client: Agency OS
    Reads sheet data using the Sheets API v4 (read-only service account).
    Env vars required:
-     GOOGLE_SHEETS_ID        — the spreadsheet ID (from the URL)
-     GOOGLE_SERVICE_ACCOUNT  — JSON string of the service account credentials
+     GOOGLE_SHEETS_ID       : the spreadsheet ID (from the URL)
+     GOOGLE_SERVICE_ACCOUNT : JSON string of the service account credentials
    Falls back to null when not configured (static data used instead).
 ───────────────────────────────────────────────────────────────────────────── */
 

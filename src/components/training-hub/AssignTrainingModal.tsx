@@ -81,7 +81,7 @@ export function AssignTrainingModal({ open, onClose, onAssign }: AssignTrainingM
         <div className="va-ops-modal-header">
           <div>
             <h2 className="va-ops-modal-title">Assign Training</h2>
-            <p className="va-ops-modal-subtitle">Assign a resource to team members with a due date.</p>
+            <p className="va-ops-modal-subtitle">Assign an Insurance Town resource to team members with a due date.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

@@ -48,7 +48,7 @@ export function CommunicationLogTab({ onToast: _onToast }: CommunicationLogTabPr
     <div className="va-ops-role-view send-center-tab">
       <RoleTabHeader
         title="Communication Log"
-        subtitle="Full timeline of proposal communications — sent, viewed, replied, escalated, and follow-ups."
+        subtitle="Full timeline of proposal communications: sent, viewed, replied, escalated, and follow-ups."
       />
 
       <div className="send-center-filters">

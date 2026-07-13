@@ -64,18 +64,18 @@ export function AvatarProfileProvider({ children }: { children: ReactNode }) {
       if (action === "View Full Profile") {
         closeProfile();
         router.push(routes.vaOperations);
-        toast.success(`Opening full profile — ${profile.name}`);
+        toast.success(`Opening full profile: ${profile.name}`);
         return;
       }
       if (action === "Assign Task" || action === "Reassign workload") {
-        toast.success(`${action} — ${profile.name}`);
+        toast.success(`${action}: ${profile.name}`);
         return;
       }
       if (action === "Message") {
         toast.success(`Message sent to ${profile.name}`);
         return;
       }
-      toast.success(`${action} — ${profile.name}`);
+      toast.success(`${action}: ${profile.name}`);
     },
     [closeProfile, router, toast],
   );

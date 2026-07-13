@@ -48,7 +48,7 @@ export function QuoteDetailsModal({
       <div className="va-ops-modal va-ops-modal-wide" role="dialog" aria-modal="true" aria-label="Quote details">
         <div className="va-ops-modal-header">
           <div>
-            <h2 className="va-ops-modal-title">Quote Details — {client}</h2>
+            <h2 className="va-ops-modal-title">Quote Details: {client}</h2>
             <p className="va-ops-modal-subtitle">{quotes.length} returned quote{quotes.length === 1 ? "" : "s"}</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>

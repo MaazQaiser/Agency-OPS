@@ -70,7 +70,7 @@ export function SalesVATab({ embedded = false }: { embedded?: boolean } = {}) {
       )}
 
       <div className="va-ops-content-grid">
-        <section className="va-ops-panel va-ops-sales-approval-panel" aria-label="Approval queue">
+        <section className="va-ops-panel va-ops-sales-approval-panel aos-card--action" aria-label="Approval queue">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Approval Queue</h3>
             <p className="va-ops-section-sub">

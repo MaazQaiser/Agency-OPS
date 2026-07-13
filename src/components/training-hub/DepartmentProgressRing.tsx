@@ -9,7 +9,7 @@ type DepartmentProgressRingProps = {
 };
 
 /**
- * Training Hub Signature Element — Circular progress ring per department
+ * Training Hub Signature Element: Circular progress ring per department
  * Ring stroke uses --hub-primary via CSS. Track uses --hub-glow.
  */
 export function DepartmentProgressRing({ completion, size = 56, label }: DepartmentProgressRingProps) {

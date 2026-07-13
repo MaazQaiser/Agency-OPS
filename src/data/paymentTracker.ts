@@ -192,15 +192,15 @@ export const paymentRecords: PaymentRecord[] = [
         { id: "ph-s3", action: "Invoice sent", date: "June 15, 2026" },
       ],
       paymentAttempts: [
-        { id: "pa-s1", method: "Card", result: "Link opened — no payment", date: "June 17, 2026" },
+        { id: "pa-s1", method: "Card", result: "Link opened: no payment", date: "June 17, 2026" },
       ],
-      clientNotes: ["Owner requested payment plan — follow up with producer."],
+      clientNotes: ["Owner requested payment plan: follow up with producer."],
       trustAccount: {
         accountName: "Insurance Town Trust",
         referenceNumber: "TR-88335",
-        depositStatus: "Pending — overdue",
+        depositStatus: "Pending: overdue",
       },
-      brokerFeeNote: "Broker fee separated — logistics BOP package.",
+      brokerFeeNote: "Broker fee separated: logistics BOP package.",
     },
   },
   {
@@ -234,7 +234,7 @@ export const paymentRecords: PaymentRecord[] = [
         referenceNumber: "TR-88338",
         depositStatus: "Pending",
       },
-      brokerFeeNote: "Broker fee listed separately — $450 agency fee.",
+      brokerFeeNote: "Broker fee listed separately: $450 agency fee.",
     },
   },
   {
@@ -261,9 +261,9 @@ export const paymentRecords: PaymentRecord[] = [
         { id: "ph-w2", action: "Invoice sent", date: "June 19, 2026" },
       ],
       paymentAttempts: [
-        { id: "pa-w1", method: "Wire", result: "Partial — $2,050 received", date: "June 21, 2026" },
+        { id: "pa-w1", method: "Wire", result: "Partial: $2,050 received", date: "June 21, 2026" },
       ],
-      clientNotes: ["Client paying in two installments — balance due June 25."],
+      clientNotes: ["Client paying in two installments: balance due June 25."],
       trustAccount: {
         accountName: "Insurance Town Trust",
         referenceNumber: "TR-88342",
@@ -349,7 +349,7 @@ export const failedTransactions: FailedTransaction[] = [
   {
     id: "fail-kim",
     clientName: "Kim Auto Shop",
-    reason: "Payment link opened — no payment",
+    reason: "Payment link opened: no payment",
     amount: "$5,800",
     time: "Today",
     cta: "Contact Client",

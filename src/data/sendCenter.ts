@@ -198,10 +198,10 @@ export const sentProposalRecords: SentProposalRecord[] = [
 
 export const communicationLogEntries: CommunicationLogEntry[] = [
   { id: "cl-1", type: "Sent", client: "Martinez Landscaping", subject: "BOP + WC Proposal", actor: "Eva Chong", timestamp: "Jun 15, 2026 · 10:22 AM", detail: "Proposal sent via email with payment link." },
-  { id: "cl-2", type: "Viewed", client: "Martinez Landscaping", subject: "BOP + WC Proposal", actor: "Client", timestamp: "Jun 15, 2026 · 2:45 PM", detail: "Proposal opened — 4 min read time." },
+  { id: "cl-2", type: "Viewed", client: "Martinez Landscaping", subject: "BOP + WC Proposal", actor: "Client", timestamp: "Jun 15, 2026 · 2:45 PM", detail: "Proposal opened: 4 min read time." },
   { id: "cl-3", type: "Replied", client: "Martinez Landscaping", subject: "BOP + WC Proposal", actor: "Client", timestamp: "Jun 16, 2026 · 9:10 AM", detail: "Client asked about broker fee breakdown." },
   { id: "cl-4", type: "Follow-up", client: "Greenline Logistics", subject: "Renewal Proposal", actor: "JoJo", timestamp: "Jun 17, 2026 · 11:00 AM", detail: "Follow-up call scheduled for overdue payment discussion." },
-  { id: "cl-5", type: "Escalated", client: "Kim Auto Shop", subject: "Commercial Auto Quote", actor: "System", timestamp: "Jun 18, 2026 · 3:30 PM", detail: "Licensed review exceeded 60 min — owner notified." },
+  { id: "cl-5", type: "Escalated", client: "Kim Auto Shop", subject: "Commercial Auto Quote", actor: "System", timestamp: "Jun 18, 2026 · 3:30 PM", detail: "Licensed review exceeded 60 min: owner notified." },
   { id: "cl-6", type: "Sent", client: "Rivera Construction", subject: "Workers Comp Bind", actor: "Sarah", timestamp: "Jun 8, 2026 · 1:15 PM", detail: "Bind proposal delivered to client portal." },
   { id: "cl-7", type: "Viewed", client: "Rivera Construction", subject: "Workers Comp Bind", actor: "Client", timestamp: "Jun 9, 2026 · 8:40 AM", detail: "Full proposal reviewed and accepted." },
 ];
@@ -326,7 +326,7 @@ export const sendCenterAiInsights = {
     {
       id: "pr-ai-1",
       title: "Approval bottlenecks",
-      detail: "Martinez BOP + WC has been waiting 72 min — owner escalation triggered.",
+      detail: "Martinez BOP + WC has been waiting 72 min: owner escalation triggered.",
       why: "SLA breach risks client delay and revenue slip.",
       actionLabel: "Escalate approval",
       actionId: "escalate",
@@ -344,7 +344,7 @@ export const sendCenterAiInsights = {
     {
       id: "sp-ai-1",
       title: "High engagement detected",
-      detail: "Martinez Landscaping opened 4 times and replied — prioritize follow-up today.",
+      detail: "Martinez Landscaping opened 4 times and replied: prioritize follow-up today.",
       why: "Hot leads close fastest within 24 hours of reply.",
       actionLabel: "Follow up now",
       actionId: "follow-up",
@@ -352,7 +352,7 @@ export const sendCenterAiInsights = {
     {
       id: "sp-ai-2",
       title: "Best follow-up timing",
-      detail: "Atlas Roofing viewed proposal twice — optimal window is 10–11 AM.",
+      detail: "Atlas Roofing viewed proposal twice: optimal window is 10–11 AM.",
       why: "Second views signal buying intent.",
       actionLabel: "Resend proposal",
       actionId: "resend",
@@ -360,7 +360,7 @@ export const sendCenterAiInsights = {
     {
       id: "sp-ai-3",
       title: "No activity for 24 days",
-      detail: "Kim Auto Shop proposal expired with zero opens — consider resend or archive.",
+      detail: "Kim Auto Shop proposal expired with zero opens: consider resend or archive.",
       why: "Stale proposals clutter pipeline and hurt metrics.",
       actionLabel: "Archive inactive",
       actionId: "archive",
@@ -378,7 +378,7 @@ export const sendCenterAiInsights = {
     {
       id: "tpl-ai-2",
       title: "Lowest response template",
-      detail: "Contractor Coverage Comparison has 48% conversion — review messaging.",
+      detail: "Contractor Coverage Comparison has 48% conversion: review messaging.",
       why: "Underperforming templates waste send capacity.",
       actionLabel: "Review template",
       actionId: "review-template",

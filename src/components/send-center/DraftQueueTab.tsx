@@ -139,7 +139,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
     <div className="va-ops-role-view send-center-tab">
       <RoleTabHeader
         title="Draft Queue"
-        subtitle="Proposals in progress — edit, submit for review, or remove drafts."
+        subtitle="Proposals in progress: edit, submit for review, or remove drafts."
         quickActions={[{ id: "new", label: "New Draft", icon: "plus" }]}
         onQuickActionClick={() => onOpenNewDraft()}
       />

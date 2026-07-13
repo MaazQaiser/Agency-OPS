@@ -149,7 +149,7 @@ export function OwnerQuickActionsProvider({ children }: { children: ReactNode })
         recordAction(action.label);
         close();
         router.push(action.route);
-        toast.success(`${action.label} — opening`);
+        toast.success(`${action.label}: opening`);
       }
     },
     [close, recordAction, router, toast],
@@ -167,7 +167,7 @@ export function OwnerQuickActionsProvider({ children }: { children: ReactNode })
         recordAction(`Opened ${card.label}`);
         close();
         router.push(card.route);
-        toast.success(`${card.label} — ${card.value} items`);
+        toast.success(`${card.label}: ${card.value} items`);
       }
     },
     [close, openNotifications, recordAction, router, toast],

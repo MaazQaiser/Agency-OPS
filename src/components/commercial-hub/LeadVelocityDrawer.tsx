@@ -128,7 +128,7 @@ export function LeadVelocityDrawer({ record, onClose, onAction }: LeadVelocityDr
             <div className="lead-velocity-slowest-callout" role="status">
               <AppIcon name="triangle-alert" size={16} strokeWidth={2} />
               <span>
-                Slowest stage: <strong>{slowest.label}</strong> — {slowest.gapFromPrev} ({slowest.owner})
+                Slowest stage: <strong>{slowest.label}</strong>: {slowest.gapFromPrev} ({slowest.owner})
               </span>
             </div>
           )}

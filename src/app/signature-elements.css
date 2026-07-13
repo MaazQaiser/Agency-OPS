@@ -205,7 +205,13 @@
 }
 
 .appetite-matrix-carrier-col {
-  width: 140px;
+  width: 148px;
+  min-width: 148px;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--surface-elevated, rgba(8, 16, 28, 0.96));
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .appetite-matrix-vertical-col {
@@ -213,16 +219,23 @@
 }
 
 .appetite-matrix-carrier-name {
-  padding: 8px 12px;
-  font-size: 12px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  padding: 10px 14px;
+  min-width: 148px;
+  font-size: 12.5px;
   font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--text-primary, #f0f6ff);
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--surface-elevated, rgba(8, 16, 28, 0.96));
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.06);
   white-space: nowrap;
 }
 
 .appetite-cell {
-  padding: 7px 12px;
+  padding: 8px 12px;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   vertical-align: middle;

@@ -184,8 +184,8 @@ function buildEntry(
 }
 
 const defaultDetails = (overrides: AuditLogDetails = {}): AuditLogDetails => ({
-  previousState: "—",
-  newState: "—",
+  previousState: "-",
+  newState: "-",
   comments: [],
   attachments: [],
   linkedWorkflowActions: [],
@@ -208,7 +208,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 18 * minute,
     details: defaultDetails({
       previousState: "Pending licensed review",
-      newState: "Approved — ready to bind",
+      newState: "Approved: ready to bind",
       comments: ["GL limits confirmed at $2M / $4M aggregate."],
       linkedWorkflowActions: [
         { label: "Open proposal", href: routes.sendCenterProposal("4821") },
@@ -252,7 +252,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 42 * minute,
     details: defaultDetails({
       previousState: "Draft",
-      newState: "Sent — awaiting signature",
+      newState: "Sent: awaiting signature",
       attachments: [{ name: "Greenline_GL_Proposal.pdf" }],
       linkedWorkflowActions: [{ label: "Track envelope", href: routes.sendCenter }],
     }),
@@ -270,7 +270,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestamp: "9:55 AM",
     timestampMs: now - 65 * minute,
     details: defaultDetails({
-      previousState: "—",
+      previousState: "-",
       newState: "Intake received",
       attachments: [{ name: "Atlas_ACORD_125.pdf" }],
     }),
@@ -280,7 +280,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "rejected",
     severity: "warning",
     eventSource: "user",
-    what: "Carrier quote declined — appetite mismatch",
+    what: "Carrier quote declined: appetite mismatch",
     actor: "Tracie Wong",
     actorRole: "va",
     recordAffected: "SUB-2812 · Rivera Construction",
@@ -289,7 +289,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 80 * minute,
     details: defaultDetails({
       previousState: "Quoted",
-      newState: "Declined — class code 5403",
+      newState: "Declined: class code 5403",
       comments: ["Recommend alternate market via Carrier Library stack."],
       internalNotes: ["Decline logged for producer coaching."],
     }),
@@ -307,8 +307,8 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestamp: "9:22 AM",
     timestampMs: now - 98 * minute,
     details: defaultDetails({
-      previousState: "—",
-      newState: "Draft invoice — $4,280.00",
+      previousState: "-",
+      newState: "Draft invoice: $4,280.00",
       linkedWorkflowActions: [
         { label: "Review invoice", href: `${routes.epayPolicy}?view=tracker&invoice=INV-2026-0912` },
       ],
@@ -328,8 +328,8 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 2 * hour,
     details: defaultDetails({
       previousState: "Standard priority",
-      newState: "Critical — 72h to lapse",
-      internalNotes: ["Owner override — assign senior producer."],
+      newState: "Critical: 72h to lapse",
+      internalNotes: ["Owner override: assign senior producer."],
     }),
   }),
   buildEntry({
@@ -346,7 +346,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 2 * hour - 13 * minute,
     details: defaultDetails({
       previousState: "Override pending",
-      newState: "Removed — expired",
+      newState: "Removed: expired",
       internalNotes: ["TCPA compliance cleanup."],
     }),
   }),
@@ -364,7 +364,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 2 * hour - 28 * minute,
     details: defaultDetails({
       previousState: "In progress",
-      newState: "Completed — certificate issued",
+      newState: "Completed: certificate issued",
     }),
   }),
   buildEntry({
@@ -381,7 +381,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 3 * hour,
     details: defaultDetails({
       previousState: "Moderate appetite",
-      newState: "Preferred — landscaping class",
+      newState: "Preferred: landscaping class",
       comments: ["Synced to submission rules engine."],
     }),
   }),
@@ -420,7 +420,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 3 * hour - 37 * minute,
     details: defaultDetails({
       previousState: "Unassigned",
-      newState: "Assigned — Pedro Alvarez",
+      newState: "Assigned: Pedro Alvarez",
       comments: ["Auto-assignment triggered by territory rule TX-NORTH."],
       internalNotes: ["Round-robin producer queue applied."],
     }),
@@ -430,7 +430,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "rejected",
     severity: "pending",
     eventSource: "user",
-    what: "Proposal revision requested — missing payroll schedule",
+    what: "Proposal revision requested: missing payroll schedule",
     actor: "Sarah Chen",
     actorRole: "producer",
     recordAffected: "PROP-4788 · Atlas Roofing",
@@ -475,7 +475,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - day - 3 * hour,
     details: defaultDetails({
       previousState: "Variance review",
-      newState: "Reconciled — $0.00 delta",
+      newState: "Reconciled: $0.00 delta",
     }),
   }),
   buildEntry({
@@ -510,7 +510,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - day - 6 * hour,
     details: defaultDetails({
       previousState: "Renewal window closed",
-      newState: "Cross-sell flagged — cyber",
+      newState: "Cross-sell flagged: cyber",
       comments: ["Auto-rule: renewal_cross_sell_cyber matched."],
     }),
   }),
@@ -529,7 +529,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     details: defaultDetails({
       previousState: "Sync interval 15m",
       newState: "Sync interval 5m",
-      internalNotes: ["Owner config change — monitor API limits."],
+      internalNotes: ["Owner config change: monitor API limits."],
     }),
   }),
   buildEntry({
@@ -563,7 +563,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestamp: "9:00 AM",
     timestampMs: now - day - 11 * hour,
     details: defaultDetails({
-      previousState: "—",
+      previousState: "-",
       newState: "Template published",
     }),
   }),
@@ -572,7 +572,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "updated",
     severity: "critical",
     eventSource: "system",
-    what: "Carrier API timeout — Travelers quote endpoint unreachable",
+    what: "Carrier API timeout: Travelers quote endpoint unreachable",
     actor: "Agency OS",
     actorRole: "operations-manager",
     recordAffected: "SYS-CARRIER-API · Travelers GL",
@@ -581,7 +581,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 55 * minute,
     details: defaultDetails({
       previousState: "Healthy",
-      newState: "Timeout after 30s — 3 retries failed",
+      newState: "Timeout after 30s: 3 retries failed",
       comments: ["Incident logged to System Health."],
       linkedWorkflowActions: [{ label: "System Health", href: routes.systemHealth }],
       internalNotes: ["Fallback to manual quote workflow recommended."],
@@ -592,7 +592,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "rejected",
     severity: "critical",
     eventSource: "system",
-    what: "Payment sync failed — gateway returned 503",
+    what: "Payment sync failed: gateway returned 503",
     actor: "Agency OS",
     actorRole: "finance",
     recordAffected: "PAY-8844 · Coastal Marine",
@@ -601,7 +601,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 72 * minute,
     details: defaultDetails({
       previousState: "Sync in progress",
-      newState: "Failed — queued for retry",
+      newState: "Failed: queued for retry",
       comments: ["System trigger: epay_sync_job."],
       linkedWorkflowActions: [
         { label: "Payment tracker", href: `${routes.epayPolicy}?view=tracker&payment=PAY-8844` },
@@ -613,7 +613,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "updated",
     severity: "critical",
     eventSource: "system",
-    what: "Trust reconciliation mismatch detected — $142.50 variance",
+    what: "Trust reconciliation mismatch detected: $142.50 variance",
     actor: "Agency OS",
     actorRole: "finance",
     recordAffected: "TRUST-2026-06-27 · Daily Close",
@@ -622,7 +622,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 105 * minute,
     details: defaultDetails({
       previousState: "Balanced",
-      newState: "Mismatch — review required",
+      newState: "Mismatch: review required",
       comments: ["Unmatched deposit from Kim Auto Shop batch."],
       internalNotes: ["Finance review flagged as pending."],
     }),
@@ -632,7 +632,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "approved",
     severity: "success",
     eventSource: "system",
-    what: "DocuSign envelope completed — all signers",
+    what: "DocuSign envelope completed: all signers",
     actor: "DocuSign",
     actorRole: "producer",
     recordAffected: "PROP-4799 · Greenline Logistics",
@@ -651,7 +651,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "sent",
     severity: "warning",
     eventSource: "auto-rule",
-    what: "Invoice reminder sent — installment due in 3 days",
+    what: "Invoice reminder sent: installment due in 3 days",
     actor: "Agency OS",
     actorRole: "finance",
     recordAffected: "INV-2026-0912 · Kim Auto Shop",
@@ -669,7 +669,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     action: "created",
     severity: "success",
     eventSource: "auto-rule",
-    what: "Auto-assignment triggered — new lead routed to VA queue",
+    what: "Auto-assignment triggered: new lead routed to VA queue",
     actor: "Agency OS",
     actorRole: "va",
     recordAffected: "LEAD-7731 · Bayview Plumbing",
@@ -678,7 +678,7 @@ const craftedAuditEntries: AuditLogEntry[] = [
     timestampMs: now - 4 * hour,
     details: defaultDetails({
       previousState: "Inbound web lead",
-      newState: "Assigned — Jazmín Flores",
+      newState: "Assigned: Jazmín Flores",
       comments: ["Auto-assignment triggered by source=website + TX-SOUTH."],
     }),
   }),

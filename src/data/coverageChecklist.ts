@@ -115,7 +115,7 @@ export const checklistClients: ChecklistClient[] = [
             { carrier: "Markel", premium: "$2,800" },
             { carrier: "Travelers", premium: "$3,100" },
           ],
-          brokerNotes: ["Markel selected — best terms for tree work carve-back."],
+          brokerNotes: ["Markel selected: best terms for tree work carve-back."],
         },
       },
       {
@@ -154,7 +154,7 @@ export const checklistClients: ChecklistClient[] = [
           deductibles: "$1,500",
           exclusions: "Racing and personal use excluded",
           premiumOptions: [{ carrier: "Travelers", premium: "$3,400" }],
-          brokerNotes: ["Driver list requested 2 days ago — follow up today."],
+          brokerNotes: ["Driver list requested 2 days ago: follow up today."],
         },
       },
       {
@@ -188,7 +188,7 @@ export const checklistClients: ChecklistClient[] = [
           deductibles: "$5,000",
           exclusions: "Prior acts excluded",
           premiumOptions: [{ carrier: "Markel", premium: "$1,400" }],
-          brokerNotes: ["Strong upsell — employee count over 20."],
+          brokerNotes: ["Strong upsell: employee count over 20."],
         },
       },
       {
@@ -254,7 +254,7 @@ export const checklistClients: ChecklistClient[] = [
           deductibles: "$1,000",
           exclusions: "Standard garage exclusions",
           premiumOptions: [{ carrier: "Travelers", premium: "$1,900" }],
-          brokerNotes: ["Limits at minimum — client aware."],
+          brokerNotes: ["Limits at minimum: client aware."],
         },
       },
       {
@@ -266,7 +266,7 @@ export const checklistClients: ChecklistClient[] = [
         driverList: "Missing",
         notes: "Awaiting signed app",
         drawer: {
-          details: "3 service vehicles — tow and flatbed.",
+          details: "3 service vehicles: tow and flatbed.",
           carrierOptions: ["Travelers", "Bristol West"],
           limits: "$1M CSL",
           deductibles: "$1,500",
@@ -330,7 +330,7 @@ export function getBindBlockers(client: ChecklistClient): string[] {
 
   for (const item of getRequiredCoverageItems(client)) {
     if (item.driverList === "Missing") {
-      blockers.push(`${item.name} — Driver List missing`);
+      blockers.push(`${item.name}: Driver List missing`);
     }
   }
 

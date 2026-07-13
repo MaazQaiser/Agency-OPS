@@ -93,7 +93,7 @@ export function isPersonalForm(formType: IntakeFormType) {
 export type YesNo = "yes" | "no" | "";
 
 export type IntakeFormData = {
-  // Step 1 — identity
+  // Step 1: identity
   preferredClientLanguage: SupportedLanguage;
   businessName: string;
   dbaName: string;
@@ -103,20 +103,20 @@ export type IntakeFormData = {
   address: string;
   state: string;
   yearsInBusiness: string;
-  // Step 2 — contractors
+  // Step 2: contractors
   typeOfWork: string;
   payroll: string;
   subcontractorUsage: YesNo;
   annualRevenue: string;
   numberOfEmployees: string;
   licenseStatus: string;
-  // Step 2 — restaurants
+  // Step 2: restaurants
   seatingCapacity: string;
   alcoholServed: YesNo;
   delivery: YesNo;
   cookingType: string;
   annualSales: string;
-  // Step 2 — personal
+  // Step 2: personal
   propertyType: string;
   vehicles: string;
   drivers: string;
@@ -155,7 +155,7 @@ export const defaultFormData: IntakeFormData = {
   subcontractorUsage: "yes",
   annualRevenue: "1200000",
   numberOfEmployees: "24",
-  licenseStatus: "Active — CA C-27",
+  licenseStatus: "Active: CA C-27",
   seatingCapacity: "",
   alcoholServed: "",
   delivery: "",
@@ -509,7 +509,7 @@ const sharedSubmissionRules: SubmissionRulesSection[] = [
   {
     title: "Required Before Submit",
     items: [
-      "All 6 steps must be completed — Business Info, Operations, Coverage, Claims, Documents, and Review.",
+      "All 6 steps must be completed: Business Info, Operations, Coverage, Claims, Documents, and Review.",
       "Every required field marked with * must be filled before advancing or submitting.",
       "At least one coverage type must be selected in Step 3.",
       "All required documents must be uploaded in Step 5.",
@@ -539,7 +539,7 @@ const sharedSubmissionRules: SubmissionRulesSection[] = [
 const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> = {
   contractors: [
     {
-      title: "Contractors — Step Requirements",
+      title: "Contractors: Step Requirements",
       items: [
         "Step 1: Business name, owner name, email, phone, address, state, and years in business.",
         "Step 2: Type of work, payroll, subcontractor usage, annual revenue, employee count, and license status.",
@@ -555,7 +555,7 @@ const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> 
   ],
   restaurants: [
     {
-      title: "Restaurants — Step Requirements",
+      title: "Restaurants: Step Requirements",
       items: [
         "Step 1: Business name, owner name, email, phone, address, state, and years in business.",
         "Step 2: Seating capacity, alcohol served, delivery, cooking type, and annual sales.",
@@ -571,7 +571,7 @@ const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> 
   ],
   "personal-lines": [
     {
-      title: "Personal Lines — Step Requirements",
+      title: "Personal Lines: Step Requirements",
       items: [
         "Step 1: Full name, email, phone, and address.",
         "Step 2: Property type, number of vehicles, drivers, and current policy details.",
@@ -622,7 +622,7 @@ export function getFormDataByType(formType: IntakeFormType): IntakeFormData {
       seatingCapacity: "85",
       alcoholServed: "yes",
       delivery: "yes",
-      cookingType: "Full kitchen — gas range",
+      cookingType: "Full kitchen: gas range",
       annualSales: "950000",
       coverageNeeded: ["General Liability", "Workers Comp", "BOP", "Property"],
       documents: {
@@ -654,7 +654,7 @@ export function getFormDataByType(formType: IntakeFormType): IntakeFormData {
       propertyType: "Single-family home",
       vehicles: "2",
       drivers: "2",
-      currentPolicy: "State Farm — bundled auto/home",
+      currentPolicy: "State Farm: bundled auto/home",
       coverageNeeded: ["Auto", "Home"],
       currentCarrier: "State Farm",
       expirationDate: "2026-09-01",
@@ -699,7 +699,7 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
       ]
     : [
         ["Business Name", data.businessName],
-        ["DBA", data.dbaName || "—"],
+        ["DBA", data.dbaName || "-"],
         ["Owner Name", data.ownerName],
         ["Email", data.email],
         ["Phone", data.phone],
@@ -713,7 +713,7 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
     operationsItems = [
       ["Type of Work", data.typeOfWork],
       ["Payroll", data.payroll],
-      ["Subcontractors", data.subcontractorUsage || "—"],
+      ["Subcontractors", data.subcontractorUsage || "-"],
       ["Annual Revenue", data.annualRevenue],
       ["Employees", data.numberOfEmployees],
       ["License Status", data.licenseStatus],
@@ -721,8 +721,8 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
   } else if (formType === "restaurants") {
     operationsItems = [
       ["Seating Capacity", data.seatingCapacity],
-      ["Alcohol Served", data.alcoholServed || "—"],
-      ["Delivery", data.delivery || "—"],
+      ["Alcohol Served", data.alcoholServed || "-"],
+      ["Delivery", data.delivery || "-"],
       ["Cooking Type", data.cookingType],
       ["Annual Sales", data.annualSales],
     ];
@@ -738,17 +738,17 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
   return [
     { title: getStep1Title(formType), items: identityItems },
     { title: "Operations / Risk Profile", items: operationsItems },
-    { title: "Coverage", items: [["Selected", data.coverageNeeded.join(", ") || "—"]] },
+    { title: "Coverage", items: [["Selected", data.coverageNeeded.join(", ") || "-"]] },
     {
       title: "Claims & Prior Insurance",
       items: [
         ["Current Carrier", data.currentCarrier],
-        ["Expiration", data.expirationDate || "—"],
-        ["Claims (5 yrs)", data.claimsLast5Years || "—"],
-        ["# Claims", data.numberOfClaims || "—"],
-        ["Total Loss", data.totalLossAmount || "—"],
-        ["Cancellations", data.policyCancellations || "—"],
-        ["Coverage Gaps", data.coverageGaps || "—"],
+        ["Expiration", data.expirationDate || "-"],
+        ["Claims (5 yrs)", data.claimsLast5Years || "-"],
+        ["# Claims", data.numberOfClaims || "-"],
+        ["Total Loss", data.totalLossAmount || "-"],
+        ["Cancellations", data.policyCancellations || "-"],
+        ["Coverage Gaps", data.coverageGaps || "-"],
       ],
     },
     {
@@ -793,7 +793,7 @@ export function getFieldValidationState(
   const fieldError = errors.find((e) => e.field === field);
 
   if (field === "licenseStatus" && data.licenseStatus && data.licenseStatus.toLowerCase().includes("expired")) {
-    return { state: "needs_review", message: "License may be expired — verify status" };
+    return { state: "needs_review", message: "License may be expired: verify status" };
   }
 
   if (fieldError) {

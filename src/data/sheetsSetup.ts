@@ -23,10 +23,10 @@ export const columnMap = [
 ];
 
 export const formulas = [
-  { label: "M — Days Open", code: '=IF(N2="Bound","—",IF(F2="","",TODAY()-F2))' },
-  { label: "T — Overdue Flag", code: '=IF(AND(N2<>"Bound",N2<>"Declined",S2<>"",TODAY()-S2>2),"OVERDUE","")' },
-  { label: "U — Market Flag", code: '=IF(AND(G2<3,N2<>"Declined",N2<>"Bound"),"<3 MARKETS","")' },
-  { label: "A — Sub ID", code: '=IF(B2="","","CS-"&TEXT(ROW()-1,"000"))' },
+  { label: "M: Days Open", code: '=IF(N2="Bound","-",IF(F2="","",TODAY()-F2))' },
+  { label: "T: Overdue Flag", code: '=IF(AND(N2<>"Bound",N2<>"Declined",S2<>"",TODAY()-S2>2),"OVERDUE","")' },
+  { label: "U: Market Flag", code: '=IF(AND(G2<3,N2<>"Declined",N2<>"Bound"),"<3 MARKETS","")' },
+  { label: "A: Sub ID", code: '=IF(B2="","","CS-"&TEXT(ROW()-1,"000"))' },
   { label: "Quote Rate (KPI)", code: '=IFERROR(COUNTIF(H2:H100,">0")/COUNTA(B2:B100),0)' },
   { label: "Avg Days Open (KPI)", code: '=IFERROR(AVERAGEIF(N2:N100,"<>Bound",M2:M100),0)' },
   { label: "Pipeline Premium", code: '=SUMIF(N2:N100,"Quoted",K2:K100)' },
@@ -45,7 +45,7 @@ export const conditionalFormatting = [
 ];
 
 export const appsScript = `// =====================================================
-// Insurance Town — Commercial Tracker Automation v1.0
+// Insurance Town: Commercial Tracker Automation v1.0
 // Paste in Tools > Apps Script > Save > Set Triggers
 // =====================================================
 
@@ -60,7 +60,7 @@ function onEdit(e) {
   const row = e.range.getRow();
   const col = e.range.getColumn();
   if (row < 2) return;
-  // Col S = 19 (Last Updated) — stamp on any edit
+  // Col S = 19 (Last Updated): stamp on any edit
   sheet.getRange(row, 19).setValue(new Date());
 }
 
@@ -101,12 +101,12 @@ function dailyDigest() {
 
     // Market minimum check
     if (markets < MIN_MARKETS && status !== 'Declined' && status !== 'Bound') {
-      marketViolations.push(\`\${client} — \${markets} markets (\${va})\`);
+      marketViolations.push(\`\${client}: \${markets} markets (\${va})\`);
     }
   }
 
   // Build email
-  let body = \`INSURANCE TOWN — DAILY COMMERCIAL DIGEST\\n\`;
+  let body = \`INSURANCE TOWN: DAILY COMMERCIAL DIGEST\\n\`;
   body += \`\${today.toDateString()}\\n\\n\`;
 
   if (overdueRows.length > 0) {
@@ -126,12 +126,12 @@ function dailyDigest() {
   }
 
   if (overdueRows.length === 0 && followUpToday.length === 0 && marketViolations.length === 0) {
-    body += \`✅ All clear — no flags today.\\n\`;
+    body += \`✅ All clear: no flags today.\\n\`;
   }
 
   body += \`\\nView full tracker: \${ss.getUrl()}\`;
 
-  GmailApp.sendEmail(NOTIFY_EMAIL, \`[InsuranceTown] Daily Commercial Digest — \${today.toDateString()}\`, body);
+  GmailApp.sendEmail(NOTIFY_EMAIL, \`[InsuranceTown] Daily Commercial Digest: \${today.toDateString()}\`, body);
 }
 
 // ---- Weekly Productivity Summary ----
@@ -155,7 +155,7 @@ function weeklyReport() {
     if (row[13] === 'Bound') vaStats[va].binds++;
   }
 
-  let body = \`INSURANCE TOWN — WEEKLY VA PRODUCTIVITY REPORT\\n\\n\`;
+  let body = \`INSURANCE TOWN: WEEKLY VA PRODUCTIVITY REPORT\\n\\n\`;
   Object.keys(vaStats).forEach(va => {
     const s = vaStats[va];
     body += \`\${va}: \${s.subs} subs | \${s.markets} markets | \${s.quotes} quotes | \${s.binds} binds\\n\`;

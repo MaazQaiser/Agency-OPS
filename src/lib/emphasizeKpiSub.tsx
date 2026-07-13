@@ -7,7 +7,7 @@ const EMPHASIS_PATTERNS: RegExp[] = [
   /\$[\d,]+(?:\/\w+)?/g,
   /\d+(?:\.\d+)?%\+?/g,
   /\d+\+\/[\w]+/g,
-  /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d+(?:,\s*\d{4})?(?:[–—-][A-Za-z]+ \d+)?/g,
+  /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d+(?:,\s*\d{4})?(?:[–:-][A-Za-z]+ \d+)?/g,
   /\(Tier \d+\)/g,
   /\b(?:Target|Need|Goal|Folio period)\b/g,
 ];

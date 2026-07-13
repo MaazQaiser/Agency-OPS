@@ -76,7 +76,7 @@ export function OutreachClientDrawer({ client, profile, onClose, onReviseProposa
             <ul className="outreach-drawer-quote-list">
               {profile.quoteHistory.map((quote) => (
                 <li key={`${quote.carrier}-${quote.premium}`}>
-                  <strong>{quote.carrier}</strong> — {quote.premium}
+                  <strong>{quote.carrier}</strong>: {quote.premium}
                   <span className="outreach-drawer-quote-status">{quote.status}</span>
                 </li>
               ))}

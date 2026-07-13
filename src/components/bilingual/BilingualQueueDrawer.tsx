@@ -79,7 +79,7 @@ export function BilingualQueueDrawer({
             <div className="va-ops-drawer-section-label">Language Profile</div>
             <dl className="va-ops-lead-details">
               <div><dt>Preferred Language</dt><dd>{profile.preferredLanguage}</dd></div>
-              <div><dt>Secondary Language</dt><dd>{profile.secondaryLanguage ?? "—"}</dd></div>
+              <div><dt>Secondary Language</dt><dd>{profile.secondaryLanguage ?? "-"}</dd></div>
               <div><dt>Interpreter Needed</dt><dd>{profile.interpreterNeeded ? "Yes" : "No"}</dd></div>
               <div><dt>Assigned Bilingual VA</dt><dd>{profile.assignedBilingualVa ? <UserChip name={profile.assignedBilingualVa} /> : "Unassigned"}</dd></div>
               <div><dt>Communication Restriction</dt><dd>{profile.communicationRestriction ?? "None"}</dd></div>

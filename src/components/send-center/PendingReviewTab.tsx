@@ -96,7 +96,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
     if (action === "Approve") {
       requirePermission("action:approve-drafts", () => {
         setRows((prev) => prev.filter((r) => r.id !== row.id));
-        logAudit("approval-made", `Draft approved — ${row.draftName}`);
+        logAudit("approval-made", `Draft approved: ${row.draftName}`);
         toast.success(toastMessages.sendCenter.proposalApproved);
       });
       return;
@@ -129,7 +129,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
     <div className="va-ops-role-view send-center-tab">
       <RoleTabHeader
         title="Pending Licensed Review"
-        subtitle="Drafts awaiting licensed producer approval — SLA monitored."
+        subtitle="Drafts awaiting licensed producer approval: SLA monitored."
       />
 
       <SendCenterAiInsight insights={sendCenterAiInsights.pendingReview} onAction={handleAiAction} />

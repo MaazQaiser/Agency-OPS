@@ -1,0 +1,537 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Card Hierarchy Design System
+   Dark Information Cards · Light Action Cards · Financial Language
+   Passive = calm monitor surfaces · Action = work that needs focus
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+html[data-theme="obsidian"] {
+  /* ── Card hierarchy tokens ── */
+  --aos-info-bg: color-mix(in srgb, var(--navy-card, #222b42) 72%, var(--obs, #0a0c10));
+  --aos-info-bg-elevated: color-mix(in srgb, var(--navy-mid, #1a2233) 55%, var(--obs, #0a0c10));
+  --aos-info-border: rgba(255, 255, 255, 0.07);
+  --aos-info-border-hover: rgba(255, 255, 255, 0.12);
+  --aos-info-highlight: rgba(255, 255, 255, 0.05);
+  --aos-info-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --aos-action-bg: #f4f7fb;
+  --aos-action-bg-soft: #eef3f8;
+  --aos-action-border: rgba(28, 43, 53, 0.14);
+  --aos-action-border-strong: rgba(28, 43, 53, 0.22);
+  --aos-action-text: #15202b;
+  --aos-action-text-muted: #4a6074;
+  --aos-action-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.65) inset;
+  --aos-action-rail: color-mix(in srgb, var(--critical-rose, #f43f5e) 72%, #b45309);
+
+  /* Refined gold — financial language (not bright yellow) */
+  --aos-finance: #c6a75a;
+  --aos-finance-soft: #d4bc7a;
+  --aos-finance-deep: #9a7b3c;
+  --aos-finance-glow: color-mix(in srgb, #c6a75a 22%, transparent);
+  --aos-finance-wash: color-mix(in srgb, #c6a75a 8%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPE 01 — Dark Information Cards (monitor / report)
+   ═══════════════════════════════════════════════════════════════ */
+.aos-card--info,
+.va-ops-kpi-card,
+.kpi-card,
+.analytics-kpi-card,
+.va-ops-snapshot-card,
+.chart-card,
+.snapshot-card,
+.metric-highlight,
+.fe-c-card,
+.training-resource-card,
+.send-center-template-card,
+.recommended-market-card,
+.carrier-stack-card,
+.search-result-card,
+.hub-kpi-grid .va-ops-kpi-card {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, transparent 42%),
+    var(--aos-info-bg);
+  border: 1px solid var(--aos-info-border);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--aos-info-shadow);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.aos-card--info:hover,
+.va-ops-kpi-card:hover,
+.kpi-card:hover,
+.analytics-kpi-card:hover,
+.va-ops-snapshot-card:hover,
+.chart-card:hover,
+.fe-c-card:hover,
+.training-resource-card:hover,
+.send-center-template-card:hover {
+  border-color: var(--aos-info-border-hover);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Quiet the colored KPI fills — color is signal, surface stays calm */
+.va-ops-kpi-card.primary,
+.va-ops-kpi-card.green,
+.va-ops-kpi-card.yellow,
+.va-ops-kpi-card.orange,
+.va-ops-kpi-card.red,
+.kpi-card.primary,
+.kpi-card.green,
+.kpi-card.yellow,
+.kpi-card.red {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 48%),
+    var(--aos-info-bg);
+}
+
+.va-ops-kpi-card.primary {
+  border-top: 2px solid color-mix(in srgb, var(--hub-accent, var(--metric-blue)) 55%, transparent);
+}
+
+.va-ops-kpi-card.green,
+.kpi-card.green {
+  border-top: 2px solid color-mix(in srgb, var(--success-green) 50%, transparent);
+}
+
+.va-ops-kpi-card.yellow,
+.va-ops-kpi-card.orange,
+.kpi-card.yellow {
+  border-top: 2px solid color-mix(in srgb, var(--aos-finance-deep) 55%, var(--warning-amber));
+}
+
+.va-ops-kpi-card.red,
+.kpi-card.red {
+  border-top: 2px solid color-mix(in srgb, var(--critical-rose) 55%, transparent);
+}
+
+/* Monitoring panels — stable foundation (not urgent) */
+.va-ops-panel:not(.aos-card--action):not(.epay-tracker-overdue-panel):not(.epay-tracker-failed-panel):not(.va-ops-failed-panel):not(.carrier-rules-decline):not(.epay-readiness-panel--blocked):not(.bilingual-alerts-panel):not(.va-ops-approval-panel):not(.va-ops-sales-approval-panel):not(.submission-approval-panel),
+.submission-tracker-table-panel,
+.analytics-panel-compact,
+.epay-trust-activity-panel,
+.carrier-rules-primary,
+.carrier-rules-secondary,
+.carrier-rules-tertiary {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 36%),
+    var(--aos-info-bg-elevated);
+  border-color: var(--aos-info-border);
+  box-shadow: var(--aos-info-shadow);
+}
+
+/* KPI typography hierarchy */
+.va-ops-kpi-label,
+.kpi-label,
+.analytics-kpi-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-muted) 88%, transparent);
+}
+
+.va-ops-kpi-value,
+.kpi-value,
+.kpi-val,
+.analytics-kpi-value {
+  font-family: var(--font-family-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.va-ops-kpi-card.primary .va-ops-kpi-value,
+.kpi-card.featured .kpi-val,
+.kpi-card.featured .kpi-value {
+  text-shadow: none;
+  color: var(--text-primary);
+}
+
+/* Soften prior glass sheens that flatten hierarchy */
+html[data-theme="obsidian"] .va-ops-kpi-card::before,
+html[data-theme="obsidian"] .kpi-card::before,
+html[data-theme="obsidian"] .analytics-kpi-card::before {
+  opacity: 0.35;
+}
+
+/* Hub KPI hover — keep calm (override loud glow) */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .hub-kpi-grid .va-ops-kpi-card:hover,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-kpi-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--aos-info-border-hover);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPE 02 — Light Action Cards (attention / work)
+   ═══════════════════════════════════════════════════════════════ */
+.aos-card--action,
+.epay-tracker-overdue-panel,
+.epay-tracker-failed-panel,
+.epay-readiness-panel--blocked,
+.carrier-rules-decline,
+.va-ops-failed-panel,
+.send-center-sla-strip,
+.submission-aging-bucket.critical,
+.submission-aging-bucket--critical,
+.aging-bucket.critical,
+.aging-bucket--critical,
+.folio-blocked-panel,
+.intake-draft-blocker-card,
+.system-health-alerts-panel,
+.bilingual-alerts-panel,
+.notification-card--high,
+.notification-card.is-urgent,
+.commercial-hub-escalation-panel,
+.va-ops-priority-action-panel,
+.va-ops-approval-panel,
+.va-ops-sales-approval-panel,
+.submission-approval-panel {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, #ffffff 0%, var(--aos-action-bg) 100%);
+  border: 1px solid var(--aos-action-border);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--aos-action-shadow);
+  color: var(--aos-action-text);
+}
+
+.aos-card--action::before,
+.epay-tracker-overdue-panel::before,
+.epay-tracker-failed-panel::before,
+.epay-readiness-panel--blocked::before,
+.carrier-rules-decline::before,
+.va-ops-failed-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--aos-action-rail), color-mix(in srgb, var(--aos-action-rail) 55%, #64748b));
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.aos-card--action .va-ops-section-title,
+.aos-card--action .va-ops-panel-header,
+.epay-tracker-overdue-panel .va-ops-section-title,
+.epay-tracker-failed-panel .va-ops-section-title,
+.va-ops-failed-panel .va-ops-section-title,
+.carrier-rules-decline .va-ops-section-title {
+  color: var(--aos-action-text);
+}
+
+.aos-card--action .va-ops-section-sub,
+.epay-tracker-overdue-panel .va-ops-section-sub,
+.epay-tracker-failed-panel .va-ops-section-sub,
+.va-ops-failed-panel .va-ops-section-sub,
+.carrier-rules-decline .va-ops-section-sub {
+  color: var(--aos-action-text-muted);
+}
+
+.aos-card--action td,
+.aos-card--action th,
+.epay-tracker-overdue-panel td,
+.epay-tracker-overdue-panel th,
+.epay-tracker-failed-panel td,
+.epay-tracker-failed-panel th,
+.va-ops-failed-panel td,
+.va-ops-failed-panel th,
+.carrier-rules-decline td,
+.carrier-rules-decline th {
+  color: inherit;
+  border-color: rgba(28, 43, 53, 0.1);
+}
+
+.aos-card--action .va-ops-priority-title,
+.epay-tracker-overdue-panel .va-ops-priority-title,
+.epay-tracker-failed-panel strong,
+.va-ops-failed-panel .va-ops-failed-workflow {
+  color: var(--aos-action-text);
+}
+
+/* Keep action buttons readable on light cards */
+.aos-card--action .va-ops-action-btn,
+.aos-card--action .epay-overdue-action-btn,
+.epay-tracker-overdue-panel .epay-overdue-action-btn,
+.epay-tracker-failed-panel .epay-failed-recovery-actions button,
+.va-ops-failed-panel .va-ops-action-btn {
+  border-color: rgba(28, 43, 53, 0.16);
+}
+
+.send-center-sla-strip {
+  color: var(--aos-action-text);
+}
+
+.send-center-sla-strip .va-ops-section-sub,
+.send-center-sla-strip [class*="muted"] {
+  color: var(--aos-action-text-muted);
+}
+
+/* Working hubs: elevate action queues slightly more */
+.module-va-operations .aos-card--action,
+.module-commercial-hub .aos-card--action,
+.module-epay-policy .epay-tracker-overdue-panel,
+.module-epay-policy .epay-tracker-failed-panel,
+.module-send-center .send-center-sla-strip,
+.module-intake-forms .aos-card--action {
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+}
+
+/* Executive hubs: keep info cards dominant, action cards reserved */
+.module-analytics .va-ops-kpi-card,
+.module-analytics .analytics-kpi-card,
+.module-va-operations .hub-kpi-grid .va-ops-kpi-card {
+  min-height: 104px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FINANCIAL LANGUAGE — refined gold value treatment
+   ═══════════════════════════════════════════════════════════════ */
+.aos-finance,
+.va-ops-kpi-value.aos-finance,
+.kpi-value.aos-finance,
+.kpi-val.aos-finance,
+.analytics-kpi-value.aos-finance,
+.epay-preview-total dd,
+.epay-collection-summary-grid dd,
+.epay-summary-positive,
+.epay-summary-warning,
+[data-aos-finance="true"] {
+  color: var(--aos-finance-soft) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+  text-shadow: 0 0 18px var(--aos-finance-glow);
+}
+
+.aos-card--info:has(.aos-finance),
+.va-ops-kpi-card:has(.aos-finance),
+.kpi-card:has(.aos-finance),
+.analytics-kpi-card:has(.aos-finance) {
+  background:
+    linear-gradient(145deg, var(--aos-finance-wash) 0%, transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, transparent 42%),
+    var(--aos-info-bg);
+  border-color: color-mix(in srgb, var(--aos-finance-deep) 22%, var(--aos-info-border));
+}
+
+.aos-finance-label,
+.va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label,
+.kpi-card:has(.aos-finance) .kpi-label,
+.analytics-kpi-card:has(.aos-finance) .analytics-kpi-label {
+  color: color-mix(in srgb, var(--aos-finance) 55%, var(--text-muted));
+}
+
+/* Table/list money cells */
+.commercial-hub-table td.aos-finance,
+.analytics-panel-compact td.aos-finance,
+.va-ops-priority-table td.aos-finance,
+.epay-invoice-line-amount,
+.epay-preview-amount,
+.carrier-market-rec-premium {
+  color: var(--aos-finance-soft);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Soften / replace loud yellow money treatments */
+.kpi-card.yellow .kpi-value,
+.va-ops-kpi-card.yellow .va-ops-kpi-value,
+.va-ops-kpi-card.orange .va-ops-kpi-value {
+  color: var(--aos-finance-soft);
+}
+
+/* Action cards: gold must remain readable on light surface */
+.aos-card--action .aos-finance,
+.epay-tracker-overdue-panel .aos-finance,
+.epay-tracker-failed-panel .epay-summary-warning,
+.epay-tracker-overdue-panel .epay-summary-warning {
+  color: var(--aos-finance-deep) !important;
+  text-shadow: none;
+}
+
+/* ePay tracker queues sit on dark hub surfaces — force light text */
+.module-epay-policy .epay-tracker-overdue-panel,
+.module-epay-policy .epay-tracker-failed-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+    var(--aos-info-bg-elevated);
+  border-color: var(--aos-info-border);
+  box-shadow: var(--aos-info-shadow);
+  color: #ffffff;
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-section-title,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-section-title,
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-panel-header,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-panel-header {
+  color: #ffffff;
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-section-sub,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-section-sub {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel th,
+.module-epay-policy .epay-tracker-failed-panel th {
+  color: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel td,
+.module-epay-policy .epay-tracker-failed-panel td,
+.module-epay-policy .epay-tracker-overdue-panel .commercial-hub-client-cell,
+.module-epay-policy .epay-tracker-failed-panel .commercial-hub-client-cell,
+.module-epay-policy .epay-tracker-overdue-panel .commercial-hub-premium,
+.module-epay-policy .epay-tracker-failed-panel .commercial-hub-premium,
+.module-epay-policy .epay-tracker-overdue-panel .bilingual-client-cell,
+.module-epay-policy .epay-tracker-failed-panel .bilingual-client-cell,
+.module-epay-policy .epay-tracker-failed-panel strong {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .aos-finance,
+.module-epay-policy .epay-tracker-failed-panel .aos-finance,
+.module-epay-policy .epay-tracker-overdue-panel .epay-summary-warning,
+.module-epay-policy .epay-tracker-failed-panel .epay-summary-warning {
+  color: var(--aos-finance-soft) !important;
+  text-shadow: 0 0 18px var(--aos-finance-glow);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .epay-overdue-action-btn,
+.module-epay-policy .epay-tracker-failed-panel .epay-failed-recovery-actions button,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-action-btn {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .epay-overdue-action-btn--primary {
+  border-color: color-mix(in srgb, var(--hub-accent, #10b981) 40%, transparent);
+  color: color-mix(in srgb, var(--hub-accent, #10b981) 70%, #ffffff);
+  background: color-mix(in srgb, var(--hub-accent, #10b981) 12%, transparent);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .epay-overdue-action-btn--promise {
+  border-color: color-mix(in srgb, var(--success, #10b981) 40%, transparent);
+  color: color-mix(in srgb, var(--success, #10b981) 65%, #ffffff);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .epay-overdue-action-btn:hover,
+.module-epay-policy .epay-tracker-failed-panel .epay-failed-recovery-actions button:hover,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-action-btn:hover {
+  border-color: color-mix(in srgb, var(--hub-accent, #10b981) 45%, transparent);
+  color: #ffffff;
+  background: color-mix(in srgb, var(--hub-accent, #10b981) 14%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Global Search (light hub) adaptations
+   ═══════════════════════════════════════════════════════════════ */
+.module-global-search .aos-card--info,
+.module-global-search .va-ops-kpi-card,
+.module-global-search .search-result-card,
+.module-global-search .va-ops-panel:not(.aos-card--action) {
+  background: #ffffff;
+  border-color: rgba(28, 43, 53, 0.1);
+  box-shadow:
+    0 6px 18px rgba(15, 25, 35, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.module-global-search .aos-finance,
+.module-global-search .va-ops-kpi-value.aos-finance {
+  color: var(--aos-finance-deep) !important;
+  text-shadow: none;
+}
+
+.module-global-search .aos-card--action {
+  background: linear-gradient(180deg, #ffffff 0%, #f2f5f8 100%);
+  border-color: rgba(28, 43, 53, 0.16);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Spacing / rhythm refinements (shared language)
+   ═══════════════════════════════════════════════════════════════ */
+.hub-kpi-grid,
+.va-ops-kpi-grid,
+.analytics-kpi-grid,
+.kpi-grid,
+.carrier-kpi-grid,
+.send-center-kpi-grid {
+  gap: 12px;
+}
+
+.va-ops-kpi-card,
+.kpi-card,
+.analytics-kpi-card {
+  padding: 15px 16px;
+}
+
+.va-ops-panel {
+  padding: 18px 18px 16px;
+}
+
+.va-ops-panel-header {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .va-ops-kpi-card,
+  .kpi-card,
+  .analytics-kpi-card {
+    padding: 14px;
+  }
+
+  .aos-card--action::before,
+  .epay-tracker-overdue-panel::before,
+  .epay-tracker-failed-panel::before,
+  .va-ops-failed-panel::before,
+  .carrier-rules-decline::before {
+    top: 8px;
+    bottom: 8px;
+  }
+}

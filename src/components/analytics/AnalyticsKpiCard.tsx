@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import type { AnalyticsKpi } from "@/data/analytics";
+import { isFinancialDisplayValue } from "@/lib/isFinancialDisplayValue";
 import { KpiSparkline } from "./KpiSparkline";
 
 const trendArrow: Record<AnalyticsKpi["trendDirection"], string> = {
@@ -11,10 +12,12 @@ const trendArrow: Record<AnalyticsKpi["trendDirection"], string> = {
 };
 
 export function AnalyticsKpiCard({ kpi }: { kpi: AnalyticsKpi }) {
+  const financial = isFinancialDisplayValue(kpi.label, kpi.value);
+
   return (
-    <div className={cn("analytics-kpi-card", `analytics-kpi-card--${kpi.trend}`)}>
+    <div className={cn("analytics-kpi-card aos-card--info", `analytics-kpi-card--${kpi.trend}`)}>
       <div className="analytics-kpi-label">{kpi.label}</div>
-      <div className="analytics-kpi-value">{kpi.value}</div>
+      <div className={cn("analytics-kpi-value", financial && "aos-finance")}>{kpi.value}</div>
       <div className="analytics-kpi-delta-row">
         <span className={cn("analytics-kpi-delta", `analytics-kpi-delta--${kpi.trend}`)}>
           <span className="analytics-kpi-arrow" aria-hidden="true">

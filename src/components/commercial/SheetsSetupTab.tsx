@@ -16,7 +16,7 @@ export function SheetsSetupTab() {
       </div>
 
       <div className="sheets-setup-accordions">
-        <AccordionCard icon="clipboard" title='Column Map — Row 1 Headers (Sheet: "Submissions")' defaultOpen>
+        <AccordionCard icon="clipboard" title='Column Map: Row 1 Headers (Sheet: "Submissions")' defaultOpen>
           <div className="column-map-grid">
             {columnMap.map((col) => (
               <div key={col.col} className="column-map-item">
@@ -54,7 +54,7 @@ export function SheetsSetupTab() {
 
         <AccordionCard
           icon="rocket"
-          title="Google Apps Script — Full Automation (Tools → Apps Script → paste and save)"
+          title="Google Apps Script: Full Automation (Tools → Apps Script → paste and save)"
         >
           <div className="formula-row formula-row-inline">
             <div className="formula-col-label">Triggers:</div>

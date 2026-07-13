@@ -114,14 +114,14 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       status: "Uploaded",
       uploadedBy: "JoJo",
       drawer: {
-        preview: "Signed commercial application — Martinez Landscaping — BOP + WC package.",
+        preview: "Signed commercial application: Martinez Landscaping: BOP + WC package.",
         uploadHistory: [
           { id: "uh-1", action: "Uploaded", by: "JoJo", date: "June 18, 2026" },
           { id: "uh-2", action: "Verified", by: "Eva", date: "June 19, 2026" },
         ],
         versionHistory: [
-          { id: "vh-1", version: "v2 — signed", date: "June 18, 2026" },
-          { id: "vh-2", version: "v1 — draft", date: "June 17, 2026" },
+          { id: "vh-1", version: "v2: signed", date: "June 18, 2026" },
+          { id: "vh-2", version: "v1: draft", date: "June 17, 2026" },
         ],
         uploadedBy: "JoJo",
         internalNotes: ["Client signed electronically via DocuSign."],
@@ -139,7 +139,7 @@ const martinezMarkelSubmission: SubmissionChecklist = {
         ],
         versionHistory: [],
         requestedBy: "Pedro",
-        internalNotes: ["Requested from Hartford — follow up if not received by Friday."],
+        internalNotes: ["Requested from Hartford: follow up if not received by Friday."],
       },
     },
     {
@@ -148,7 +148,7 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       status: "Uploaded",
       uploadedBy: "JoJo",
       drawer: {
-        preview: "Current dec page — Hartford BOP policy expiring July 12, 2026.",
+        preview: "Current dec page: Hartford BOP policy expiring July 12, 2026.",
         uploadHistory: [
           { id: "uh-4", action: "Uploaded", by: "JoJo", date: "June 17, 2026" },
         ],
@@ -163,12 +163,12 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       status: "Uploaded",
       uploadedBy: "JoJo",
       drawer: {
-        preview: "Payroll report — $420,000 annual — class codes 0042, 8810.",
+        preview: "Payroll report: $420,000 annual: class codes 0042, 8810.",
         uploadHistory: [
           { id: "uh-5", action: "Uploaded", by: "JoJo", date: "June 20, 2026" },
         ],
         versionHistory: [
-          { id: "vh-4", version: "v2 — updated payroll", date: "June 20, 2026" },
+          { id: "vh-4", version: "v2: updated payroll", date: "June 20, 2026" },
           { id: "vh-5", version: "v1", date: "June 15, 2026" },
         ],
         uploadedBy: "JoJo",
@@ -180,10 +180,10 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       name: "Driver List",
       status: "Pending",
       drawer: {
-        preview: "Driver list pending — 3 commercial vehicles on account.",
+        preview: "Driver list pending: 3 commercial vehicles on account.",
         uploadHistory: [],
         versionHistory: [],
-        internalNotes: ["Client has 3 vehicles — need DL and MVR for each driver."],
+        internalNotes: ["Client has 3 vehicles: need DL and MVR for each driver."],
       },
     },
     {
@@ -192,7 +192,7 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       status: "Uploaded",
       uploadedBy: "JoJo",
       drawer: {
-        preview: "Markel contractor supplemental — completed and signed.",
+        preview: "Markel contractor supplemental: completed and signed.",
         uploadHistory: [
           { id: "uh-6", action: "Uploaded", by: "JoJo", date: "June 19, 2026" },
         ],
@@ -207,7 +207,7 @@ const martinezMarkelSubmission: SubmissionChecklist = {
       status: "Completed",
       uploadedBy: "JoJo",
       drawer: {
-        preview: "Landscaping and lawn maintenance — residential and commercial accounts.",
+        preview: "Landscaping and lawn maintenance: residential and commercial accounts.",
         uploadHistory: [
           { id: "uh-7", action: "Completed in system", by: "JoJo", date: "June 17, 2026" },
         ],

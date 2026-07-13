@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Premium Table Scrollbars
+   Shared horizontal/vertical scroll treatment for data tables.
+   Quiet, Linear/Notion-adjacent: thin, soft contrast, discoverable.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --table-scrollbar-size: 8px;
+  --table-scrollbar-thumb-inset: 2px;
+  --table-scrollbar-radius: 999px;
+  --table-scrollbar-track: color-mix(in srgb, var(--surface-elevated, var(--surface-card)) 42%, transparent);
+  --table-scrollbar-thumb: color-mix(in srgb, var(--text-muted) 42%, transparent);
+  --table-scrollbar-thumb-hover: color-mix(in srgb, var(--text-secondary) 58%, transparent);
+  --table-scrollbar-thumb-active: color-mix(
+    in srgb,
+    var(--hub-accent, var(--ita-primary, #4f46e5)) 42%,
+    color-mix(in srgb, var(--text-muted) 55%, transparent)
+  );
+  --table-scrollbar-corner: transparent;
+  --table-scrollbar-fade: color-mix(in srgb, var(--surface-card) 88%, transparent);
+}
+
+html[data-theme="obsidian"] {
+  --table-scrollbar-track: rgba(255, 255, 255, 0.03);
+  --table-scrollbar-thumb: rgba(255, 255, 255, 0.16);
+  --table-scrollbar-thumb-hover: rgba(255, 255, 255, 0.26);
+  --table-scrollbar-thumb-active: color-mix(
+    in srgb,
+    var(--hub-accent, #0891b2) 35%,
+    rgba(255, 255, 255, 0.28)
+  );
+  --table-scrollbar-fade: color-mix(in srgb, var(--surface-card, #0d1420) 92%, transparent);
+}
+
+/* Shared scroll surface for every data-table wrap */
+.table-wrap,
+.commercial-hub-table-wrap,
+.ops-responsive-table-wrap,
+.ops-table-scroll,
+.submission-tracker-table-scroll,
+.epay-tracker-table-wrap,
+.epay-trust-ledger-wrap,
+.va-ops-priority-table-wrap,
+.va-ops-lead-table-wrap,
+.va-ops-logs-table-wrap,
+.va-ops-handoff-table-wrap,
+.va-ops-producer-table-wrap,
+.submission-history-table-wrap,
+.carrier-search-table-wrap,
+.pipeline-table-wrap,
+.intake-routing-table-wrap,
+.fe-intel-table-wrap,
+.fe-edge-table-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--table-scrollbar-thumb) var(--table-scrollbar-track);
+}
+
+.table-wrap::-webkit-scrollbar,
+.commercial-hub-table-wrap::-webkit-scrollbar,
+.ops-responsive-table-wrap::-webkit-scrollbar,
+.ops-table-scroll::-webkit-scrollbar,
+.submission-tracker-table-scroll::-webkit-scrollbar,
+.epay-tracker-table-wrap::-webkit-scrollbar,
+.epay-trust-ledger-wrap::-webkit-scrollbar,
+.va-ops-priority-table-wrap::-webkit-scrollbar,
+.va-ops-lead-table-wrap::-webkit-scrollbar,
+.va-ops-logs-table-wrap::-webkit-scrollbar,
+.va-ops-handoff-table-wrap::-webkit-scrollbar,
+.va-ops-producer-table-wrap::-webkit-scrollbar,
+.submission-history-table-wrap::-webkit-scrollbar,
+.carrier-search-table-wrap::-webkit-scrollbar,
+.pipeline-table-wrap::-webkit-scrollbar,
+.intake-routing-table-wrap::-webkit-scrollbar,
+.fe-intel-table-wrap::-webkit-scrollbar,
+.fe-edge-table-wrap::-webkit-scrollbar {
+  width: var(--table-scrollbar-size);
+  height: var(--table-scrollbar-size);
+}
+
+.table-wrap::-webkit-scrollbar-track,
+.commercial-hub-table-wrap::-webkit-scrollbar-track,
+.ops-responsive-table-wrap::-webkit-scrollbar-track,
+.ops-table-scroll::-webkit-scrollbar-track,
+.submission-tracker-table-scroll::-webkit-scrollbar-track,
+.epay-tracker-table-wrap::-webkit-scrollbar-track,
+.epay-trust-ledger-wrap::-webkit-scrollbar-track,
+.va-ops-priority-table-wrap::-webkit-scrollbar-track,
+.va-ops-lead-table-wrap::-webkit-scrollbar-track,
+.va-ops-logs-table-wrap::-webkit-scrollbar-track,
+.va-ops-handoff-table-wrap::-webkit-scrollbar-track,
+.va-ops-producer-table-wrap::-webkit-scrollbar-track,
+.submission-history-table-wrap::-webkit-scrollbar-track,
+.carrier-search-table-wrap::-webkit-scrollbar-track,
+.pipeline-table-wrap::-webkit-scrollbar-track,
+.intake-routing-table-wrap::-webkit-scrollbar-track,
+.fe-intel-table-wrap::-webkit-scrollbar-track,
+.fe-edge-table-wrap::-webkit-scrollbar-track {
+  background: var(--table-scrollbar-track);
+  border-radius: var(--table-scrollbar-radius);
+  margin: 2px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb,
+.commercial-hub-table-wrap::-webkit-scrollbar-thumb,
+.ops-responsive-table-wrap::-webkit-scrollbar-thumb,
+.ops-table-scroll::-webkit-scrollbar-thumb,
+.submission-tracker-table-scroll::-webkit-scrollbar-thumb,
+.epay-tracker-table-wrap::-webkit-scrollbar-thumb,
+.epay-trust-ledger-wrap::-webkit-scrollbar-thumb,
+.va-ops-priority-table-wrap::-webkit-scrollbar-thumb,
+.va-ops-lead-table-wrap::-webkit-scrollbar-thumb,
+.va-ops-logs-table-wrap::-webkit-scrollbar-thumb,
+.va-ops-handoff-table-wrap::-webkit-scrollbar-thumb,
+.va-ops-producer-table-wrap::-webkit-scrollbar-thumb,
+.submission-history-table-wrap::-webkit-scrollbar-thumb,
+.carrier-search-table-wrap::-webkit-scrollbar-thumb,
+.pipeline-table-wrap::-webkit-scrollbar-thumb,
+.intake-routing-table-wrap::-webkit-scrollbar-thumb,
+.fe-intel-table-wrap::-webkit-scrollbar-thumb,
+.fe-edge-table-wrap::-webkit-scrollbar-thumb {
+  background-color: var(--table-scrollbar-thumb);
+  background-clip: padding-box;
+  border: var(--table-scrollbar-thumb-inset) solid transparent;
+  border-radius: var(--table-scrollbar-radius);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.table-wrap:hover::-webkit-scrollbar-thumb,
+.commercial-hub-table-wrap:hover::-webkit-scrollbar-thumb,
+.ops-responsive-table-wrap:hover::-webkit-scrollbar-thumb,
+.ops-table-scroll:hover::-webkit-scrollbar-thumb,
+.submission-tracker-table-scroll:hover::-webkit-scrollbar-thumb,
+.epay-tracker-table-wrap:hover::-webkit-scrollbar-thumb,
+.epay-trust-ledger-wrap:hover::-webkit-scrollbar-thumb,
+.va-ops-priority-table-wrap:hover::-webkit-scrollbar-thumb,
+.va-ops-lead-table-wrap:hover::-webkit-scrollbar-thumb,
+.va-ops-logs-table-wrap:hover::-webkit-scrollbar-thumb,
+.va-ops-handoff-table-wrap:hover::-webkit-scrollbar-thumb,
+.va-ops-producer-table-wrap:hover::-webkit-scrollbar-thumb,
+.submission-history-table-wrap:hover::-webkit-scrollbar-thumb,
+.carrier-search-table-wrap:hover::-webkit-scrollbar-thumb,
+.pipeline-table-wrap:hover::-webkit-scrollbar-thumb,
+.intake-routing-table-wrap:hover::-webkit-scrollbar-thumb,
+.fe-intel-table-wrap:hover::-webkit-scrollbar-thumb,
+.fe-edge-table-wrap:hover::-webkit-scrollbar-thumb,
+.table-wrap::-webkit-scrollbar-thumb:hover,
+.commercial-hub-table-wrap::-webkit-scrollbar-thumb:hover,
+.ops-responsive-table-wrap::-webkit-scrollbar-thumb:hover,
+.ops-table-scroll::-webkit-scrollbar-thumb:hover,
+.submission-tracker-table-scroll::-webkit-scrollbar-thumb:hover,
+.epay-tracker-table-wrap::-webkit-scrollbar-thumb:hover,
+.epay-trust-ledger-wrap::-webkit-scrollbar-thumb:hover,
+.va-ops-priority-table-wrap::-webkit-scrollbar-thumb:hover,
+.va-ops-lead-table-wrap::-webkit-scrollbar-thumb:hover,
+.va-ops-logs-table-wrap::-webkit-scrollbar-thumb:hover,
+.va-ops-handoff-table-wrap::-webkit-scrollbar-thumb:hover,
+.va-ops-producer-table-wrap::-webkit-scrollbar-thumb:hover,
+.submission-history-table-wrap::-webkit-scrollbar-thumb:hover,
+.carrier-search-table-wrap::-webkit-scrollbar-thumb:hover,
+.pipeline-table-wrap::-webkit-scrollbar-thumb:hover,
+.intake-routing-table-wrap::-webkit-scrollbar-thumb:hover,
+.fe-intel-table-wrap::-webkit-scrollbar-thumb:hover,
+.fe-edge-table-wrap::-webkit-scrollbar-thumb:hover {
+  background-color: var(--table-scrollbar-thumb-hover);
+}
+
+.table-wrap::-webkit-scrollbar-thumb:active,
+.commercial-hub-table-wrap::-webkit-scrollbar-thumb:active,
+.ops-responsive-table-wrap::-webkit-scrollbar-thumb:active,
+.ops-table-scroll::-webkit-scrollbar-thumb:active,
+.submission-tracker-table-scroll::-webkit-scrollbar-thumb:active,
+.epay-tracker-table-wrap::-webkit-scrollbar-thumb:active,
+.epay-trust-ledger-wrap::-webkit-scrollbar-thumb:active,
+.va-ops-priority-table-wrap::-webkit-scrollbar-thumb:active,
+.va-ops-lead-table-wrap::-webkit-scrollbar-thumb:active,
+.va-ops-logs-table-wrap::-webkit-scrollbar-thumb:active,
+.va-ops-handoff-table-wrap::-webkit-scrollbar-thumb:active,
+.va-ops-producer-table-wrap::-webkit-scrollbar-thumb:active,
+.submission-history-table-wrap::-webkit-scrollbar-thumb:active,
+.carrier-search-table-wrap::-webkit-scrollbar-thumb:active,
+.pipeline-table-wrap::-webkit-scrollbar-thumb:active,
+.intake-routing-table-wrap::-webkit-scrollbar-thumb:active,
+.fe-intel-table-wrap::-webkit-scrollbar-thumb:active,
+.fe-edge-table-wrap::-webkit-scrollbar-thumb:active {
+  background-color: var(--table-scrollbar-thumb-active);
+}
+
+.table-wrap::-webkit-scrollbar-corner,
+.commercial-hub-table-wrap::-webkit-scrollbar-corner,
+.ops-responsive-table-wrap::-webkit-scrollbar-corner,
+.ops-table-scroll::-webkit-scrollbar-corner,
+.submission-tracker-table-scroll::-webkit-scrollbar-corner,
+.epay-tracker-table-wrap::-webkit-scrollbar-corner,
+.epay-trust-ledger-wrap::-webkit-scrollbar-corner,
+.va-ops-priority-table-wrap::-webkit-scrollbar-corner,
+.va-ops-lead-table-wrap::-webkit-scrollbar-corner,
+.va-ops-logs-table-wrap::-webkit-scrollbar-corner,
+.va-ops-handoff-table-wrap::-webkit-scrollbar-corner,
+.va-ops-producer-table-wrap::-webkit-scrollbar-corner,
+.submission-history-table-wrap::-webkit-scrollbar-corner,
+.carrier-search-table-wrap::-webkit-scrollbar-corner,
+.pipeline-table-wrap::-webkit-scrollbar-corner,
+.intake-routing-table-wrap::-webkit-scrollbar-corner,
+.fe-intel-table-wrap::-webkit-scrollbar-corner,
+.fe-edge-table-wrap::-webkit-scrollbar-corner {
+  background: var(--table-scrollbar-corner);
+}
+
+/* Soft edge fade so wide tables feel inset without competing with content */
+.epay-trust-ledger-wrap,
+.module-analytics .analytics-carrier-table-wrap,
+.module-analytics .commercial-hub-table-wrap:has(.analytics-carrier-table) {
+  position: relative;
+  border-radius: var(--radius-md);
+}
+
+.module-epay-policy .epay-trust-ledger-wrap {
+  max-width: 100%;
+  padding-bottom: 2px;
+}
+
+.module-analytics .commercial-hub-table-wrap:has(.analytics-carrier-table) {
+  max-width: 100%;
+  padding-bottom: 2px;
+}
+
+/* Priority tables: denser header rhythm without changing layout structure */
+.module-epay-policy .epay-trust-ledger-table th,
+.module-analytics .analytics-carrier-table th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  letter-spacing: 0.045em;
+}
+
+.module-epay-policy .epay-trust-ledger-table td,
+.module-analytics .analytics-carrier-table td {
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.module-analytics .analytics-carrier-table {
+  min-width: 720px;
+}
+
+.module-epay-policy .epay-trust-ledger-table {
+  min-width: 960px;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --table-scrollbar-size: 9px;
+    --table-scrollbar-thumb-inset: 1.5px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --table-scrollbar-size: 10px;
+    --table-scrollbar-thumb-inset: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table-wrap::-webkit-scrollbar-thumb,
+  .commercial-hub-table-wrap::-webkit-scrollbar-thumb,
+  .ops-responsive-table-wrap::-webkit-scrollbar-thumb,
+  .ops-table-scroll::-webkit-scrollbar-thumb,
+  .submission-tracker-table-scroll::-webkit-scrollbar-thumb,
+  .epay-tracker-table-wrap::-webkit-scrollbar-thumb,
+  .epay-trust-ledger-wrap::-webkit-scrollbar-thumb {
+    transition: none;
+  }
+}

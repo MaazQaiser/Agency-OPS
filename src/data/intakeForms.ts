@@ -97,7 +97,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "9 minutes",
       whoCanSubmit: "Producers, VAs, and intake team",
-      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday — New Submissions"],
+      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday: New Submissions"],
     },
   },
   {
@@ -126,7 +126,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "11 minutes",
       whoCanSubmit: "Producers, VAs, and intake team",
-      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday — Restaurant Pipeline"],
+      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday: Restaurant Pipeline"],
     },
   },
   {
@@ -152,7 +152,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "6 minutes",
       whoCanSubmit: "Producers, VAs, and CSRs",
-      routingDestination: ["AgencyZoom", "Slack #personal-intake", "Monday — Personal Lines"],
+      routingDestination: ["AgencyZoom", "Slack #personal-intake", "Monday: Personal Lines"],
     },
   },
 ];

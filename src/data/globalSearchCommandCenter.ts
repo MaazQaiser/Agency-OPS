@@ -218,7 +218,7 @@ export function resolveRecentSearchCard(term: string): RecentSearchCard {
     term,
     hub: "All Modules",
     activity: "Recent search",
-    status: "—",
+    status: "-",
   };
 }
 

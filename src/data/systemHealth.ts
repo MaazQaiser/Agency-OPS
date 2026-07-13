@@ -348,12 +348,12 @@ export const seedSystemHealthRecords: SystemHealthRecord[] = [
     status: "Offline",
     lastSync: "45 mins ago",
     lastSyncMs: now - 45 * min,
-    responseTime: "—",
+    responseTime: "-",
     responseTimeMs: 0,
     errorCount: 12,
     healthScore: 28,
     uptimePercent: 88.4,
-    avgLatency: "—",
+    avgLatency: "-",
     lastSuccess: "May 20, 2026 · 9:15 AM",
     lastFailure: "May 20, 2026 · 9:15 AM",
     dependencies: ["Carrier APIs", "Slack"],
@@ -367,7 +367,7 @@ export const seedSystemHealthAlerts: SystemHealthAlert[] = [
   {
     id: "sha-1",
     title: "AgencyZoom sync delayed by 12 mins",
-    detail: "CRM sync queue behind schedule — client record updates may be stale.",
+    detail: "CRM sync queue behind schedule: client record updates may be stale.",
     severity: "High",
     systemId: "sys-agencyzoom",
     timestamp: "5m ago",
@@ -375,7 +375,7 @@ export const seedSystemHealthAlerts: SystemHealthAlert[] = [
   {
     id: "sha-2",
     title: "Carrier API timeout",
-    detail: "Markel and Travelers endpoints returning 504 — quote submissions affected.",
+    detail: "Markel and Travelers endpoints returning 504: quote submissions affected.",
     severity: "Critical",
     systemId: "sys-carrier",
     timestamp: "12m ago",
@@ -391,7 +391,7 @@ export const seedSystemHealthAlerts: SystemHealthAlert[] = [
   {
     id: "sha-4",
     title: "Search indexing backlog",
-    detail: "Global Search index 22 mins behind — new submissions not yet discoverable.",
+    detail: "Global Search index 22 mins behind: new submissions not yet discoverable.",
     severity: "Medium",
     systemId: "sys-search",
     timestamp: "22m ago",
@@ -407,7 +407,7 @@ export const seedSystemHealthAlerts: SystemHealthAlert[] = [
   {
     id: "sha-6",
     title: "Proposal delivery offline",
-    detail: "Email service unreachable — sent proposals not delivering to clients.",
+    detail: "Email service unreachable: sent proposals not delivering to clients.",
     severity: "Critical",
     systemId: "sys-proposal",
     timestamp: "45m ago",
@@ -415,14 +415,14 @@ export const seedSystemHealthAlerts: SystemHealthAlert[] = [
 ];
 
 export const seedSystemErrors: SystemErrorEntry[] = [
-  { id: "err-1", systemId: "sys-carrier", timestamp: "May 20, 2026 · 9:38 AM", severity: "Critical", message: "Carrier API timeout — Markel endpoint 504", module: "Commercial Hub", failureType: "Timeout" },
+  { id: "err-1", systemId: "sys-carrier", timestamp: "May 20, 2026 · 9:38 AM", severity: "Critical", message: "Carrier API timeout: Markel endpoint 504", module: "Commercial Hub", failureType: "Timeout" },
   { id: "err-2", systemId: "sys-proposal", timestamp: "May 20, 2026 · 9:15 AM", severity: "Critical", message: "Proposal delivery service unreachable", module: "Send Center", failureType: "Sync Failure" },
-  { id: "err-3", systemId: "sys-epay", timestamp: "May 20, 2026 · 9:42 AM", severity: "High", message: "Payment gateway latency spike — 1.2s avg", module: "ePayPolicy", failureType: "Latency Spike" },
-  { id: "err-4", systemId: "sys-agencyzoom", timestamp: "May 20, 2026 · 9:36 AM", severity: "High", message: "AgencyZoom sync delayed — 12 min behind", module: "Commercial Hub", failureType: "Sync Failure" },
-  { id: "err-5", systemId: "sys-search", timestamp: "May 20, 2026 · 9:20 AM", severity: "Medium", message: "Search indexing backlog — 847 records pending", module: "Global Search", failureType: "Queue Stuck" },
+  { id: "err-3", systemId: "sys-epay", timestamp: "May 20, 2026 · 9:42 AM", severity: "High", message: "Payment gateway latency spike: 1.2s avg", module: "ePayPolicy", failureType: "Latency Spike" },
+  { id: "err-4", systemId: "sys-agencyzoom", timestamp: "May 20, 2026 · 9:36 AM", severity: "High", message: "AgencyZoom sync delayed: 12 min behind", module: "Commercial Hub", failureType: "Sync Failure" },
+  { id: "err-5", systemId: "sys-search", timestamp: "May 20, 2026 · 9:20 AM", severity: "Medium", message: "Search indexing backlog: 847 records pending", module: "Global Search", failureType: "Queue Stuck" },
   { id: "err-6", systemId: "sys-notifications", timestamp: "May 20, 2026 · 8:10 AM", severity: "Medium", message: "Notification queue delivery delay", module: "Notifications", failureType: "Queue Stuck" },
   { id: "err-7", systemId: "sys-carrier", timestamp: "May 20, 2026 · 8:55 AM", severity: "High", message: "Travelers API rate limit exceeded", module: "Carrier Library", failureType: "Rate Limit" },
-  { id: "err-8", systemId: "sys-epay", timestamp: "May 20, 2026 · 8:30 AM", severity: "Medium", message: "Auth token refresh failed — retried successfully", module: "ePayPolicy", failureType: "Auth Error" },
+  { id: "err-8", systemId: "sys-epay", timestamp: "May 20, 2026 · 8:30 AM", severity: "Medium", message: "Auth token refresh failed: retried successfully", module: "ePayPolicy", failureType: "Auth Error" },
 ];
 
 export const seedSystemRetries: SystemRetryEntry[] = [

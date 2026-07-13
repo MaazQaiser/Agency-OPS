@@ -203,7 +203,7 @@ export function SubmissionChecklistTab() {
                     <span className={cn("badge", coverageValidationClass[item.status])}>{item.status}</span>
                   </td>
                   <td>{item.detail}</td>
-                  <td className={item.issue ? "submission-cell-warning" : ""}>{item.issue ?? "—"}</td>
+                  <td className={item.issue ? "submission-cell-warning" : ""}>{item.issue ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -258,7 +258,7 @@ export function SubmissionChecklistTab() {
         </section>
       </div>
 
-      <section className="va-ops-panel submission-approval-panel" aria-label="Submission approval">
+      <section className="va-ops-panel submission-approval-panel aos-card--action" aria-label="Submission approval">
         <div className="submission-approval-header">
           <div>
             <h3 className="va-ops-section-title">Submission Approval</h3>

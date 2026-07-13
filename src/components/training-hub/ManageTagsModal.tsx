@@ -103,7 +103,7 @@ export function ManageTagsModal({ open, onClose, onSave }: ManageTagsModalProps)
         <div className="va-ops-modal-header">
           <div>
             <h2 className="va-ops-modal-title">Manage Tags</h2>
-            <p className="va-ops-modal-subtitle">Add, edit, or remove training resource tags.</p>
+            <p className="va-ops-modal-subtitle">Add, edit, or remove tags for Insurance Town training resources.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

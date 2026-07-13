@@ -133,12 +133,12 @@ export function SearchPreviewPanel({ result, onNavigate }: SearchPreviewPanelPro
             <ul className="global-search-preview-list">
               {openItems.map((item) => (
                 <li key={`${item.label}-${item.value}`} className={item.urgent ? "is-urgent" : undefined}>
-                  <strong>{item.label}</strong> — {item.value}
+                  <strong>{item.label}</strong>: {item.value}
                 </li>
               ))}
               {policies.map((policy) => (
                 <li key={policy.label}>
-                  <strong>{policy.label}</strong> — {policy.value}
+                  <strong>{policy.label}</strong>: {policy.value}
                 </li>
               ))}
             </ul>

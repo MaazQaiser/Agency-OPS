@@ -57,7 +57,7 @@ export function EoRiskBreakdown({ score, variant = "panel", className }: EoRiskB
       <div className="eo-risk-factors">
         <div className="eo-risk-factors-title">Risk factors</div>
         {score.factors.length === 0 ? (
-          <p className="eo-risk-factors-empty">No active risk factors — submission is within tolerance.</p>
+          <p className="eo-risk-factors-empty">No active risk factors: submission is within tolerance.</p>
         ) : (
           <ul className="eo-risk-factors-list">
             {score.factors.map((factor) => (

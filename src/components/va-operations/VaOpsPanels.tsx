@@ -574,7 +574,7 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
   };
 
   return (
-    <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent" aria-label="Approval queue">
+    <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent aos-card--action" aria-label="Approval queue">
       <VaOpsPanelHeader
         title="Pending Decisions"
         sub="Approval queue across Commercial, Send Center, and Retention."

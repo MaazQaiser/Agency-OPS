@@ -139,7 +139,7 @@ export const prospectQueue: ResearchProspect[] = [
       renewalDate: "November 2026",
       estimatedPremium: "$24,200/yr",
       coverageGaps: ["GL limits at minimum", "Garagekeepers coverage unclear"],
-      notes: ["Referred by JoJo — existing brokerage client.", "Needs GL + garagekeepers quote bundle."],
+      notes: ["Referred by JoJo: existing brokerage client.", "Needs GL + garagekeepers quote bundle."],
     },
     qualification: {
       status: "ready",
@@ -154,7 +154,7 @@ export const prospectQueue: ResearchProspect[] = [
       ],
     },
     previousAttempts: ["Referral validated with JoJo", "Owner contact updated 14 min ago"],
-    recommendedAction: "Push to Dialer — high-fit GL prospect ready for first contact.",
+    recommendedAction: "Push to Dialer: high-fit GL prospect ready for first contact.",
   },
 ];
 

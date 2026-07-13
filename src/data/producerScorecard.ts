@@ -8,11 +8,11 @@ export const productionHeader = {
   titleEmphasis: "Scorecard",
   meta: [
     { label: "Owner", value: "Eva Chong · Insurance Town · California" },
-    { label: "Purpose", value: "Visual reference for Hassan — replaces ISL entirely" },
+    { label: "Purpose", value: "Visual reference for Hassan: replaces ISL entirely" },
     { label: "Date", value: "May 29, 2026" },
   ],
   patent: "Patent Pending · USPTO #64/053,057",
-  confBanner: "⚠ Confidential — Insurance Town — Producer Scorecard Prototype — For Hassan Reference Only",
+  confBanner: "⚠ Confidential: Insurance Town: Producer Scorecard Prototype: For Hassan Reference Only",
   footer: "Insurance Town | Agency OS · Producer Scorecard Prototype · For Hassan Reference · Patent Pending USPTO #64/053,057 · May 29, 2026",
 };
 
@@ -25,7 +25,7 @@ export const producers: Producer[] = [
 
 export const hassanAlert = {
   title: "How This Works for Hassan",
-  body: "Each producer card reads from Kyle's Sales_Scorecard Sheets tab. Adding a new producer = Eva adds one Tab 11 row. Dashboard auto-generates a new KPI card. Zero developer involvement per addition. Sarah = Personal Lines + Life only — commercial CPA never appears on her view.",
+  body: "Each producer card reads from Kyle's Sales_Scorecard Sheets tab. Adding a new producer = Eva adds one Tab 11 row. Dashboard auto-generates a new KPI card. Zero developer involvement per addition. Sarah = Personal Lines + Life only: commercial CPA never appears on her view.",
 };
 
 export const sarahKpis: KpiItem[] = [
@@ -43,7 +43,7 @@ export const sarahLobTable = [
   { line: "Auto", lineType: "personal" as const, quoted: 8, bound: 2, closeRate: "25%", premium: "$2,100" },
   { line: "Home", lineType: "personal" as const, quoted: 5, bound: 1, closeRate: "20%", premium: "$1,800" },
   { line: "Bundle", lineType: "personal" as const, quoted: 4, bound: 2, closeRate: "50%", premium: "$2,700" },
-  { line: "Life", lineType: "life" as const, quoted: 3, bound: 1, closeRate: "33%", premium: "—" },
+  { line: "Life", lineType: "life" as const, quoted: 3, bound: 1, closeRate: "33%", premium: "-" },
 ];
 
 import type { SpeedToLeadSlaState } from "@/lib/speedToLead";
@@ -102,7 +102,7 @@ export const speedToLead: SpeedToLeadEntry[] = [
   },
 ];
 
-/** @deprecated Use SpeedToLeadEntry + live card — kept for export PDF compatibility */
+/** @deprecated Use SpeedToLeadEntry + live card: kept for export PDF compatibility */
 export type SpeedToLeadLegacyRow = {
   name: string;
   variant: "green" | "amber" | "red";
@@ -211,14 +211,14 @@ export const weeklyRace: WeeklyRaceEntry[] = [
   },
 ];
 
-export const weeklyRaceRules = "Points: 1pt/dial · 3pts/conversation · 5pts/quote · 10pts/bind · 5pts/Life app. Configured in Kyle's Points Config Sheets tab — Eva edits.";
+export const weeklyRaceRules = "Points: 1pt/dial · 3pts/conversation · 5pts/quote · 10pts/bind · 5pts/Life app. Configured in Kyle's Points Config Sheets tab: Eva edits.";
 
 export const pipelineKpi = [
   { pipeline: "1 New Personal Leads", line: "Personal", lineType: "personal" as const, newLeads: 20, contacted: 11, quoted: 7, bound: 2, contactPct: "55%", closePct: "18%", cpa: "$250" },
   { pipeline: "Home/Auto Bundle", line: "Personal", lineType: "personal" as const, newLeads: 14, contacted: 9, quoted: 6, bound: 3, contactPct: "64%", closePct: "33%", cpa: "$133" },
   { pipeline: "Commercial New", line: "Commercial", lineType: "commercial" as const, newLeads: 24, contacted: 9, quoted: 5, bound: 1, contactPct: "38%", closePct: "14%", cpa: "$350" },
-  { pipeline: "Life / FFS", line: "Life", lineType: "life" as const, newLeads: 8, contacted: 6, quoted: 4, bound: 1, contactPct: "75%", closePct: "13%", cpa: "—" },
-  { pipeline: "Korean Department", line: "Personal", lineType: "personal" as const, newLeads: 4, contacted: 3, quoted: 2, bound: 1, contactPct: "75%", closePct: "25%", cpa: "—" },
+  { pipeline: "Life / FFS", line: "Life", lineType: "life" as const, newLeads: 8, contacted: 6, quoted: 4, bound: 1, contactPct: "75%", closePct: "13%", cpa: "-" },
+  { pipeline: "Korean Department", line: "Personal", lineType: "personal" as const, newLeads: 4, contacted: 3, quoted: 2, bound: 1, contactPct: "75%", closePct: "25%", cpa: "-" },
 ];
 
 export const pipelineKpiTotals = { newLeads: 70, contacted: 38, quoted: 24, bound: 8, contactPct: "54%", closePct: "21%", cpa: "$236" };

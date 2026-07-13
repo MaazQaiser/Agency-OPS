@@ -59,7 +59,7 @@ export function getEoRiskLevel(total: number): EoRiskLevel {
 
 export function parseMissingDocsCount(value: string): number {
   const normalized = value.trim().toLowerCase();
-  if (!normalized || normalized === "none" || normalized === "n/a" || normalized === "—") return 0;
+  if (!normalized || normalized === "none" || normalized === "n/a" || normalized === "-") return 0;
   if (normalized.includes(",")) {
     return normalized.split(",").filter((part) => part.trim().length > 0).length;
   }

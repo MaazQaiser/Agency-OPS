@@ -108,7 +108,7 @@ export function TrainingQuizBlock({ questions: initialQuestions, onValidated }: 
           {result.passed && (
             <p className="training-quiz-pass-msg">
               <AppIcon name="check" size={16} strokeWidth={2.5} />
-              Completion validated — you may mark this training complete.
+              Completion validated: you may mark this training complete.
             </p>
           )}
         </div>

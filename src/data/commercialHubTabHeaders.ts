@@ -30,18 +30,18 @@ export const commercialHubTabHeaders = {
   },
   "ready-to-bind": {
     title: "Bind Readiness",
-    subtitle: "Final stage — producer approved, quote selected, docs and payment validated.",
+    subtitle: "Final stage: producer approved, quote selected, docs and payment validated.",
   },
   outreach: {
     title: "Outreach Queue",
-    subtitle: "Commercial follow-up — quote decisions, pending responses, and objection handling.",
+    subtitle: "Commercial follow-up: quote decisions, pending responses, and objection handling.",
   },
   "submission-clock": {
     title: "Pipeline SLA Monitor",
-    subtitle: "Time-based lifecycle tracker — stage accountability, SLA compliance, and bind velocity.",
+    subtitle: "Time-based lifecycle tracker: stage accountability, SLA compliance, and bind velocity.",
   },
   "lead-velocity": {
     title: "Speed-to-Market",
-    subtitle: "Lead-to-bind speed tracking — first contact, quote velocity, conversion, and bottlenecks.",
+    subtitle: "Lead-to-bind speed tracking: first contact, quote velocity, conversion, and bottlenecks.",
   },
 } as const satisfies Record<string, CommercialHubTabHeaderCopy>;

@@ -76,11 +76,16 @@ export function NotificationCard({
     onAction(actionId);
   };
 
+  const needsAction =
+    notification.priority === "critical" || notification.priority === "high";
+
   return (
     <li
       className={cn(
         "notification-card",
         `notification-card--${notification.type}`,
+        needsAction && "aos-card--action notification-card--high",
+        !needsAction && "aos-card--info",
         isUnread && "unread",
         !isUnread && "read",
         notification.pinned && "pinned",

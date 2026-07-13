@@ -67,7 +67,7 @@ export const folioDrawerBlockedDocs: FolioDrawerBlockedAccount[] = [
 ];
 
 export const folioDrawerRiskAccounts: FolioDrawerRiskAccount[] = [
-  { id: "fr-1", client: "Martinez Landscaping", exposure: "Score 6", issue: "Coverage gap — Umbrella" },
+  { id: "fr-1", client: "Martinez Landscaping", exposure: "Score 6", issue: "Coverage gap: Umbrella" },
   { id: "fr-2", client: "Kim Auto Shop", exposure: "Score 7", issue: "Overdue doc review" },
   { id: "fr-3", client: "Greenline Logistics", exposure: "Score 5", issue: "Overdue payment" },
 ];

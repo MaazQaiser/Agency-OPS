@@ -198,7 +198,7 @@ export function TrainingLibraryTab() {
       <div className="va-ops-panel-header training-library-resources-header">
         <h3 className="va-ops-section-title">Training Resources</h3>
         <p className="va-ops-section-sub">
-          {filteredResources.length} resource{filteredResources.length === 1 ? "" : "s"} — click a card for details.
+          {filteredResources.length} resource{filteredResources.length === 1 ? "" : "s"}: click a card for details.
         </p>
       </div>
       <div className="training-resource-grid">
@@ -275,7 +275,7 @@ export function TrainingLibraryTab() {
         <section className="va-ops-panel training-library-primary" aria-label="Assigned training queue">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Assigned Training</h3>
-            <p className="va-ops-section-sub">Track assigned resources across the team.</p>
+            <p className="va-ops-section-sub">Track assigned Insurance Town resources.</p>
           </div>
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
@@ -362,7 +362,7 @@ export function TrainingLibraryTab() {
       <section className="va-ops-panel training-activity-panel" aria-label="Training activity">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Training Activity</h3>
-          <p className="va-ops-section-sub">Learning visibility across the team.</p>
+          <p className="va-ops-section-sub">Insurance Town learning visibility.</p>
         </div>
         <ol className="training-activity-timeline">
           {libraryActivity.map((item) => {

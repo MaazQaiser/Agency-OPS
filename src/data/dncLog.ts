@@ -131,7 +131,7 @@ export const dncComplianceAlerts: DncComplianceAlert[] = [
   {
     id: "alert-1",
     title: "Attempted contact on DNC lead",
-    detail: "Dialer queue attempted call to Greenline Logistics — blocked automatically.",
+    detail: "Dialer queue attempted call to Greenline Logistics: blocked automatically.",
     severity: "critical",
     recordId: "dnc-rivera",
     timestamp: "22m ago",
@@ -155,7 +155,7 @@ export const dncComplianceAlerts: DncComplianceAlert[] = [
   {
     id: "alert-4",
     title: "Unauthorized outreach attempt",
-    detail: "Send Center draft blocked for Greenline Logistics — Full Block DNC active.",
+    detail: "Send Center draft blocked for Greenline Logistics: Full Block DNC active.",
     severity: "info",
     recordId: "dnc-greenline",
     timestamp: "5h ago",
@@ -176,10 +176,10 @@ export const seedDncRecords: DncRecord[] = [
     dateAddedMs: now - 2 * day,
     status: "Active",
     overrideStatus: "None",
-    notes: ["Confirmed verbal DNC on recorded line.", "Legal reviewed — full block approved."],
+    notes: ["Confirmed verbal DNC on recorded line.", "Legal reviewed: full block approved."],
     relatedSubmissions: ["trk-rivera", "Workers Comp quote"],
     communicationHistory: [
-      { id: "c1", channel: "Call", summary: "Outbound attempt blocked — DNC active", timestamp: "Jun 21, 2026 · 9:12 AM", blocked: true },
+      { id: "c1", channel: "Call", summary: "Outbound attempt blocked: DNC active", timestamp: "Jun 21, 2026 · 9:12 AM", blocked: true },
       { id: "c2", channel: "Email", summary: "Renewal reminder suppressed", timestamp: "Jun 19, 2026 · 2:00 PM", blocked: true },
     ],
     overrideRequests: [],
@@ -195,7 +195,7 @@ export const seedDncRecords: DncRecord[] = [
     phone: "(512) 555-0144",
     email: "carlos@martinezlandscaping.com",
     dncType: "Call DNC",
-    reason: "Requested no phone contact — prefers email only during renewal period.",
+    reason: "Requested no phone contact: prefers email only during renewal period.",
     markedBy: "JoJo",
     dateAdded: "Jun 19, 2026",
     dateAddedMs: now - day,
@@ -205,7 +205,7 @@ export const seedDncRecords: DncRecord[] = [
     relatedSubmissions: ["Submission #2048", "BOP + WC package"],
     communicationHistory: [
       { id: "c1", channel: "Call", summary: "Call attempt blocked", timestamp: "Jun 21, 2026 · 8:00 AM", blocked: true },
-      { id: "c2", channel: "Email", summary: "Proposal delivery allowed — Call DNC only", timestamp: "Jun 18, 2026 · 11:00 AM", blocked: false },
+      { id: "c2", channel: "Email", summary: "Proposal delivery allowed: Call DNC only", timestamp: "Jun 18, 2026 · 11:00 AM", blocked: false },
     ],
     overrideRequests: [
       {
@@ -228,7 +228,7 @@ export const seedDncRecords: DncRecord[] = [
     phone: "(214) 555-0188",
     email: "min@greenlinelogistics.com",
     dncType: "Full Block",
-    reason: "Account sold — new owner requested complete communication stop.",
+    reason: "Account sold: new owner requested complete communication stop.",
     markedBy: "System",
     dateAdded: "Jun 18, 2026",
     dateAddedMs: now - 3 * day,
@@ -252,7 +252,7 @@ export const seedDncRecords: DncRecord[] = [
     phone: "(469) 555-0177",
     email: "david@kimautoshop.com",
     dncType: "SMS DNC",
-    reason: "Opted out of SMS reminders — TCPA compliance.",
+    reason: "Opted out of SMS reminders: TCPA compliance.",
     markedBy: "Kat",
     dateAdded: "Jun 21, 2026",
     dateAddedMs: now - 4 * 60 * 60 * 1000,
@@ -275,7 +275,7 @@ export const seedDncRecords: DncRecord[] = [
     phone: "(415) 555-0155",
     email: "r.chen@atlasroofing.com",
     dncType: "Call DNC",
-    reason: "Temporary call DNC during audit — client requested 30-day pause.",
+    reason: "Temporary call DNC during audit: client requested 30-day pause.",
     markedBy: "Tracie",
     dateAdded: "Jun 15, 2026",
     dateAddedMs: now - 6 * day,
@@ -284,7 +284,7 @@ export const seedDncRecords: DncRecord[] = [
     notes: ["Owner approved temporary override for bind confirmation call."],
     relatedSubmissions: ["trk-atlas", "General Liability submission"],
     communicationHistory: [
-      { id: "c1", channel: "Call", summary: "Override call completed — bind confirmed", timestamp: "Jun 17, 2026 · 2:00 PM", blocked: false },
+      { id: "c1", channel: "Call", summary: "Override call completed: bind confirmed", timestamp: "Jun 17, 2026 · 2:00 PM", blocked: false },
     ],
     overrideRequests: [
       {

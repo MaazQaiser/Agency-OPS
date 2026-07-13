@@ -56,7 +56,7 @@ export function ImportSubmissionModal({ open, onClose }: ImportSubmissionModalPr
         );
         if (progress >= 100) {
           window.clearInterval(interval);
-          toast.success(`${fileName} imported — review fields in New Submission`);
+          toast.success(`${fileName} imported: review fields in New Submission`);
         }
       }, 400);
     },
@@ -83,7 +83,7 @@ export function ImportSubmissionModal({ open, onClose }: ImportSubmissionModalPr
         <header className="intake-import-modal-header">
           <div>
             <h2>Import Submission</h2>
-            <p>Upload intake data from external sources — fields map to New Submission.</p>
+            <p>Upload intake data from external sources: fields map to New Submission.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

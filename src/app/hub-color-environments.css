@@ -135,25 +135,29 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background-color: #1a2128;
+  background-color: #161c22;
   background-image:
-    radial-gradient(ellipse 58% 85% at 94% 6%, rgba(255, 255, 255, 0.1) 0%, transparent 58%),
-    radial-gradient(ellipse 48% 75% at 6% 92%, rgba(255, 255, 255, 0.07) 0%, transparent 54%),
-    linear-gradient(180deg, #232b33 0%, #1a2128 54%, #141a20 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.055) 0%, transparent 62%),
+    radial-gradient(ellipse 44% 68% at 6% 90%, rgba(255, 255, 255, 0.035) 0%, transparent 58%),
+    linear-gradient(180deg, #1e252c 0%, #161c22 56%, #12171c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 html[data-theme="obsidian"] .module-global-search .va-ops-page-header {
-  background-color: #1a2128;
+  background-color: #161c22;
   background-image:
-    radial-gradient(ellipse 58% 85% at 94% 6%, rgba(255, 255, 255, 0.1) 0%, transparent 58%),
-    radial-gradient(ellipse 48% 75% at 6% 92%, rgba(255, 255, 255, 0.07) 0%, transparent 54%),
-    linear-gradient(180deg, #232b33 0%, #1a2128 54%, #141a20 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.055) 0%, transparent 62%),
+    radial-gradient(ellipse 44% 68% at 6% 90%, rgba(255, 255, 255, 0.035) 0%, transparent 58%),
+    linear-gradient(180deg, #1e252c 0%, #161c22 56%, #12171c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 .module-global-search .va-ops-page-header-left {
@@ -166,7 +170,8 @@ html[data-theme="obsidian"] .module-global-search .va-ops-page-header {
 }
 
 .module-global-search .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.52);
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .module-global-search .va-ops-section-sub {
@@ -1162,24 +1167,24 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 48px 64px;
+  gap: 18px;
+  padding: 40px 56px;
   box-sizing: border-box;
   position: relative;
   isolation: isolate;
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--hub-accent) 10%, color-mix(in srgb, var(--ita-base-mid) 74%, var(--obs))) 0%,
-    color-mix(in srgb, var(--hub-deep) 24%, color-mix(in srgb, var(--ita-base-mid) 78%, var(--obs))) 100%
+    color-mix(in srgb, var(--hub-accent) 6%, color-mix(in srgb, var(--ita-base-mid) 70%, var(--obs))) 0%,
+    color-mix(in srgb, var(--hub-deep) 14%, color-mix(in srgb, var(--ita-base-mid) 82%, var(--obs))) 100%
   );
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-  border-bottom: 1px solid var(--hub-primary-border);
+  backdrop-filter: blur(14px) saturate(118%);
+  -webkit-backdrop-filter: blur(14px) saturate(118%);
+  border-bottom: 1px solid color-mix(in srgb, var(--hub-accent) 18%, rgba(255, 255, 255, 0.06));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 16%, transparent),
-    inset 0 -1px 0 var(--hub-glow),
-    0 8px 28px color-mix(in srgb, var(--hub-accent) 12%, transparent);
+    inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 8%, rgba(255, 255, 255, 0.04)),
+    inset 0 -1px 0 color-mix(in srgb, var(--hub-accent) 6%, transparent),
+    0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
 /* Hub identity rail */
@@ -1199,9 +1204,13 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--hub-secondary), var(--hub-accent));
-  box-shadow: 0 0 14px var(--hub-glow);
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--hub-secondary) 78%, transparent),
+    color-mix(in srgb, var(--hub-accent) 70%, transparent)
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--hub-accent) 18%, transparent);
   pointer-events: none;
   z-index: 2;
 }
@@ -1220,17 +1229,17 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
 ) .va-ops-page-header::after {
   content: "";
   position: absolute;
-  left: 64px;
-  right: 64px;
+  left: 56px;
+  right: 56px;
   bottom: 0;
-  height: 2px;
+  height: 1px;
   background: linear-gradient(
     90deg,
-    var(--hub-accent) 0%,
-    color-mix(in srgb, var(--hub-secondary) 75%, var(--hub-accent)) 40%,
-    transparent 72%
+    color-mix(in srgb, var(--hub-accent) 55%, transparent) 0%,
+    color-mix(in srgb, var(--hub-secondary) 40%, var(--hub-accent)) 38%,
+    transparent 78%
   );
-  box-shadow: 0 0 12px var(--hub-glow);
+  box-shadow: none;
   pointer-events: none;
   z-index: 2;
 }
@@ -1248,7 +1257,7 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
 ) .va-ops-page-header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
   flex-shrink: 0;
   position: relative;
@@ -1270,7 +1279,7 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   align-items: center;
   justify-content: flex-end;
   flex-wrap: nowrap;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
   min-width: 0;
   max-width: min(720px, 55vw);
@@ -1311,11 +1320,11 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
 ) .va-ops-page-header .va-ops-page-title {
   margin: 0;
   font-family: var(--font-family-display);
-  font-size: 44px;
+  font-size: 42px;
   font-weight: 600;
   font-style: italic;
-  letter-spacing: 0.01em;
-  line-height: 1.08;
+  letter-spacing: -0.012em;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
@@ -1330,8 +1339,11 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   .module-send-center,
   .module-analytics
 ) .va-ops-page-header .va-ops-page-subtitle {
-  margin: 4px 0 0;
-  color: color-mix(in srgb, var(--hub-secondary) 52%, var(--text-muted));
+  margin: 6px 0 0;
+  max-width: 42rem;
+  font-size: 13px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--hub-secondary) 38%, var(--text-muted));
 }
 
 :is(
@@ -1360,10 +1372,10 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   .module-send-center,
   .module-analytics
 ) .va-ops-page-header .va-ops-search:focus-within {
-  border-color: var(--hub-accent);
+  border-color: color-mix(in srgb, var(--hub-accent) 72%, transparent);
   box-shadow:
-    0 0 0 3px var(--hub-glow),
-    0 4px 18px color-mix(in srgb, var(--hub-accent) 14%, transparent);
+    0 0 0 3px color-mix(in srgb, var(--hub-accent) 12%, transparent),
+    0 4px 14px rgba(0, 0, 0, 0.12);
   outline: none;
 }
 
@@ -1394,8 +1406,8 @@ html[data-theme="obsidian"] :is(
 ) .va-ops-page-header {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--hub-accent) 16%, rgba(10, 14, 26, 0.9)) 0%,
-    color-mix(in srgb, var(--obs) 90%, var(--hub-deep)) 100%
+    color-mix(in srgb, var(--hub-accent) 9%, rgba(10, 14, 26, 0.94)) 0%,
+    color-mix(in srgb, var(--obs) 94%, var(--hub-deep)) 100%
   );
 }
 
@@ -1429,8 +1441,8 @@ html[data-theme="obsidian"] :is(
   ) .va-ops-page-header {
     flex-direction: column;
     align-items: stretch;
-    padding: 48px var(--mobile-page-pad, 16px);
-    gap: 12px;
+    padding: 36px var(--mobile-page-pad, 16px);
+    gap: 14px;
   }
 
   :is(
@@ -1466,22 +1478,37 @@ html[data-theme="obsidian"] :is(
   }
 }
 
+/* Shared signature-header text + control calmness (rich colored heroes) */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header .va-ops-page-subtitle {
+  color: rgba(255, 255, 255, 0.62);
+}
+
 /* ═══════════════════════════════════════════════════════════════
-   VA OPERATIONS — Signature page header (rich indigo gradient)
+   VA OPERATIONS — Signature page header (refined indigo)
    ═══════════════════════════════════════════════════════════════ */
 .module-va-operations .va-ops-page-header,
 html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
-  background-color: #3730a3;
+  background-color: #1b1a3a;
   background-image:
-    radial-gradient(ellipse 48% 80% at 96% 8%, rgba(79, 70, 229, 0.28) 0%, transparent 58%),
-    radial-gradient(ellipse 42% 70% at 6% 92%, rgba(79, 70, 229, 0.16) 0%, transparent 54%),
-    linear-gradient(180deg, #4f46e5 0%, #4338ca 40%, #3730a3 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(129, 140, 248, 0.18) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(79, 70, 229, 0.12) 0%, transparent 58%),
+    linear-gradient(180deg, #35308f 0%, #2a2670 46%, #1b1a3a 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 30px rgba(0, 0, 0, 0.25);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 10px 26px rgba(0, 0, 0, 0.22);
 }
 
 .module-va-operations .va-ops-page-header::before,
@@ -1495,12 +1522,12 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
 }
 
 .module-va-operations .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-va-operations .va-ops-page-header .va-ops-search {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
@@ -1541,22 +1568,21 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   COMMERCIAL HUB — Signature page header (rich teal gradient)
+   COMMERCIAL HUB — Signature page header (refined teal)
    ═══════════════════════════════════════════════════════════════ */
 .module-commercial-hub .va-ops-page-header,
 html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
-  background-color: #095852;
+  background-color: #0c2f2c;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(20, 184, 166, 0.42) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(13, 148, 136, 0.32) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(45, 212, 191, 0.18) 0%, transparent 52%),
-    linear-gradient(180deg, #0f8b82 0%, #0c6e67 45%, #095852 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(45, 212, 191, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(13, 148, 136, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #0d6b64 0%, #0b524d 48%, #0c2f2c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 12px 30px rgba(0, 0, 0, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.22);
 }
 
 .module-commercial-hub .va-ops-page-header::before,
@@ -1570,14 +1596,14 @@ html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
 }
 
 .module-commercial-hub .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .va-ops-role-action-btn,
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .export-menu-trigger,
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
@@ -1585,27 +1611,28 @@ html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .va-ops-role-action-btn:hover,
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .export-menu-trigger:hover,
 .module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FARMERS EDGE — Signature page header (rich forest green gradient)
+   FARMERS EDGE — Signature page header (refined forest green)
    ═══════════════════════════════════════════════════════════════ */
 .module-farmers-edge .va-ops-page-header,
 html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
-  background-color: #1a5c38;
+  background-color: #12281c;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(52, 211, 153, 0.42) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(5, 150, 105, 0.38) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(16, 185, 129, 0.22) 0%, transparent 52%),
-    linear-gradient(180deg, #388e3c 0%, #2d7d46 48%, #1b5e34 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(52, 211, 153, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(5, 150, 105, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #2c6b3f 0%, #215533 48%, #12281c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-farmers-edge .va-ops-page-header::before,
@@ -1619,13 +1646,13 @@ html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
 }
 
 .module-farmers-edge .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-farmers-edge .va-ops-page-header .header-filter-select,
 .module-farmers-edge .va-ops-page-header .va-ops-search {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
@@ -1634,7 +1661,7 @@ html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
 
 .module-farmers-edge .va-ops-page-header .header-filter-select:hover,
 .module-farmers-edge .va-ops-page-header .va-ops-search:hover {
-  border-color: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .module-farmers-edge .va-ops-page-header .header-filter-select:focus-visible,
@@ -1668,34 +1695,35 @@ html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
 }
 
 .module-farmers-edge .va-ops-page-header .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-farmers-edge .va-ops-page-header .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   INTAKE FORMS — Signature page header (rich burnt orange gradient)
+   INTAKE FORMS — Signature page header (refined amber)
    ═══════════════════════════════════════════════════════════════ */
 .module-intake-forms .va-ops-page-header,
 html[data-theme="obsidian"] .module-intake-forms .va-ops-page-header {
-  background-color: #8f3f0f;
+  background-color: #2a1a0f;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(251, 146, 60, 0.48) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(217, 119, 6, 0.38) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(245, 158, 11, 0.22) 0%, transparent 52%),
-    linear-gradient(180deg, #d97706 0%, #b45309 48%, #8f3f0f 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(251, 191, 36, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(217, 119, 6, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #a86412 0%, #84480e 48%, #2a1a0f 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-intake-forms .va-ops-page-header::before,
@@ -1709,40 +1737,41 @@ html[data-theme="obsidian"] .module-intake-forms .va-ops-page-header {
 }
 
 .module-intake-forms .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-intake-forms .va-ops-page-header .intake-forms-header-actions .va-ops-role-action-btn,
 .module-intake-forms .va-ops-page-header .intake-forms-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-intake-forms .va-ops-page-header .intake-forms-header-actions .va-ops-role-action-btn:hover,
 .module-intake-forms .va-ops-page-header .intake-forms-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TRAINING HUB — Signature page header (rich purple gradient)
+   TRAINING HUB — Signature page header (refined violet)
    ═══════════════════════════════════════════════════════════════ */
 .module-training-hub .va-ops-page-header,
 html[data-theme="obsidian"] .module-training-hub .va-ops-page-header {
-  background-color: #4c1d95;
+  background-color: #22133d;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(167, 139, 250, 0.5) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(124, 58, 237, 0.4) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(192, 132, 252, 0.24) 0%, transparent 52%),
-    linear-gradient(180deg, #7c3aed 0%, #6d28d9 48%, #4c1d95 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(167, 139, 250, 0.18) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(124, 58, 237, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #5b2db0 0%, #47208c 48%, #22133d 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-training-hub .va-ops-page-header::before,
@@ -1756,40 +1785,41 @@ html[data-theme="obsidian"] .module-training-hub .va-ops-page-header {
 }
 
 .module-training-hub .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-training-hub .va-ops-page-header .training-hub-header-actions .va-ops-role-action-btn,
 .module-training-hub .va-ops-page-header .training-hub-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-training-hub .va-ops-page-header .training-hub-header-actions .va-ops-role-action-btn:hover,
 .module-training-hub .va-ops-page-header .training-hub-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CARRIER LIBRARY — Signature page header (rich blue gradient)
+   CARRIER LIBRARY — Signature page header (refined blue)
    ═══════════════════════════════════════════════════════════════ */
 .module-carrier-library .va-ops-page-header,
 html[data-theme="obsidian"] .module-carrier-library .va-ops-page-header {
-  background-color: #1e3a8a;
+  background-color: #121a35;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(96, 165, 250, 0.5) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(59, 130, 246, 0.4) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(147, 197, 253, 0.24) 0%, transparent 52%),
-    linear-gradient(180deg, #1d4ed8 0%, #1e40af 48%, #1e3a8a 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(96, 165, 250, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(37, 99, 235, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #1c48b0 0%, #18388a 48%, #121a35 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-carrier-library .va-ops-page-header::before,
@@ -1803,40 +1833,41 @@ html[data-theme="obsidian"] .module-carrier-library .va-ops-page-header {
 }
 
 .module-carrier-library .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-carrier-library .va-ops-page-header .carrier-library-header-actions .va-ops-role-action-btn,
 .module-carrier-library .va-ops-page-header .carrier-library-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-carrier-library .va-ops-page-header .carrier-library-header-actions .va-ops-role-action-btn:hover,
 .module-carrier-library .va-ops-page-header .carrier-library-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   EPAY POLICY — Signature page header (rich emerald green gradient)
+   EPAY POLICY — Signature page header (refined emerald)
    ═══════════════════════════════════════════════════════════════ */
 .module-epay-policy .va-ops-page-header,
 html[data-theme="obsidian"] .module-epay-policy .va-ops-page-header {
-  background-color: #047857;
+  background-color: #0f2a22;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(52, 211, 153, 0.5) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(16, 185, 129, 0.4) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(110, 231, 183, 0.24) 0%, transparent 52%),
-    linear-gradient(180deg, #10b981 0%, #059669 48%, #047857 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(52, 211, 153, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(16, 185, 129, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #0d8a64 0%, #0b6f52 48%, #0f2a22 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-epay-policy .va-ops-page-header::before,
@@ -1850,40 +1881,41 @@ html[data-theme="obsidian"] .module-epay-policy .va-ops-page-header {
 }
 
 .module-epay-policy .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-epay-policy .va-ops-page-header .epay-policy-header-actions .va-ops-role-action-btn,
 .module-epay-policy .va-ops-page-header .epay-policy-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-epay-policy .va-ops-page-header .epay-policy-header-actions .va-ops-role-action-btn:hover,
 .module-epay-policy .va-ops-page-header .epay-policy-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SEND CENTER — Signature page header (rich crimson gradient)
+   SEND CENTER — Signature page header (refined crimson)
    ═══════════════════════════════════════════════════════════════ */
 .module-send-center .va-ops-page-header,
 html[data-theme="obsidian"] .module-send-center .va-ops-page-header {
-  background-color: #9f1239;
+  background-color: #2a121c;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(251, 113, 133, 0.5) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(225, 29, 72, 0.4) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(254, 205, 211, 0.22) 0%, transparent 52%),
-    linear-gradient(180deg, #e11d48 0%, #be123c 48%, #9f1239 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(251, 113, 133, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(225, 29, 72, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #b3183d 0%, #8f1433 48%, #2a121c 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-send-center .va-ops-page-header::before,
@@ -1897,40 +1929,41 @@ html[data-theme="obsidian"] .module-send-center .va-ops-page-header {
 }
 
 .module-send-center .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-send-center .va-ops-page-header .send-center-header-actions .va-ops-role-action-btn,
 .module-send-center .va-ops-page-header .send-center-header-actions .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-send-center .va-ops-page-header .send-center-header-actions .va-ops-role-action-btn:hover,
 .module-send-center .va-ops-page-header .send-center-header-actions .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ANALYTICS — Signature page header (rich teal-blue gradient)
+   ANALYTICS — Signature page header (refined cyan)
    ═══════════════════════════════════════════════════════════════ */
 .module-analytics .va-ops-page-header,
 html[data-theme="obsidian"] .module-analytics .va-ops-page-header {
-  background-color: #155e75;
+  background-color: #10262e;
   background-image:
-    radial-gradient(ellipse 54% 92% at 96% 8%, rgba(6, 182, 212, 0.5) 0%, transparent 58%),
-    radial-gradient(ellipse 46% 78% at 6% 90%, rgba(8, 145, 178, 0.4) 0%, transparent 54%),
-    radial-gradient(ellipse 36% 58% at 38% 18%, rgba(103, 232, 249, 0.24) 0%, transparent 52%),
-    linear-gradient(180deg, #0891b2 0%, #0e7490 48%, #155e75 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(34, 211, 238, 0.16) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(8, 145, 178, 0.14) 0%, transparent 58%),
+    linear-gradient(180deg, #0c738c 0%, #0b5c70 48%, #10262e 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
 }
 
 .module-analytics .va-ops-page-header::before,
@@ -1944,19 +1977,19 @@ html[data-theme="obsidian"] .module-analytics .va-ops-page-header {
 }
 
 .module-analytics .va-ops-page-header .va-ops-page-subtitle {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .module-analytics .va-ops-page-header .hub-help-trigger {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(255, 255, 255, 0.88);
   box-shadow: none;
 }
 
 .module-analytics .va-ops-page-header .hub-help-trigger:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }

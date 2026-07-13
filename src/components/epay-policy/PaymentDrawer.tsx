@@ -67,7 +67,7 @@ export function PaymentDrawer({ payment, onClose }: PaymentDrawerProps) {
         label: "Payment Tracker",
       }),
     );
-    toast.success(`Marked bound — opening Submission Clock for ${payment.clientName}`);
+    toast.success(`Marked bound: opening Submission Clock for ${payment.clientName}`);
     onClose();
   };
 
@@ -152,7 +152,7 @@ export function PaymentDrawer({ payment, onClose }: PaymentDrawerProps) {
                 {drawer.paymentHistory.map((entry) => (
                   <li key={entry.id}>
                     <strong>{entry.action}</strong>
-                    {entry.amount ? ` — ${entry.amount}` : ""} · {entry.date}
+                    {entry.amount ? `: ${entry.amount}` : ""} · {entry.date}
                   </li>
                 ))}
               </ul>
@@ -165,7 +165,7 @@ export function PaymentDrawer({ payment, onClose }: PaymentDrawerProps) {
               <ul className="va-ops-gap-list">
                 {drawer.paymentAttempts.map((attempt) => (
                   <li key={attempt.id}>
-                    {attempt.method} — {attempt.result} · {attempt.date}
+                    {attempt.method}: {attempt.result} · {attempt.date}
                   </li>
                 ))}
               </ul>

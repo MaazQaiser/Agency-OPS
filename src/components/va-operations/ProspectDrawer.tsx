@@ -124,7 +124,7 @@ export function ProspectDrawer({ prospect, onClose }: ProspectDrawerProps) {
 
           <div className="va-ops-drawer-section">
             <div className="va-ops-drawer-section-label">
-              Qualification — {qualificationStatusLabel[qualification.status]}
+              Qualification: {qualificationStatusLabel[qualification.status]}
             </div>
             <ul className="va-ops-qual-checklist va-ops-qual-checklist-compact">
               {qualification.items.map((item) => (

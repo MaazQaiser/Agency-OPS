@@ -159,7 +159,7 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
       actions: [`Assign to ${payload.assignTo}`, payload.actionType],
       dependencies: [],
       connectedTools: ["AgencyZoom"],
-      lastExecution: "Just now — success",
+      lastExecution: "Just now: success",
       failureLogs: [],
     };
 
@@ -220,7 +220,7 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
             ? {
                 ...workflow,
                 runsToday: workflow.runsToday + 1,
-                lastExecution: "Just now — test success",
+                lastExecution: "Just now: test success",
               }
             : workflow,
         ),
@@ -357,7 +357,7 @@ export function AutomationBuilderTab({ embedded = false }: { embedded?: boolean 
         </button>
       </section>
 
-      <section className="va-ops-panel va-ops-failed-panel" aria-label="Failed executions">
+      <section className="va-ops-panel va-ops-failed-panel aos-card--action" aria-label="Failed executions">
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Failed Executions</h3>
           <p className="va-ops-section-sub">Workflow errors requiring attention.</p>

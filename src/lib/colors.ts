@@ -1,4 +1,4 @@
-/** Agency OS color palette — Insurance Town brand (matches :root tokens in globals.css) */
+/** Agency OS color palette: Insurance Town brand (matches :root tokens in globals.css) */
 export const colors = {
   brand: {
     base: "#1C2B35",

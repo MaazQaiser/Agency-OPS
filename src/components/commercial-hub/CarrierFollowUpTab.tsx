@@ -52,7 +52,7 @@ export function CarrierFollowUpTab() {
     const carrierName = payload.carrierName ?? "";
     setHighlightCarrier(carrierName);
     toast.info(
-      `Carrier loaded — ${carrierName}${payload.appetite ? ` · ${payload.appetite}` : ""}`,
+      `Carrier loaded: ${carrierName}${payload.appetite ? ` · ${payload.appetite}` : ""}`,
     );
   }, [toast]);
 
@@ -149,7 +149,7 @@ export function CarrierFollowUpTab() {
 
         <CommercialHubIntelPanel
           title="SLA Breaches"
-          subtitle="Markets past carrier response target — escalate immediately."
+          subtitle="Markets past carrier response target: escalate immediately."
         >
           {breached.length === 0 ? (
             <p className="va-ops-section-sub">No active SLA breaches.</p>

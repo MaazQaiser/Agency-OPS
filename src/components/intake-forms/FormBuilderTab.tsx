@@ -415,7 +415,7 @@ export function FormBuilderTab() {
             <input className="intake-form-input" type="number" value={data.numberOfEmployees} onChange={(e) => update("numberOfEmployees", e.target.value)} />
           </FormField>
           <FormField label="License Status" required error={errorFor(errs, "licenseStatus")}>
-            <input className="intake-form-input" value={data.licenseStatus} onChange={(e) => update("licenseStatus", e.target.value)} placeholder="Active — CA C-27" />
+            <input className="intake-form-input" value={data.licenseStatus} onChange={(e) => update("licenseStatus", e.target.value)} placeholder="Active: CA C-27" />
           </FormField>
         </div>
       );
@@ -660,7 +660,7 @@ export function FormBuilderTab() {
     <div className="va-ops-role-view intake-form-builder">
       <RoleTabHeader
         title={formBuilderHeader.title}
-        subtitle={`${formTypeLabels[formType]} — ${formBuilderHeader.subtitle}`}
+        subtitle={`${formTypeLabels[formType]}: ${formBuilderHeader.subtitle}`}
         quickActions={formBuilderHeader.quickActions}
         onQuickActionClick={handleQuickAction}
       />
@@ -718,7 +718,7 @@ export function FormBuilderTab() {
         <section className="va-ops-panel intake-form-panel" aria-label="Form fields">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">{stepTitle}</h3>
-            <p className="va-ops-section-sub">Step {currentStep} — complete all required fields marked with *</p>
+            <p className="va-ops-section-sub">Step {currentStep}: complete all required fields marked with *</p>
           </div>
           {renderStep()}
         </section>

@@ -1,0 +1,600 @@
+/* ═══════════════════════════════════════════════════════════════
+   Retention Scorecard — Executive visual refinement
+   Hierarchy · KPI rhythm · Tables · Controls · Responsive
+   ═══════════════════════════════════════════════════════════════ */
+
+.module-retention {
+  --retention-accent: #6366f1;
+  --retention-accent-soft: #a5b4fc;
+  --retention-surface: color-mix(in srgb, var(--navy-card, #222b42) 70%, var(--obs, #0a0c10));
+  --retention-surface-elevated: color-mix(in srgb, var(--navy-mid, #1a2233) 58%, var(--obs, #0a0c10));
+}
+
+.module-retention .page-container,
+.module-retention .retention-locale-surface.page-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px 56px;
+}
+
+/* ── Hero / header ── */
+.module-retention .retention-page-header-row {
+  align-items: flex-end;
+  gap: 16px;
+  margin: 0 -28px 18px;
+  padding: 36px 28px 22px;
+  background:
+    radial-gradient(ellipse 52% 80% at 94% 8%, rgba(165, 180, 252, 0.14) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 60% at 8% 90%, rgba(99, 102, 241, 0.12) 0%, transparent 58%),
+    linear-gradient(180deg, #2f3278 0%, #24265c 48%, #16182f 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 26px rgba(0, 0, 0, 0.2);
+}
+
+.module-retention .app-header.retention {
+  background: transparent;
+  border-bottom: none;
+  padding: 0;
+}
+
+.module-retention .app-header.retention h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  color: #ffffff;
+}
+
+.module-retention .app-header.retention h1 em {
+  color: var(--retention-accent-soft);
+  font-style: italic;
+}
+
+.module-retention .app-header.retention .patent {
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.module-retention .retention-page-header-actions {
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle-btn {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle-btn:hover:not(:disabled) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle-btn.active {
+  color: #ffffff;
+  background: color-mix(in srgb, var(--retention-accent) 36%, transparent);
+  box-shadow: none;
+}
+
+.module-retention .retention-page-header-actions .hub-help-trigger {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.module-retention .retention-dept-badge {
+  margin: 0 0 22px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border-color: color-mix(in srgb, var(--retention-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--retention-accent) 10%, var(--retention-surface));
+  color: var(--retention-accent-soft);
+  letter-spacing: 0.02em;
+}
+
+.module-retention .retention-dept-badge-dot {
+  background: var(--retention-accent-soft);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--retention-accent) 22%, transparent);
+}
+
+/* ── Section rhythm ── */
+.module-retention .section-label {
+  margin: 36px 0 14px;
+}
+
+.module-retention .section-label:first-of-type {
+  margin-top: 8px;
+}
+
+.module-retention .sl-text {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.module-retention .retention-scorecard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.module-retention .retention-scorecard-section--primary {
+  gap: 16px;
+  padding: 18px;
+  border-radius: var(--radius-lg, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+    var(--retention-surface-elevated);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.module-retention .retention-scorecard-section--primary > .section-label {
+  margin: 0 0 2px;
+}
+
+.module-retention .retention-scorecard-section--primary .sl-text {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.module-retention .two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ── Context / callout panels (calm, not neon) ── */
+.module-retention .alert {
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 0;
+  border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.module-retention .alert-blue,
+.module-retention .alert-purple,
+.module-retention .alert-green {
+  color: var(--text-secondary);
+}
+
+.module-retention .alert-blue {
+  background: color-mix(in srgb, var(--metric-blue) 12%, var(--retention-surface));
+  border-color: color-mix(in srgb, var(--metric-blue) 28%, transparent);
+}
+
+.module-retention .alert-purple {
+  background: color-mix(in srgb, var(--draft-violet) 12%, var(--retention-surface));
+  border-color: color-mix(in srgb, var(--draft-violet) 28%, transparent);
+}
+
+.module-retention .alert-green {
+  background: color-mix(in srgb, var(--success-green) 11%, var(--retention-surface));
+  border-color: color-mix(in srgb, var(--success-green) 26%, transparent);
+}
+
+.module-retention .alert-amber,
+.module-retention .alert-yellow {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f7fb 100%);
+  border-color: rgba(28, 43, 53, 0.14);
+  color: #15202b;
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.module-retention .alert-title {
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  margin-bottom: 6px;
+}
+
+.module-retention .alert-blue .alert-title {
+  color: color-mix(in srgb, var(--metric-blue) 70%, #ffffff);
+}
+
+.module-retention .alert-purple .alert-title {
+  color: color-mix(in srgb, var(--draft-violet) 70%, #ffffff);
+}
+
+.module-retention .alert-green .alert-title {
+  color: color-mix(in srgb, var(--success-green) 75%, #ffffff);
+}
+
+.module-retention .alert-amber .alert-title,
+.module-retention .alert-yellow .alert-title {
+  color: #15202b;
+}
+
+.module-retention .alert p,
+.module-retention .alert li {
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.module-retention .alert-blue p,
+.module-retention .alert-blue li,
+.module-retention .alert-purple p,
+.module-retention .alert-purple li,
+.module-retention .alert-green p,
+.module-retention .alert-green li {
+  color: var(--text-secondary);
+}
+
+.module-retention .alert-amber p,
+.module-retention .alert-amber li,
+.module-retention .alert-yellow p,
+.module-retention .alert-yellow li {
+  color: #4a6074;
+}
+
+.module-retention .retention-alert-note {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.module-retention .alert-amber .retention-alert-note,
+.module-retention .alert-yellow .retention-alert-note {
+  color: #64748b;
+}
+
+/* ── Scorecard command / tabs ── */
+.module-retention .retention-scorecard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.module-retention .retention-scorecard-toolbar-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-family-mono);
+}
+
+.module-retention .retention-scorecard-tabs.tab-bar {
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--obs, #0a0c10) 35%, transparent);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.module-retention .retention-scorecard-tabs.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.module-retention .tab.retention {
+  padding: 9px 14px;
+  border-radius: 7px;
+  border-bottom: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.module-retention .tab.retention:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.module-retention .tab.retention.active {
+  color: #ffffff;
+  background: color-mix(in srgb, var(--retention-accent) 36%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--retention-accent-soft) 28%, transparent);
+}
+
+.module-retention .tab-content.retention {
+  padding: 16px 0 4px;
+}
+
+.module-retention .retention-kpi-footnote {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* ── KPI cards ── */
+.module-retention .kpi-grid.retention {
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.module-retention .kpi-card.retention {
+  min-height: 116px;
+  padding: 14px 15px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, transparent 44%),
+    var(--retention-surface);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.module-retention .kpi-card.retention:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.module-retention .kpi-label.retention {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 92%, transparent);
+  margin-bottom: 10px;
+}
+
+.module-retention .kpi-val.retention {
+  font-size: clamp(1.35rem, 2vw, 1.65rem);
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+}
+
+.module-retention .kpi-card.retention .aos-finance,
+.module-retention .kpi-val.retention.aos-finance {
+  color: var(--aos-finance-soft, #d4bc7a);
+}
+
+.module-retention .kpi-sub.retention {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Soft color accent — top rail only, surface stays dark */
+.module-retention .kpi-card.retention.primary,
+.module-retention .kpi-card.retention.green,
+.module-retention .kpi-card.retention.yellow,
+.module-retention .kpi-card.retention.red {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, transparent 44%),
+    var(--retention-surface);
+}
+
+.module-retention .kpi-card.retention.primary {
+  border-top: 2px solid color-mix(in srgb, var(--retention-accent) 65%, transparent);
+}
+
+.module-retention .kpi-card.retention.green {
+  border-top: 2px solid color-mix(in srgb, var(--success-green) 60%, transparent);
+}
+
+.module-retention .kpi-card.retention.yellow {
+  border-top: 2px solid color-mix(in srgb, var(--aos-finance-deep, #9a7b3c) 65%, transparent);
+}
+
+.module-retention .kpi-card.retention.red {
+  border-top: 2px solid color-mix(in srgb, var(--critical-rose) 60%, transparent);
+}
+
+/* ── Tables ── */
+.module-retention .retention-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--retention-surface);
+}
+
+.module-retention table.retention {
+  margin-bottom: 0;
+  min-width: 640px;
+  width: 100%;
+}
+
+.module-retention table.retention th {
+  background: color-mix(in srgb, var(--retention-accent) 10%, transparent);
+  color: var(--retention-accent-soft);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.module-retention table.retention td {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: top;
+}
+
+.module-retention table.retention tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.module-retention table.retention tbody tr:hover td {
+  background: color-mix(in srgb, var(--retention-accent) 8%, transparent);
+}
+
+.module-retention table.retention tbody td:first-child {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.module-retention .pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Amber action table context */
+.module-retention .alert-amber + .retention-table-wrap,
+.module-retention .alert-amber ~ .retention-table-wrap {
+  margin-top: 0;
+}
+
+/* ── Accordion / tiers ── */
+.module-retention .card {
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+    var(--retention-surface);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.module-retention .card-header {
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.module-retention .card-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.module-retention .card-body {
+  padding: 4px 16px 16px;
+}
+
+.module-retention .card-icon {
+  color: var(--retention-accent-soft);
+}
+
+.module-retention .tier-row {
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--retention-surface) 80%, transparent);
+  margin-bottom: 8px;
+}
+
+.module-retention .tier-row:hover {
+  border-color: color-mix(in srgb, var(--retention-accent) 30%, transparent);
+}
+
+.module-retention .tier-body {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.module-retention .tier-body strong {
+  color: var(--retention-accent-soft);
+}
+
+.module-retention .tier-badge {
+  flex-shrink: 0;
+}
+
+/* Nested alerts inside accordions */
+.module-retention .card-body .alert {
+  margin-top: 12px;
+}
+
+/* ── Empty / loading alignment ── */
+.module-retention .ops-skeleton-shimmer,
+.module-retention .hub-empty-state,
+.module-retention .hub-error-state {
+  border-radius: 10px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .module-retention .page-container,
+  .module-retention .retention-locale-surface.page-container {
+    padding: 0 20px 48px;
+  }
+
+  .module-retention .retention-page-header-row {
+    margin: 0 -20px 16px;
+    padding: 28px 20px 18px;
+  }
+
+  .module-retention .kpi-grid.retention {
+    grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .module-retention .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .module-retention .retention-page-header-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .module-retention .retention-scorecard-section--primary {
+    padding: 14px;
+  }
+
+  .module-retention .retention-scorecard-toolbar {
+    align-items: stretch;
+  }
+
+  .module-retention .tab.retention {
+    padding: 10px 12px;
+    font-size: 11.5px;
+  }
+
+  .module-retention table.retention {
+    min-width: 560px;
+  }
+
+  .module-retention .section-label {
+    margin-top: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .module-retention .kpi-grid.retention {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .module-retention .kpi-card.retention {
+    min-height: 108px;
+    padding: 12px;
+  }
+
+  .module-retention .kpi-val.retention {
+    font-size: 1.3rem;
+  }
+}

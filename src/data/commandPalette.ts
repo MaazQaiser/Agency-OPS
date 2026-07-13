@@ -34,7 +34,7 @@ export const paletteAiGuidance: PaletteAiGuidance[] = [
   { id: "ai-q-martinez", label: "Open Martinez Landscaping", query: "Martinez Landscaping" },
 ];
 
-/** Verb-first operational actions — Suggested Actions group */
+/** Verb-first operational actions: Suggested Actions group */
 export const suggestedPaletteActions: CommandPaletteAction[] = [
   {
     id: "create-submission",

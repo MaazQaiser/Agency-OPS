@@ -1,11 +1,11 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Analytics Hub — Executive Performance Intelligence Data
+   Analytics Hub: Executive Performance Intelligence Data
    Cyan identity. In production: AgencyZoom + Google Sheets folio ranges.
 ───────────────────────────────────────────────────────────────────────────── */
 
 export const analyticsHeader = {
   title: "Analytics",
-  subtitle: "Executive performance intelligence · Pipeline trends · Producer scorecards",
+  subtitle: "Executive performance intelligence · Production · Retention · Velocity · Carrier mix",
   helpId: "analytics" as const,
 };
 
@@ -144,7 +144,7 @@ export const executiveSummary: ExecutiveSummaryItem[] = [
     id: "exec-lost-opp",
     label: "Biggest lost opportunity",
     value: "Rivera Construction",
-    detail: "$48k WC quote — declined by 2 carriers",
+    detail: "$48k WC quote: declined by 2 carriers",
     tone: "negative",
   },
   {
@@ -442,8 +442,8 @@ export type LostAccount = {
 };
 
 export const lostAccounts: LostAccount[] = [
-  { id: "lost-1", account: "Summit Landscaping", producer: "Lisa Park", premium: "$6,400", lostDate: "Jun 12", reason: "Price — moved to competitor" },
-  { id: "lost-2", account: "QuickRoute Delivery", producer: "Mike Torres", premium: "$11,200", lostDate: "Jun 8", reason: "Coverage gap — fleet size" },
+  { id: "lost-1", account: "Summit Landscaping", producer: "Lisa Park", premium: "$6,400", lostDate: "Jun 12", reason: "Price: moved to competitor" },
+  { id: "lost-2", account: "QuickRoute Delivery", producer: "Mike Torres", premium: "$11,200", lostDate: "Jun 8", reason: "Coverage gap: fleet size" },
 ];
 
 export type VelocityStage = {
@@ -480,7 +480,7 @@ export const velocityBottlenecks: VelocityBottleneck[] = [
   {
     id: "bn-wc",
     segment: "Workers Comp",
-    message: "WC quote stage +0.6 days vs target — payroll doc delays",
+    message: "WC quote stage +0.6 days vs target: payroll doc delays",
     delta: "+0.6 days",
     severity: "Medium",
   },
@@ -628,29 +628,29 @@ export type AnalyticsAiInsight = {
 
 export const analyticsAiInsights: Record<AnalyticsTabId, AnalyticsAiInsight[]> = {
   overview: [
-    { id: "ai-ov-1", title: "Retention risk rising in contractors segment", detail: "Contractor renewals down 2.1pp — 6 accounts flagged at-risk this week." },
-    { id: "ai-ov-2", title: "Producer Eva outperforming by 18%", detail: "Eva Martinez leads written premium with 42% bind ratio — 8pp above team avg." },
-    { id: "ai-ov-3", title: "Commercial Auto cycle time slowing", detail: "Auto quote stage +0.8 days vs benchmark — MVR collection delays detected." },
+    { id: "ai-ov-1", title: "Retention risk rising in contractors segment", detail: "Contractor renewals down 2.1pp: 6 accounts flagged at-risk this week." },
+    { id: "ai-ov-2", title: "Producer Eva outperforming by 18%", detail: "Eva Martinez leads written premium with 42% bind ratio: 8pp above team avg." },
+    { id: "ai-ov-3", title: "Commercial Auto cycle time slowing", detail: "Auto quote stage +0.8 days vs benchmark: MVR collection delays detected." },
   ],
   production: [
-    { id: "ai-prod-1", title: "Pipeline conversion dropping at quote stage", detail: "24% of quoted deals lost post-quote — review carrier mix on WC submissions." },
+    { id: "ai-prod-1", title: "Pipeline conversion dropping at quote stage", detail: "24% of quoted deals lost post-quote: review carrier mix on WC submissions." },
     { id: "ai-prod-2", title: "James Okonkwo fastest rank climb", detail: "+2 positions this month driven by higher avg deal size ($6,582)." },
     { id: "ai-prod-3", title: "Bound premium pacing behind target", detail: "At current close rate, team will miss June premium goal by ~$38k." },
   ],
   retention: [
-    { id: "ai-ret-1", title: "Mike Torres save rate below threshold", detail: "63% save rate — 3 lost accounts this month. Schedule renewal review calls." },
-    { id: "ai-ret-2", title: "High-risk renewals concentrated in WC", detail: "8 of 14 at-risk accounts are workers comp — rate pressure primary driver." },
-    { id: "ai-ret-3", title: "Save rate trending down 1.8pp", detail: "Team save rate 88.2% vs 92% target — intervention needed on 14 accounts." },
+    { id: "ai-ret-1", title: "Mike Torres save rate below threshold", detail: "63% save rate: 3 lost accounts this month. Schedule renewal review calls." },
+    { id: "ai-ret-2", title: "High-risk renewals concentrated in WC", detail: "8 of 14 at-risk accounts are workers comp: rate pressure primary driver." },
+    { id: "ai-ret-3", title: "Save rate trending down 1.8pp", detail: "Team save rate 88.2% vs 92% target: intervention needed on 14 accounts." },
   ],
   velocity: [
     { id: "ai-vel-1", title: "Commercial Auto avg +2.4 days slower than benchmark", detail: "Driver list and MVR delays account for 68% of auto cycle time variance." },
-    { id: "ai-vel-2", title: "Quote stage is primary bottleneck", detail: "Intake → Quote at 2.3 days — 51% of total cycle time spent here." },
-    { id: "ai-vel-3", title: "Bind stage performing within target", detail: "Approval → Bind at 0.8 days — only +0.1 days over benchmark." },
+    { id: "ai-vel-2", title: "Quote stage is primary bottleneck", detail: "Intake → Quote at 2.3 days: 51% of total cycle time spent here." },
+    { id: "ai-vel-3", title: "Bind stage performing within target", detail: "Approval → Bind at 0.8 days. Only +0.1 days over benchmark." },
   ],
   carriers: [
-    { id: "ai-car-1", title: "Travelers bind rate dropped 9%", detail: "Travelers commercial bind rate fell from 41% to 32% — appetite tightening in TX." },
-    { id: "ai-car-2", title: "Farmers concentration risk", detail: "45% of written premium with Farmers — diversification recommended." },
-    { id: "ai-car-3", title: "Guard decline ratio elevated", detail: "Guard at 18% decline ratio — review submission quality on restaurant risks." },
+    { id: "ai-car-1", title: "Travelers bind rate dropped 9%", detail: "Travelers commercial bind rate fell from 41% to 32%: appetite tightening in TX." },
+    { id: "ai-car-2", title: "Farmers concentration risk", detail: "45% of written premium with Farmers: diversification recommended." },
+    { id: "ai-car-3", title: "Guard decline ratio elevated", detail: "Guard at 18% decline ratio: review submission quality on restaurant risks." },
   ],
 };
 

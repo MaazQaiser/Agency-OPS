@@ -45,7 +45,7 @@ export function IntakeAiAssistant({ className, onSuggestCoverages }: IntakeAiAss
       </ul>
       <div className="intake-ai-assistant-insight">
         <strong>Insight</strong>
-        <p>Payroll report missing — upload to auto-fill revenue and employee fields.</p>
+        <p>Payroll report missing: upload to auto-fill revenue and employee fields.</p>
       </div>
     </section>
   );

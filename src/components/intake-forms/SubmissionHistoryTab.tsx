@@ -136,7 +136,7 @@ export function SubmissionHistoryTab() {
       openSubmission(row);
       return;
     }
-    toast.success(`${actionId} — ${row.client}`);
+    toast.success(`${actionId}: ${row.client}`);
   };
 
   return (
@@ -220,7 +220,7 @@ export function SubmissionHistoryTab() {
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">Submission Log</h3>
           <p className="va-ops-section-sub">
-            {filteredRows.length} record{filteredRows.length === 1 ? "" : "s"} — click a row to view details.
+            {filteredRows.length} record{filteredRows.length === 1 ? "" : "s"}: click a row to view details.
           </p>
         </div>
         <div className="commercial-hub-table-wrap submission-history-table-wrap ops-responsive-table-wrap">

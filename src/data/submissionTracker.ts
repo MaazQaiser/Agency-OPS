@@ -155,7 +155,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
       { label: "Commercial Auto", status: "complete" },
       { label: "Property", status: "complete" },
     ],
-    brokerNotes: ["Only 2 of 3 required markets — add CNA or Nationwide.", "No UW update from Markel in 3 days."],
+    brokerNotes: ["Only 2 of 3 required markets: add CNA or Nationwide.", "No UW update from Markel in 3 days."],
     producerNotes: ["Needs quote by Friday.", "Comparing against State Farm renewal."],
     quotes: [
       {
@@ -166,7 +166,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
         coverageLimits: "$1M / $2M",
         exclusions: "None",
         brokerFee: "$500",
-        notes: "Best overall terms — recommended",
+        notes: "Best overall terms: recommended",
       },
       {
         id: "q-martinez-cna",
@@ -221,8 +221,8 @@ export const trackerSubmissions: TrackerSubmission[] = [
       { label: "Garagekeepers", status: "pending" },
       { label: "Commercial Auto", status: "complete" },
     ],
-    brokerNotes: ["GL limits at minimum — client aware."],
-    producerNotes: ["Referred by JoJo — bind target after docs."],
+    brokerNotes: ["GL limits at minimum: client aware."],
+    producerNotes: ["Referred by JoJo: bind target after docs."],
     quotes: [
       {
         id: "q-kim-travelers",
@@ -267,7 +267,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
       { label: "Property", status: "complete" },
       { label: "Business Income", status: "complete" },
     ],
-    brokerNotes: ["Fleet logistics account — present both quotes Friday."],
+    brokerNotes: ["Fleet logistics account: present both quotes Friday."],
     producerNotes: ["Client wants cargo coverage emphasized."],
     quotes: [
       {
@@ -332,7 +332,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
       { label: "General Liability", status: "pending" },
     ],
     brokerNotes: ["Client verbally accepted ICW terms."],
-    producerNotes: ["High-value WC — priority bind this week."],
+    producerNotes: ["High-value WC: priority bind this week."],
     quotes: [
       {
         id: "q-rivera-icw",
@@ -355,7 +355,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
       selectedCarrier: "ICW",
       selectedPremium: "$18,900",
       brokerFee: "$1,200",
-      approvalStatus: "Producer approved — pending signed app",
+      approvalStatus: "Producer approved: pending signed app",
     },
   },
   {
@@ -388,7 +388,7 @@ export const trackerSubmissions: TrackerSubmission[] = [
       { label: "General Liability", status: "complete" },
       { label: "Tools & Equipment", status: "complete" },
     ],
-    brokerNotes: ["Travelers best quote — presenting to client."],
+    brokerNotes: ["Travelers best quote: presenting to client."],
     producerNotes: ["Standard GL renewal opportunity."],
     quotes: [
       {
@@ -458,7 +458,7 @@ export const documentBlockers: DocumentBlocker[] = [
       { id: "d1-loss", name: "Loss Runs", requestedDate: "May 18, 2026", lastReminder: "Today", status: "Overdue" },
       { id: "d1-driver", name: "Driver Schedule", requestedDate: "May 19, 2026", lastReminder: "Yesterday", status: "Received" },
       { id: "d1-app", name: "Signed Application", requestedDate: "May 18, 2026", lastReminder: "Today", status: "Overdue" },
-      { id: "d1-payroll", name: "Payroll Report", requestedDate: "May 15, 2026", lastReminder: "—", status: "Received" },
+      { id: "d1-payroll", name: "Payroll Report", requestedDate: "May 15, 2026", lastReminder: "-", status: "Received" },
       { id: "d1-vehicles", name: "Vehicle List", requestedDate: "May 17, 2026", lastReminder: "2 days ago", status: "Pending" },
     ],
   },
@@ -471,11 +471,11 @@ export const documentBlockers: DocumentBlocker[] = [
     action: "Follow Up",
     urgency: "waiting-client",
     documents: [
-      { id: "d2-loss", name: "Loss Runs", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
-      { id: "d2-driver", name: "Driver Schedule", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
+      { id: "d2-loss", name: "Loss Runs", requestedDate: "May 20, 2026", lastReminder: "-", status: "Received" },
+      { id: "d2-driver", name: "Driver Schedule", requestedDate: "May 20, 2026", lastReminder: "-", status: "Received" },
       { id: "d2-app", name: "Signed Application", requestedDate: "May 21, 2026", lastReminder: "Today", status: "Pending" },
       { id: "d2-payroll", name: "Payroll Report", requestedDate: "May 19, 2026", lastReminder: "Yesterday", status: "Received" },
-      { id: "d2-vehicles", name: "Vehicle List", requestedDate: "May 20, 2026", lastReminder: "—", status: "Received" },
+      { id: "d2-vehicles", name: "Vehicle List", requestedDate: "May 20, 2026", lastReminder: "-", status: "Received" },
     ],
   },
   {
@@ -626,7 +626,7 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     carrier: "ICW",
     premium: "$18,900",
     brokerFee: "$1,200",
-    approvalStatus: "Producer approved — pending signed app",
+    approvalStatus: "Producer approved: pending signed app",
     producerApproved: true,
     va: "Pedro",
     bindState: "awaiting-signed-app",
@@ -666,7 +666,7 @@ export const readyToBindQueue: ReadyToBindItem[] = [
     carrier: "Travelers",
     premium: "$11,400",
     brokerFee: "$725",
-    approvalStatus: "All checks complete — ready to issue",
+    approvalStatus: "All checks complete: ready to issue",
     producerApproved: true,
     va: "Pedro",
     bindState: "ready-to-issue",
@@ -761,7 +761,7 @@ export function validateAddMarket(
   if (ineligibleCoverage.length > 0) {
     return {
       ok: false,
-      error: `Coverage not eligible — resolve missing items: ${ineligibleCoverage.map((i) => i.label).join(", ")}.`,
+      error: `Coverage not eligible: resolve missing items: ${ineligibleCoverage.map((i) => i.label).join(", ")}.`,
     };
   }
 
@@ -784,7 +784,7 @@ export function applyAddMarket(
 ): TrackerSubmission {
   const nextCarriers = [...submission.carriers, { carrier, status: "New Submission" }];
   const nextNotes = notes.trim()
-    ? [...submission.brokerNotes, `Add Market — ${carrier}: ${notes.trim()}`]
+    ? [...submission.brokerNotes, `Add Market: ${carrier}: ${notes.trim()}`]
     : submission.brokerNotes;
 
   const marketsSubmitted = nextCarriers.length;
@@ -824,7 +824,7 @@ export function computeClientSla(submission: TrackerSubmission): SlaInfo {
   }
 
   if (submission.quotesReceived === 0) {
-    return { label: "—", overdue: false };
+    return { label: "-", overdue: false };
   }
 
   const overdue =
@@ -832,7 +832,7 @@ export function computeClientSla(submission: TrackerSubmission): SlaInfo {
     && submission.daysOpen > 4;
 
   return {
-    label: overdue ? "Blocked — overdue" : "18h waiting",
+    label: overdue ? "Blocked: overdue" : "18h waiting",
     overdue,
   };
 }

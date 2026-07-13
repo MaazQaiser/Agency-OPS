@@ -22,7 +22,7 @@ function RetentionKpiGrid({ kpis, footnote }: { kpis: RetentionKpi[]; footnote: 
           />
         ))}
       </KpiGrid>
-      <p style={{ fontSize: "var(--font-size-12)", color: "var(--muted)" }}>{footnote}</p>
+      <p className="retention-kpi-footnote">{footnote}</p>
     </>
   );
 }
@@ -32,19 +32,21 @@ export function RetentionKpiTabs() {
   const [activeTab, setActiveTab] = useState("valerie");
 
   return (
-    <>
-      <div className="export-table-header-export" style={{ marginBottom: 16 }}>
-        <span className="sh-label" style={{ fontSize: "var(--font-size-12)", fontWeight: 600 }}>
+    <div className="retention-scorecard-block">
+      <div className="retention-scorecard-toolbar export-table-header-export">
+        <span className="retention-scorecard-toolbar-label sh-label">
           {copy.scorecardHeader}
         </span>
         <ExportMenu kind="retention-scorecard" />
       </div>
 
-      <div className="tab-bar">
+      <div className="tab-bar retention-scorecard-tabs" role="tablist" aria-label={copy.scorecardHeader}>
         {copy.tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
             className={`tab retention${activeTab === tab.id ? " active" : ""}`}
             onClick={() => setActiveTab(tab.id)}
           >
@@ -61,32 +63,34 @@ export function RetentionKpiTabs() {
           <RetentionKpiGrid kpis={copy.tracieKpis} footnote={copy.tracieFootnote} />
         )}
         {activeTab === "combined" && (
-          <DataTable variant="retention">
-            <thead>
-              <tr>
-                {copy.combinedTable.headers.map((header) => (
-                  <th key={header}>{header}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {copy.combinedTable.rows.map((row) => (
-                <tr key={row.kpi}>
-                  <td>{row.kpi}</td>
-                  <td style={row.valerieColor ? { color: `var(--${row.valerieColor})` } : undefined}>
-                    {row.valerie}
-                  </td>
-                  <td style={row.tracieColor ? { color: `var(--${row.tracieColor})` } : undefined}>
-                    {row.tracie}
-                  </td>
-                  <td>{row.combined}</td>
-                  <td>{row.goal}</td>
+          <div className="retention-table-wrap">
+            <DataTable variant="retention">
+              <thead>
+                <tr>
+                  {copy.combinedTable.headers.map((header) => (
+                    <th key={header}>{header}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </DataTable>
+              </thead>
+              <tbody>
+                {copy.combinedTable.rows.map((row) => (
+                  <tr key={row.kpi}>
+                    <td>{row.kpi}</td>
+                    <td style={row.valerieColor ? { color: `var(--${row.valerieColor})` } : undefined}>
+                      {row.valerie}
+                    </td>
+                    <td style={row.tracieColor ? { color: `var(--${row.tracieColor})` } : undefined}>
+                      {row.tracie}
+                    </td>
+                    <td>{row.combined}</td>
+                    <td>{row.goal}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </DataTable>
+          </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

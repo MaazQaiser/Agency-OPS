@@ -200,7 +200,7 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
         <div className="va-ops-panel-header">
           <h3 className="va-ops-section-title">All Payments</h3>
           <p className="va-ops-section-sub">
-            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"} — expand a row for policy, carrier, and payment history.
+            {filteredRows.length} result{filteredRows.length === 1 ? "" : "s"}: expand a row for policy, carrier, and payment history.
           </p>
         </div>
         <div className="commercial-hub-table-wrap epay-tracker-table-wrap">
@@ -280,7 +280,7 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
                               <dd>
                                 <ul className="epay-expand-history">
                                   {row.drawer.paymentHistory.map((item) => (
-                                    <li key={item.id}>{item.action} — {item.date}{item.amount ? ` (${item.amount})` : ""}</li>
+                                    <li key={item.id}>{item.action}: {item.date}{item.amount ? ` (${item.amount})` : ""}</li>
                                   ))}
                                 </ul>
                               </dd>
@@ -298,10 +298,10 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
       </section>
 
       <div className="epay-tracker-mid-grid">
-        <section className="va-ops-panel epay-tracker-overdue-panel" aria-label="Overdue invoices">
+        <section className="va-ops-panel epay-tracker-overdue-panel aos-card--action" aria-label="Overdue invoices">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Overdue Invoices</h3>
-            <p className="va-ops-section-sub">Action queue — overdue, follow-up, and high priority only.</p>
+            <p className="va-ops-section-sub">Action queue: overdue, follow-up, and high priority only.</p>
           </div>
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">
@@ -352,10 +352,10 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
           </div>
         </section>
 
-        <section className="va-ops-panel epay-tracker-failed-panel" aria-label="Failed transactions">
+        <section className="va-ops-panel epay-tracker-failed-panel aos-card--action" aria-label="Failed transactions">
           <div className="va-ops-panel-header">
             <h3 className="va-ops-section-title">Failed Transactions</h3>
-            <p className="va-ops-section-sub">Recovery queue — retry or contact client.</p>
+            <p className="va-ops-section-sub">Recovery queue: retry or contact client.</p>
           </div>
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table">

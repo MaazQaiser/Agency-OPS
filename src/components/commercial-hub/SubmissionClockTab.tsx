@@ -143,12 +143,12 @@ export function SubmissionClockTab() {
             assignedVa: vaOptions[(vaIdx + 1) % vaOptions.length],
             assignedProducer: producerOptions[(prodIdx + 1) % producerOptions.length],
             internalNotes: [
-              `Reassigned ${new Date().toLocaleString()} — VA and producer rotated by owner.`,
+              `Reassigned ${new Date().toLocaleString()}: VA and producer rotated by owner.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          toast.success(`Reassigned — ${record.clientName}`);
+          toast.success(`Reassigned: ${record.clientName}`);
           });
           break;
         }
@@ -158,12 +158,12 @@ export function SubmissionClockTab() {
             ...record,
             slaStatus: record.slaStatus === "Healthy" ? "At Risk" : "Delayed",
             internalNotes: [
-              `Stage escalated ${new Date().toLocaleString()} — ${record.currentStage} flagged for owner review.`,
+              `Stage escalated ${new Date().toLocaleString()}: ${record.currentStage} flagged for owner review.`,
               ...record.internalNotes,
             ],
           };
           persistRecord(updated);
-          toast.warning(`Escalated — ${record.currentStage}`);
+          toast.warning(`Escalated: ${record.currentStage}`);
           });
           break;
         }
@@ -196,7 +196,7 @@ export function SubmissionClockTab() {
             ],
           };
           persistRecord(updated);
-          logAudit("override-used", `Force stage — ${record.clientName} → ${nextLabel}`);
+          logAudit("override-used", `Force stage: ${record.clientName} → ${nextLabel}`);
           toast.success(`Moved to ${nextLabel}`);
           });
           break;
@@ -222,7 +222,7 @@ export function SubmissionClockTab() {
           updated = {
             ...record,
             internalNotes: [
-              `Owner note ${new Date().toLocaleString()} — follow-up required on ${record.currentStage}.`,
+              `Owner note ${new Date().toLocaleString()}: follow-up required on ${record.currentStage}.`,
               ...record.internalNotes,
             ],
           };
@@ -235,7 +235,7 @@ export function SubmissionClockTab() {
           setSelected(record);
           return;
         default:
-          toast.success(`${action} — ${record.clientName}`);
+          toast.success(`${action}: ${record.clientName}`);
       }
     },
     [logAudit, persistRecord, requirePermission, toast],

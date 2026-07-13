@@ -25,7 +25,7 @@ export function saveFollowUp(payload: AddFollowUpPayload) {
       ...defaultDrawer(payload.client),
       notes: payload.notes.trim() ? [payload.notes.trim()] : [],
       contactHistory: [
-        { action: `Follow-up created — ${payload.followUpType}`, date: "Today", by: "JoJo" },
+        { action: `Follow-up created: ${payload.followUpType}`, date: "Today", by: "JoJo" },
       ],
     },
   };
@@ -35,7 +35,7 @@ export function saveFollowUp(payload: AddFollowUpPayload) {
     activeFollowUps: [followUp, ...current.activeFollowUps],
   }));
 
-  prependActivity(`Follow-up added for ${payload.client} — ${payload.followUpType}`);
+  prependActivity(`Follow-up added for ${payload.client}: ${payload.followUpType}`);
 }
 
 export function saveReminder(payload: CreateReminderPayload) {
@@ -53,7 +53,7 @@ export function saveReminder(payload: CreateReminderPayload) {
     reminders: [reminder, ...current.reminders],
   }));
 
-  prependActivity(`Reminder scheduled for ${payload.assignedTo} — ${payload.reminderType}`);
+  prependActivity(`Reminder scheduled for ${payload.assignedTo}: ${payload.reminderType}`);
 }
 
 export function sendQuoteReminder(payload: SendQuoteReminderPayload) {
@@ -67,7 +67,7 @@ export function sendQuoteReminder(payload: SendQuoteReminderPayload) {
             ...row,
             lastContact: nowLabel,
             status: "Followed Up",
-            nextStep: payload.channel === "email" ? "Await client reply" : "SMS sent — monitor reply",
+            nextStep: payload.channel === "email" ? "Await client reply" : "SMS sent: monitor reply",
           }
         : row,
     ),

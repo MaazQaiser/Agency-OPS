@@ -9,7 +9,7 @@ export function WeeklyRaceTab() {
     <>
       <div className="section-hdr">
         <div className="sh-label">
-          Weekly Race — {weeklyRaceGoal} Pt Goal · Points configurable in Sheets tab Eva controls
+          Weekly Race: {weeklyRaceGoal} Pt Goal · Points configurable in Sheets tab Eva controls
         </div>
       </div>
 

@@ -25,7 +25,7 @@ export function CarrierMixTab({ period }: { period: AnalyticsTimeFilterId }) {
             <h3 className="va-ops-section-title">Carrier Performance</h3>
             <p className="va-ops-section-sub">Volume, decline ratio, quote speed, concentration, and appetite trend.</p>
           </div>
-          <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
+          <div className="commercial-hub-table-wrap ops-responsive-table-wrap analytics-carrier-table-wrap">
             <table className="commercial-hub-table analytics-carrier-table">
               <thead>
                 <tr>

@@ -68,9 +68,9 @@ export const approvalQueue: SalesApproval[] = [
     typeLabel: "Email Draft",
     submitted: "15 min ago",
     cta: "Approve Draft",
-    quoteDetails: "General Liability + Garagekeepers — Travelers quote at $5,800/yr with $600 broker fee.",
+    quoteDetails: "General Liability + Garagekeepers: Travelers quote at $5,800/yr with $600 broker fee.",
     carrierComparison: [
-      { carrier: "Travelers", premium: "$5,800/yr", notes: "Recommended — best GL limits" },
+      { carrier: "Travelers", premium: "$5,800/yr", notes: "Recommended: best GL limits" },
       { carrier: "Markel", premium: "$6,200/yr", notes: "Higher premium, broader garagekeepers" },
     ],
     brokerNotes: [
@@ -95,16 +95,16 @@ export const approvalQueue: SalesApproval[] = [
     typeLabel: "SMS Draft",
     submitted: "27 min ago",
     cta: "Review",
-    quoteDetails: "BOP renewal — current policy expires in 45 days. Renewal premium est. $14,500/yr.",
+    quoteDetails: "BOP renewal: current policy expires in 45 days. Renewal premium est. $14,500/yr.",
     carrierComparison: [
-      { carrier: "Hartford", premium: "$14,500/yr", notes: "Incumbent carrier — renewal terms" },
+      { carrier: "Hartford", premium: "$14,500/yr", notes: "Incumbent carrier: renewal terms" },
     ],
     brokerNotes: [
-      "Long-standing client — prefer SMS for quick response.",
+      "Long-standing client: prefer SMS for quick response.",
       "Renewal docs pending from carrier.",
     ],
     draftCommunication:
-      "Hi — this is Insurance Town. Your BOP policy for Greenline Logistics renews in 45 days. Reply YES to schedule a renewal review or call us at (555) 012-3456.",
+      "Hi: this is Insurance Town. Your BOP policy for Greenline Logistics renews in 45 days. Reply YES to schedule a renewal review or call us at (555) 012-3456.",
     complianceChecklist: [
       { id: "c1", label: "Licensed producer review completed", checked: false },
       { id: "c2", label: "Opt-out language included", checked: true },

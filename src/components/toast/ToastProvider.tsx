@@ -188,7 +188,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         const errorMessage =
           typeof outcomes.error === "function"
             ? outcomes.error(err)
-            : outcomes.error ?? "Something went wrong — please try again";
+            : outcomes.error ?? "Something went wrong: please try again";
         update(id, errorMessage, "error", { action: outcomes.errorAction });
         throw err;
       }

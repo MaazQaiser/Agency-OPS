@@ -169,7 +169,7 @@ export function AddMarketModal({
             <>
               {marketsRemaining > 0 && (
                 <div className="add-market-alert add-market-alert-warn">
-                  Minimum market requirement not met — {submission.marketsSubmitted} of {requiredMarketCount} markets before Quote Review.
+                  Minimum market requirement not met: {submission.marketsSubmitted} of {requiredMarketCount} markets before Quote Review.
                 </div>
               )}
 
@@ -178,7 +178,7 @@ export function AddMarketModal({
                 <ul className="va-ops-gap-list">
                   {submission.carriers.map((market) => (
                     <li key={`${market.carrier}-${market.status}`}>
-                      <strong>{market.carrier}</strong> — {market.status}
+                      <strong>{market.carrier}</strong>: {market.status}
                     </li>
                   ))}
                 </ul>

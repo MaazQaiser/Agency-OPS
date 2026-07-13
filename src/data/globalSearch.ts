@@ -151,7 +151,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Last Activity", value: "2 hours ago" },
     ],
     drawer: {
-      summary: "Commercial client — BOP + Workers Comp package with Markel.",
+      summary: "Commercial client: BOP + Workers Comp package with Markel.",
       details: [
         { label: "Business Type", value: "Landscaping" },
         { label: "Producer", value: "Eva" },
@@ -174,7 +174,7 @@ export const rawSearchResults: RawSearchResult[] = [
       ],
       riskFlags: [
         { label: "E&O exposure", level: "high" },
-        { label: "Coverage gap — Umbrella", level: "medium" },
+        { label: "Coverage gap: Umbrella", level: "medium" },
       ],
     },
   },
@@ -193,7 +193,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Last Activity", value: "Today" },
     ],
     drawer: {
-      summary: "Auto repair shop — Commercial Auto submission in progress.",
+      summary: "Auto repair shop: Commercial Auto submission in progress.",
       details: [
         { label: "Business Type", value: "Auto Repair" },
         { label: "Producer", value: "Pedro" },
@@ -218,7 +218,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Status", value: "Ready to Bind" },
     ],
     drawer: {
-      summary: "BOP + Workers Comp submission to Markel — checklist 72% complete.",
+      summary: "BOP + Workers Comp submission to Markel: checklist 72% complete.",
       details: [
         { label: "Invoice", value: "INV-2048" },
         { label: "Submission Date", value: "June 20, 2026" },
@@ -350,7 +350,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Status", value: "Pending" },
     ],
     drawer: {
-      summary: "Invoice for Martinez Landscaping — BOP + WC with separated broker fee.",
+      summary: "Invoice for Martinez Landscaping: BOP + WC with separated broker fee.",
       details: [
         { label: "Policy Premium", value: "$4,200" },
         { label: "Broker Fee", value: "$500" },
@@ -406,10 +406,10 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Last Activity", value: "1 day ago" },
     ],
     drawer: {
-      summary: "Fleet logistics account — BOP package with overdue invoice.",
+      summary: "Fleet logistics account: BOP package with overdue invoice.",
       details: [
         { label: "Producer", value: "Eva" },
-        { label: "Invoice", value: "INV-2042 — $6,200 overdue" },
+        { label: "Invoice", value: "INV-2042: $6,200 overdue" },
         { label: "Carrier", value: "CNA" },
       ],
       notes: ["Owner requested payment plan."],
@@ -460,7 +460,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Status", value: "Missing" },
     ],
     drawer: {
-      summary: "Loss runs requested from prior carrier — blocking bind.",
+      summary: "Loss runs requested from prior carrier: blocking bind.",
       details: [
         { label: "Requested", value: "June 18, 2026" },
         { label: "Prior Carrier", value: "Hartford" },
@@ -496,7 +496,7 @@ export const rawSearchResults: RawSearchResult[] = [
     id: "sr-martinez-proposal",
     type: "submission",
     group: "Submissions",
-    title: "Martinez Landscaping — Proposal",
+    title: "Martinez Landscaping: Proposal",
     hub: "Send Center",
     cta: "Open Proposal",
     href: crossModuleRoutes.sendCenterProposal("prop-martinez", "sent"),
@@ -507,7 +507,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Premium", value: "$9,800" },
     ],
     drawer: {
-      summary: "BOP proposal sent to Martinez Landscaping — awaiting client response.",
+      summary: "BOP proposal sent to Martinez Landscaping: awaiting client response.",
       details: [
         { label: "Producer", value: "Eva" },
         { label: "Broker Fee", value: "$600" },
@@ -572,7 +572,7 @@ export const rawSearchResults: RawSearchResult[] = [
     id: "sr-pending-bind-sub",
     type: "submission",
     group: "Submissions",
-    title: "Rivera Construction — Pending Bind",
+    title: "Rivera Construction: Pending Bind",
     hub: "Commercial Hub",
     status: "Pending",
     lastUpdated: "4 hours ago",
@@ -610,9 +610,9 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Carrier", value: "Travelers" },
     ],
     drawer: {
-      summary: "Contractor WC quote pending carrier response — 4 days open.",
+      summary: "Contractor WC quote pending carrier response: 4 days open.",
       details: [{ label: "Producer", value: "Sarah" }],
-      notes: ["E&O exposure elevated — follow up today."],
+      notes: ["E&O exposure elevated: follow up today."],
       relatedLinks: [{ label: "Submission Tracker", href: crossModuleRoutes.submissionTracker("trk-martinez") }],
     },
   },
@@ -620,7 +620,7 @@ export const rawSearchResults: RawSearchResult[] = [
     id: "sr-send-draft-harbor",
     type: "document",
     group: "Documents",
-    title: "Harbor Logistics — Proposal Draft",
+    title: "Harbor Logistics: Proposal Draft",
     hub: "Send Center",
     status: "Draft",
     lastUpdated: "2 hours ago",
@@ -643,7 +643,7 @@ export const rawSearchResults: RawSearchResult[] = [
     id: "sr-az-note-martinez",
     type: "document",
     group: "Documents",
-    title: "AZ Note — Martinez Landscaping",
+    title: "AZ Note: Martinez Landscaping",
     hub: "Commercial Hub",
     status: "Active",
     lastUpdated: "Yesterday",
@@ -679,9 +679,9 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Policy", value: "Commercial Auto" },
     ],
     drawer: {
-      summary: "Commercial auto policy renewing in 45 days — retention outreach scheduled.",
+      summary: "Commercial auto policy renewing in 45 days: retention outreach scheduled.",
       details: [{ label: "Premium", value: "$12,400" }],
-      notes: ["High churn risk — schedule call."],
+      notes: ["High churn risk: schedule call."],
       relatedLinks: [{ label: "Retention Hub", href: routes.retention }],
     },
   },
@@ -701,7 +701,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Status", value: "Active" },
     ],
     drawer: {
-      summary: "National carrier — strong workers comp appetite for contractors.",
+      summary: "National carrier: strong workers comp appetite for contractors.",
       details: [{ label: "AM Best", value: "A++" }],
       notes: [],
       relatedLinks: [{ label: "Carrier Library", href: routes.carrierLibrary }],
@@ -735,7 +735,7 @@ export const rawSearchResults: RawSearchResult[] = [
     type: "policy",
     group: "Policies",
     section: "Policies",
-    title: "Atlas Roofing — BOP Renewal",
+    title: "Atlas Roofing: BOP Renewal",
     hub: "Commercial Hub",
     status: "Renewal in 14 days",
     lastUpdated: "Today",
@@ -749,7 +749,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Renewal Date", value: "July 11, 2026" },
     ],
     drawer: {
-      summary: "Atlas Roofing renewal package — ICW BOP with umbrella layer.",
+      summary: "Atlas Roofing renewal package: ICW BOP with umbrella layer.",
       details: [
         { label: "Producer", value: "Pedro" },
         { label: "Assigned VA", value: "Pedro" },
@@ -769,7 +769,7 @@ export const rawSearchResults: RawSearchResult[] = [
     type: "alert",
     group: "Alerts",
     section: "Alerts",
-    title: "SLA Breach — Kim Auto Shop",
+    title: "SLA Breach: Kim Auto Shop",
     hub: "VA Operations",
     status: "Critical",
     lastUpdated: "18 min ago",
@@ -783,7 +783,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Type", value: "Missing Docs" },
     ],
     drawer: {
-      summary: "Kim Auto Shop missing driver schedule — SLA breached on document chase.",
+      summary: "Kim Auto Shop missing driver schedule: SLA breached on document chase.",
       details: [
         { label: "Client", value: "Kim Auto Shop" },
         { label: "Producer", value: "Pedro" },
@@ -820,7 +820,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Type", value: "Folio Warning" },
     ],
     drawer: {
-      summary: "Current folio at 61% pace with 7 days remaining — bind velocity below target.",
+      summary: "Current folio at 61% pace with 7 days remaining: bind velocity below target.",
       details: [{ label: "Target Binds", value: "12" }, { label: "Current", value: "7" }],
       notes: [],
       relatedLinks: [{ label: "VA Operations", href: routes.vaOperations }],
@@ -832,7 +832,7 @@ export const rawSearchResults: RawSearchResult[] = [
     type: "note",
     group: "Notes",
     section: "Documents",
-    title: "AZ Note — Martinez Landscaping",
+    title: "AZ Note: Martinez Landscaping",
     hub: "Commercial Hub",
     status: "Internal Flag",
     lastUpdated: "3 hours ago",
@@ -845,7 +845,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Flag", value: "Producer comment" },
     ],
     drawer: {
-      summary: "Producer comment flagged — client wants quote by Friday with umbrella option.",
+      summary: "Producer comment flagged: client wants quote by Friday with umbrella option.",
       details: [
         { label: "Author", value: "Eva" },
         { label: "Client", value: "Martinez Landscaping" },
@@ -859,7 +859,7 @@ export const rawSearchResults: RawSearchResult[] = [
     type: "task",
     group: "Tasks",
     section: "Tasks",
-    title: "Pending Bind — Rivera Construction",
+    title: "Pending Bind: Rivera Construction",
     hub: "Commercial Hub",
     status: "Pending Bind",
     lastUpdated: "Today",
@@ -873,7 +873,7 @@ export const rawSearchResults: RawSearchResult[] = [
       { label: "Due", value: "Today" },
     ],
     drawer: {
-      summary: "Rivera Construction ready to bind — awaiting signed application.",
+      summary: "Rivera Construction ready to bind: awaiting signed application.",
       details: [
         { label: "Client", value: "Rivera Construction" },
         { label: "Carrier", value: "CNA" },
@@ -889,7 +889,7 @@ export const rawSearchResults: RawSearchResult[] = [
     type: "task",
     group: "Tasks",
     section: "Tasks",
-    title: "Approval Waiting — Harbor Logistics",
+    title: "Approval Waiting: Harbor Logistics",
     hub: "Commercial Hub",
     status: "Pending Approval",
     lastUpdated: "Yesterday",

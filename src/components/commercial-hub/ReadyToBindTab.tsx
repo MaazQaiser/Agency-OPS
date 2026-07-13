@@ -204,7 +204,7 @@ export function ReadyToBindTab() {
             <ul className="va-ops-gap-list">
               {paymentPending.map((item) => (
                 <li key={item.id}>
-                  <strong>{item.client}</strong> — {item.paymentStatus}
+                  <strong>{item.client}</strong>: {item.paymentStatus}
                   {item.paymentMethod ? ` · ${item.paymentMethod}` : ""} · {item.va}
                 </li>
               ))}

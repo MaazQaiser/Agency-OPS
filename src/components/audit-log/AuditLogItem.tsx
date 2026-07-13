@@ -124,11 +124,11 @@ export function AuditLogItem({ entry, className, onNavigate }: AuditLogItemProps
               <div className="audit-log-details-grid">
                 <div className="audit-log-details-block">
                   <span className="audit-log-details-label">Previous state</span>
-                  <p>{details.previousState ?? "—"}</p>
+                  <p>{details.previousState ?? "-"}</p>
                 </div>
                 <div className="audit-log-details-block">
                   <span className="audit-log-details-label">New state</span>
-                  <p>{details.newState ?? "—"}</p>
+                  <p>{details.newState ?? "-"}</p>
                 </div>
               </div>
 

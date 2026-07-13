@@ -43,7 +43,7 @@ export function FarmersEdgeIntelligencePanel({
         className="va-ops-drawer farmers-edge-intelligence-drawer module-farmers-edge"
         role="dialog"
         aria-modal="true"
-        aria-label={`${modeLabel} — Farmers Edge intelligence`}
+        aria-label={`${modeLabel}: Farmers Edge intelligence`}
       >
         <header className="fe-intel-drawer-header">
           <div className="fe-intel-drawer-identity">

@@ -5,11 +5,11 @@ export function SpeedToLeadTab() {
   return (
     <>
       <div className="section-hdr">
-        <div className="sh-label">Speed-to-Lead Indicator — Agency-Wide (All Team Members)</div>
+        <div className="sh-label">Speed-to-Lead Indicator: Agency-Wide (All Team Members)</div>
       </div>
       <p className="speed-stl-intro">
         Live timers update every second. This indicator appears in each person&apos;s individual view and in
-        Eva&apos;s owner summary — not Jazmín only.
+        Eva&apos;s owner summary: not Jazmín only.
       </p>
 
       <div className="speed-stl-grid">

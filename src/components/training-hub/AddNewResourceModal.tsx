@@ -66,7 +66,7 @@ export function AddNewResourceModal({ open, onClose, onSave }: AddNewResourceMod
         <div className="va-ops-modal-header">
           <div>
             <h2 className="va-ops-modal-title">Add New Resource</h2>
-            <p className="va-ops-modal-subtitle">Link an external training resource to the library.</p>
+            <p className="va-ops-modal-subtitle">Link an external resource to the Insurance Town training library.</p>
           </div>
           <button type="button" className="va-ops-drawer-close" aria-label="Close" onClick={onClose}>
             <AppIcon name="close" size={18} strokeWidth={2.25} />

@@ -13,24 +13,26 @@ export function SystemOwnershipSection() {
       <SectionLabel>{systemOwnership.section}</SectionLabel>
 
       <AccordionCard icon="folder" title={systemOwnership.title}>
-        <table className="retention">
-          <thead>
-            <tr>
-              {systemOwnership.headers.map((header) => (
-                <th key={header}>{header}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {systemOwnership.rows.map((row) => (
-              <tr key={row.system}>
-                <td>{row.system}</td>
-                <td>{row.who}</td>
-                <td>{row.what}</td>
+        <div className="retention-table-wrap">
+          <table className="retention">
+            <thead>
+              <tr>
+                {systemOwnership.headers.map((header) => (
+                  <th key={header}>{header}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {systemOwnership.rows.map((row) => (
+                <tr key={row.system}>
+                  <td>{row.system}</td>
+                  <td>{row.who}</td>
+                  <td>{row.what}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </AccordionCard>
     </>
   );
@@ -45,26 +47,28 @@ export function FutureRoadmapSection() {
       <SectionLabel>{futureRoadmap.section}</SectionLabel>
 
       <AccordionCard icon="rocket" title={futureRoadmap.title}>
-        <table className="retention">
-          <thead>
-            <tr>
-              {futureRoadmap.headers.map((header) => (
-                <th key={header}>{header}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {futureRoadmap.rows.map((row) => (
-              <tr key={row.feature}>
-                <td>{row.feature}</td>
-                <td>{row.description}</td>
-                <td>
-                  <span className={`pill ${row.pill}`}>{row.phase}</span>
-                </td>
+        <div className="retention-table-wrap">
+          <table className="retention">
+            <thead>
+              <tr>
+                {futureRoadmap.headers.map((header) => (
+                  <th key={header}>{header}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {futureRoadmap.rows.map((row) => (
+                <tr key={row.feature}>
+                  <td>{row.feature}</td>
+                  <td>{row.description}</td>
+                  <td>
+                    <span className={`pill ${row.pill}`}>{row.phase}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </AccordionCard>
     </>
   );

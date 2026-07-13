@@ -65,7 +65,7 @@ function getRiskLevelTag(score: number): { label: string; className: string } {
 }
 
 function cell(value: string | number | undefined) {
-  if (value == null || value === "") return "—";
+  if (value == null || value === "") return "-";
   return value;
 }
 
@@ -136,7 +136,7 @@ export function CoverageChecklistTab() {
 
   const onRulesHandoff = useCallback((payload: Record<string, string | undefined>) => {
     toast.success(
-      `Submission rules applied — ${payload.product ?? "product"}: ${payload.documents ?? "checklist updated"}`,
+      `Submission rules applied: ${payload.product ?? "product"}: ${payload.documents ?? "checklist updated"}`,
     );
     reviewPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [toast]);
@@ -422,7 +422,7 @@ export function CoverageChecklistTab() {
       <CommercialHubWorkspace
         ariaLabel="Coverage review"
         title="Coverage Review"
-        subtitle="Validate required coverage before sending to market — click a row for details."
+        subtitle="Validate required coverage before sending to market: click a row for details."
       >
         <div ref={reviewPanelRef} className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table coverage-review-table">
@@ -459,7 +459,7 @@ export function CoverageChecklistTab() {
 
       <CommercialHubTabFooter title="Bind Blockers" subtitle="Items blocking market submission.">
         {blockers.length === 0 ? (
-          <p className="coverage-blockers-empty">No blockers — account is market ready.</p>
+          <p className="coverage-blockers-empty">No blockers: account is market ready.</p>
         ) : (
           <ul className="coverage-blockers-list">
             {blockers.map((blocker) => (

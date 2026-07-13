@@ -8,7 +8,7 @@ export function PipelineKpiTab() {
     <>
       <div className="pipeline-kpi-section">
         <div className="section-hdr">
-          <div className="sh-label">Pipeline Summary — Folio Period</div>
+          <div className="sh-label">Pipeline Summary: Folio Period</div>
         </div>
         <p className="pipeline-kpi-section-desc">
           Modular KPI blocks sourced from Kyle&apos;s Sales_Scorecard · All lines + all pipelines
@@ -22,7 +22,7 @@ export function PipelineKpiTab() {
       </div>
 
       <div className="section-hdr">
-        <div className="sh-label">Pipeline Breakdown — By Source</div>
+        <div className="sh-label">Pipeline Breakdown: By Source</div>
       </div>
       <DataTable variant="production">
         <thead>

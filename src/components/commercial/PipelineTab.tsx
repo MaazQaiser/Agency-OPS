@@ -146,8 +146,8 @@ export function PipelineTab() {
                   <td>{s.markets} {needsMarketWarning(s) && <span className="mkt-warn"><AppIcon name="triangle-alert" size={12} strokeWidth={2.5} /></span>}</td>
                   <td>{s.quotes}</td>
                   <td>{s.declines}</td>
-                  <td>{s.premium ? `$${s.premium.toLocaleString()}` : "—"}</td>
-                  <td style={{ fontSize: "var(--font-size-12)" }}>{s.followUp || "—"}</td>
+                  <td>{s.premium ? `$${s.premium.toLocaleString()}` : "-"}</td>
+                  <td style={{ fontSize: "var(--font-size-12)" }}>{s.followUp || "-"}</td>
                   <td style={{ color: s.daysOpen > 10 ? "var(--red)" : s.daysOpen > 5 ? "var(--yellow)" : "var(--text-main)" }}>{s.daysOpen}</td>
                   <td><EoRiskBadge score={risk} /></td>
                   <td>
@@ -156,7 +156,7 @@ export function PipelineTab() {
                   <td><span className={`badge ${getStatusBadgeClass(s.status, s.daysOpen)}`}>{s.status}</span></td>
                   <td style={{ fontSize: "var(--font-size-12)", color: s.missingDocs !== "None" && s.missingDocs !== "N/A" ? "var(--red)" : "var(--text-muted)" }}>{s.missingDocs}</td>
                   <td style={{ fontSize: "var(--font-size-12)", color: "var(--text-muted)" }}>{s.uw}</td>
-                  <td style={{ fontSize: "var(--font-size-12)" }}>{s.binding || "—"}</td>
+                  <td style={{ fontSize: "var(--font-size-12)" }}>{s.binding || "-"}</td>
                 </tr>
               );
               })}

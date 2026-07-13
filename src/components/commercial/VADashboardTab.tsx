@@ -85,7 +85,7 @@ export function VADashboardTab() {
       <hr className="divider" />
 
       <div className="chart-card" style={{ marginBottom: 20 }}>
-        <div className="chart-title">Weekly Leaderboard — Submissions Worked</div>
+        <div className="chart-title">Weekly Leaderboard: Submissions Worked</div>
         {vaLeaderboard.map((row, i) => (
           <div key={row.name} className="va-row">
             <div className="va-rank">{i + 1}</div>
@@ -130,7 +130,7 @@ export function VADashboardTab() {
                 <td>{s.markets} {needsMarketWarning(s) && <span className="mkt-warn"><AppIcon name="triangle-alert" size={12} strokeWidth={2.5} /> &lt;3</span>}</td>
                 <td>{s.quotes}</td>
                 <td><span className={`badge ${getStatusBadgeClass(s.status, s.daysOpen)}`}>{s.status === "Overdue" || (s.daysOpen > 10 && s.status !== "Bound" && s.status !== "Quoted") ? "Overdue" : s.status}</span></td>
-                <td style={{ fontSize: "var(--font-size-12)" }}>{s.followUp || "—"}</td>
+                <td style={{ fontSize: "var(--font-size-12)" }}>{s.followUp || "-"}</td>
                 <td style={{ fontSize: "var(--font-size-12)", color: s.missingDocs !== "None" && s.missingDocs !== "N/A" ? "var(--red)" : "var(--text-muted)" }}>{s.missingDocs}</td>
                 <td>
                   <div className="aging-bar">

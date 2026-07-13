@@ -89,7 +89,7 @@ export const leadQueue: DialerLead[] = [
     email: "michael@kimautoshop.com",
     contactHistory: [
       { action: "Lead assigned to Kat", time: "14 minutes ago" },
-      { action: "Referral from JoJo — existing client", time: "14 minutes ago" },
+      { action: "Referral from JoJo: existing client", time: "14 minutes ago" },
     ],
     notes: ["Referred by Greenline Logistics.", "Needs GL quote for auto shop."],
     lastInteraction: "No contact yet",

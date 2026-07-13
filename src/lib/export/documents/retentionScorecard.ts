@@ -35,10 +35,10 @@ export function exportRetentionScorecardPdf(): void {
 
   const body = `
     <section class="export-section">
-      ${kpiGridHtml(valerieKpis, "Valerie — English Retention")}
+      ${kpiGridHtml(valerieKpis, "Valerie: English Retention")}
     </section>
     <section class="export-section">
-      ${kpiGridHtml(tracieKpis, "Tracie — Korean Retention")}
+      ${kpiGridHtml(tracieKpis, "Tracie: Korean Retention")}
     </section>
     <section class="export-section">
       <h2 class="export-section-title">Combined Executive View</h2>

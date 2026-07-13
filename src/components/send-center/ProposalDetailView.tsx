@@ -176,7 +176,7 @@ export function ProposalDetailView({ proposalId, onToast }: ProposalDetailViewPr
     if (action === "Mark Bound") {
       setLifecycleStatus("Bound");
       saveProposalOverrides(detail.id, { lifecycleStatus: "Bound", lastUpdated: new Date().toLocaleString() });
-      onToast(`Marked bound — ${detail.client}`, "success");
+      onToast(`Marked bound: ${detail.client}`, "success");
       return;
     }
     if (action === "Create Invoice") {
@@ -210,7 +210,7 @@ export function ProposalDetailView({ proposalId, onToast }: ProposalDetailViewPr
       onToast(toastMessages.sendCenter.proposalArchived, "success");
       return;
     }
-    onToast(`${action} — ${detail.client}`, "success");
+    onToast(`${action}: ${detail.client}`, "success");
   };
 
   const handleSave = () => {
@@ -264,7 +264,7 @@ export function ProposalDetailView({ proposalId, onToast }: ProposalDetailViewPr
 
       {langMismatch && proposalLang && (
         <LanguageMismatchWarning
-          message={`Proposal sent in ${proposalLang.proposalLanguage} — client prefers ${proposalLang.clientPreferredLanguage}.`}
+          message={`Proposal sent in ${proposalLang.proposalLanguage}: client prefers ${proposalLang.clientPreferredLanguage}.`}
         />
       )}
 
@@ -277,7 +277,7 @@ export function ProposalDetailView({ proposalId, onToast }: ProposalDetailViewPr
                 key={`${from}-${to}`}
                 type="button"
                 className="va-ops-action-btn"
-                onClick={() => onToast(`Translating proposal ${getTranslatePairLabel(from, to)} — ${detail.client}`, "success")}
+                onClick={() => onToast(`Translating proposal ${getTranslatePairLabel(from, to)}: ${detail.client}`, "success")}
               >
                 Translate {getTranslatePairLabel(from, to)}
               </button>
@@ -301,7 +301,7 @@ export function ProposalDetailView({ proposalId, onToast }: ProposalDetailViewPr
               <button
                 type="button"
                 className="va-ops-action-btn"
-                onClick={() => onToast(`Downloading PDF — ${detail.proposalNumber}`, "success")}
+                onClick={() => onToast(`Downloading PDF: ${detail.proposalNumber}`, "success")}
               >
                 <AppIcon name="download" size={14} strokeWidth={2} />
                 Download PDF

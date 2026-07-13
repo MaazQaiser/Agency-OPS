@@ -102,7 +102,7 @@ export function QuoteReviewTab() {
         type: "quote-to-draft",
         sourcePath: `${routes.commercialHub}?view=quote-review`,
         returnLabel: "Quote Review",
-        payload: { client, carrier, premium, brokerFee, quote: `${carrier} — ${premium}` },
+        payload: { client, carrier, premium, brokerFee, quote: `${carrier}: ${premium}` },
       },
       { href: `${routes.commercialHub}?view=quote-review`, label: "Quote Review" },
     );
@@ -284,7 +284,7 @@ export function QuoteReviewTab() {
                       <dt>Selected Quote</dt>
                       <dd>
                         {reviewCase.selectedQuote
-                          ? `${reviewCase.selectedQuote.carrier} — ${reviewCase.selectedQuote.premium}`
+                          ? `${reviewCase.selectedQuote.carrier}: ${reviewCase.selectedQuote.premium}`
                           : "None selected"}
                       </dd>
                     </div>

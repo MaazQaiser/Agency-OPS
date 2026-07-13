@@ -74,7 +74,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       "Review Tasks Due Today and SLA Breaches first each morning.",
       "Use the Activity tab to audit who touched which lead or submission.",
       "Route approvals from the Approvals queue before end of folio day.",
-      "Monitor speed-to-lead on the Overview strip — target under 3 minutes.",
+      "Monitor speed-to-lead on the Overview strip: target under 3 minutes.",
     ],
     metrics: [
       {
@@ -92,7 +92,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-sla",
         term: "SLA Breaches",
-        definition: "Work items past their service-level threshold — calls, docs, or follow-ups that missed the window.",
+        definition: "Work items past their service-level threshold: calls, docs, or follow-ups that missed the window.",
         keywords: ["sla", "breach", "missed"],
       },
       {
@@ -108,7 +108,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
         id: "va-folio",
         title: "Folio context",
         items: [
-          "VA metrics roll up to the active folio period — not calendar month.",
+          "VA metrics roll up to the active folio period. Not calendar month.",
           "Use the folio bar to compare written premium pace vs days remaining.",
         ],
         keywords: ["folio", "pace", "period"],
@@ -145,13 +145,13 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-clock",
         term: "Submission Clock",
-        definition: "Elapsed time waiting on market action — quote, bind, or carrier response since last touch.",
+        definition: "Elapsed time waiting on market action: quote, bind, or carrier response since last touch.",
         keywords: ["clock", "waiting", "market", "time"],
       },
       {
         id: "metric-velocity",
         term: "Lead Velocity",
-        definition: "Stage progression speed — how fast submissions move from intake through quote to bind.",
+        definition: "Stage progression speed: how fast submissions move from intake through quote to bind.",
         keywords: ["velocity", "stage", "progression", "pipeline"],
       },
       {
@@ -169,7 +169,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "shield",
     hubAccent: "farmers-edge",
     summary:
-      "Commercial competitive intelligence hub. Access ITA's commercial edge over competitors — coverage benefits, gaps by vertical, equipment intel, objection reframes, script lines, and cross-sell angles. Commercial only. Zero PL content.",
+      "Commercial competitive intelligence hub. Access ITA's commercial edge over competitors: coverage benefits, gaps by vertical, equipment intel, objection reframes, script lines, and cross-sell angles. Commercial only. Zero PL content.",
     dataSources: [
       { label: "Google Sheets (Tab 12)", type: "config" },
       { label: "Google Sheets (Content Ranges)", type: "live" },
@@ -179,7 +179,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       "Use Playbook View to see all 6 content cards simultaneously during a live call.",
       "Switch to Benefits Only, Scripts Only, or Our Edge for focused views.",
       "Search across cards to find specific terms, objections, or equipment types.",
-      "The vertical list is driven by Tab 12 in Google Sheets — Kyle adds new verticals there.",
+      "The vertical list is driven by Tab 12 in Google Sheets: Kyle adds new verticals there.",
     ],
     metrics: [
       {
@@ -226,7 +226,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-drafts",
         term: "Draft Queue",
-        definition: "Proposals in progress — not yet submitted for producer review.",
+        definition: "Proposals in progress: not yet submitted for producer review.",
         keywords: ["draft", "queue", "proposal"],
       },
       {
@@ -271,7 +271,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     howToUse: [
       "Review Retention % and PIF trends by department tab.",
       "Track Cross-Sell Points against monthly goals.",
-      "Complete ACRs (Annual Coverage Reviews) on schedule.",
+      "Complete Annual Coverage Reviews on schedule.",
       "Log cancellation saves with 60-day hold verification.",
       "Compare Valerie (English) vs Tracie (Korean) scorecards separately.",
     ],
@@ -285,13 +285,13 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-folio-pace",
         term: "Folio Pace",
-        definition: "Progress against folio-period goals — renewals and cross-sell measured per folio, not calendar month.",
+        definition: "Progress against folio-period goals: renewals and cross-sell measured per folio, not calendar month.",
         keywords: ["folio", "pace", "period"],
       },
       {
         id: "metric-acr",
-        term: "ACR Rules",
-        definition: "Annual Coverage Reviews due per household — completed ACRs count toward retention KPIs.",
+        term: "Annual Coverage Review Rules",
+        definition: "Annual Coverage Reviews due per household: completed reviews count toward retention KPIs.",
         keywords: ["acr", "annual", "coverage", "review"],
       },
       {
@@ -301,7 +301,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
         keywords: ["cross-sell", "points", "upsell"],
       },
     ],
-    quickActions: ["Schedule ACR", "Log save attempt", "Refer to producer", "Export scorecard"],
+    quickActions: ["Schedule Annual Coverage Review", "Log save attempt", "Refer to producer", "Export scorecard"],
   },
   "intake-forms": {
     id: "intake-forms",
@@ -309,7 +309,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "clipboard",
     hubAccent: "intake",
     summary:
-      "Structured client intake — form selection, multi-step submission wizard, draft recovery, and submission history with routing visibility.",
+      "Structured client intake: form selection, multi-step submission wizard, draft recovery, and submission history with routing visibility.",
     dataSources: [
       { label: "AgencyZoom", type: "pipeline" },
       { label: "Supabase", type: "live" },
@@ -318,9 +318,9 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     ],
     howToUse: [
       "Start from Form Selector to pick the correct vertical template.",
-      "Use New Submission wizard — save drafts anytime; resume from Drafts tab.",
+      "Use New Submission wizard: save drafts anytime; resume from Drafts tab.",
       "Review Submission History for status, validation, and routing activity.",
-      "Failed queue surfaces routing errors — retry or contact client from row actions.",
+      "Failed queue surfaces routing errors: retry or contact client from row actions.",
       "Notes panel captures VA context alongside the active form step.",
     ],
     metrics: [
@@ -333,7 +333,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-routing",
         term: "Routing Activity",
-        definition: "Post-submit system handoffs — AgencyZoom, Slack, Monday — with success or failure per integration.",
+        definition: "Post-submit system handoffs: AgencyZoom, Slack, Monday: with success or failure per integration.",
         keywords: ["routing", "agencyzoom", "slack"],
       },
       {
@@ -363,7 +363,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "shield",
     hubAccent: "carrier",
     summary:
-      "Central market intelligence — carrier appetite, submission rules, product guides, and contact paths for placement decisions.",
+      "Central market intelligence: carrier appetite, submission rules, product guides, and contact paths for placement decisions.",
     dataSources: [
       { label: "Carrier MGA contacts", type: "config" },
       { label: "Internal appetite notes", type: "approved" },
@@ -398,24 +398,24 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "trophy",
     hubAccent: "training",
     summary:
-      "Department training library — SOPs, Loom walkthroughs, Scribe docs, and onboarding resources for every VA role.",
+      "Insurance Town internal learning platform: SOPs, Loom walkthroughs, Scribe docs, and onboarding resources for every VA role.",
     dataSources: [
       { label: "Loom", type: "live" },
       { label: "Scribe", type: "approved" },
       { label: "Google Drive", type: "config" },
     ],
     howToUse: [
-      "Browse by department or resource type in the library.",
+      "Browse Insurance Town resources by department or content type in the library.",
       "Upload new training with tags for discoverability.",
       "Assign required resources during VA onboarding.",
-      "Use Department Overview for completion tracking.",
+      "Use Department Overview for completion and certification tracking.",
     ],
     metrics: [
       {
         id: "metric-completion",
         term: "Completion Rate",
-        definition: "Percentage of assigned training resources marked complete per department.",
-        keywords: ["completion", "training", "onboarding"],
+        definition: "Percentage of assigned Insurance Town training resources marked complete per department.",
+        keywords: ["completion", "training", "onboarding", "insurance town"],
       },
       {
         id: "metric-required",
@@ -432,14 +432,14 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "dollar",
     hubAccent: "epay",
     summary:
-      "Invoice builder, payment tracking, and trust reconciliation — separates broker fees from premium and triggers Agency Bill workflows.",
+      "Invoice builder, payment tracking, and trust reconciliation: separates broker fees from premium and triggers Agency Bill workflows.",
     dataSources: [
       { label: "ePayPolicy", type: "live" },
       { label: "Supabase", type: "live" },
       { label: "Trust ledger", type: "approved" },
     ],
     howToUse: [
-      "Build invoices in Invoice Builder — separate broker fee from premium lines.",
+      "Build invoices in Invoice Builder: separate broker fee from premium lines.",
       "Track payment status and send client payment links.",
       "Reconcile trust funds in the Trust Reference tab.",
       "Trigger Agency Bill when carrier requires agency-billed workflow.",
@@ -449,7 +449,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-broker-fee",
         term: "Broker Fee Separation",
-        definition: "Broker fees appear as distinct line items — never bundled into premium for compliance.",
+        definition: "Broker fees appear as distinct line items. Never bundled into premium for compliance.",
         keywords: ["broker", "fee", "separation", "premium"],
       },
       {
@@ -461,7 +461,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
       {
         id: "metric-agency-bill",
         term: "Agency Bill Trigger",
-        definition: "Fires when policy is agency-billed — creates carrier payable and trust obligation.",
+        definition: "Fires when policy is agency-billed: creates carrier payable and trust obligation.",
         keywords: ["agency", "bill", "trigger", "carrier"],
       },
     ],
@@ -473,7 +473,7 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     icon: "search",
     hubAccent: "search",
     summary:
-      "Deep operational search across all hubs — clients, submissions, carriers, team, documents, and command actions from one workspace.",
+      "Deep operational search across all hubs: clients, submissions, carriers, team, documents, and command actions from one workspace.",
     dataSources: [
       { label: "All hub indexes", type: "live" },
       { label: "Supabase", type: "pipeline" },
@@ -507,32 +507,89 @@ export const hubHelpContent: Record<HubHelpId, HubHelpContent> = {
     title: "Analytics",
     icon: "bar-chart",
     hubAccent: "analytics",
-    summary: "Agency-wide performance metrics — written premium pace, retention rate, commercial bind rate, quote velocity, and carrier mix. All metrics tied to active folio period.",
+    summary:
+      "Executive performance reporting for Insurance Town: written premium pace, retention health, producer production, quote velocity, and carrier mix. All views follow the active folio period.",
     dataSources: [
       { label: "AgencyZoom", type: "pipeline" },
       { label: "Google Sheets (Folio)", type: "config" },
     ],
     howToUse: [
-      "Overview tab shows 6 KPI cards with 7-point sparklines for trend direction.",
-      "Negative trends show in rose — positive in hub cyan.",
-      "Carrier Mix shows premium distribution and bind rates by carrier for the current month.",
-      "Production and Retention tabs show detailed breakdowns (coming in next build).",
+      "Start on Overview for agency-wide KPI pace against folio targets.",
+      "Open Production for producer leaderboards, close rate, and pipeline stage mix.",
+      "Open Retention for renewals due, save rate, and at-risk accounts by producer.",
+      "Use Velocity to spot quote and bind delays versus target turnaround.",
+      "Use Carrier Mix to review premium concentration and bind performance by market.",
+      "Change the time filter to compare MTD, folio period, and trailing windows.",
     ],
     metrics: [
       {
         id: "metric-wp",
-        term: "Written Premium (MTD)",
-        definition: "Total bound premium for the current month-to-date vs the folio monthly pace target.",
-        keywords: ["written", "premium", "mtd", "pace"],
+        term: "Written Premium",
+        definition:
+          "Bound premium for the selected period versus the folio pace target. Use sparklines to confirm whether pace is accelerating or slipping.",
+        keywords: ["written", "premium", "mtd", "pace", "folio"],
+      },
+      {
+        id: "metric-retention-rate",
+        term: "Retention Rate",
+        definition:
+          "Share of the renewal book retained for the period. Above target means book health is holding; a down trend flags save work this week.",
+        keywords: ["retention", "renewal", "save", "rate"],
       },
       {
         id: "metric-bind",
         term: "Commercial Bind Rate",
-        definition: "Percentage of quoted commercial submissions that convert to a bound policy.",
+        definition:
+          "Percentage of quoted commercial submissions that convert to a bound policy. Falling bind rate usually means quote quality or follow-up lag.",
         keywords: ["bind", "rate", "commercial", "conversion"],
       },
+      {
+        id: "metric-close-rate",
+        term: "Close Rate (Production)",
+        definition:
+          "Quoted-to-bound conversion across producers. Compare against the leaderboard to see whose pipeline needs coaching.",
+        keywords: ["close", "rate", "production", "producer", "leaderboard"],
+      },
+      {
+        id: "metric-save-rate",
+        term: "Save Rate (Retention)",
+        definition:
+          "Renewals retained versus renewals due. Pair with At-Risk Renewals to prioritize outreach before loss.",
+        keywords: ["save", "rate", "retention", "at-risk", "renewals"],
+      },
+      {
+        id: "metric-quote-velocity",
+        term: "Quote Turnaround",
+        definition:
+          "Average days from intake to first quote. Above target means pipeline delay risk before bind pressure shows up.",
+        keywords: ["quote", "velocity", "turnaround", "days"],
+      },
     ],
-    quickActions: ["View production", "Export KPIs", "Compare folios"],
+    quickActions: ["Open Production", "Open Retention", "Export KPIs", "Compare folio periods"],
+    extraSections: [
+      {
+        id: "analytics-views",
+        title: "What each view covers",
+        items: [
+          "Overview: agency pulse: premium pace, retention, bind rate, and quote speed.",
+          "Production: who is writing, how producers rank, and how premium sits across pipeline stages.",
+          "Retention: renewal book health: due counts, save rate, and accounts that need intervention.",
+          "Velocity: where submissions stall between intake, quote, and bind.",
+          "Carrier Mix: which markets carry premium share and where bind rates diverge.",
+        ],
+        keywords: ["production", "retention", "overview", "velocity", "carriers", "tabs", "views"],
+      },
+      {
+        id: "analytics-trends",
+        title: "How to read trends",
+        items: [
+          "Sparklines show short-period direction. Rising cyan is improving; rose marks pressure.",
+          "Benchmark text under each KPI shows distance to folio target or the prior period.",
+          "Act first on negative deltas that are also behind benchmark.",
+        ],
+        keywords: ["sparkline", "trend", "benchmark", "delta", "interpret"],
+      },
+    ],
   },
 };
 

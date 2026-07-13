@@ -361,7 +361,7 @@ export function SubmissionTrackerTab({
               },
               producerNotes: [
                 ...row.producerNotes,
-                `Quote sent for review — ${quote.carrier} at ${quote.premium}`,
+                `Quote sent for review: ${quote.carrier} at ${quote.premium}`,
               ],
             }
           : row,
@@ -382,7 +382,7 @@ export function SubmissionTrackerTab({
       <CommercialHubWorkspace
         ariaLabel="Active submissions"
         title="Active Submissions"
-        subtitle={`${filteredRows.length} submission${filteredRows.length === 1 ? "" : "s"} — click a row to expand pipeline details.`}
+        subtitle={`${filteredRows.length} submission${filteredRows.length === 1 ? "" : "s"}: click a row to expand pipeline details.`}
         actions={
           <>
             <ExportMenu kind="submission-log" />

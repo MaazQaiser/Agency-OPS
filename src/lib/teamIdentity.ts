@@ -18,7 +18,7 @@ export type TeamIdentity = {
   defaultStatus: TeamAvatarStatus;
 };
 
-/** Premium role-based gradient rings — persistent identity layer */
+/** Premium role-based gradient rings: persistent identity layer */
 const RINGS = {
   valerie: "linear-gradient(135deg, #3B82F6, #60A5FA)",
   tracie: "linear-gradient(135deg, #8B5CF6, #A78BFA)",
@@ -48,7 +48,7 @@ export function resolveRoleRingGradient(role: string): string {
   if (r.includes("kat") || r.includes("dialer")) return RINGS.kat;
   if (r.includes("jojo") || r.includes("brokerage va1")) return RINGS.jojo;
   if (r.includes("pedro") && r.includes("va")) return RINGS.pedroVa;
-  if (r.includes("arminda")) return RINGS.arminda;
+  if (r.includes("arminda") || r.includes("agencyzoom operations") || r.includes("agencyzoom ops")) return RINGS.arminda;
   if (r.includes("eva") || r.includes("owner")) return RINGS.eva;
   if (r.includes("finance") || r.includes("trust") || r.includes("billing")) return ROLE_RING_GRADIENTS.finance;
   if (r.includes("training") || r.includes("coach")) return ROLE_RING_GRADIENTS.training;
@@ -152,10 +152,10 @@ export const TEAM_IDENTITIES: TeamIdentity[] = [
   {
     id: "arminda-ops",
     name: "Arminda",
-    role: "AZ Operations",
+    role: "AgencyZoom Operations",
     ringGradient: RINGS.arminda,
     photoUrl: teamPhotoPath("arminda-ops"),
-    aliases: ["arminda", "arminda ops"],
+    aliases: ["arminda", "arminda ops", "agencyzoom operations", "az operations"],
     defaultStatus: "online",
   },
   {

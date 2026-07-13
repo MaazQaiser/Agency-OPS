@@ -9,6 +9,7 @@ import {
   type VerticalContent,
 } from "@/data/farmersEdge";
 import type { VerticalMeta } from "@/hooks/useFarmersEdgeData";
+import { BenefitsWorkspace } from "./BenefitsWorkspace";
 import { EquipmentIntelTable } from "./EquipmentIntelTable";
 import { OurEdgeTable } from "./OurEdgeTable";
 
@@ -96,6 +97,21 @@ export function ContentCardGrid({ activeVertical, activeView, searchQuery, verti
   const showXsell = showAll;
 
   const q = debouncedQuery;
+
+  if (activeView === "benefits") {
+    return (
+      <BenefitsWorkspace
+        benefits={content.benefits}
+        gaps={content.gaps}
+        scripts={content.scripts}
+        xsell={content.xsell}
+        verticalLabel={verticalLabel}
+        searchQuery={q}
+        highlight={highlight}
+        matchesQuery={matchesQuery}
+      />
+    );
+  }
 
   return (
     <div className={`fe-content-grid${activeView !== "playbook" ? " fe-content-grid--focused" : ""}`}>
