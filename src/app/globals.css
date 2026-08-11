@@ -11225,6 +11225,85 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   border-color: var(--primary);
 }
 
+/* Selects — white chevron, room so the arrow doesn’t collide with text */
+select.intake-form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  cursor: pointer;
+  background-color: var(--surface-base);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  color-scheme: dark;
+}
+
+select.intake-form-input option {
+  background: var(--surface-elevated, #1a1f2c);
+  color: var(--text-primary, #f8fafc);
+}
+
+/* Native date/time picker — force a white calendar glyph (avoid invert + color-scheme clash) */
+.intake-form-input[type="date"],
+.intake-form-input[type="time"],
+.intake-form-input[type="datetime-local"],
+.intake-form-input[type="month"],
+.intake-form-input[type="week"] {
+  color-scheme: dark;
+  padding-right: 12px;
+}
+
+.intake-form-input[type="date"]::-webkit-calendar-picker-indicator,
+.intake-form-input[type="time"]::-webkit-calendar-picker-indicator,
+.intake-form-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.intake-form-input[type="month"]::-webkit-calendar-picker-indicator,
+.intake-form-input[type="week"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px 16px;
+  filter: none;
+}
+
+.intake-form-input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.intake-form-input[type="time"]::-webkit-calendar-picker-indicator:hover,
+.intake-form-input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.intake-form-input[type="month"]::-webkit-calendar-picker-indicator:hover,
+.intake-form-input[type="week"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.85;
+}
+
+html[data-theme="light"] select.intake-form-input {
+  color-scheme: light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+html[data-theme="light"] .intake-form-input[type="date"],
+html[data-theme="light"] .intake-form-input[type="time"],
+html[data-theme="light"] .intake-form-input[type="datetime-local"],
+html[data-theme="light"] .intake-form-input[type="month"],
+html[data-theme="light"] .intake-form-input[type="week"] {
+  color-scheme: light;
+}
+
+html[data-theme="light"] .intake-form-input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="light"] .intake-form-input[type="time"]::-webkit-calendar-picker-indicator,
+html[data-theme="light"] .intake-form-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+html[data-theme="light"] .intake-form-input[type="month"]::-webkit-calendar-picker-indicator,
+html[data-theme="light"] .intake-form-input[type="week"]::-webkit-calendar-picker-indicator {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  filter: none;
+  opacity: 0.85;
+}
+
 .intake-form-textarea {
   resize: vertical;
   min-height: 80px;
@@ -11234,6 +11313,31 @@ html[data-theme="obsidian"] .va-ops-kpi-card:has(.kpi-sparkline-wrap--open) {
   font-size: var(--font-size-xs);
   color: var(--danger);
   font-weight: 600;
+}
+
+.intake-form-input.is-invalid,
+.intake-form-field.is-invalid .intake-form-input {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 35%, transparent);
+}
+
+.intake-form-input.is-invalid:focus-visible,
+.intake-form-field.is-invalid .intake-form-input:focus-visible {
+  outline-color: var(--danger);
+  border-color: var(--danger);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 25%, transparent);
+}
+
+.intake-form-field.is-invalid .intake-form-label,
+.intake-form-field.is-invalid > legend.intake-form-label {
+  color: var(--danger);
+}
+
+.intake-form-field.is-invalid .send-center-new-draft-checklist {
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border-subtle));
+  padding: 8px;
+  background: color-mix(in srgb, var(--danger) 6%, transparent);
 }
 
 .intake-form-step-content {
@@ -16884,20 +16988,30 @@ html[data-theme="obsidian"] .cmd-palette {
 
 /* ── New Draft Modal ── */
 .send-center-new-draft-root {
-  z-index: 600;
+  z-index: 700;
 }
 
 .send-center-new-draft-backdrop {
-  pointer-events: none;
+  pointer-events: auto;
+  background: rgba(6, 10, 18, 0.72);
 }
 
 .send-center-new-draft-modal {
   width: min(780px, 100%);
   max-height: min(92vh, 880px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Solid surface so folio/header content never bleeds through */
+  background: var(--surface-elevated, var(--surface-header));
+  isolation: isolate;
 }
 
 .send-center-new-draft-header {
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  background: inherit;
 }
 
 .send-center-new-draft-title-row {
@@ -16908,19 +17022,11 @@ html[data-theme="obsidian"] .cmd-palette {
 }
 
 .send-center-new-draft-status {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-  background: color-mix(in srgb, #f59e0b 15%, transparent);
-  color: #fcd34d;
-  border: 1px solid color-mix(in srgb, #f59e0b 35%, transparent);
-}
-
-.send-center-new-draft-status.saving {
-  background: color-mix(in srgb, var(--primary) 15%, transparent);
-  color: var(--primary-light);
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  /* Match sidebar priority badges (.badge / .badge-yellow) */
+  padding: 6px 14px;
+  font-size: var(--font-size-12);
+  line-height: 1.2;
+  align-self: center;
 }
 
 .send-center-new-draft-saved-at {
@@ -16933,7 +17039,7 @@ html[data-theme="obsidian"] .cmd-palette {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 220px;
   gap: 0;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
@@ -16941,11 +17047,32 @@ html[data-theme="obsidian"] .cmd-palette {
 .send-center-new-draft-form {
   padding: var(--space-lg);
   overflow-y: auto;
-  max-height: min(calc(92vh - 180px), 680px);
+  min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
   border-right: 1px solid var(--border-subtle);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-muted) 45%, transparent) transparent;
+}
+
+.send-center-new-draft-form::-webkit-scrollbar,
+.send-center-new-draft-preview::-webkit-scrollbar {
+  width: 8px;
+}
+
+.send-center-new-draft-form::-webkit-scrollbar-track,
+.send-center-new-draft-preview::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.send-center-new-draft-form::-webkit-scrollbar-thumb,
+.send-center-new-draft-preview::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 40%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .send-center-new-draft-section {
@@ -17003,13 +17130,13 @@ html[data-theme="obsidian"] .cmd-palette {
 }
 
 .send-center-new-draft-preview {
-  position: sticky;
-  top: 0;
-  align-self: start;
+  align-self: stretch;
+  min-height: 0;
   padding: var(--space-lg);
   background: color-mix(in srgb, var(--primary) 4%, var(--surface-header));
-  max-height: min(calc(92vh - 180px), 680px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-muted) 45%, transparent) transparent;
 }
 
 .send-center-new-draft-preview-title {
@@ -21347,10 +21474,14 @@ html[data-theme="obsidian"] .system-health-alert-item.high {
 .ops-toast-viewport {
   position: fixed;
   top: calc(var(--app-header-stack-height, 96px) + var(--space-sm));
-  right: var(--space-md);
-  z-index: 600;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  /* Above modals (≤600) and shortcut help (≤710); below search/overlays (9000+) */
+  z-index: 800;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: var(--space-sm);
   width: min(380px, calc(100vw - var(--space-md) * 2));
   pointer-events: none;
@@ -21381,11 +21512,11 @@ html[data-theme="obsidian"] .system-health-alert-item.high {
 @keyframes ops-toast-enter {
   from {
     opacity: 0;
-    transform: translateX(12px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
@@ -21499,6 +21630,7 @@ html[data-theme="obsidian"] .system-health-alert-item.high {
   .ops-toast-viewport {
     left: var(--space-sm);
     right: var(--space-sm);
+    transform: none;
     width: auto;
   }
 }

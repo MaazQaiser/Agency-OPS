@@ -140,8 +140,6 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
       <RoleTabHeader
         title="Draft Queue"
         subtitle="Proposals in progress: edit, submit for review, or remove drafts."
-        quickActions={[{ id: "new", label: "New Draft", icon: "plus" }]}
-        onQuickActionClick={() => onOpenNewDraft()}
       />
 
       <SendCenterAiInsight insights={sendCenterAiInsights.draftQueue} onAction={handleAiAction} />

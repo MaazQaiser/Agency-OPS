@@ -1,3 +1,4 @@
+import type { AiDraftLanguage, AiDraftTone } from "./aiDraftReview";
 import type { SendPriority } from "./sendCenter";
 
 export type NewDraftFormValues = {
@@ -21,6 +22,12 @@ export type NewDraftFormValues = {
   internalNotes: string;
   specialConditions: string;
   clientRequests: string;
+  /** Outbound compose fields (AI Draft Review flow) */
+  emailSubject: string;
+  emailBody: string;
+  tone: AiDraftTone;
+  language: AiDraftLanguage;
+  selectedTemplate: string;
 };
 
 export const newDraftClientOptions = [
@@ -29,7 +36,6 @@ export const newDraftClientOptions = [
   "Greenline Logistics",
   "Rivera Construction",
   "Atlas Roofing",
-  "Greenline Logistics",
 ];
 
 export const newDraftPolicyTypes = ["BOP", "Workers Comp", "Commercial Auto", "GL Package", "Umbrella", "Multi-line"];
@@ -82,6 +88,11 @@ export const defaultNewDraftFormValues = (): NewDraftFormValues => ({
   internalNotes: "",
   specialConditions: "",
   clientRequests: "",
+  emailSubject: "",
+  emailBody: "",
+  tone: "Professional",
+  language: "English",
+  selectedTemplate: "",
 });
 
 export function parseCurrency(value: string): number {
@@ -121,7 +132,8 @@ export function loadAutosavedDraft(): NewDraftFormValues | null {
   try {
     const raw = localStorage.getItem(NEW_DRAFT_AUTOSAVE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as NewDraftFormValues;
+    const parsed = JSON.parse(raw) as Partial<NewDraftFormValues>;
+    return { ...defaultNewDraftFormValues(), ...parsed };
   } catch {
     return null;
   }

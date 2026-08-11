@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FormSkeleton, LoadingButton } from "@/components/shared/loading";
 import { useDrawerLoading } from "@/hooks/useTabLoading";
 import { useModalCommand } from "@/hooks/useShortcutAction";
@@ -26,15 +27,25 @@ import {
   type NewDraftFormErrors,
   type NewDraftFormValues,
 } from "@/data/newDraftForm";
+import {
+  aiDraftLanguageOptions,
+  aiDraftTemplateOptions,
+  aiDraftToneOptions,
+} from "@/data/aiDraftReview";
 import type { SendPriority } from "@/data/sendCenter";
 import { cn } from "@/lib/cn";
 import { useIsMobile } from "@/lib/useBreakpoint";
+import { ComplianceNoticeFooter } from "./ComplianceNoticeFooter";
 
 type NewDraftModalProps = {
   open: boolean;
   initialValues?: Partial<NewDraftFormValues>;
   onClose: () => void;
   onSave: (form: NewDraftFormValues, submitForReview: boolean) => void;
+  onGenerateAiDraft?: (form: NewDraftFormValues) => void;
+  /** When false, Generate AI Draft is visible but locked. */
+  aiDraftingEnabled?: boolean;
+  aiDisabledTooltip?: string;
 };
 
 function FieldError({ message }: { message?: string }) {
@@ -42,7 +53,15 @@ function FieldError({ message }: { message?: string }) {
   return <span className="intake-form-error" role="alert">{message}</span>;
 }
 
-export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraftModalProps) {
+export function NewDraftModal({
+  open,
+  initialValues,
+  onClose,
+  onSave,
+  onGenerateAiDraft,
+  aiDraftingEnabled = true,
+  aiDisabledTooltip = "AI drafting is currently unavailable.",
+}: NewDraftModalProps) {
   const [form, setForm] = useState<NewDraftFormValues>(defaultNewDraftFormValues);
   const [errors, setErrors] = useState<NewDraftFormErrors>({});
   const [dirty, setDirty] = useState(false);
@@ -54,6 +73,11 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
   const [mobileStep, setMobileStep] = useState(0);
   const isMobile = useIsMobile();
   const toast = useToast();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const mobileSteps = [
     { id: "client", label: "Client" },
@@ -151,10 +175,33 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
     onClose();
   };
 
+  const focusFirstInvalidField = (validation: NewDraftFormErrors) => {
+    const order: (keyof NewDraftFormErrors)[] = [
+      "clientName",
+      "policyType",
+      "producerAssigned",
+      "carrier",
+      "premiumEstimate",
+      "submissionType",
+      "requiredDocuments",
+    ];
+    const firstKey = order.find((key) => validation[key]);
+    if (!firstKey) return;
+    window.requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLElement>(`[data-draft-field="${firstKey}"]`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (el instanceof HTMLElement && "focus" in el) {
+        el.focus({ preventScroll: true });
+      }
+    });
+  };
+
   const handleSubmit = async (submitForReview: boolean) => {
     const validation = validateNewDraftForm(form);
     if (Object.keys(validation).length > 0) {
       setErrors(validation);
+      toast.error(toastMessages.intake.missingFields);
+      focusFirstInvalidField(validation);
       return;
     }
     setSubmitting(true);
@@ -165,6 +212,27 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
     toast.success(
       submitForReview ? toastMessages.sendCenter.submittedForReview : toastMessages.sendCenter.draftSaved,
     );
+    setSubmitting(false);
+  };
+
+  const handleGenerateAiDraft = async () => {
+    if (!aiDraftingEnabled) {
+      toast.error(aiDisabledTooltip);
+      return;
+    }
+    const validation = validateNewDraftForm(form);
+    if (Object.keys(validation).length > 0) {
+      setErrors(validation);
+      toast.error(toastMessages.intake.missingFields);
+      focusFirstInvalidField(validation);
+      return;
+    }
+    if (!onGenerateAiDraft) return;
+    setSubmitting(true);
+    await new Promise((resolve) => window.setTimeout(resolve, 480));
+    clearAutosavedDraft();
+    onGenerateAiDraft(form);
+    resetForm();
     setSubmitting(false);
   };
 
@@ -181,11 +249,19 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
     open,
   );
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
-    <div className="va-ops-modal-root send-center-new-draft-root" role="presentation">
-      <div className="va-ops-drawer-backdrop send-center-new-draft-backdrop" aria-hidden="true" />
+  return createPortal(
+    <div
+      className="va-ops-modal-root send-center-new-draft-root module-send-center"
+      role="presentation"
+    >
+      <button
+        type="button"
+        className="va-ops-drawer-backdrop send-center-new-draft-backdrop"
+        aria-label="Close dialog"
+        onClick={handleClose}
+      />
       <div
         className="va-ops-modal va-ops-modal-wide send-center-new-draft-modal"
         role="dialog"
@@ -198,7 +274,13 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             <div className="send-center-new-draft-title-row">
               <h2 className="va-ops-modal-title">Create New Draft</h2>
               {(dirty || autoSaving) && (
-                <span className={cn("send-center-new-draft-status", autoSaving && "saving")}>
+                <span
+                  className={cn(
+                    "badge",
+                    autoSaving ? "badge-blue" : "badge-yellow",
+                    "send-center-new-draft-status",
+                  )}
+                >
                   {autoSaving ? "Saving…" : "Unsaved changes"}
                 </span>
               )}
@@ -245,21 +327,23 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 0 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Client Information</h3>
               <div className="intake-form-grid">
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.clientName && "is-invalid")}>
                   <span className="intake-form-label">Client Name <span className="intake-form-required">*</span></span>
-                  <input
-                    type="text"
-                    className="intake-form-input"
-                    list="new-draft-clients"
+                  <select
+                    className={cn("intake-form-input", errors.clientName && "is-invalid")}
                     value={form.clientName}
                     onChange={(e) => updateField("clientName", e.target.value)}
-                    placeholder="Search or enter client"
-                  />
-                  <datalist id="new-draft-clients">
+                    aria-label="Client name"
+                    aria-invalid={Boolean(errors.clientName)}
+                    data-draft-field="clientName"
+                  >
+                    <option value="">Select client</option>
                     {newDraftClientOptions.map((c) => (
-                      <option key={c} value={c} />
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
-                  </datalist>
+                  </select>
                   <FieldError message={errors.clientName} />
                 </label>
                 <label className="intake-form-field">
@@ -272,12 +356,14 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
                     placeholder="Legal business name"
                   />
                 </label>
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.policyType && "is-invalid")}>
                   <span className="intake-form-label">Policy Type <span className="intake-form-required">*</span></span>
                   <select
-                    className="intake-form-input"
+                    className={cn("intake-form-input", errors.policyType && "is-invalid")}
                     value={form.policyType}
                     onChange={(e) => updateField("policyType", e.target.value)}
+                    aria-invalid={Boolean(errors.policyType)}
+                    data-draft-field="policyType"
                   >
                     <option value="">Select policy type</option>
                     {newDraftPolicyTypes.map((t) => (
@@ -304,12 +390,14 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
                     onChange={(e) => updateField("renewalDate", e.target.value)}
                   />
                 </label>
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.producerAssigned && "is-invalid")}>
                   <span className="intake-form-label">Producer Assigned <span className="intake-form-required">*</span></span>
                   <select
-                    className="intake-form-input"
+                    className={cn("intake-form-input", errors.producerAssigned && "is-invalid")}
                     value={form.producerAssigned}
                     onChange={(e) => updateField("producerAssigned", e.target.value)}
+                    aria-invalid={Boolean(errors.producerAssigned)}
+                    data-draft-field="producerAssigned"
                   >
                     <option value="">Select producer</option>
                     {newDraftProducerOptions.map((p) => (
@@ -324,21 +412,23 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 1 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Coverage Setup</h3>
               <div className="intake-form-grid">
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.carrier && "is-invalid")}>
                   <span className="intake-form-label">Carrier <span className="intake-form-required">*</span></span>
-                  <input
-                    type="text"
-                    className="intake-form-input"
-                    list="new-draft-carriers"
+                  <select
+                    className={cn("intake-form-input", errors.carrier && "is-invalid")}
                     value={form.carrier}
                     onChange={(e) => updateField("carrier", e.target.value)}
-                    placeholder="Search or enter carrier"
-                  />
-                  <datalist id="new-draft-carriers">
+                    aria-label="Carrier"
+                    aria-invalid={Boolean(errors.carrier)}
+                    data-draft-field="carrier"
+                  >
+                    <option value="">Select carrier</option>
                     {newDraftCarrierOptions.map((c) => (
-                      <option key={c} value={c} />
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
-                  </datalist>
+                  </select>
                   <FieldError message={errors.carrier} />
                 </label>
                 <label className="intake-form-field">
@@ -374,14 +464,16 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
                     placeholder="e.g. $1,000"
                   />
                 </label>
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.premiumEstimate && "is-invalid")}>
                   <span className="intake-form-label">Premium Estimate <span className="intake-form-required">*</span></span>
                   <input
                     type="text"
-                    className="intake-form-input"
+                    className={cn("intake-form-input", errors.premiumEstimate && "is-invalid")}
                     value={form.premiumEstimate}
                     onChange={(e) => updateField("premiumEstimate", e.target.value)}
                     placeholder="e.g. 18420"
+                    aria-invalid={Boolean(errors.premiumEstimate)}
+                    data-draft-field="premiumEstimate"
                   />
                   <FieldError message={errors.premiumEstimate} />
                 </label>
@@ -411,12 +503,14 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 2 && "active-step")}>
               <h3 className="send-center-new-draft-section-title">Submission Info</h3>
               <div className="intake-form-grid">
-                <label className="intake-form-field">
+                <label className={cn("intake-form-field", errors.submissionType && "is-invalid")}>
                   <span className="intake-form-label">Submission Type <span className="intake-form-required">*</span></span>
                   <select
-                    className="intake-form-input"
+                    className={cn("intake-form-input", errors.submissionType && "is-invalid")}
                     value={form.submissionType}
                     onChange={(e) => updateField("submissionType", e.target.value)}
+                    aria-invalid={Boolean(errors.submissionType)}
+                    data-draft-field="submissionType"
                   >
                     <option value="">Select submission type</option>
                     {newDraftSubmissionTypes.map((t) => (
@@ -451,7 +545,11 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
                     ))}
                   </div>
                 </fieldset>
-                <fieldset className="intake-form-field intake-form-field-full">
+                <fieldset
+                  className={cn("intake-form-field intake-form-field-full", errors.requiredDocuments && "is-invalid")}
+                  data-draft-field="requiredDocuments"
+                  tabIndex={-1}
+                >
                   <legend className="intake-form-label">
                     Required Documents <span className="intake-form-required">*</span>
                   </legend>
@@ -504,6 +602,75 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
                 </label>
               </div>
             </section>
+
+            <section className={cn("send-center-new-draft-section", isMobile && mobileStep === 2 && "active-step")}>
+              <h3 className="send-center-new-draft-section-title">Compose Message</h3>
+              <div className="intake-form-grid">
+                <label className="intake-form-field">
+                  <span className="intake-form-label">Selected Template</span>
+                  <select
+                    className="intake-form-input"
+                    value={form.selectedTemplate}
+                    onChange={(e) => updateField("selectedTemplate", e.target.value)}
+                  >
+                    <option value="">Auto-select from policy</option>
+                    {aiDraftTemplateOptions.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="intake-form-field">
+                  <span className="intake-form-label">Tone</span>
+                  <select
+                    className="intake-form-input"
+                    value={form.tone}
+                    onChange={(e) => updateField("tone", e.target.value as typeof form.tone)}
+                  >
+                    {aiDraftToneOptions.map((tone) => (
+                      <option key={tone} value={tone}>{tone}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="intake-form-field">
+                  <span className="intake-form-label">Language</span>
+                  <select
+                    className="intake-form-input"
+                    value={form.language}
+                    onChange={(e) => updateField("language", e.target.value as typeof form.language)}
+                  >
+                    {aiDraftLanguageOptions.map((language) => (
+                      <option key={language} value={language}>{language}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="intake-form-field intake-form-field-full">
+                  <span className="intake-form-label">Subject {aiDraftingEnabled ? "(optional)" : ""}</span>
+                  <input
+                    type="text"
+                    className="intake-form-input"
+                    value={form.emailSubject}
+                    onChange={(e) => updateField("emailSubject", e.target.value)}
+                    placeholder={aiDraftingEnabled ? "Leave blank to let AI generate" : "Write your subject"}
+                  />
+                </label>
+                <label className="intake-form-field intake-form-field-full">
+                  <span className="intake-form-label">
+                    {aiDraftingEnabled ? "Message notes (optional)" : "Message"}
+                  </span>
+                  <textarea
+                    className="intake-form-input intake-form-textarea"
+                    value={form.emailBody}
+                    onChange={(e) => updateField("emailBody", e.target.value)}
+                    rows={aiDraftingEnabled ? 3 : 6}
+                    placeholder={
+                      aiDraftingEnabled
+                        ? "Optional guidance for the AI draft"
+                        : "Compose your email manually"
+                    }
+                  />
+                </label>
+              </div>
+            </section>
           </div>
 
           <aside
@@ -527,6 +694,11 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
           </>
           )}
         </div>
+
+        <ComplianceNoticeFooter
+          state={aiDraftingEnabled ? "normal" : "warning"}
+          className="send-center-compliance-notice--modal"
+        />
 
         <div className={cn("va-ops-modal-footer send-center-new-draft-footer", isMobile && "send-center-new-draft-footer--stepper")}>
           {isMobile && mobileStep < 3 ? (
@@ -556,24 +728,49 @@ export function NewDraftModal({ open, initialValues, onClose, onSave }: NewDraft
             <LoadingButton
               className="va-ops-role-action-btn"
               loading={submitting}
-              loadingLabel="Submitting…"
-              onClick={() => void handleSubmit(true)}
-            >
-              Save &amp; Submit for Review
-            </LoadingButton>
-            <LoadingButton
-              className="va-ops-role-action-btn intake-form-continue-btn"
-              loading={submitting}
               loadingLabel="Saving…"
               onClick={() => void handleSubmit(false)}
             >
               Save Draft
             </LoadingButton>
+            <LoadingButton
+              className="va-ops-role-action-btn"
+              loading={submitting}
+              loadingLabel="Submitting…"
+              onClick={() => void handleSubmit(true)}
+            >
+              Save &amp; Submit for Review
+            </LoadingButton>
+            {onGenerateAiDraft && (
+              aiDraftingEnabled ? (
+                <LoadingButton
+                  className="va-ops-role-action-btn intake-form-continue-btn"
+                  loading={submitting}
+                  loadingLabel="Generating…"
+                  onClick={() => void handleGenerateAiDraft()}
+                >
+                  Generate AI Draft
+                </LoadingButton>
+              ) : (
+                <button
+                  type="button"
+                  className="va-ops-role-action-btn send-center-ai-disabled-generate send-center-ai-disabled-generate--footer"
+                  disabled
+                  title={aiDisabledTooltip}
+                  aria-label="Generate AI Draft (disabled)"
+                >
+                  <AppIcon name="lock" size={14} strokeWidth={2.25} aria-hidden />
+                  Generate AI Draft
+                  <span className="send-center-ai-disabled-generate-hint">Disabled</span>
+                </button>
+              )
+            )}
           </div>
             </>
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
