@@ -1,5 +1,6 @@
 import type { AppIconName } from "@/components/ui/AppIcon";
 import type { AccessTarget } from "@/data/subscriptionTiers";
+import { HUB_THEMES } from "@/lib/hubThemes";
 import { routes } from "@/lib/routes";
 
 export const SIDEBAR_COLLAPSED_STORAGE_KEY = "agency-os-sidebar-collapsed";
@@ -13,6 +14,7 @@ export type SidebarNavKey =
   | "training-hub"
   | "carrier-library"
   | "epay-policy"
+  | "global-search"
   | "send-center"
   | "analytics"
   | "audit-logs";
@@ -39,7 +41,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "dashboard",
     label: "Dashboard",
     icon: "home",
-    accent: "#6366f1",
+    accent: HUB_THEMES.vaOperations.navAccent,
     accentClass: "dashboard",
     href: `${routes.vaOperations}?view=overview`,
     module: "va-operations",
@@ -48,7 +50,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "va-operations",
     label: "VA Operations",
     icon: "users",
-    accent: "#4f46e5",
+    accent: HUB_THEMES.vaOperations.navAccent,
     accentClass: "va",
     href: `${routes.vaOperations}?view=tasks`,
     module: "va-operations",
@@ -58,7 +60,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "commercial",
     label: "Commercial Hub",
     icon: "target",
-    accent: "#0d9488",
+    accent: HUB_THEMES.commercial.navAccent,
     accentClass: "commercial",
     href: routes.commercialHub,
     module: "commercial",
@@ -68,7 +70,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "farmers-edge",
     label: "Farmers Edge",
     icon: "telescope",
-    accent: "#059669",
+    accent: HUB_THEMES.farmersEdge.navAccent,
     accentClass: "farmers",
     href: routes.farmersEdge,
     module: "farmers-edge",
@@ -77,7 +79,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "intake-forms",
     label: "Intake Forms",
     icon: "clipboard",
-    accent: "#d97706",
+    accent: HUB_THEMES.intakeForms.navAccent,
     accentClass: "intake",
     href: routes.intakeForms,
     module: "intake-forms",
@@ -87,7 +89,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "training-hub",
     label: "Training Hub",
     icon: "trophy",
-    accent: "#7c3aed",
+    accent: HUB_THEMES.training.navAccent,
     accentClass: "training",
     href: routes.trainingHub,
     module: "training-hub",
@@ -96,7 +98,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "carrier-library",
     label: "Carrier Library",
     icon: "shield",
-    accent: "#1d4ed8",
+    accent: HUB_THEMES.carrierLibrary.navAccent,
     accentClass: "carrier",
     href: routes.carrierLibrary,
     module: "carrier-library",
@@ -105,16 +107,25 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "epay-policy",
     label: "ePayPolicy",
     icon: "dollar",
-    accent: "#10b981",
+    accent: HUB_THEMES.ePayPolicy.navAccent,
     accentClass: "epay",
     href: routes.epayPolicy,
     module: "epay-policy",
   },
   {
+    key: "global-search",
+    label: "Global Search",
+    icon: "search",
+    accent: HUB_THEMES.globalSearch.navAccent,
+    accentClass: "search",
+    href: routes.globalSearch,
+    module: "global-search",
+  },
+  {
     key: "send-center",
     label: "Send Center",
     icon: "send",
-    accent: "#e11d48",
+    accent: HUB_THEMES.sendCenter.navAccent,
     accentClass: "send",
     href: routes.sendCenter,
     module: "send-center",
@@ -124,7 +135,7 @@ export const sidebarNavItems: SidebarNavItem[] = [
     key: "analytics",
     label: "Analytics",
     icon: "bar-chart",
-    accent: "#0891b2",
+    accent: HUB_THEMES.analytics.navAccent,
     accentClass: "analytics",
     href: routes.analytics,
     module: "analytics",
@@ -178,8 +189,8 @@ export function isSidebarNavActive(
 export function sidebarAccentStyle(accent: string): Record<string, string> {
   return {
     "--sidebar-item-accent": accent,
-    "--sidebar-item-glow": `color-mix(in srgb, ${accent} 28%, transparent)`,
-    "--sidebar-item-bg": `color-mix(in srgb, ${accent} 14%, transparent)`,
-    "--sidebar-item-bg-active": `color-mix(in srgb, ${accent} 20%, transparent)`,
+    "--sidebar-item-glow": `color-mix(in srgb, ${accent} 22%, transparent)`,
+    "--sidebar-item-bg": `color-mix(in srgb, ${accent} 10%, transparent)`,
+    "--sidebar-item-bg-active": `color-mix(in srgb, ${accent} 12%, transparent)`,
   };
 }

@@ -1,0 +1,2167 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Visual QA contrast + spacing fixes
+   Presentation only. Loaded last. Does not change data or behavior.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+.app-shell,
+.hub-shell {
+  --text-muted: #7A8794;
+  --text-tertiary: #7A8794;
+  --ih-meta: #7A8794;
+  --qa-label: #526979;
+  --qa-muted: #7A8794;
+  --qa-text: #1C2B35;
+  --qa-border: #E6EBF2;
+  --qa-card: #FFFFFF;
+  --qa-workspace: #F7FBFD;
+}
+
+/* ── P0: Sidebar contrast on dark navy ── */
+.agency-sidebar .sidebar-nav-item,
+.agency-sidebar .sidebar-nav-label {
+  color: rgba(247, 251, 253, 0.88);
+}
+
+.agency-sidebar .sidebar-nav-icon-wrap,
+.agency-sidebar .agency-sidebar-collapse-btn {
+  color: rgba(247, 251, 253, 0.72);
+}
+
+.agency-sidebar .sidebar-nav-item:hover,
+.agency-sidebar .sidebar-nav-item:hover .sidebar-nav-label {
+  color: #FFFFFF;
+}
+
+.agency-sidebar .sidebar-nav-item--active,
+.agency-sidebar .sidebar-nav-item--active .sidebar-nav-label,
+.global-shell .sidebar-nav-item--active,
+.app-shell .sidebar-nav-item--active {
+  color: #F7FBFD;
+}
+
+.agency-sidebar .sidebar-nav-item--active {
+  background: color-mix(in srgb, #F7FBFD 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 28%, transparent);
+}
+
+.agency-sidebar .sidebar-nav-item--active .sidebar-nav-icon-wrap,
+.agency-sidebar .sidebar-nav-item--active .sidebar-nav-icon-wrap svg,
+.global-shell .sidebar-nav-item--active .sidebar-nav-icon-wrap,
+.app-shell .sidebar-nav-item--active .sidebar-nav-icon-wrap {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 36%, #F7FBFD);
+}
+
+.agency-sidebar .sidebar-nav-item--active .sidebar-nav-badge--dot {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 36%, #F7FBFD);
+}
+
+.agency-sidebar-brand-subtitle {
+  color: rgba(247, 251, 253, 0.72);
+}
+
+/* ── P0: KPI / section labels on white ── */
+.app-content .va-ops-kpi-label,
+.app-content .kpi-label,
+.app-content .analytics-kpi-label,
+.app-content .send-center-kpi-command-label,
+.app-content .aos-kpi-label,
+.hub-shell .va-ops-kpi-label,
+.hub-shell .kpi-label,
+.hub-shell .analytics-kpi-label {
+  color: var(--qa-label);
+  font-weight: 700;
+}
+
+.app-content .kpi-sub,
+.app-content .va-ops-kpi-sub,
+.app-content .analytics-kpi-sub,
+.app-content .va-ops-section-sub,
+.app-content .ih-section-sub,
+.app-content .meta,
+.app-content .h-meta,
+.app-content time,
+.app-content .folio-progress-stat-label,
+.app-content .folio-progress-dates,
+.app-top-nav-search {
+  color: var(--qa-muted);
+}
+
+.app-content .va-ops-kpi-value,
+.app-content .kpi-value,
+.app-content .kpi-val,
+.app-content .analytics-kpi-value {
+  color: var(--qa-text);
+}
+
+/* ── Hero text on hub-colored headers ── */
+.hub-shell .va-ops-page-header-eyebrow,
+.hub-shell .commercial-hub-hero-eyebrow,
+.hub-shell .owner-overview-hero-eyebrow,
+.hub-shell .va-ops-page-header-left::before,
+.owner-overview-hero-eyebrow,
+.module-va-operations .owner-overview-hero .owner-overview-hero-subtitle,
+.hub-shell .va-ops-page-subtitle,
+.hub-shell .commercial-hub-hero-subtitle,
+.hub-shell .owner-overview-hero-subtitle {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-label {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ── Status: keep semantic hue, readable text ── */
+.app-content .aos-status-pill--positive,
+.app-content .badge-green,
+.app-content .pill-green,
+.app-content .va-ops-status-pill.active {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+  border: 1px solid color-mix(in srgb, #10B981 32%, #E6EBF2);
+}
+
+.app-content .aos-status-pill--warning,
+.app-content .badge-yellow,
+.app-content .badge-amber,
+.app-content .pill-amber,
+.app-content .va-ops-status-pill.away {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+  border: 1px solid color-mix(in srgb, #F59E0B 36%, #E6EBF2);
+}
+
+.app-content .aos-status-pill--danger,
+.app-content .badge-red,
+.app-content .pill-red {
+  color: color-mix(in srgb, #F43F5E 40%, #1C2B35);
+  border: 1px solid color-mix(in srgb, #F43F5E 34%, #E6EBF2);
+}
+
+.app-content .aos-status-pill--info,
+.app-content .badge-blue,
+.app-content .pill-blue {
+  color: color-mix(in srgb, #3B82F6 42%, #1C2B35);
+  border: 1px solid color-mix(in srgb, #3B82F6 32%, #E6EBF2);
+}
+
+.app-content .aos-status-pill--draft,
+.app-content .badge-violet,
+.app-content .pill-violet {
+  color: color-mix(in srgb, #8B5CF6 42%, #1C2B35);
+  border: 1px solid color-mix(in srgb, #8B5CF6 32%, #E6EBF2);
+}
+
+/* ── Tabs ── */
+.va-ops-tab-btn,
+.tab,
+.tab-btn,
+.send-center-tab-btn {
+  color: var(--qa-label);
+}
+
+.va-ops-tab-btn.active,
+.tab.active,
+.tab-btn.active,
+.send-center-tab-btn.active {
+  color: var(--hub-primary);
+  font-weight: 600;
+}
+
+/* ── Cards + grids ── */
+.app-content .va-ops-kpi-card,
+.app-content .kpi-card,
+.app-content .aos-kpi-card,
+.app-content .analytics-kpi-card,
+.app-content .aos-card--info,
+.app-content .chart-card,
+.app-content .va-ops-panel,
+.app-content .ih-panel {
+  background: var(--qa-card);
+  border: 1px solid var(--qa-border);
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+}
+
+.app-content .va-ops-kpi-card,
+.app-content .kpi-card,
+.app-content .aos-kpi-card,
+.app-content .analytics-kpi-card,
+.app-content .commercial-hub-kpi-uniform.va-ops-kpi-card,
+.app-content .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card,
+.module-training-hub .training-kpi-grid .va-ops-kpi-card,
+.module-training-hub .training-kpi-card--primary,
+.module-carrier-library .carrier-kpi-grid .va-ops-kpi-card,
+.module-intake-forms .intake-kpi-grid .va-ops-kpi-card,
+.module-send-center .send-center-kpi-grid .va-ops-kpi-card {
+  padding: 18px 20px;
+}
+
+.app-content .va-ops-kpi-tooltip,
+.hub-shell .va-ops-kpi-tooltip,
+.module-commercial-hub .va-ops-kpi-tooltip,
+.module-va-operations .va-ops-kpi-tooltip {
+  display: none;
+}
+
+.app-content .intake-form-card-icon,
+.module-intake-forms .intake-form-card-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.app-content .intake-form-card-icon svg,
+.module-intake-forms .intake-form-card-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.module-intake-forms .intake-form-selector .commercial-hub-mid-grid,
+.app-content .intake-form-selector .commercial-hub-mid-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.app-content .va-ops-kpi-grid,
+.app-content .kpi-grid,
+.app-content .analytics-kpi-grid,
+.app-content .hub-kpi-grid,
+.app-content .send-center-kpi-command-grid {
+  gap: 16px;
+}
+
+.app-content .va-ops-panel,
+.app-content .ih-panel,
+.app-content .chart-card {
+  padding: 20px;
+}
+
+.app-content .va-ops-section-title + .va-ops-section-sub,
+.app-content .ih-section-title + .ih-section-sub {
+  margin-top: 8px;
+}
+
+.app-content .va-ops-section-sub + *,
+.app-content .ih-section-sub + *,
+.app-content .va-ops-panel-header + .va-ops-kpi-grid,
+.app-content .va-ops-panel-header + table,
+.app-content .va-ops-panel-header + .table-wrap {
+  margin-top: 16px;
+}
+
+.app-content .ih-section,
+.app-content .va-ops-overview-section,
+.app-content .owner-overview-section {
+  margin-bottom: 32px;
+}
+
+/* ── Tables ── */
+.app-content thead th {
+  background: var(--qa-workspace);
+  color: var(--qa-label);
+  border-bottom: 1px solid var(--qa-border);
+  height: 44px;
+}
+
+.app-content tbody td {
+  min-height: 52px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--qa-border);
+  color: var(--qa-text);
+}
+
+.app-content tbody tr:hover td {
+  background: var(--qa-workspace);
+}
+
+/* ── Forms ── */
+.app-content input:not([type="checkbox"]):not([type="radio"]):not(.va-ops-search-input),
+.app-content select,
+.app-content .header-filter-select,
+.app-content .va-ops-search {
+  min-height: 42px;
+  height: 42px;
+  border: 1px solid #D8E0E8;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: var(--qa-text);
+}
+
+.app-content textarea {
+  border: 1px solid #D8E0E8;
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: var(--qa-text);
+}
+
+.app-content .epay-form-label,
+.app-content .va-ops-form-label,
+.app-content label > span:first-child {
+  color: var(--qa-label);
+}
+
+.app-content .epay-form-field,
+.app-content .va-ops-form-field {
+  gap: 8px;
+}
+
+/* ── Buttons ── */
+.app-content .va-ops-action-btn,
+.app-content .btn-primary,
+.app-content .btn-secondary,
+.app-content .commercial-hub-btn {
+  min-height: 42px;
+  border-radius: 10px;
+}
+
+.app-content .va-ops-action-btn:disabled,
+.app-content .btn-primary:disabled {
+  opacity: 0.55;
+  color: var(--qa-muted);
+}
+
+/* ── Overflow / wrapping ── */
+.app-content,
+.hub-shell,
+.va-ops-kpi-grid,
+.kpi-grid,
+.analytics-kpi-grid,
+.table-wrap,
+.commercial-hub-table-wrap {
+  min-width: 0;
+}
+
+.app-content td,
+.app-content .va-ops-kpi-sub,
+.app-content .kpi-sub {
+  overflow-wrap: break-word;
+}
+
+.app-content table {
+  width: 100%;
+}
+
+/* ── Folio strip ── */
+.global-folio-strip .folio-progress-stat-label,
+.global-folio-strip .folio-progress-dates,
+.global-folio-days {
+  color: var(--qa-muted);
+}
+
+.global-folio-strip .folio-progress-stat-value,
+.global-folio-strip .folio-progress-pct {
+  color: var(--qa-text);
+}
+
+/* ── Links that were too faint ── */
+.app-content a.va-ops-section-link,
+.app-content .view-all,
+.app-content .va-ops-panel-link {
+  color: var(--hub-primary);
+  font-weight: 600;
+}
+
+/* ── Hub pulse strip: light, readable chips ── */
+.hub-local-pulse {
+  background: #FFFFFF;
+  border-bottom: 1px solid #E6EBF2;
+  min-height: 44px;
+  padding: 8px 32px;
+}
+
+.hub-local-pulse-label {
+  color: #7A8794;
+}
+
+.hub-local-pulse-chip {
+  color: #1C2B35;
+  background: #F7FBFD;
+  border: 1px solid #E6EBF2;
+}
+
+.hub-local-pulse-chip strong {
+  color: #1C2B35;
+}
+
+.hub-local-pulse-chip--red {
+  background: color-mix(in srgb, #F43F5E 12%, #FFFFFF);
+  border-color: color-mix(in srgb, #F43F5E 34%, #E6EBF2);
+  color: color-mix(in srgb, #F43F5E 40%, #1C2B35);
+}
+
+.hub-local-pulse-chip--amber {
+  background: color-mix(in srgb, #F59E0B 12%, #FFFFFF);
+  border-color: color-mix(in srgb, #F59E0B 36%, #E6EBF2);
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+}
+
+.hub-local-pulse-chip--blue {
+  background: color-mix(in srgb, #3B82F6 12%, #FFFFFF);
+  border-color: color-mix(in srgb, #3B82F6 32%, #E6EBF2);
+  color: color-mix(in srgb, #3B82F6 42%, #1C2B35);
+}
+
+/* ── Hero actions on hub headers ── */
+.va-ops-page-header .va-ops-role-action-btn,
+.va-ops-page-header .export-menu-trigger,
+.va-ops-page-header .commercial-hub-header-actions .va-ops-role-action-btn,
+.module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .va-ops-role-action-btn,
+.module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .export-menu-trigger {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #FFFFFF;
+}
+
+.va-ops-page-header .va-ops-role-action-btn:hover,
+.module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .va-ops-role-action-btn:hover,
+.module-commercial-hub .va-ops-page-header .commercial-hub-header-actions .export-menu-trigger:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.module-commercial-hub .va-ops-page-header .va-ops-page-subtitle,
+.hub-shell .va-ops-page-header .va-ops-page-subtitle,
+.module-va-operations .owner-overview-hero .owner-overview-hero-subtitle {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 1279px) {
+  .hub-shell .va-ops-tab-content,
+  .app-content .va-ops-tab-content,
+  .hub-shell .va-ops-page-header,
+  .hub-shell .va-ops-tab-nav {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hub-shell .va-ops-tab-content,
+  .app-content .va-ops-tab-content,
+  .hub-shell .va-ops-page-header,
+  .hub-shell .module-page-header-row,
+  .hub-shell .va-ops-tab-nav,
+  .app-content .va-ops-tab-nav,
+  html[data-theme="light"] .module-commercial-hub .commercial-hub-hero,
+  html[data-theme="light"] .module-commercial-hub .va-ops-page-header,
+  html[data-theme="light"] .module-va-operations .va-ops-page-header,
+  html[data-theme="light"] .module-va-operations .owner-overview-hero,
+  .module-commercial-hub .commercial-hub-hero.va-ops-page-header {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  html[data-theme="light"] .module-commercial-hub .commercial-hub-hero,
+  .module-commercial-hub .commercial-hub-hero.va-ops-page-header {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .hub-local-pulse {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .app-content .va-ops-kpi-card,
+  .app-content .kpi-card,
+  .app-content .aos-kpi-card {
+    padding: 16px;
+  }
+
+  .cmd-palette {
+    padding: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cmd-palette-panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: min(86vh, 640px);
+  }
+
+  .help-drawer {
+    width: min(100vw, 400px);
+  }
+}
+
+/* ── P0: leftover dark-theme text on light surfaces ── */
+.hub-shell .hub-local-pulse,
+.hub-shell .hub-local-pulse-label,
+.app-content .hub-local-pulse-label {
+  color: #7A8794;
+}
+
+.app-content .va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label,
+.hub-shell .va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label,
+.module-commercial-hub .commercial-hub-kpi-uniform .va-ops-kpi-label,
+.module-commercial-hub .commercial-hub-kpi-flagship .va-ops-kpi-label {
+  color: #526979;
+}
+
+.app-content .aos-kpi-card--positive .va-ops-kpi-value,
+.app-content .va-ops-kpi-card.green .va-ops-kpi-value,
+.app-content .aos-kpi-card--positive .kpi-value,
+.app-content .va-ops-kpi-value.aos-finance,
+.app-content .kpi-value.aos-finance,
+.app-content .analytics-kpi-value.aos-finance,
+.module-commercial-hub .commercial-hub-kpi-uniform.green .va-ops-kpi-value {
+  color: color-mix(in srgb, #10B981 62%, #1C2B35) !important;
+}
+
+.app-content .aos-kpi-card--warning .va-ops-kpi-value,
+.app-content .va-ops-kpi-card.amber .va-ops-kpi-value,
+.app-content .va-ops-kpi-card.yellow .va-ops-kpi-value {
+  color: color-mix(in srgb, #F59E0B 55%, #1C2B35);
+}
+
+.app-content .aos-kpi-card--danger .va-ops-kpi-value,
+.app-content .va-ops-kpi-card.red .va-ops-kpi-value {
+  color: color-mix(in srgb, #F43F5E 58%, #1C2B35);
+}
+
+.app-content .aos-kpi-card--info .va-ops-kpi-value,
+.app-content .va-ops-kpi-card.info .va-ops-kpi-value {
+  color: color-mix(in srgb, #3B82F6 48%, #1C2B35);
+  text-shadow: none;
+  font-weight: 700;
+}
+
+.app-content .va-ops-kpi-card.primary .va-ops-kpi-value,
+.module-va-operations .va-ops-kpi-card.primary .va-ops-kpi-value,
+.module-va-operations .va-ops-kpi-card.info .va-ops-kpi-value,
+.module-va-operations .aos-kpi-card--info .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.info .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.primary .va-ops-kpi-value,
+.va-ops-overview--flagship .ih-kpi--primary.info .va-ops-kpi-value,
+.va-ops-overview--flagship .ih-kpi--primary.primary .va-ops-kpi-value {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 70%, #1C2B35);
+  text-shadow: none;
+  font-weight: 700;
+}
+
+.app-content .va-ops-kpi-card.teal .va-ops-kpi-value,
+.app-content .aos-kpi-card--commercial .va-ops-kpi-value {
+  color: color-mix(in srgb, #0D9488 62%, #1C2B35);
+}
+
+.module-commercial-hub .va-ops-panel,
+.module-commercial-hub .commercial-hub-tab-workspace,
+.module-commercial-hub .commercial-hub-tab-intel,
+.module-commercial-hub .commercial-hub-tab-footer,
+.module-commercial-hub .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+}
+
+.module-commercial-hub .va-ops-panel:hover,
+.module-commercial-hub .commercial-hub-tab-workspace:hover,
+.module-commercial-hub .commercial-hub-tab-intel:hover,
+.module-commercial-hub .commercial-hub-tab-footer:hover,
+.module-commercial-hub .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card:hover {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+  box-shadow: 0 8px 24px rgba(30, 50, 80, 0.09);
+}
+
+.module-commercial-hub .commercial-hub-table th,
+.module-commercial-hub .commercial-hub-table thead th,
+.module-va-operations .va-ops-priority-table th,
+.module-va-operations .va-ops-lead-table th {
+  color: #526979;
+  background: #F7FBFD;
+  border-bottom: 1px solid #E6EBF2;
+}
+
+.module-commercial-hub .commercial-hub-btn-secondary-action {
+  color: #0D9488;
+  background: color-mix(in srgb, #0D9488 8%, #FFFFFF);
+  border: 1px solid color-mix(in srgb, #0D9488 28%, #E6EBF2);
+}
+
+.module-commercial-hub .commercial-hub-btn-tertiary-action {
+  color: #526979;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+}
+
+.module-commercial-hub .commercial-hub-inline-expand {
+  background: #F7FBFD;
+  border-top: 1px solid #E6EBF2;
+}
+
+.module-commercial-hub .submission-tracker-row.expanded,
+.module-commercial-hub .submission-tracker-detail-row td {
+  background: #F7FBFD;
+  border-bottom-color: #E6EBF2;
+}
+
+.commercial-expand-meta,
+.commercial-expand-empty,
+.commercial-expand-footer-label,
+.module-commercial-hub .commercial-docs-accordion-chevron,
+.module-commercial-hub .commercial-docs-missing-count,
+.module-commercial-hub .commercial-docs-owner {
+  color: #7A8794;
+}
+
+.commercial-expand-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+}
+
+.commercial-expand-card-title {
+  color: #526979;
+}
+
+.commercial-expand-chip,
+.commercial-expand-step {
+  color: #1C2B35;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+}
+
+.commercial-expand-line-list li,
+.commercial-expand-notes-list li {
+  color: #1C2B35;
+}
+
+.commercial-expand-line-list strong,
+.commercial-expand-note-tag {
+  color: color-mix(in srgb, #0D9488 62%, #1C2B35);
+}
+
+.commercial-expand-step.is-complete {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+  background: color-mix(in srgb, #10B981 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #10B981 28%, #E6EBF2);
+}
+
+.commercial-expand-chip--missing {
+  color: color-mix(in srgb, #F43F5E 40%, #1C2B35);
+  background: color-mix(in srgb, #F43F5E 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #F43F5E 28%, #E6EBF2);
+}
+
+.commercial-expand-chip--pending,
+.commercial-expand-warning {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+}
+
+.help-drawer-header-kicker {
+  color: color-mix(in srgb, var(--hub-primary, #10B981) 55%, #1C2B35);
+  font-weight: 700;
+}
+
+.module-analytics .va-ops-page-header .analytics-time-filter {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.module-analytics .va-ops-page-header .analytics-time-filter-btn {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.module-analytics .va-ops-page-header .analytics-time-filter-btn.active {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ── P0: Active Team Members / primary KPI numerals on white ── */
+.app-content .va-ops-kpi-value,
+.hub-shell .va-ops-kpi-value {
+  text-shadow: none;
+}
+
+/* ── Hero search: placeholder must read on the white field ── */
+.hub-shell .va-ops-page-header .va-ops-search,
+.module-va-operations .va-ops-page-header .va-ops-search,
+.module-va-operations .owner-overview-hero .va-ops-search {
+  background: #FFFFFF;
+  border: none;
+  box-shadow: none;
+}
+
+.hub-shell .va-ops-page-header .va-ops-search-icon,
+.module-va-operations .va-ops-page-header .va-ops-search-icon,
+.module-va-operations .owner-overview-hero .va-ops-search-icon {
+  color: #526979;
+}
+
+.app-content .va-ops-search-input,
+.app-content .va-ops-page-header input.va-ops-search-input,
+.hub-shell .va-ops-search-input,
+.hub-shell .va-ops-page-header .va-ops-search-input,
+.module-va-operations .va-ops-page-header .va-ops-search-input,
+.module-va-operations .owner-overview-hero .va-ops-search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  min-height: 0;
+  color: #1C2B35;
+  -webkit-text-fill-color: #1C2B35;
+}
+
+.app-content .va-ops-search-input::-webkit-search-decoration,
+.app-content .va-ops-search-input::-webkit-search-cancel-button,
+.app-content .va-ops-search-input::-webkit-search-results-button,
+.app-content .va-ops-search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.app-content .va-ops-page-header .va-ops-search-input::placeholder,
+.hub-shell .va-ops-page-header .va-ops-search-input::placeholder,
+.module-va-operations .va-ops-page-header .va-ops-search-input::placeholder,
+.module-va-operations .owner-overview-hero .va-ops-search-input::placeholder {
+  color: #7A8794;
+  opacity: 1;
+  -webkit-text-fill-color: #7A8794;
+}
+
+/* ── Filter tabs: no box stroke ── */
+.app-content .va-ops-filter-btn,
+.hub-shell .va-ops-filter-btn,
+.module-va-operations .va-ops-filter-btn,
+.hub-shell .va-ops-filter-row [role="tab"] {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #526979;
+}
+
+.app-content .va-ops-filter-btn:hover,
+.module-va-operations .va-ops-filter-btn:hover,
+.hub-shell .va-ops-filter-row [role="tab"]:hover {
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  color: #1C2B35;
+}
+
+.app-content .va-ops-filter-btn.active,
+.module-va-operations .va-ops-filter-btn.active,
+.hub-shell .va-ops-filter-btn.active,
+.hub-shell .va-ops-filter-row [role="tab"][aria-selected="true"] {
+  border: none;
+  border-bottom: 2px solid var(--hub-primary, #4F46E5);
+  background: transparent;
+  box-shadow: none;
+  color: var(--hub-primary, #4F46E5);
+  font-weight: 600;
+}
+
+/* ── Page headers: stack top-to-bottom on every hub ── */
+.hub-shell .va-ops-page-header,
+.app-content .va-ops-page-header,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.hub-shell .va-ops-page-header-left,
+.app-content .va-ops-page-header-left,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header-left,
+.va-ops-page-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.hub-shell .va-ops-page-header-toolbar,
+.app-content .va-ops-page-header-toolbar,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header-toolbar {
+  margin-left: 0;
+  max-width: none;
+  width: 100%;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.commercial-hub-hero-main,
+.owner-overview-hero-top,
+.retention-page-header-row,
+.module-retention .retention-page-header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+/* ── Approval queue cards: leftover dark glass → light workspace ── */
+.app-content .va-ops-approval-item,
+.app-content .va-ops-priority-item,
+.module-va-operations .va-ops-approval-item,
+.module-va-operations .va-ops-priority-item {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+  color: #1C2B35;
+  padding: 16px 18px;
+  align-items: center;
+}
+
+.app-content .va-ops-approval-title-row,
+.module-va-operations .va-ops-approval-title-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.app-content .va-ops-approval-title,
+.app-content .va-ops-priority-title,
+.module-va-operations .va-ops-approval-title {
+  color: #1C2B35;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.app-content .va-ops-approval-badges {
+  margin-bottom: 0;
+}
+
+.app-content .va-ops-source-badge,
+.module-va-operations .va-ops-source-badge {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 10%, #FFFFFF);
+  border: none;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 48%, #1C2B35);
+}
+
+.app-content .va-ops-source-badge--commercial {
+  background: color-mix(in srgb, #0D9488 10%, #FFFFFF);
+  color: color-mix(in srgb, #0D9488 48%, #1C2B35);
+}
+
+.app-content .va-ops-source-badge--send-center {
+  background: color-mix(in srgb, #E11D48 10%, #FFFFFF);
+  color: color-mix(in srgb, #E11D48 42%, #1C2B35);
+}
+
+.app-content .va-ops-source-badge--retention {
+  background: color-mix(in srgb, #4F46E5 10%, #FFFFFF);
+  color: color-mix(in srgb, #4F46E5 48%, #1C2B35);
+}
+
+.app-content .va-ops-approval-item .badge,
+.app-content .va-ops-approval-item .badge-yellow,
+.app-content .va-ops-approval-item .badge-blue,
+.app-content .va-ops-approval-item .badge-red,
+.app-content .va-ops-approval-item .badge-gray {
+  border: none;
+  box-shadow: none;
+}
+
+.app-content .va-ops-approval-meta,
+.app-content .va-ops-priority-meta,
+.hub-shell .va-ops-approval-meta {
+  color: #526979;
+  font-size: 12px;
+  gap: 8px 18px;
+}
+
+.app-content .va-ops-approval-meta strong,
+.app-content .va-ops-priority-meta strong,
+.hub-shell .va-ops-approval-meta strong {
+  color: #1C2B35;
+  font-weight: 600;
+}
+
+.app-content .va-ops-approval-lifecycle-step,
+.module-va-operations .va-ops-approval-lifecycle-step {
+  color: #526979;
+}
+
+.app-content .va-ops-approval-lifecycle-step.is-current,
+.module-va-operations .va-ops-approval-lifecycle-step.is-current {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+  font-weight: 800;
+}
+
+.app-content .va-ops-approval-lifecycle-step.is-complete,
+.module-va-operations .va-ops-approval-lifecycle-step.is-complete {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+}
+
+.app-content .va-ops-approval-lifecycle-arrow,
+.module-va-operations .va-ops-approval-lifecycle-arrow {
+  color: #7A8794;
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn,
+.app-content .va-ops-approval-item .va-ops-action-btn:not(.primary):not(.critical) {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  color: #1C2B35;
+  min-height: 42px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--approve,
+.app-content .va-ops-approval-item .va-ops-action-btn--approve:not(.primary):not(.critical) {
+  background: var(--hub-primary, #4F46E5);
+  border-color: var(--hub-primary, #4F46E5);
+  color: #FFFFFF;
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--approve:hover,
+.app-content .va-ops-approval-item .va-ops-action-btn--approve:not(.primary):not(.critical):hover {
+  background: var(--hub-deep, #3730A3);
+  border-color: var(--hub-deep, #3730A3);
+  color: #FFFFFF;
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--review,
+.app-content .va-ops-approval-item .va-ops-action-btn--review:not(.primary):not(.critical) {
+  background: #FFFFFF;
+  border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 32%, #E6EBF2);
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--review:hover,
+.app-content .va-ops-approval-item .va-ops-action-btn--review:not(.primary):not(.critical):hover {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 8%, #FFFFFF);
+  border-color: var(--hub-primary, #4F46E5);
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--critical-review,
+.app-content .va-ops-approval-item .va-ops-action-btn--critical-review:not(.primary):not(.critical) {
+  background: color-mix(in srgb, #F43F5E 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #F43F5E 28%, #E6EBF2);
+  color: color-mix(in srgb, #F43F5E 40%, #1C2B35);
+}
+
+.app-content .va-ops-approval-item .va-ops-action-btn--critical-review:hover,
+.app-content .va-ops-approval-item .va-ops-action-btn--critical-review:not(.primary):not(.critical):hover {
+  background: color-mix(in srgb, #F43F5E 16%, #FFFFFF);
+  border-color: color-mix(in srgb, #F43F5E 42%, #E6EBF2);
+  color: color-mix(in srgb, #F43F5E 48%, #1C2B35);
+}
+
+/* ── Workload rows: leftover dark glass → light workspace ── */
+.app-content .va-ops-workload-row,
+.module-va-operations .va-ops-workload-row {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+  color: #1C2B35;
+  padding: 14px 16px;
+  gap: 16px;
+}
+
+.app-content .va-ops-workload-name,
+.module-va-operations .va-ops-workload-name {
+  color: #1C2B35;
+  font-weight: 700;
+}
+
+.app-content .va-ops-workload-role,
+.module-va-operations .va-ops-workload-role {
+  color: #526979;
+  font-weight: 600;
+}
+
+.app-content .va-ops-workload-segments,
+.module-va-operations .va-ops-workload-segments {
+  gap: 8px;
+}
+
+.app-content .va-ops-workload-segment-bar,
+.module-va-operations .va-ops-workload-segment-bar {
+  height: 10px;
+  background: #F0F4F8;
+  border: none;
+  box-shadow: none;
+}
+
+.app-content .va-ops-workload-segment--open,
+.module-va-operations .va-ops-workload-segment--open {
+  background: var(--hub-primary, #4F46E5);
+}
+
+.app-content .va-ops-workload-segment--overdue,
+.module-va-operations .va-ops-workload-segment--overdue {
+  background: #F43F5E;
+}
+
+.app-content .va-ops-workload-segment--completed,
+.module-va-operations .va-ops-workload-segment--completed {
+  background: #10B981;
+}
+
+.app-content .va-ops-workload-segment-legend,
+.module-va-operations .va-ops-workload-segment-legend {
+  color: #526979;
+  font-size: 12px;
+  gap: 8px 16px;
+  align-items: baseline;
+}
+
+.app-content .va-ops-workload-segment-legend strong,
+.module-va-operations .va-ops-workload-segment-legend strong {
+  color: #1C2B35;
+  font-weight: 700;
+}
+
+.app-content .va-ops-workload-segment-legend .is-overdue strong,
+.module-va-operations .va-ops-workload-segment-legend .is-overdue strong {
+  color: color-mix(in srgb, #F43F5E 42%, #1C2B35);
+}
+
+.app-content .va-ops-workload-segment-legend .is-completed strong,
+.module-va-operations .va-ops-workload-segment-legend .is-completed strong {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+}
+
+.app-content .va-ops-workload-approvals,
+.module-va-operations .va-ops-workload-approvals {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+  font-weight: 700;
+}
+
+.app-content .va-ops-workload-row .badge,
+.app-content .va-ops-workload-risk,
+.module-va-operations .va-ops-workload-risk {
+  border: none;
+  box-shadow: none;
+}
+
+.app-content .va-ops-workload-row .team-avatar,
+.module-va-operations .va-ops-workload-row .team-avatar,
+.module-va-operations .va-ops-workload-row .team-avatar-root {
+  box-shadow: none;
+}
+
+.app-content .va-ops-workload-row .team-avatar,
+.module-va-operations .va-ops-workload-row .team-avatar {
+  background: var(--hub-primary, #4F46E5);
+}
+
+.app-content .va-ops-workload-row .team-avatar-ring,
+.module-va-operations .va-ops-workload-row .team-avatar-ring {
+  background: var(--hub-primary, #4F46E5);
+  box-shadow: none;
+}
+
+/* ── Active workflow cards: leftover dark glass → light workspace ── */
+.app-content .va-ops-workflow-card,
+.module-va-operations .va-ops-workflow-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+  color: #1C2B35;
+  padding: 16px 18px;
+}
+
+.app-content .va-ops-workflow-card.selected,
+.module-va-operations .va-ops-workflow-card.selected {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 6%, #FFFFFF);
+  border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 28%, #E6EBF2);
+}
+
+.app-content .va-ops-workflow-name,
+.module-va-operations .va-ops-workflow-name {
+  color: #1C2B35;
+  font-weight: 700;
+}
+
+.app-content .va-ops-workflow-main:hover .va-ops-workflow-name,
+.module-va-operations .va-ops-workflow-main:hover .va-ops-workflow-name {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+}
+
+.app-content .va-ops-workflow-meta,
+.module-va-operations .va-ops-workflow-meta {
+  color: #526979;
+}
+
+.app-content .va-ops-workflow-meta strong,
+.module-va-operations .va-ops-workflow-meta strong {
+  color: #1C2B35;
+  font-weight: 600;
+}
+
+.app-content .va-ops-workflow-card .badge,
+.module-va-operations .va-ops-workflow-card .badge {
+  border: none;
+  box-shadow: none;
+}
+
+.app-content .va-ops-workflow-card .va-ops-action-btn,
+.app-content .va-ops-workflow-card .va-ops-action-btn:not(.primary):not(.critical) {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  color: #1C2B35;
+  min-height: 42px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.app-content .va-ops-workflow-card .va-ops-resume-btn,
+.app-content .va-ops-workflow-card .va-ops-resume-btn:not(.primary):not(.critical),
+.module-va-operations .va-ops-resume-btn {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 8%, #FFFFFF);
+  border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 32%, #E6EBF2);
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+}
+
+.app-content .va-ops-workflow-card .va-ops-resume-btn:hover,
+.app-content .va-ops-workflow-card .va-ops-resume-btn:not(.primary):not(.critical):hover {
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 12%, #FFFFFF);
+  border-color: var(--hub-primary, #4F46E5);
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+}
+
+/* ── Workflow logic: leftover dark canvas + faint step labels ── */
+.app-content .va-ops-logic-panel .va-ops-section-sub,
+.module-va-operations .va-ops-logic-panel .va-ops-section-sub {
+  color: #526979;
+}
+
+.app-content .va-ops-logic-panel .va-ops-section-sub strong,
+.module-va-operations .va-ops-logic-panel .va-ops-section-sub strong {
+  color: #1C2B35;
+  font-weight: 700;
+}
+
+.app-content .va-ops-logic-flow,
+.module-va-operations .va-ops-logic-flow {
+  background: #F7FBFD;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+}
+
+.app-content .va-ops-logic-step,
+.module-va-operations .va-ops-logic-step {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  box-shadow: none;
+}
+
+.app-content .va-ops-logic-step-label,
+.module-va-operations .va-ops-logic-step-label {
+  color: #1C2B35;
+}
+
+.app-content .va-ops-logic-step-type,
+.module-va-operations .va-ops-logic-step-type {
+  color: #526979;
+}
+
+.app-content .va-ops-logic-trigger,
+.module-va-operations .va-ops-logic-trigger {
+  background: color-mix(in srgb, #3B82F6 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #3B82F6 22%, #E6EBF2);
+}
+
+.app-content .va-ops-logic-condition,
+.module-va-operations .va-ops-logic-condition {
+  background: color-mix(in srgb, #D97706 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #D97706 22%, #E6EBF2);
+}
+
+.app-content .va-ops-logic-action,
+.module-va-operations .va-ops-logic-action {
+  background: color-mix(in srgb, #10B981 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #10B981 22%, #E6EBF2);
+}
+
+.app-content .va-ops-logic-outcome,
+.module-va-operations .va-ops-logic-outcome {
+  background: color-mix(in srgb, #7C3AED 10%, #FFFFFF);
+  border-color: color-mix(in srgb, #7C3AED 22%, #E6EBF2);
+}
+
+.app-content .va-ops-logic-trigger .va-ops-logic-step-type,
+.module-va-operations .va-ops-logic-trigger .va-ops-logic-step-type {
+  color: color-mix(in srgb, #3B82F6 42%, #1C2B35);
+}
+
+.app-content .va-ops-logic-condition .va-ops-logic-step-type,
+.module-va-operations .va-ops-logic-condition .va-ops-logic-step-type {
+  color: color-mix(in srgb, #D97706 42%, #1C2B35);
+}
+
+.app-content .va-ops-logic-action .va-ops-logic-step-type,
+.module-va-operations .va-ops-logic-action .va-ops-logic-step-type {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+}
+
+.app-content .va-ops-logic-outcome .va-ops-logic-step-type,
+.module-va-operations .va-ops-logic-outcome .va-ops-logic-step-type {
+  color: color-mix(in srgb, #7C3AED 42%, #1C2B35);
+}
+
+.app-content .va-ops-logic-arrow,
+.module-va-operations .va-ops-logic-arrow {
+  color: #526979;
+}
+
+/* ── Leftover dark-glass inner cards → light workspace (overall) ── */
+.app-content :is(
+  .va-ops-integration-card,
+  .va-ops-callback-row,
+  .va-ops-live-call-row,
+  .va-ops-script-card,
+  .va-ops-missed-row,
+  .va-ops-prospect-row,
+  .va-ops-source-row,
+  .va-ops-bind-row,
+  .va-ops-pipeline-row,
+  .va-ops-optimization-row,
+  .va-ops-test-simulation,
+  .va-ops-test-step,
+  .va-ops-drawer-list li,
+  .va-ops-drawer-text,
+  .va-ops-gap-list li,
+  .va-ops-qual-checklist li,
+  .va-ops-revenue-grid > div,
+  .va-ops-carrier-compare li,
+  .va-ops-draft-preview,
+  .add-carrier-product-card,
+  .commercial-hub-funnel-main,
+  .commercial-hub-pipeline-stage-h,
+  .commercial-hub-alert-row,
+  .submission-aging-bucket,
+  .coverage-risk-flags-card,
+  .quote-review-context-panel,
+  .quote-review-delta-block,
+  .quote-review-producer-card,
+  .quote-ai-recommended-card,
+  .market-readiness
+),
+.hub-shell :is(
+  .va-ops-integration-card,
+  .va-ops-optimization-row,
+  .va-ops-bind-row,
+  .va-ops-pipeline-row
+) {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+  color: #1C2B35;
+}
+
+.app-content .va-ops-integrations-panel .va-ops-section-sub,
+.module-va-operations .va-ops-integrations-panel .va-ops-section-sub {
+  color: #526979;
+}
+
+.app-content .va-ops-integration-name,
+.module-va-operations .va-ops-integration-name {
+  color: #1C2B35;
+  font-weight: 700;
+}
+
+.app-content .va-ops-integration-sync,
+.module-va-operations .va-ops-integration-sync {
+  color: #526979;
+}
+
+.app-content .va-ops-integration-sync strong,
+.module-va-operations .va-ops-integration-sync strong {
+  color: #1C2B35;
+  font-weight: 600;
+}
+
+.app-content .va-ops-integration-card .badge,
+.module-va-operations .va-ops-integration-card .badge {
+  border: none;
+  box-shadow: none;
+}
+
+.app-content .submission-tracker-sla-strip,
+.app-content .submission-quick-chip,
+.app-content .submission-tracker-table-panel .submission-tracker-detail-row td {
+  background: #F7FBFD;
+  border-color: #E6EBF2;
+  color: #1C2B35;
+}
+
+.app-content .va-ops-qual-checklist li,
+.app-content .va-ops-gap-list li,
+.app-content .va-ops-drawer-list li,
+.app-content .va-ops-drawer-text {
+  color: #526979;
+}
+
+/* ── Row 3-dot action menu (DNC + shared) ── */
+.app-content .commercial-row-action-menu,
+.hub-shell .commercial-row-action-menu,
+.dnc-log-table .commercial-row-action-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.app-content .commercial-row-action-trigger,
+.hub-shell .commercial-row-action-trigger,
+.dnc-log-table .commercial-row-action-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #E6EBF2;
+  background: #FFFFFF;
+  color: #1C2B35;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.app-content .commercial-row-action-trigger:hover,
+.hub-shell .commercial-row-action-trigger:hover,
+.dnc-log-table .commercial-row-action-trigger:hover {
+  border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 32%, #E6EBF2);
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
+  background: #FFFFFF;
+}
+
+.app-content .commercial-row-action-dropdown,
+.hub-shell .commercial-row-action-dropdown,
+.dnc-log-table .commercial-row-action-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  min-width: 180px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 12px;
+  border: 1px solid #E6EBF2;
+  background: #FFFFFF;
+  box-shadow: 0 12px 32px rgba(30, 50, 80, 0.12);
+}
+
+.app-content .commercial-row-action-item,
+.hub-shell .commercial-row-action-item,
+.dnc-log-table .commercial-row-action-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #1C2B35;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.app-content .commercial-row-action-item:hover,
+.hub-shell .commercial-row-action-item:hover,
+.dnc-log-table .commercial-row-action-item:hover {
+  background: #F7FBFD;
+  color: #1C2B35;
+}
+
+.app-content .commercial-row-action-item--danger,
+.dnc-log-table .commercial-row-action-item--danger {
+  color: color-mix(in srgb, #F43F5E 42%, #1C2B35);
+}
+
+.dnc-log-table .dnc-log-actions-col,
+.dnc-log-table th:last-child,
+.dnc-log-table td:last-child,
+.bilingual-queue-table .bilingual-queue-actions-col,
+.bilingual-queue-table th:last-child,
+.bilingual-queue-table td:last-child,
+.module-send-center .send-center-actions-col,
+.module-send-center .send-center-table th.send-center-actions-col,
+.module-send-center .send-center-table td.send-center-actions-col {
+  width: 52px;
+  min-width: 52px;
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* ── Toolbar search: icon inside a single field, not stacked above ── */
+.app-content .send-center-search-wrap,
+.hub-shell .send-center-search-wrap,
+.dnc-toolbar .send-center-search-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 14px;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.app-content .send-center-search-wrap svg,
+.dnc-toolbar .send-center-search-wrap svg {
+  flex-shrink: 0;
+  color: #526979;
+}
+
+.app-content .send-center-search-wrap input,
+.app-content .send-center-search-wrap input:not([type="checkbox"]):not([type="radio"]),
+.dnc-toolbar .send-center-search-wrap input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #1C2B35;
+  -webkit-text-fill-color: #1C2B35;
+}
+
+.app-content .send-center-search-wrap input::-webkit-search-decoration,
+.app-content .send-center-search-wrap input::-webkit-search-cancel-button,
+.app-content .send-center-search-wrap input::-webkit-search-results-button,
+.app-content .send-center-search-wrap input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.app-content .send-center-search-wrap input::placeholder,
+.dnc-toolbar .send-center-search-wrap input::placeholder {
+  color: #7A8794;
+  opacity: 1;
+  -webkit-text-fill-color: #7A8794;
+}
+
+.app-content .dnc-toolbar,
+.dnc-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.app-content .dnc-toolbar .send-center-search-wrap,
+.dnc-toolbar .send-center-search-wrap {
+  width: auto;
+  flex: 1 1 240px;
+  max-width: 320px;
+  min-width: 200px;
+}
+
+.app-content .dnc-filter-row,
+.dnc-toolbar .dnc-filter-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-content .dnc-filter-row .header-filter-select,
+.dnc-toolbar .dnc-filter-row .header-filter-select {
+  width: auto;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.app-content .bilingual-toolbar,
+.bilingual-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.app-content .bilingual-toolbar .send-center-search-wrap,
+.bilingual-toolbar .send-center-search-wrap {
+  width: auto;
+  flex: 1 1 240px;
+  max-width: 320px;
+  min-width: 200px;
+}
+
+.app-content .bilingual-filter-row,
+.bilingual-toolbar .bilingual-filter-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-content .bilingual-filter-row .header-filter-select,
+.bilingual-toolbar .bilingual-filter-row .header-filter-select {
+  width: auto;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* ── Today timeline cards: leftover white text on light fills ── */
+.app-content .va-ops-today-timeline-card,
+.module-va-operations .va-ops-today-timeline-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+  color: #1C2B35;
+}
+
+.app-content .va-ops-today-timeline-label,
+.module-va-operations .va-ops-today-timeline-label {
+  color: #526979;
+}
+
+.app-content .va-ops-today-timeline-meta,
+.module-va-operations .va-ops-today-timeline-meta {
+  color: #7A8794;
+}
+
+.app-content .va-ops-today-timeline-time,
+.module-va-operations .va-ops-today-timeline-time {
+  color: #526979;
+}
+
+.app-content .va-ops-today-timeline-text,
+.module-va-operations .va-ops-today-timeline-text {
+  color: #1C2B35;
+  font-weight: 600;
+}
+
+.app-content .va-ops-today-timeline-type,
+.module-va-operations .va-ops-today-timeline-type {
+  border: none;
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 48%, #1C2B35);
+  background: color-mix(in srgb, var(--hub-primary, #4F46E5) 10%, #FFFFFF);
+}
+
+.app-content .va-ops-today-timeline-type--call,
+.module-va-operations .va-ops-today-timeline-type--call {
+  color: color-mix(in srgb, #3B82F6 42%, #1C2B35);
+  background: color-mix(in srgb, #3B82F6 10%, #FFFFFF);
+}
+
+.app-content .va-ops-today-timeline-type--follow-up,
+.module-va-operations .va-ops-today-timeline-type--follow-up {
+  color: color-mix(in srgb, #4F46E5 48%, #1C2B35);
+  background: color-mix(in srgb, #4F46E5 10%, #FFFFFF);
+}
+
+.app-content .va-ops-today-timeline-type--appointment,
+.module-va-operations .va-ops-today-timeline-type--appointment {
+  color: color-mix(in srgb, #7C3AED 42%, #1C2B35);
+  background: color-mix(in srgb, #7C3AED 10%, #FFFFFF);
+}
+
+.app-content .va-ops-today-timeline-type--deadline,
+.module-va-operations .va-ops-today-timeline-type--deadline {
+  color: color-mix(in srgb, #F43F5E 40%, #1C2B35);
+  background: color-mix(in srgb, #F43F5E 10%, #FFFFFF);
+}
+
+/* ── Farmers benefits: micro type was 9–11px ── */
+.module-farmers-edge .fe-c-type-label,
+.app-content .fe-c-type-label {
+  font-size: 12px;
+  color: color-mix(in srgb, #059669 42%, #1C2B35);
+}
+
+.module-farmers-edge .fe-benefits-stat-label,
+.app-content .fe-benefits-stat-label {
+  font-size: 12px;
+  color: #526979;
+}
+
+.module-farmers-edge .fe-benefits-stat-value,
+.app-content .fe-benefits-stat-value {
+  font-size: 24px;
+  color: color-mix(in srgb, #059669 42%, #1C2B35);
+}
+
+.module-farmers-edge .fe-benefits-section-meta,
+.app-content .fe-benefits-section-meta {
+  font-size: 12px;
+  color: color-mix(in srgb, #059669 42%, #1C2B35);
+}
+
+.module-farmers-edge .fe-benefit-rank,
+.app-content .fe-benefit-rank {
+  font-size: 13px;
+  color: color-mix(in srgb, #059669 42%, #1C2B35);
+}
+
+.module-farmers-edge .fe-benefit-priority,
+.app-content .fe-benefit-priority {
+  font-size: 11px;
+  color: color-mix(in srgb, #059669 42%, #1C2B35);
+}
+
+.module-farmers-edge .fe-benefit-feature-title,
+.app-content .fe-benefit-feature-title {
+  font-size: 16px;
+  color: #1C2B35;
+}
+
+.module-farmers-edge .fe-benefit-value-label,
+.app-content .fe-benefit-value-label {
+  font-size: 12px;
+  color: #526979;
+}
+
+.module-farmers-edge .fe-benefit-value,
+.app-content .fe-benefit-value {
+  font-size: 13px;
+  color: #526979;
+}
+
+.module-farmers-edge .fe-benefit-quick,
+.app-content .fe-benefit-quick {
+  font-size: 13px;
+  color: #526979;
+}
+
+.module-farmers-edge .fe-benefits-disclosure-hint,
+.app-content .fe-benefits-disclosure-hint {
+  font-size: 13px;
+  color: #526979;
+}
+
+/* ── Training Hub KPIs: 96px lock clipped labels/subtext ── */
+.hub-shell .module-training-hub .training-department-overview.va-ops-role-view,
+.module-training-hub .training-department-overview.va-ops-role-view {
+  gap: 20px;
+}
+
+.hub-shell .module-training-hub .training-kpi-grid.commercial-hub-kpi-grid,
+.module-training-hub .training-kpi-grid {
+  grid-auto-rows: auto;
+  gap: 16px;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-card,
+.module-training-hub .training-kpi-grid .commercial-hub-kpi-uniform.va-ops-kpi-card,
+.module-training-hub .hub-kpi-grid .va-ops-kpi-card,
+.hub-shell .module-training-hub .hub-kpi-grid .va-ops-kpi-card {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 18px 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-label {
+  margin-bottom: 0;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.hub-shell .module-training-hub .training-kpi-grid > .va-ops-kpi-card .va-ops-kpi-value,
+.hub-shell .module-training-hub .commercial-hub-kpi-grid > :nth-child(-n+3) .va-ops-kpi-value,
+.hub-shell .module-training-hub .commercial-hub-kpi-grid > :nth-child(n+4) .va-ops-kpi-value,
+.module-training-hub .training-kpi-grid .va-ops-kpi-value {
+  font-size: 1.75rem;
+}
+
+.module-training-hub .training-kpi-grid .aos-kpi-meta {
+  margin: 0;
+}
+
+.module-training-hub .training-kpi-grid .va-ops-kpi-sub {
+  margin-top: 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+/* ── ePay pre-flight checks: verified vs incomplete ── */
+.module-epay-policy .epay-readiness-item.complete {
+  border-color: color-mix(in srgb, #10B981 32%, #E6EBF2);
+  background: color-mix(in srgb, #10B981 10%, #FFFFFF);
+}
+
+.module-epay-policy .epay-readiness-item.complete .epay-readiness-icon {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+  background: color-mix(in srgb, #10B981 16%, #FFFFFF);
+}
+
+.module-epay-policy .epay-readiness-item.complete .epay-readiness-status {
+  color: color-mix(in srgb, #10B981 42%, #1C2B35);
+}
+
+.module-epay-policy .epay-readiness-item:not(.complete) {
+  border-color: color-mix(in srgb, #F59E0B 36%, #E6EBF2);
+  background: color-mix(in srgb, #F59E0B 10%, #FFFFFF);
+}
+
+.module-epay-policy .epay-readiness-item:not(.complete) .epay-readiness-icon {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+  background: color-mix(in srgb, #F59E0B 16%, #FFFFFF);
+}
+
+.module-epay-policy .epay-readiness-item:not(.complete) .epay-readiness-status {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+}
+
+.module-epay-policy .epay-readiness-label {
+  color: #1C2B35;
+}
+
+/* ── Command palette: center in the viewport ── */
+.cmd-palette,
+.cmd-palette-visible {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  transform: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+@media (max-width: 767px) {
+  .cmd-palette,
+  .cmd-palette-visible {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 0;
+  }
+}
+
+/* ── Send Center KPI commands: 88px lock clipped subtext ── */
+.module-send-center .va-ops-role-view.send-center-tab {
+  gap: 20px;
+}
+
+.module-send-center .send-center-kpi-strip {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.app-content .send-center-kpi-command-grid,
+.module-send-center .send-center-kpi-command-grid {
+  gap: 16px;
+  align-items: stretch;
+}
+
+.module-send-center .send-center-kpi-command,
+.app-content .send-center-kpi-command.aos-kpi-card,
+.module-send-center .send-center-kpi-command.ih-kpi--primary,
+.module-send-center .send-center-kpi-command.ih-kpi--secondary {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 16px 18px;
+  gap: 8px;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.module-send-center .send-center-kpi-command-label {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.hub-shell .module-send-center .ih-kpi--primary .send-center-kpi-command-value,
+.hub-shell .module-send-center .ih-kpi--secondary .send-center-kpi-command-value,
+.send-center-kpi-command-grid .ih-kpi--primary .send-center-kpi-command-value,
+.send-center-kpi-command-grid .ih-kpi--secondary .send-center-kpi-command-value,
+.module-send-center .send-center-kpi-command-value {
+  font-size: 1.75rem;
+  line-height: 1.05;
+}
+
+.module-send-center .send-center-kpi-command-sub,
+.app-content .send-center-kpi-command-sub {
+  margin-top: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #526979;
+}
+
+/* ── Send Center filters: search + dropdowns + export on one row ── */
+.app-content .send-center-filters,
+.module-send-center .send-center-filters {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.app-content .send-center-table-toolbar,
+.module-send-center .send-center-table-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.module-send-center .send-center-filters .va-ops-search,
+.app-content .send-center-filters .va-ops-search,
+.app-content .send-center-filters .send-center-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1 1 220px;
+  width: auto;
+  max-width: none;
+  min-width: 180px;
+  height: 42px;
+  min-height: 42px;
+}
+
+.module-send-center .send-center-filter-row,
+.app-content .send-center-filter-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.module-send-center .send-center-filter,
+.app-content .send-center-filter {
+  flex: 0 1 140px;
+  min-width: 120px;
+  width: 140px;
+}
+
+.module-send-center .send-center-table-toolbar .export-menu {
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .app-content .send-center-filters,
+  .module-send-center .send-center-filters,
+  .app-content .send-center-table-toolbar,
+  .module-send-center .send-center-table-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .module-send-center .send-center-filters .va-ops-search,
+  .app-content .send-center-filters .va-ops-search,
+  .app-content .send-center-filters .send-center-search {
+    flex: 1 1 100%;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .module-send-center .send-center-filter-row,
+  .app-content .send-center-filter-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .module-send-center .send-center-filter,
+  .app-content .send-center-filter {
+    width: auto;
+    min-width: 0;
+    flex: none;
+  }
+}
+
+/* ── Analytics carrier row: Dependence card was clipped ── */
+.module-analytics .analytics-tab-view,
+.hub-shell .analytics-tab-view,
+.module-analytics .analytics-dual-panel,
+.module-analytics .analytics-dual-panel--carrier {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.module-analytics .analytics-dual-panel--carrier {
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.9fr);
+}
+
+.module-analytics .analytics-dual-panel > .va-ops-panel,
+.module-analytics .analytics-dual-panel--carrier > .va-ops-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.module-analytics .analytics-carrier-table-wrap,
+.module-analytics .commercial-hub-table-wrap:has(.analytics-carrier-table) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.module-analytics .analytics-dual-panel--carrier .va-ops-section-title,
+.module-analytics .analytics-dual-panel--carrier .va-ops-section-sub {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.module-analytics .analytics-dependency-caption {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── Audit log drawer: leftover navy chrome ── */
+.va-ops-drawer.audit-log-panel,
+.audit-log-panel {
+  background: #FFFFFF;
+  color: #1C2B35;
+  border-left-color: #E6EBF2;
+  box-shadow: -12px 0 40px rgba(20, 35, 50, 0.12);
+}
+
+.audit-log-header,
+.audit-log-toolbar,
+.audit-log-metrics,
+.audit-log-footer {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+  color: #1C2B35;
+}
+
+.audit-log-header h2 {
+  color: #1C2B35;
+}
+
+.audit-log-header p,
+.audit-log-filter-label,
+.audit-log-footer-count,
+.audit-log-metric-label,
+.audit-log-group-label {
+  color: #7A8794;
+}
+
+.audit-log-panel .va-ops-drawer-close {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  color: #1C2B35;
+}
+
+.audit-log-panel .va-ops-drawer-close:hover {
+  background: #F7FBFD;
+  color: #1C2B35;
+  border-color: #D8E0E8;
+}
+
+.audit-log-search,
+.audit-log-filter select {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+  color: #1C2B35;
+}
+
+.audit-log-metric {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+}
+
+.audit-log-metric-value {
+  color: #1C2B35;
+}
+
+.audit-log-metric--critical .audit-log-metric-value {
+  color: color-mix(in srgb, #F43F5E 42%, #1C2B35);
+}
+
+.audit-log-metric--failed .audit-log-metric-value {
+  color: color-mix(in srgb, #F59E0B 38%, #1C2B35);
+}
+
+.audit-log-metric--pending .audit-log-metric-value {
+  color: color-mix(in srgb, #3B82F6 42%, #1C2B35);
+}
+
+.audit-log-body {
+  background: #F7FBFD;
+}
+
+.audit-log-group-label {
+  background: #F7FBFD;
+  border-bottom-color: #E6EBF2;
+  box-shadow: none;
+}
+
+.audit-log-footer-btn {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+  color: #1C2B35;
+}
+
+.audit-log-footer-btn--primary {
+  color: color-mix(in srgb, #4F46E5 42%, #1C2B35);
+  background: color-mix(in srgb, #4F46E5 8%, #FFFFFF);
+  border-color: color-mix(in srgb, #4F46E5 28%, #E6EBF2);
+}
+
+/* ── Notifications drawer: wide enough for header + card actions ── */
+.va-ops-drawer.notification-center-panel,
+.notification-center-panel {
+  width: min(720px, 92vw);
+  max-width: 92vw;
+}
+
+@media (max-width: 767px) {
+  .va-ops-drawer.notification-center-panel,
+  .notification-center-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ── Notifications header: title / actions / close no longer overlap ── */
+.notification-center-header {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 64px;
+  padding: 12px 16px 12px 20px;
+  overflow: visible;
+  background: #FFFFFF;
+}
+
+.notification-center-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.notification-center-header-title h2 {
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  color: #1C2B35;
+}
+
+.notification-center-unread-badge {
+  position: static;
+  flex-shrink: 0;
+  padding: 3px 8px;
+  font-size: 10px;
+  z-index: 0;
+}
+
+.notification-center-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.notification-center-header-actions .export-menu {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.notification-center-header-actions .export-menu-trigger,
+.notification-center-header-actions .export-menu-trigger--compact {
+  min-height: 36px;
+  height: 36px;
+  padding: 0 10px;
+}
+
+.notification-center-header .va-ops-drawer-close {
+  width: 36px;
+  height: 36px;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  color: #1C2B35;
+}

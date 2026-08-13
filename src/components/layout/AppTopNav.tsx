@@ -15,7 +15,7 @@ export function AppTopNav() {
   const pathname = usePathname();
   const { phase, label: syncLabel, isStale, refresh } = useGlobalSync();
   const { toggle: toggleNotifications, unreadCount, hasUrgentPulse } = useNotificationCenter();
-  const { open: openContextualHelp } = useContextualHelp();
+  const { toggle: toggleContextualHelp, activeHubId } = useContextualHelp();
   const { open: openGlobalSearch } = useGlobalSearch();
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -73,7 +73,7 @@ export function AppTopNav() {
 
         <button
           type="button"
-          className="top-nav-action-btn"
+          className="top-nav-action-btn top-nav-action-btn--settings"
           aria-label="Settings"
           onClick={() => setProfileOpen(true)}
         >
@@ -83,9 +83,11 @@ export function AppTopNav() {
 
         <button
           type="button"
-          className="top-nav-action-btn"
-          onClick={() => openContextualHelp(helpHubId)}
-          aria-label="Help for current hub"
+          className="top-nav-action-btn top-nav-action-btn--help"
+          onClick={(event) => toggleContextualHelp(helpHubId, event.currentTarget)}
+          aria-label="Open contextual help"
+          aria-expanded={activeHubId === helpHubId}
+          aria-controls="contextual-help-drawer"
         >
           <AppIcon name="help-circle" size={18} strokeWidth={2} />
           <span className="top-nav-action-label">Help</span>

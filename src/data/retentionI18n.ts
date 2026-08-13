@@ -86,6 +86,10 @@ export function getRetentionCopy(locale: RetentionLocale) {
     departmentName: isKr ? "Tracie: Korean Dept" : "Valerie: English Dept",
     pageTitle: isKr ? "유지 점수표" : "Retention Scorecard",
     pageTitleEmphasis: isKr ? "점수표" : "Scorecard",
+    pageKicker: isKr ? "유지" : "RETENTION",
+    pageLede: isKr
+      ? "영어와 한국어 유지 부서에서 유효 보험료를 보호하고, 교차판매를 추진하며, 갱신 방어를 관리합니다."
+      : "Protect in-force premium, drive cross-sell, and manage renewal saves across English and Korean retention departments.",
     sectionArchitecture: isKr
       ? "핵심 아키텍처: 두 개의 별도 보상 생태계"
       : "Core Architecture Decision: Two Separate Compensation Ecosystems",
@@ -93,6 +97,20 @@ export function getRetentionCopy(locale: RetentionLocale) {
       ? "유지 KPI 점수표: 부서당 최대 6개 KPI (Eva 규칙)"
       : "Retention KPI Scorecard: Max 6 Core KPIs Per Department (Eva's Rule)",
     scorecardHeader: isKr ? "유지 KPI 점수표" : "Retention KPI Scorecard",
+    healthKicker: isKr ? "유지 건전성" : "Retention Health",
+    trendTitle: isKr ? "유지율" : "Retention %",
+    trendSubtitle: isKr
+      ? "부서별 유지율과 기존 목표. Folio 기간 기준: 달력 월이 아닙니다."
+      : "Department retention versus the existing goal. Folio period dates. Not calendar month.",
+    attentionTitle: isKr ? "유지 KPI 점수표" : "Retention KPI Scorecard",
+    attentionAction: isKr ? "보기" : "View",
+    attentionHeaders: isKr
+      ? ["부서", "유지율", "상태", "목표", "PIF", "시그널", "보기"]
+      : ["Department", "Retention %", "Status", "Goal", "PIF", "Signal", "View"],
+    attentionEmptyTitle: isKr ? "이 폴리오에 유지 기록이 없습니다" : "No retention records for this folio yet",
+    attentionEmptyDescription: isKr
+      ? "갱신 및 교차판매 활동은 폴리오가 진행되면 여기에 표시됩니다."
+      : "Renewal and cross-sell activity will populate as the folio progresses.",
     tabs: [
       {
         id: "valerie",

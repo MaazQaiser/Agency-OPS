@@ -30,6 +30,7 @@ import { exportSendCenterHistoryPdf } from "@/lib/export";
 import { SendCenterAiInsight } from "./SendCenterAiInsight";
 import { SendCenterBulkBar } from "./SendCenterBulkBar";
 import { SentProposalLifecycleStepper } from "./SentProposalLifecycleStepper";
+import { CommercialRowActionMenu } from "@/components/commercial-hub/CommercialRowActionMenu";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -206,7 +207,7 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                   <th>Sent Date</th>
                   <th>Engagement</th>
                   <th>Lifecycle</th>
-                  <th aria-label="Actions" />
+                  <th aria-label="Actions" className="send-center-actions-col" />
                 </tr>
               </thead>
               <tbody>
@@ -260,19 +261,31 @@ export function SentProposalsTab({ onToast }: SentProposalsTabProps) {
                         <td className="send-center-lifecycle-cell">
                           <SentProposalLifecycleStepper row={row} />
                         </td>
-                        <td>
-                          <div className="send-center-row-actions">
-                            {(["Resend", "Follow-up", "Archive"] as const).map((action) => (
-                              <button
-                                key={action}
-                                type="button"
-                                className="va-ops-action-btn"
-                                onClick={() => handleAction(action, row)}
-                              >
-                                {action}
-                              </button>
-                            ))}
-                          </div>
+                        <td
+                          className="send-center-actions-col"
+                          data-label="Action"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <CommercialRowActionMenu
+                            label={`Actions for ${row.client}`}
+                            actions={[
+                              {
+                                id: "resend",
+                                label: "Resend",
+                                onSelect: () => handleAction("Resend", row),
+                              },
+                              {
+                                id: "follow-up",
+                                label: "Follow-up",
+                                onSelect: () => handleAction("Follow-up", row),
+                              },
+                              {
+                                id: "archive",
+                                label: "Archive",
+                                onSelect: () => handleAction("Archive", row),
+                              },
+                            ]}
+                          />
                         </td>
                       </tr>
                     );

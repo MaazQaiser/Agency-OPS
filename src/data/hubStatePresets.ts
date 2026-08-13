@@ -192,8 +192,8 @@ export const hubErrorPresets: Record<
     retryLabel: "Refresh",
   },
   "generic-fetch": {
-    title: "Unable to load data",
-    message: "Something went wrong while fetching this view. Please try again.",
+    title: "Something went wrong",
+    message: "We couldn't load this information right now.",
     severity: "critical",
     retryLabel: "Retry",
   },

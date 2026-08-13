@@ -1,0 +1,950 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Light Visual Foundation
+   Loaded last. Dark sidebar + light workspace + hub heroes +
+   white cards. Does not change layout, data, or behavior.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Page canvas ── */
+html,
+body {
+  background-color: var(--surface-page);
+  color: var(--text-primary);
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 70% 42% at 100% 0%, var(--bg-glow-a), transparent 62%),
+    radial-gradient(ellipse 50% 36% at 0% 100%, var(--bg-glow-b), transparent 58%);
+  background-attachment: fixed;
+}
+
+.app-shell,
+.app-shell-main,
+.app-content {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK SIDEBAR (stable Agency OS chrome)
+   ═══════════════════════════════════════════════════════════════ */
+.agency-sidebar {
+  --text-primary: #F7FBFD;
+  --text-secondary: color-mix(in srgb, var(--ita-sky) 78%, #ffffff);
+  --text-muted: var(--ita-sky-mid);
+  --text-tertiary: var(--ita-sky-mid);
+  --surface-header: var(--ita-navy);
+  --surface-card: color-mix(in srgb, #ffffff 8%, var(--ita-navy));
+  --surface-elevated: #243542;
+  --surface-modal: #243542;
+  --border-subtle: rgba(170, 208, 231, 0.12);
+  --border-default: rgba(170, 208, 231, 0.2);
+  --ita-primary: var(--ita-sky);
+  background: var(--ita-navy);
+  border-right: 1px solid rgba(170, 208, 231, 0.12);
+  box-shadow: var(--shadow-sidebar);
+  color: #F7FBFD;
+}
+
+.agency-sidebar-brand-title {
+  color: #F7FBFD;
+  font-family: var(--font-family-display);
+}
+
+.agency-sidebar-brand-subtitle {
+  color: var(--ita-sky-mid);
+}
+
+.agency-sidebar-brand-img {
+  mix-blend-mode: normal;
+}
+
+.agency-sidebar-tenant {
+  background: color-mix(in srgb, #ffffff 8%, var(--ita-navy));
+  border-color: rgba(170, 208, 231, 0.18);
+  color: #F7FBFD;
+}
+
+.agency-sidebar-tenant:hover {
+  background: color-mix(in srgb, #ffffff 12%, var(--ita-navy));
+  border-color: color-mix(in srgb, var(--ita-sky) 40%, transparent);
+}
+
+.sidebar-nav-item {
+  color: color-mix(in srgb, var(--ita-sky) 82%, #ffffff);
+}
+
+.sidebar-nav-item:hover {
+  color: #ffffff;
+  background: var(--sidebar-item-bg, color-mix(in srgb, var(--sidebar-item-accent, var(--ita-sky)) 10%, transparent));
+}
+
+.sidebar-nav-item:hover .sidebar-nav-icon-wrap {
+  color: var(--sidebar-item-accent, var(--ita-sky));
+}
+
+.sidebar-nav-item--active {
+  color: #F7FBFD;
+  background: var(--sidebar-item-bg-active, color-mix(in srgb, var(--sidebar-item-accent, var(--ita-sky)) 12%, transparent));
+}
+
+.sidebar-nav-item:active {
+  transform: scale(0.98);
+}
+
+.sidebar-nav-icon-wrap {
+  color: var(--ita-sky-mid);
+}
+
+.sidebar-nav-item--active .sidebar-nav-icon-wrap {
+  color: var(--sidebar-item-accent, var(--ita-sky));
+}
+
+.sidebar-profile-dropdown {
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border-color: var(--border-default);
+  box-shadow: 0 16px 40px rgba(28, 43, 53, 0.16);
+  --text-primary: #1C2B35;
+  --text-secondary: #526979;
+  --text-muted: #7AAFC8;
+}
+
+.mobile-more-sheet {
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+  box-shadow: 0 -12px 40px rgba(28, 43, 53, 0.12);
+}
+
+.mobile-more-item {
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+@media (max-width: 767px) {
+  .mobile-bottom-nav {
+    background: #FFFFFF;
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -4px 20px rgba(28, 43, 53, 0.08);
+  }
+
+  .mobile-bottom-nav-item {
+    color: var(--text-muted);
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: var(--sidebar-item-accent, var(--ita-navy));
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT TOP NAV
+   ═══════════════════════════════════════════════════════════════ */
+.app-top-nav {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  box-shadow: none;
+}
+
+.app-top-nav-search {
+  background: var(--surface-subtle);
+  border-color: var(--border-default);
+  color: var(--text-muted);
+}
+
+.app-top-nav-search:hover {
+  background: var(--surface-hover);
+  border-color: color-mix(in srgb, var(--ita-sky-mid) 50%, transparent);
+  color: var(--text-secondary);
+}
+
+.app-top-nav-kbd {
+  background: #FFFFFF;
+  border-color: var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.top-nav-action-btn {
+  color: var(--text-secondary);
+}
+
+.top-nav-action-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.top-nav-action-btn:active {
+  transform: scale(0.98);
+}
+
+.top-nav-profile-name {
+  color: var(--text-primary);
+}
+
+/* Folio strip remains a dark executive band */
+.global-folio-strip,
+.folio-progress-bar {
+  background: var(--ita-navy);
+  border-bottom-color: rgba(170, 208, 231, 0.12);
+}
+
+.global-utility-badge,
+.global-utility-sync {
+  background: color-mix(in srgb, var(--hub-accent, var(--ita-sky)) 10%, var(--surface-subtle));
+  border-color: color-mix(in srgb, var(--hub-accent, var(--ita-sky-mid)) 22%, var(--border-subtle));
+  color: var(--text-secondary);
+}
+
+.global-utility-badge--context {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--hub-accent, var(--ita-navy)) 8%, var(--surface-subtle));
+}
+
+.global-utility-badge-sep,
+.global-utility-strip-divider {
+  color: var(--text-muted);
+  background: var(--border-subtle);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HUB HEROES — approved 135° gradients
+   ═══════════════════════════════════════════════════════════════ */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header {
+  background-color: var(--hub-dark, var(--hub-accent));
+  background-image:
+    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    var(--hub-gradient, linear-gradient(135deg, var(--hub-dark, var(--hub-accent)), var(--hub-accent)));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header .va-ops-page-title {
+  color: #ffffff;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-h1);
+  font-style: italic;
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header .va-ops-page-subtitle {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.module-global-search .va-ops-page-header {
+  background-color: var(--hub-search-dark);
+  background-image:
+    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.1) 0%, transparent 62%),
+    var(--hub-search-gradient);
+}
+
+/* Header controls on colored heroes */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header :is(
+  .va-ops-role-action-btn,
+  .export-menu-trigger,
+  .hub-help-trigger,
+  .header-filter-select,
+  .va-ops-search
+) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition:
+    background var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease),
+    color var(--motion-standard) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header :is(
+  .va-ops-role-action-btn,
+  .export-menu-trigger,
+  .hub-help-trigger
+):hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics
+) .va-ops-page-header :is(
+  .va-ops-role-action-btn,
+  .export-menu-trigger,
+  .hub-help-trigger
+):active {
+  transform: scale(0.98);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT TABS + WORKSPACE
+   ═══════════════════════════════════════════════════════════════ */
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-nav,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .send-center-tab-nav {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.va-ops-tab-btn,
+.tab,
+.tab-btn {
+  color: var(--text-secondary);
+  transition:
+    color var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease);
+}
+
+.va-ops-tab-btn.active,
+.tab.active,
+.tab-btn.active {
+  color: var(--hub-primary, var(--hub-accent, var(--ita-navy)));
+}
+
+.va-ops-tab-btn::after {
+  background: var(--hub-primary, var(--hub-accent, var(--ita-navy)));
+  box-shadow: none;
+  transition: transform var(--motion-standard) var(--motion-ease), opacity var(--motion-standard) var(--motion-ease);
+}
+
+.va-ops-tab-btn:hover {
+  color: var(--hub-accent, var(--ita-navy));
+  background: var(--surface-hover);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARDS — white, 1px ITA border, 12–16 radius, restrained shadow
+   ═══════════════════════════════════════════════════════════════ */
+.aos-card--info,
+.va-ops-kpi-card,
+.kpi-card,
+.analytics-kpi-card,
+.va-ops-snapshot-card,
+.chart-card,
+.snapshot-card,
+.metric-highlight,
+.fe-c-card,
+.training-resource-card,
+.send-center-template-card,
+.recommended-market-card,
+.carrier-stack-card,
+.search-result-card,
+.card,
+.producer-card,
+.system-health-summary-card,
+.formula-card,
+.acc-card,
+.hub-kpi-grid .va-ops-kpi-card,
+.va-ops-panel:not(.aos-card--action) {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  color: var(--text-primary);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition:
+    transform var(--motion-standard) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease);
+}
+
+.aos-card--info:hover,
+.va-ops-kpi-card:hover,
+.kpi-card:hover,
+.analytics-kpi-card:hover,
+.va-ops-snapshot-card:hover,
+.chart-card:hover,
+.fe-c-card:hover,
+.training-resource-card:hover,
+.send-center-template-card:hover,
+.card:hover,
+.producer-card:hover,
+.va-ops-panel:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--hub-accent, var(--ita-sky-mid)) 28%, var(--border-subtle));
+  box-shadow: var(--shadow-card-hover);
+}
+
+.va-ops-kpi-card.primary,
+.va-ops-kpi-card.green,
+.va-ops-kpi-card.yellow,
+.va-ops-kpi-card.orange,
+.va-ops-kpi-card.red,
+.kpi-card.primary,
+.kpi-card.green,
+.kpi-card.yellow,
+.kpi-card.red {
+  background: var(--surface-card);
+}
+
+.va-ops-kpi-card.primary,
+.kpi-card.primary {
+  border-top: 2px solid var(--hub-accent, var(--semantic-info));
+}
+
+.va-ops-kpi-card.green,
+.kpi-card.green {
+  border-top: 2px solid var(--semantic-good);
+}
+
+.va-ops-kpi-card.yellow,
+.va-ops-kpi-card.orange,
+.kpi-card.yellow {
+  border-top: 2px solid var(--semantic-warning);
+}
+
+.va-ops-kpi-card.red,
+.kpi-card.red {
+  border-top: 2px solid var(--semantic-danger);
+}
+
+.va-ops-kpi-label,
+.kpi-label,
+.analytics-kpi-label {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.va-ops-kpi-value,
+.kpi-value,
+.kpi-val,
+.analytics-kpi-value {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-kpi-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  text-shadow: none;
+}
+
+.hub-kpi-grid .va-ops-kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hub-kpi-grid .va-ops-kpi-value {
+  font-size: var(--font-size-kpi-md);
+  line-height: 1.1;
+}
+
+.hub-kpi-grid .va-ops-kpi-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.va-ops-kpi-card.primary .va-ops-kpi-value,
+.kpi-card.primary .kpi-value,
+.kpi-card.featured .kpi-val,
+.kpi-card.featured .kpi-value {
+  color: var(--hub-accent, var(--semantic-info));
+  text-shadow: none;
+}
+
+.va-ops-kpi-card.green .va-ops-kpi-value,
+.kpi-card.green .kpi-value,
+.kpi-val.green {
+  color: var(--semantic-good);
+}
+
+.va-ops-kpi-card.yellow .va-ops-kpi-value,
+.va-ops-kpi-card.orange .va-ops-kpi-value,
+.kpi-card.yellow .kpi-value,
+.kpi-val.amber {
+  color: var(--semantic-warning);
+}
+
+.va-ops-kpi-card.red .va-ops-kpi-value,
+.kpi-card.red .kpi-value,
+.kpi-val.red {
+  color: var(--semantic-danger);
+}
+
+.aos-finance,
+.va-ops-kpi-value.aos-finance,
+.kpi-value.aos-finance,
+.kpi-val.aos-finance,
+.analytics-kpi-value.aos-finance,
+.epay-preview-total dd,
+.epay-collection-summary-grid dd.epay-summary-positive,
+.epay-summary-positive,
+[data-aos-finance="true"] {
+  color: var(--semantic-good) !important;
+  text-shadow: none;
+}
+
+.aos-card--info:has(.aos-finance),
+.va-ops-kpi-card:has(.aos-finance),
+.kpi-card:has(.aos-finance),
+.analytics-kpi-card:has(.aos-finance) {
+  background: var(--surface-card);
+  border-color: var(--border-subtle);
+  border-top: 2px solid var(--semantic-good);
+}
+
+.aos-finance-label,
+.va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label,
+.kpi-card:has(.aos-finance) .kpi-label {
+  color: var(--text-muted);
+}
+
+.commercial-hub-table td.aos-finance,
+.epay-invoice-line-amount,
+.epay-preview-amount,
+.carrier-market-rec-premium {
+  color: var(--semantic-good);
+}
+
+/* Action / problem cards stay light with semantic rail */
+.aos-card--action,
+.epay-tracker-overdue-panel,
+.epay-tracker-failed-panel,
+.epay-readiness-panel--blocked,
+.carrier-rules-decline,
+.va-ops-failed-panel,
+.send-center-sla-strip,
+.bilingual-alerts-panel,
+.va-ops-approval-panel,
+.va-ops-sales-approval-panel,
+.submission-approval-panel {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel,
+.module-epay-policy .epay-tracker-failed-panel {
+  background: var(--surface-card);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-section-title,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-section-title,
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-panel-header,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-panel-header,
+.module-epay-policy .epay-tracker-overdue-panel td,
+.module-epay-policy .epay-tracker-failed-panel td,
+.module-epay-policy .epay-tracker-overdue-panel .commercial-hub-client-cell,
+.module-epay-policy .epay-tracker-failed-panel .commercial-hub-client-cell,
+.module-epay-policy .epay-tracker-overdue-panel .commercial-hub-premium,
+.module-epay-policy .epay-tracker-failed-panel .commercial-hub-premium,
+.module-epay-policy .epay-tracker-failed-panel strong {
+  color: var(--text-primary);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .va-ops-section-sub,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-section-sub,
+.module-epay-policy .epay-tracker-overdue-panel th,
+.module-epay-policy .epay-tracker-failed-panel th {
+  color: var(--text-secondary);
+}
+
+.module-epay-policy .epay-tracker-overdue-panel .epay-overdue-action-btn,
+.module-epay-policy .epay-tracker-failed-panel .epay-failed-recovery-actions button,
+.module-epay-policy .epay-tracker-failed-panel .va-ops-action-btn {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  background: var(--surface-subtle);
+}
+
+.epay-tracker-overdue-panel::before,
+.epay-tracker-failed-panel::before,
+.va-ops-failed-panel::before,
+.carrier-rules-decline::before {
+  background: var(--semantic-danger);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TABLES, INPUTS, BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
+.commercial-hub-table thead th,
+.va-ops-priority-table th,
+.send-center-table th,
+.analytics-leaderboard-table th {
+  color: var(--text-muted);
+  border-bottom-color: var(--border-subtle);
+  background: var(--surface-subtle);
+}
+
+.commercial-hub-table tbody tr:hover td,
+.va-ops-priority-table tbody tr:hover td {
+  background: var(--surface-hover);
+}
+
+.table-wrap {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: none;
+}
+
+input,
+select,
+textarea,
+.va-ops-search,
+.header-filter-select,
+.send-center-select {
+  background: #FFFFFF;
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.va-ops-action-btn,
+.btn-primary,
+button.va-ops-action-btn {
+  transition:
+    background var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease),
+    color var(--motion-standard) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-standard) var(--motion-ease);
+}
+
+.va-ops-action-btn:hover,
+.va-ops-role-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--hub-accent, var(--ita-navy)) 18%, transparent);
+}
+
+.va-ops-action-btn:active,
+.va-ops-role-action-btn:active,
+.btn:active,
+button:active {
+  transform: scale(0.98);
+}
+
+.badge,
+.pill {
+  font-family: var(--font-family-mono);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EVA FAB + VA quick actions — hub identity on light canvas
+   ═══════════════════════════════════════════════════════════════ */
+.eva-fab-trigger {
+  background: var(--hub-gradient, var(--hub-va-gradient));
+  border-color: color-mix(in srgb, var(--hub-accent) 40%, transparent);
+  color: #ffffff;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--hub-accent) 28%, transparent);
+}
+
+.va-quick-actions-item {
+  background: #FFFFFF;
+  border-color: color-mix(in srgb, var(--hub-va) 28%, var(--border-subtle));
+  color: var(--hub-va);
+  box-shadow: var(--shadow-card);
+}
+
+.va-quick-actions-item:hover {
+  background: var(--surface-hover);
+}
+
+.va-quick-actions-item-tooltip {
+  background: var(--ita-navy);
+  border-color: transparent;
+  color: #F7FBFD;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMAND PALETTE — light working overlay
+   ═══════════════════════════════════════════════════════════════ */
+.cmd-palette-backdrop {
+  background: color-mix(in srgb, var(--ita-navy) 42%, transparent);
+}
+
+.cmd-palette-panel {
+  background: #FFFFFF;
+  border: 1px solid var(--border-default);
+  box-shadow: 0 24px 64px rgba(28, 43, 53, 0.18);
+}
+
+.cmd-palette-main {
+  border-right-color: var(--border-subtle);
+}
+
+.cmd-palette-preview-slot {
+  background: var(--surface-subtle);
+}
+
+.cmd-palette-header,
+.cmd-palette-categories {
+  background: #FFFFFF;
+  border-bottom-color: var(--border-subtle);
+}
+
+.cmd-palette-header-kbd,
+.cmd-palette-hint,
+.cmd-palette-clear {
+  background: var(--surface-subtle);
+  border-color: var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.cmd-palette-input {
+  color: var(--text-primary);
+}
+
+.cmd-palette-ai-hint {
+  background: var(--metric-blue-bg);
+  border-color: var(--metric-blue-border);
+  color: var(--semantic-info);
+}
+
+.cmd-palette-category.active {
+  background: var(--surface-active);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.cmd-hub-tag-va {
+  color: var(--hub-va);
+  background: color-mix(in srgb, var(--hub-va) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-va) 24%, transparent);
+}
+
+.cmd-hub-tag-commercial {
+  color: var(--hub-commercial);
+  background: color-mix(in srgb, var(--hub-commercial) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-commercial) 24%, transparent);
+}
+
+.cmd-hub-tag-send {
+  color: var(--hub-send);
+  background: color-mix(in srgb, var(--hub-send) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-send) 24%, transparent);
+}
+
+.cmd-hub-tag-carrier {
+  color: var(--hub-carrier);
+  background: color-mix(in srgb, var(--hub-carrier) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-carrier) 24%, transparent);
+}
+
+.cmd-hub-tag-epay {
+  color: var(--hub-epay);
+  background: color-mix(in srgb, var(--hub-epay) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-epay) 24%, transparent);
+}
+
+.cmd-hub-tag-training {
+  color: var(--hub-training);
+  background: color-mix(in srgb, var(--hub-training) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-training) 24%, transparent);
+}
+
+.cmd-hub-tag-intake {
+  color: var(--hub-intake);
+  background: color-mix(in srgb, var(--hub-intake) 10%, transparent);
+  border-color: color-mix(in srgb, var(--hub-intake) 24%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIGNATURE ELEMENTS on light surfaces
+   ═══════════════════════════════════════════════════════════════ */
+.pipeline-stage-bar-track {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+.pipeline-stage-bar-name,
+.pipeline-stage-bar-count {
+  color: #ffffff;
+}
+
+.dept-progress-ring-value {
+  color: var(--text-primary);
+}
+
+.appetite-matrix-title {
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  :is(
+    .module-va-operations,
+    .module-commercial-hub,
+    .module-farmers-edge,
+    .module-intake-forms,
+    .module-training-hub,
+    .module-carrier-library,
+    .module-epay-policy,
+    .module-send-center,
+    .module-analytics
+  ) .va-ops-page-header .va-ops-page-title {
+    font-size: 32px;
+  }
+
+  .hub-kpi-grid .va-ops-kpi-value,
+  .va-ops-kpi-value,
+  .kpi-value,
+  .kpi-val {
+    font-size: 28px;
+  }
+
+  .app-content,
+  .va-ops-panel,
+  .va-ops-kpi-card,
+  .kpi-card {
+    max-width: 100%;
+  }
+}
+
+.module-va-operations .va-ops-tab-content {
+  background: var(--surface-page);
+}
+
+.module-va-operations::before {
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--hub-va) 8%, transparent), transparent 48%),
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--hub-va) 5%, transparent), transparent 52%);
+}
+
+.module-retention .retention-page-header-row h1,
+.module-retention .app-header.retention h1 {
+  color: #ffffff;
+  font-family: var(--font-family-display);
+}
+
+.help-drawer,
+.hub-help-drawer,
+.notification-center-panel {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.module-retention .retention-scorecard-section--primary {
+  background: var(--surface-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.module-farmers-edge .fe-c-card,
+.module-farmers-edge .fe-benefits-disclosure,
+.module-farmers-edge .fe-benefits-support-list,
+.module-farmers-edge .fe-benefit-priority--quiet {
+  background: var(--surface-card);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.commercial-expand-chip {
+  background: var(--surface-subtle);
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-ops-kpi-card,
+  .kpi-card,
+  .va-ops-panel,
+  .sidebar-nav-item,
+  .va-ops-action-btn,
+  .va-ops-tab-btn {
+    transition: none !important;
+    transform: none !important;
+  }
+}

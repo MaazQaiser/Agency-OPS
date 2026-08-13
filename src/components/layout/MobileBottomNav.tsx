@@ -7,15 +7,18 @@ import { AppIcon } from "@/components/ui/AppIcon";
 import type { AppIconName } from "@/components/ui/AppIcon";
 import { useGlobalSearch } from "@/components/global-search/GlobalSearchProvider";
 import { useEntitlements } from "@/hooks/useEntitlements";
+import { HUB_THEMES } from "@/lib/hubThemes";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
 import { MobileMoreSheet } from "./MobileMoreSheet";
+import { sidebarAccentStyle } from "@/lib/sidebarNavigation";
 
 type NavItem = {
   id: string;
   label: string;
   icon: AppIconName;
   href?: string;
+  accent: string;
   onClick?: () => void;
   isActive?: (pathname: string, view: string | null) => boolean;
 };
@@ -34,6 +37,7 @@ export function MobileBottomNav() {
       id: "home",
       label: "Home",
       icon: "home",
+      accent: HUB_THEMES.vaOperations.navAccent,
       href: `${routes.vaOperations}?view=overview`,
       isActive: (p, view) =>
         (p === routes.vaOperations || p.startsWith(`${routes.vaOperations}/`) || p === routes.home || p === "/dashboard") &&
@@ -45,6 +49,7 @@ export function MobileBottomNav() {
             id: "commercial",
             label: "Commercial",
             icon: "target" as AppIconName,
+            accent: HUB_THEMES.commercial.navAccent,
             href: routes.commercialHub,
             isActive: (p: string) => p === routes.commercialHub || p.startsWith(`${routes.commercialHub}/`),
           },
@@ -54,6 +59,7 @@ export function MobileBottomNav() {
       id: "va",
       label: "VA",
       icon: "users",
+      accent: HUB_THEMES.vaOperations.navAccent,
       href: `${routes.vaOperations}?view=tasks`,
       isActive: (p, view) =>
         (p === routes.vaOperations || p.startsWith(`${routes.vaOperations}/`)) && Boolean(view && view !== "overview"),
@@ -62,12 +68,14 @@ export function MobileBottomNav() {
       id: "search",
       label: "Search",
       icon: "search",
+      accent: HUB_THEMES.globalSearch.navAccent,
       onClick: () => openCommandPalette(),
     },
     {
       id: "more",
       label: "More",
       icon: "more-horizontal",
+      accent: "#1C2B35",
       onClick: () => setMoreOpen(true),
     },
   ];
@@ -78,6 +86,7 @@ export function MobileBottomNav() {
         <div className="mobile-bottom-nav-inner">
           {items.map((item) => {
             const active = item.isActive?.(pathname, activeView) ?? false;
+            const style = sidebarAccentStyle(item.accent);
 
             if (item.onClick) {
               return (
@@ -85,6 +94,7 @@ export function MobileBottomNav() {
                   key={item.id}
                   type="button"
                   className={cn("mobile-bottom-nav-item", item.id === "more" && moreOpen && "active")}
+                  style={style}
                   onClick={item.onClick}
                   aria-label={item.label}
                   aria-expanded={item.id === "more" ? moreOpen : undefined}
@@ -102,6 +112,7 @@ export function MobileBottomNav() {
                 key={item.id}
                 href={item.href!}
                 className={cn("mobile-bottom-nav-item", active && "active")}
+                style={style}
                 aria-current={active ? "page" : undefined}
               >
                 <span className="mobile-bottom-nav-icon-wrap">

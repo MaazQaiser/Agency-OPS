@@ -177,11 +177,49 @@
   gap: 8px;
 }
 
+.print-only {
+  display: none !important;
+}
+
 @media print {
+  @page {
+    margin: 16mm 14mm;
+    size: letter;
+  }
+
+  html,
+  body,
+  .app-shell,
+  .app-shell-main,
+  .app-content,
+  .hub-shell {
+    background: #FFFFFF !important;
+    color: #1C2B35 !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    font-size: 12px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-hidden,
+  .agency-sidebar,
+  .app-top-nav,
+  .app-top-header,
   .app-top-header-stack,
+  .global-folio-strip,
+  .folio-progress-bar,
   .hub-operational-strips,
   .mobile-bottom-nav,
+  .mobile-more-root,
   .va-ops-tab-nav,
+  .commercial-hub-subnav,
   .va-ops-page-header,
   .va-ops-role-header,
   .va-ops-role-actions,
@@ -197,43 +235,216 @@
   .owner-quick-actions-root,
   .eva-fab-cluster,
   .cmd-palette-backdrop,
+  .cmd-palette,
   .help-drawer-root,
-  .folio-progress-stat-spark,
   .hub-help-trigger,
+  .folio-progress-stat-spark,
   .module-breadcrumb-bar,
   .data-state-freshness-row,
+  .pipeline-hover-actions,
+  .epay-invoice-sticky-actions,
+  .epay-client-switcher,
+  .bilingual-mismatch-warning,
   button,
   .va-ops-action-btn,
   .va-ops-role-action-btn,
   input,
   select,
+  textarea,
   .send-center-checkbox-col {
     display: none !important;
   }
 
-  .app-content {
+  .app-shell-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .app-content,
+  .hub-shell,
+  .va-ops-tab-content,
+  .va-ops-role-view {
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 
-  body {
-    background: #fff !important;
-    color: #1c2b35 !important;
-    font-size: 10pt;
+  .print-document {
+    width: 100%;
+    max-width: none;
+    color: #1C2B35;
+    background: #FFFFFF;
   }
 
-  .va-ops-tab-content {
-    padding: 0 !important;
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid #DDE4EA;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
   }
 
-  .badge {
-    border: 1px solid #999 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+  .print-header-org {
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5E6B7D;
   }
 
-  @page {
-    margin: 0.75in;
-    size: letter;
+  .print-header-kicker {
+    font-size: 10px;
+    color: #8A98A6;
+    margin-top: 2px;
+  }
+
+  .print-header-title {
+    font-family: var(--font-display, "Cormorant Garamond", Palatino, "Times New Roman", serif);
+    font-size: 30px;
+    font-weight: 600;
+    color: #1C2B35;
+    margin: 4px 0 0;
+    line-height: 1.15;
+  }
+
+  .print-header-sub {
+    font-size: 12px;
+    color: #5E6B7D;
+    margin-top: 4px;
+  }
+
+  .print-section {
+    margin-bottom: 18px;
+    break-inside: avoid;
+  }
+
+  .print-section-title {
+    font-family: var(--font-sans, Inter, "Segoe UI", sans-serif);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5E6B7D;
+    border-bottom: 1px solid #DDE4EA;
+    padding-bottom: 6px;
+    margin: 0 0 10px;
+  }
+
+  .print-dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    margin: 0;
+  }
+
+  .print-dl dt {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8A98A6;
+    margin: 0 0 2px;
+  }
+
+  .print-dl dd {
+    margin: 0;
+    font-size: 13px;
+    color: #1C2B35;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: #FFFFFF;
+    border: 1px solid #DDE4EA;
+  }
+
+  .print-table thead {
+    display: table-header-group;
+  }
+
+  .print-table th {
+    background: #F7FBFD;
+    color: #5E6B7D;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid #DDE4EA;
+  }
+
+  .print-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #E6EBF2;
+    background: #FFFFFF;
+    vertical-align: top;
+  }
+
+  .print-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .print-table .numeric {
+    font-family: var(--font-mono, "JetBrains Mono", Consolas, monospace);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .print-table tfoot td {
+    font-weight: 700;
+    border-top: 1px solid #1C2B35;
+    border-bottom: none;
+    font-size: 14px;
+  }
+
+  .print-status {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .print-footer {
+    margin-top: 24px;
+    padding-top: 10px;
+    border-top: 1px solid #DDE4EA;
+    font-size: 9px;
+    color: #8A98A6;
+  }
+
+  .print-invoice .print-header-title {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 32px;
+  }
+
+  .module-commercial-hub table thead,
+  .commercial-hub-table thead {
+    display: table-header-group;
+  }
+
+  .module-commercial-hub table tr,
+  .commercial-hub-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .badge,
+  .export-status,
+  .print-status {
+    border: 1px solid #DDE4EA !important;
+    box-shadow: none !important;
   }
 }

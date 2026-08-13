@@ -9,7 +9,7 @@ export type CommercialRowAction = {
   label: string;
   onSelect: () => void;
   icon?: ReactNode;
-  accent?: "farmers-edge";
+  accent?: "farmers-edge" | "danger";
   disabled?: boolean;
 };
 
@@ -69,6 +69,7 @@ export function CommercialRowActionMenu({
                 className={cn(
                   "commercial-row-action-item",
                   action.accent === "farmers-edge" && "commercial-row-action-item--farmers-edge",
+                  action.accent === "danger" && "commercial-row-action-item--danger",
                 )}
                 disabled={action.disabled}
                 onClick={() => {

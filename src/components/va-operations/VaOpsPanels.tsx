@@ -33,7 +33,8 @@ import {
 } from "@/data/vaOperations";
 import { cn } from "@/lib/cn";
 import { TeamAvatar } from "@/components/user-profile/TeamAvatar";
-import { VaTaskQueueRow } from "./VaTaskQueueRow";
+import { VaTodayTimelineStrip } from "./VaTodayTimelineStrip";
+import { VaTaskQueueCard, VaTaskQueueRow } from "./VaTaskQueueRow";
 
 const memberUserIds: Record<string, string> = {
   Kat: "kat",
@@ -247,8 +248,25 @@ const taskFilters: { id: TaskFilter; label: string }[] = [
   { id: "critical", label: "Critical" },
 ];
 
+const ownerKpiTone: Record<string, string> = {
+  "Active Team Members": "info",
+  "Tasks Due Today": "amber",
+  "Leads Waiting": "teal",
+  "SLA Breaches": "red",
+  "Pending Approvals": "amber",
+};
+
+const snapshotTone: Record<string, string> = {
+  calls: "info",
+  docs: "teal",
+  quotes: "teal",
+  renewals: "positive",
+  automation: "violet",
+};
+
 type VaOpsPanelsProps = {
   role: VaOperationsRoleId;
+  flagship?: boolean;
   showOperationalSnapshot?: boolean;
   showKpis?: boolean;
   showPriorityQueue?: boolean;
@@ -260,7 +278,17 @@ type VaOpsPanelsProps = {
   activityLimit?: number;
 };
 
-export function VaOpsKpiStrip({ role }: { role: VaOperationsRoleId }) {
+const ownerPrimaryKpis = new Set(["Tasks Due Today", "SLA Breaches", "Pending Approvals"]);
+
+export function VaOpsKpiStrip({
+  role,
+  sectionTitle,
+  flagship = false,
+}: {
+  role: VaOperationsRoleId;
+  sectionTitle?: string;
+  flagship?: boolean;
+}) {
   const kpis = role === "owner" ? vaOperationsKpis : vaOperationsKpis.filter((kpi) => {
     if (role === "dialer") return ["Leads Waiting", "SLA Breaches", "Tasks Due Today"].includes(kpi.label);
     if (role === "research") return ["Leads Waiting", "Tasks Due Today", "SLA Breaches"].includes(kpi.label);
@@ -270,29 +298,69 @@ export function VaOpsKpiStrip({ role }: { role: VaOperationsRoleId }) {
     return true;
   });
 
+  const ordered = flagship
+    ? [...kpis].sort((a, b) => {
+        const ai = ownerPrimaryKpis.has(a.label) ? 0 : 1;
+        const bi = ownerPrimaryKpis.has(b.label) ? 0 : 1;
+        return ai - bi;
+      })
+    : kpis;
+
   return (
-    <section className="va-ops-kpi-strip" aria-label="KPI overview">
-      <div className={cn("va-ops-kpi-grid", kpis.length === 5 && "cols-5", kpis.length === 3 && "cols-3")}>
-        {kpis.map((kpi) => (
-          <VaOpsKpiCard key={kpi.label} {...kpi} />
-        ))}
+    <section className="va-ops-kpi-strip ih-section--primary" aria-label={sectionTitle ?? "KPI overview"}>
+      {sectionTitle && (
+        <div className="va-ops-section-heading">
+          <h2 className="va-ops-panel-title">{sectionTitle}</h2>
+          <p className="va-ops-section-sub">What requires a decision or follow-up right now.</p>
+        </div>
+      )}
+      <div className={cn("va-ops-kpi-grid", ordered.length === 5 && "cols-5", ordered.length === 3 && "cols-3")}>
+        {ordered.map((kpi) => {
+          const primary = flagship ? ownerPrimaryKpis.has(kpi.label) : ordered.length <= 3;
+          return (
+            <VaOpsKpiCard
+              key={kpi.label}
+              {...kpi}
+              color={flagship ? ownerKpiTone[kpi.label] ?? kpi.color : kpi.color}
+              className={cn(
+                flagship && "va-ops-kpi-card--flagship",
+                primary ? "ih-kpi--primary" : "ih-kpi--secondary",
+              )}
+            />
+          );
+        })}
       </div>
     </section>
   );
 }
 
-export function VaOpsOperationalSnapshot({ role }: { role: VaOperationsRoleId }) {
+export function VaOpsOperationalSnapshot({
+  role,
+  flagship = false,
+}: {
+  role: VaOperationsRoleId;
+  flagship?: boolean;
+}) {
   const items = filterOperationalSnapshot(role);
 
   return (
-    <section className="va-ops-snapshot-section" aria-label="Operational snapshot">
+    <section className="va-ops-snapshot-section ih-section--secondary" aria-label={flagship ? "Today at the agency" : "Operational snapshot"}>
       <div className="va-ops-section-heading">
-        <h2 className="va-ops-panel-title">Operational Snapshot</h2>
-        <p className="va-ops-section-sub">Agency-wide activity summary for today</p>
+        <h2 className="va-ops-panel-title">{flagship ? "Today at the agency" : "Operational Snapshot"}</h2>
+        <p className="va-ops-section-sub">
+          {flagship ? "A fast operational snapshot of today's activity." : "Agency-wide activity summary for today"}
+        </p>
       </div>
       <div className={cn("va-ops-snapshot-grid", items.length < 5 && `cols-${items.length}`)}>
         {items.map((item) => (
-          <article key={item.key} className="va-ops-snapshot-card">
+          <article
+            key={item.key}
+            className={cn(
+              "va-ops-snapshot-card",
+              flagship && "va-ops-snapshot-card--flagship",
+              flagship && snapshotTone[item.key] && `va-ops-snapshot-card--${snapshotTone[item.key]}`,
+            )}
+          >
             <div className="va-ops-snapshot-label">{item.label}</div>
             <div className="va-ops-snapshot-value">{item.value}</div>
             <div className="va-ops-snapshot-sub">{item.sub}</div>
@@ -305,27 +373,34 @@ export function VaOpsOperationalSnapshot({ role }: { role: VaOperationsRoleId })
 
 function PriorityQueueTable({ tasks }: { tasks: PriorityTask[] }) {
   return (
-    <div className="va-ops-priority-table-wrap">
-      <table className="va-ops-priority-table">
-        <thead>
-          <tr>
-            <th>Task</th>
-            <th>Priority</th>
-            <th>Source</th>
-            <th>Assignment</th>
-            <th>Due</th>
-            <th>Blocker</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => (
-            <VaTaskQueueRow key={task.id} task={task} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <div className="va-ops-priority-table-wrap">
+        <table className="va-ops-priority-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Priority</th>
+              <th>Source</th>
+              <th>Assignment</th>
+              <th>Due</th>
+              <th>Blocker</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks.map((task) => (
+              <VaTaskQueueRow key={task.id} task={task} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul className="va-ops-priority-cards">
+        {tasks.map((task) => (
+          <VaTaskQueueCard key={task.id} task={task} />
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -352,10 +427,10 @@ export function VaOpsPriorityQueue({
   const visible = limit ? filtered.slice(0, limit) : filtered;
 
   return (
-    <section className="va-ops-panel va-ops-priority-panel" aria-label="Today's priority queue">
+    <section className="va-ops-panel va-ops-priority-panel ih-section--primary" aria-label="Today's priority queue">
       <VaOpsPanelHeader
-        title="Today's Priority Queue"
-        sub={expanded ? "All tasks sorted by urgency and due time." : "Tasks sorted by urgency and due time."}
+        title="Today's priority queue"
+        sub={expanded ? "All tasks sorted by urgency and due time." : "Sorted by urgency and due time."}
         freshness="Synced 1m ago"
         source={{ label: "Google Sheets", type: "SYNC" }}
       />
@@ -398,7 +473,7 @@ export function VaOpsActivityFeed({
   const visible = limit ? filtered.slice(0, limit) : filtered;
 
   return (
-    <section className="va-ops-panel va-ops-activity-panel va-ops-panel--accent" aria-label="Live activity">
+    <section className="va-ops-panel va-ops-activity-panel va-ops-panel--accent ih-section--supporting" aria-label="Live activity">
       <VaOpsPanelHeader
         title="Live Activity"
         sub="Recent actions happening across the team."
@@ -434,7 +509,7 @@ export function VaOpsLeadTracker({ role }: { role: VaOperationsRoleId }) {
   const rows = filterByRole(leadResponseTracker, role);
 
   return (
-    <section className="va-ops-panel va-ops-lead-panel va-ops-panel--accent" aria-label="Lead response tracker">
+    <section className="va-ops-panel va-ops-lead-panel va-ops-panel--accent ih-section--supporting" aria-label="Lead response tracker">
       <VaOpsPanelHeader
         title="Speed-to-Lead Monitor"
         sub="Monitor response times and SLA performance."
@@ -485,7 +560,7 @@ export function VaOpsWorkload({ role }: { role: VaOperationsRoleId }) {
   const rows = filterByRole(workloadDistribution, role);
 
   return (
-    <section className="va-ops-panel va-ops-workload-panel va-ops-panel--accent" aria-label="Workload distribution">
+    <section className="va-ops-panel va-ops-workload-panel va-ops-panel--accent ih-section--secondary" aria-label="Workload distribution">
       <VaOpsPanelHeader
         title="Workload Distribution"
         sub="Open tasks and completions by team member."
@@ -535,13 +610,15 @@ function ApprovalQueueItem({
     <li className="va-ops-approval-item">
       <div className="va-ops-approval-main">
         <div className="va-ops-approval-title-row">
+          <div className="va-ops-approval-title">{draft.title}</div>
           <div className="va-ops-approval-badges">
-            <span className="va-ops-source-badge">{approvalHubLabels[draft.hub]}</span>
+            <span className={cn("va-ops-source-badge", `va-ops-source-badge--${draft.hub}`)}>
+              {approvalHubLabels[draft.hub]}
+            </span>
             <span className={cn("badge", approvalPriorityClass[draft.priority])}>
               {approvalPriorityLabels[draft.priority]}
             </span>
           </div>
-          <div className="va-ops-approval-title">{draft.title}</div>
         </div>
         <div className="va-ops-approval-meta">
           <span>Type: <strong>{approvalTypeLabels[draft.approvalType]}</strong></span>
@@ -574,7 +651,7 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
   };
 
   return (
-    <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent aos-card--action" aria-label="Approval queue">
+    <section className="va-ops-panel va-ops-approval-panel va-ops-panel--accent aos-card--action ih-section--secondary" aria-label="Approval queue">
       <VaOpsPanelHeader
         title="Pending Decisions"
         sub="Approval queue across Commercial, Send Center, and Retention."
@@ -592,6 +669,7 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
 
 export function VaOpsPanels({
   role,
+  flagship = false,
   showOperationalSnapshot = false,
   showKpis = true,
   showPriorityQueue = true,
@@ -604,13 +682,24 @@ export function VaOpsPanels({
 }: VaOpsPanelsProps) {
   return (
     <>
-      {showKpis && <VaOpsKpiStrip role={role} />}
-      {showOperationalSnapshot && <VaOpsOperationalSnapshot role={role} />}
+      {showKpis && (
+        <VaOpsKpiStrip
+          role={role}
+          flagship={flagship}
+          sectionTitle={flagship ? "Needs attention" : undefined}
+        />
+      )}
+      {showOperationalSnapshot && <VaOpsOperationalSnapshot role={role} flagship={flagship} />}
+      {flagship && <VaTodayTimelineStrip />}
       {showPriorityQueue && <VaOpsPriorityQueue role={role} limit={priorityLimit} />}
-      {showActivity && <VaOpsActivityFeed role={role} limit={activityLimit} />}
       {showApprovals && <VaOpsApprovalQueue role={role} />}
-      {showWorkload && <VaOpsWorkload role={role} />}
-      {showLeadTracker && <VaOpsLeadTracker role={role} />}
+      {(showLeadTracker || showWorkload) && (
+        <div className="va-ops-secondary-grid">
+          {showLeadTracker && <VaOpsLeadTracker role={role} />}
+          {showWorkload && <VaOpsWorkload role={role} />}
+        </div>
+      )}
+      {showActivity && <VaOpsActivityFeed role={role} limit={activityLimit} />}
     </>
   );
 }

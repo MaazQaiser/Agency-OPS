@@ -31,7 +31,7 @@
   }
 
   .mobile-bottom-nav-label {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .va-ops-kpi-value,
@@ -66,11 +66,9 @@
     right: 0;
     z-index: 400;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: color-mix(in srgb, var(--surface-header) 94%, transparent);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-    border-top: 1px solid var(--border-subtle);
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18);
+    background: #FFFFFF;
+    border-top: 1px solid color-mix(in srgb, var(--ita-sky) 55%, transparent);
+    box-shadow: 0 -4px 20px rgba(28, 43, 53, 0.08);
   }
 
   .mobile-bottom-nav-inner {
@@ -90,23 +88,23 @@
     justify-content: center;
     gap: 2px;
     min-width: 0;
-    min-height: var(--mobile-touch-min);
+    min-height: 44px;
     padding: 6px 2px 8px;
     border: none;
     background: none;
     color: var(--text-muted);
     text-decoration: none;
     font-family: var(--font-family);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.02em;
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: color 180ms ease, background 180ms ease;
     -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-bottom-nav-item.active {
-    color: var(--ita-primary);
+    color: var(--sidebar-item-accent, var(--ita-navy));
   }
 
   .mobile-bottom-nav-item--center {
@@ -173,10 +171,10 @@
 /* ── Header: legacy topbar hidden (sidebar architecture) ── */
 @media (max-width: 767px) {
   :root {
-    --top-header-bar-height: 0px;
+    --top-header-bar-height: 56px;
     --top-header-hub-nav-height: 0px;
-    --top-header-height: 0px;
-    --app-header-stack-height: var(--folio-bar-height);
+    --top-header-height: var(--top-header-bar-height);
+    --app-header-stack-height: calc(var(--top-header-bar-height) + var(--folio-bar-height));
   }
 
   .app-top-header-stack,
@@ -801,15 +799,10 @@
   }
 }
 
-/* ── VA task queue table (mobile horizontal scroll) ── */
+/* ── VA task queue: stacked cards on mobile (see owner-overview.css) ── */
 @media (max-width: 767px) {
-  .va-ops-priority-table {
-    min-width: 980px;
-  }
-
   .va-ops-priority-table-wrap {
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    overflow: visible;
   }
 }
 

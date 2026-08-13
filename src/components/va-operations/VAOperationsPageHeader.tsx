@@ -3,8 +3,17 @@
 import { AppIcon } from "@/components/ui/AppIcon";
 import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { vaOperationsHeader } from "@/data/vaOperations";
+import { OwnerOverviewHero } from "./OwnerOverviewHero";
 
-export function VAOperationsPageHeader() {
+type VAOperationsPageHeaderProps = {
+  variant?: "default" | "owner-overview";
+};
+
+export function VAOperationsPageHeader({ variant = "default" }: VAOperationsPageHeaderProps) {
+  if (variant === "owner-overview") {
+    return <OwnerOverviewHero />;
+  }
+
   return (
     <header className="va-ops-page-header">
       <div className="va-ops-page-header-left">

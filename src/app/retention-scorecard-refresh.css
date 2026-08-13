@@ -1,0 +1,560 @@
+/* ═══════════════════════════════════════════════════════════════
+   Retention Scorecard — visual refresh
+   Presentation only. Loaded after retention-scorecard-refine.css
+   ═══════════════════════════════════════════════════════════════ */
+
+.module-retention {
+  --retention-accent: var(--hub-primary, #4F46E5);
+  --retention-accent-soft: var(--hub-glow, rgba(79, 70, 229, 0.14));
+}
+
+.module-retention .page-container,
+.module-retention .retention-locale-surface.page-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 32px 56px;
+  background: transparent;
+}
+
+.module-retention .retention-page-header-row {
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0 0 20px;
+  padding: 0 0 20px;
+  background: none;
+  border-bottom: 1px solid #E6EBF2;
+  box-shadow: none;
+}
+
+.module-retention .app-header.retention {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.module-retention .retention-page-kicker {
+  margin: 0 0 6px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hub-primary, #4F46E5);
+}
+
+.module-retention .app-header.retention h1 {
+  font-family: var(--font-family-display);
+  font-size: clamp(32px, 4vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #1C2B35;
+}
+
+.module-retention .app-header.retention h1 em {
+  color: var(--hub-primary, #4F46E5);
+  font-style: italic;
+}
+
+.module-retention .retention-page-lede {
+  margin: 8px 0 0;
+  max-width: 640px;
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 1.5;
+  color: #526979;
+}
+
+.module-retention .retention-page-freshness,
+.module-retention .retention-health-freshness {
+  margin: 8px 0 0;
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+  color: #7AAFC8;
+}
+
+.module-retention .app-header.retention .patent {
+  margin-top: 10px;
+  background: #F7FBFD;
+  border: 1px solid #E6EBF2;
+  color: #7A8794;
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle,
+.module-retention .retention-page-header-actions .hub-help-trigger {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+  color: #1C2B35;
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle-btn {
+  color: #526979;
+}
+
+.module-retention .retention-page-header-actions .retention-lang-toggle-btn.active {
+  color: #FFFFFF;
+  background: var(--hub-primary, #4F46E5);
+}
+
+.module-retention .retention-dept-badge {
+  margin: 0 0 24px;
+  background: var(--hub-glow, rgba(79, 70, 229, 0.1));
+  border-color: #E6EBF2;
+  color: var(--hub-primary, #4F46E5);
+}
+
+.module-retention .retention-dept-badge-dot {
+  background: var(--hub-primary, #4F46E5);
+}
+
+.module-retention .section-label .sl-text {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: #1C2B35;
+  border-bottom-color: #E6EBF2;
+}
+
+.module-retention .retention-scorecard-section--primary {
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.module-retention .retention-scorecard-tabs.tab-bar {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+}
+
+.module-retention .tab.retention {
+  color: #526979;
+}
+
+.module-retention .tab.retention.active {
+  color: #FFFFFF;
+  background: var(--hub-primary, #4F46E5);
+  box-shadow: none;
+}
+
+/* ── Primary health ── */
+.retention-health-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+  margin-bottom: 16px;
+}
+
+.retention-health-card--positive { border-left: 4px solid #10B981; }
+.retention-health-card--warning { border-left: 4px solid #F59E0B; }
+.retention-health-card--danger { border-left: 4px solid #F43F5E; }
+.retention-health-card--info { border-left: 4px solid var(--hub-primary, #4F46E5); }
+
+.retention-health-kicker {
+  margin: 0 0 16px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7A8794;
+}
+
+.retention-health-body {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.retention-health-label {
+  margin: 0 0 4px;
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7A8794;
+}
+
+.retention-health-value {
+  margin: 0 0 10px;
+  font-family: var(--font-family-mono);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #1C2B35;
+}
+
+.retention-health-value--positive { color: #10B981; }
+.retention-health-value--warning { color: #F59E0B; }
+.retention-health-value--danger { color: #F43F5E; }
+
+.retention-health-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.retention-health-goal,
+.retention-health-context {
+  margin: 10px 0 0;
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: #526979;
+}
+
+/* ── Supporting KPIs ── */
+.module-retention .kpi-grid.retention {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.module-retention .kpi-card.retention {
+  min-height: 124px;
+  padding: 18px 20px;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.module-retention .kpi-label.retention {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7A8794;
+}
+
+.module-retention .kpi-val.retention {
+  font-family: var(--font-family-mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: #1C2B35;
+}
+
+.module-retention .kpi-sub.retention {
+  font-family: var(--font-family);
+  font-size: 12px;
+  color: #526979;
+}
+
+.module-retention .kpi-card.retention.green { border-top: 3px solid #10B981; }
+.module-retention .kpi-card.retention.yellow,
+.module-retention .kpi-card.retention.amber { border-top: 3px solid #F59E0B; }
+.module-retention .kpi-card.retention.red { border-top: 3px solid #F43F5E; }
+.module-retention .kpi-card.retention.primary,
+.module-retention .kpi-card.retention.blue { border-top: 3px solid var(--hub-primary, #4F46E5); }
+
+/* ── Trend ── */
+.retention-trend-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+.retention-trend-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.retention-trend-title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: #1C2B35;
+}
+
+.retention-trend-sub {
+  margin: 4px 0 0;
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: #526979;
+}
+
+.retention-trend-goal {
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+  color: #7A8794;
+  white-space: nowrap;
+}
+
+.retention-trend-plot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.retention-trend-values,
+.retention-trend-stage,
+.retention-trend-labels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: end;
+  justify-items: center;
+}
+
+.retention-trend-stage {
+  position: relative;
+  height: 220px;
+  align-items: stretch;
+}
+
+.retention-trend-plot .aos-target-line {
+  border-top: 1px dashed #CBD5E1;
+}
+
+.retention-trend-col-value {
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: #1C2B35;
+}
+
+.retention-trend-bar-track {
+  width: 56px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  background: #F7FBFD;
+  border: 1px solid #E6EBF2;
+  border-radius: 10px 10px 4px 4px;
+  overflow: hidden;
+}
+
+.retention-trend-bar-fill {
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  background: var(--hub-primary, #4F46E5);
+}
+
+.retention-trend-bar-fill--positive { background: #10B981; }
+.retention-trend-bar-fill--warning { background: #F59E0B; }
+.retention-trend-bar-fill--danger { background: #F43F5E; }
+
+.retention-trend-col-label {
+  margin-top: 10px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  color: #526979;
+  text-align: center;
+}
+
+/* ── Department / attention table ── */
+.retention-risk-section {
+  margin: 8px 0 24px;
+}
+
+.retention-risk-title {
+  margin: 0 0 14px;
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: #1C2B35;
+}
+
+.retention-risk-table-wrap {
+  overflow-x: auto;
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+}
+
+.retention-risk-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.retention-risk-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7A8794;
+  background: #F7FBFD;
+  border-bottom: 1px solid #E6EBF2;
+}
+
+.retention-risk-table td {
+  padding: 0 16px;
+  height: 60px;
+  border-bottom: 1px solid #E6EBF2;
+  background: #FFFFFF;
+  vertical-align: middle;
+}
+
+.retention-risk-row--watch td:first-child {
+  box-shadow: inset 4px 0 0 #F59E0B;
+}
+
+.retention-risk-row--high td:first-child {
+  box-shadow: inset 4px 0 0 #F43F5E;
+}
+
+.retention-risk-name {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 700;
+  color: #1C2B35;
+}
+
+.retention-risk-score {
+  font-family: var(--font-family-mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.retention-risk-score--positive { color: #10B981; }
+.retention-risk-score--warning { color: #F59E0B; }
+.retention-risk-score--danger { color: #F43F5E; }
+
+.retention-risk-meta,
+.retention-risk-signal {
+  font-family: var(--font-family);
+  font-size: 12px;
+  color: #526979;
+}
+
+.retention-risk-mono {
+  font-family: var(--font-family-mono);
+}
+
+.retention-risk-action {
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hub-primary, #4F46E5);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.retention-risk-action:hover,
+.retention-risk-action:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.retention-risk-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 12px;
+}
+
+.retention-risk-card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.retention-risk-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.module-retention .retention-table-wrap {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  border-radius: 16px;
+}
+
+.module-retention table.retention th {
+  background: #F7FBFD;
+  color: #7A8794;
+}
+
+.module-retention table.retention td {
+  color: #526979;
+}
+
+.module-retention table.retention tbody td:first-child {
+  color: #1C2B35;
+}
+
+.module-retention .alert {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+  color: #526979;
+}
+
+.module-retention .card {
+  background: #FFFFFF;
+  border: 1px solid #E6EBF2;
+}
+
+@media (max-width: 1280px) {
+  .module-retention .kpi-grid.retention {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .module-retention .page-container,
+  .module-retention .retention-locale-surface.page-container {
+    padding: 16px 16px 48px;
+  }
+
+  .module-retention .retention-page-header-row {
+    flex-direction: column;
+  }
+
+  .retention-health-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .retention-health-value {
+    font-size: 40px;
+  }
+
+  .module-retention .kpi-grid.retention {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .retention-trend-values,
+  .retention-trend-stage,
+  .retention-trend-labels {
+    gap: 12px;
+  }
+
+  .retention-risk-table-wrap {
+    display: none;
+  }
+
+  .retention-risk-cards {
+    display: grid;
+  }
+}
+
+@media (max-width: 480px) {
+  .module-retention .kpi-grid.retention {
+    grid-template-columns: 1fr;
+  }
+
+  .retention-trend-bar-track {
+    width: 40px;
+  }
+}

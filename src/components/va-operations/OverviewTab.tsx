@@ -2,12 +2,13 @@
 
 import type { VaOperationsRoleId } from "@/data/vaOperations";
 import {
-  CardSkeletonGrid,
+  ActivitySkeleton,
+  AvatarListSkeleton,
   KpiSkeletonGrid,
-  TimelineSkeleton,
 } from "@/components/shared/loading";
 import { DataStateView, HubErrorState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
+import { cn } from "@/lib/cn";
 import { VaOpsPanels } from "./VaOpsPanels";
 import { VaOpsTopStrips } from "./VaOpsTopStrips";
 
@@ -21,6 +22,7 @@ export function OverviewTab({ role }: OverviewTabProps) {
     isEmpty: () => false,
     errorPreset: "generic-fetch",
   });
+  const flagship = role === "owner";
 
   return (
     <DataStateView
@@ -29,10 +31,10 @@ export function OverviewTab({ role }: OverviewTabProps) {
       isStale={isStale}
       showFreshness={false}
       loading={
-        <div className="va-ops-overview">
+        <div className={cn("va-ops-overview", flagship && "va-ops-overview--flagship")}>
           <KpiSkeletonGrid count={5} />
-          <CardSkeletonGrid count={3} />
-          <TimelineSkeleton />
+          <ActivitySkeleton count={5} />
+          <AvatarListSkeleton count={4} />
         </div>
       }
       error={
@@ -44,12 +46,13 @@ export function OverviewTab({ role }: OverviewTabProps) {
         />
       }
     >
-      <div className="va-ops-overview">
-        <VaOpsTopStrips />
+      <div className={cn("va-ops-overview", flagship && "va-ops-overview--flagship")}>
+        <VaOpsTopStrips showPresence={!flagship} showTimeline={!flagship} />
         <VaOpsPanels
           role={role}
+          flagship={flagship}
           showOperationalSnapshot
-          priorityLimit={3}
+          priorityLimit={flagship ? undefined : 3}
           activityLimit={5}
         />
       </div>

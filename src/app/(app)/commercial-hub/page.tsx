@@ -1,12 +1,13 @@
 import { Suspense } from "react";
+import { HubShell } from "@/components/layout/HubShell";
 import { CommercialHubModule } from "@/components/commercial-hub/CommercialHubModule";
 
 export default function CommercialHubPage() {
   return (
-    <div className="module-commercial-hub">
+    <HubShell hub="commercial">
       <Suspense fallback={<div className="va-ops-tab-content" />}>
         <CommercialHubModule />
       </Suspense>
-    </div>
+    </HubShell>
   );
 }

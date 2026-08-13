@@ -66,7 +66,9 @@ export function VAOperationsModule() {
 
   return (
     <>
-      <VAOperationsPageHeader />
+      <VAOperationsPageHeader
+        variant={safeActiveTab === "overview" && activeRole === "owner" ? "owner-overview" : "default"}
+      />
 
       <nav className="va-ops-tab-nav" aria-label="VA Operations workflows">
         {visibleTabs.map((tab) => (

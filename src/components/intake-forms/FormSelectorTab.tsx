@@ -88,11 +88,11 @@ export function FormSelectorTab() {
       <div className="va-ops-role-view intake-form-selector">
         <section className="va-ops-kpi-strip" aria-label="Intake forms KPI summary">
           <div className="commercial-hub-kpi-grid intake-kpi-grid hub-kpi-grid">
-            {intakeFormsKpis.map((kpi) => (
+            {intakeFormsKpis.map((kpi, index) => (
               <VaOpsKpiCard
                 key={kpi.label}
                 {...kpi}
-                className="commercial-hub-kpi-uniform"
+                className={cn("commercial-hub-kpi-uniform", index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary")}
                 sparkline={false}
               />
             ))}
@@ -114,7 +114,7 @@ export function FormSelectorTab() {
                 >
                   <div className="intake-form-card-top">
                     <div className="intake-form-card-icon" aria-hidden="true">
-                      <AppIcon name={form.icon} size={24} strokeWidth={2} />
+                      <AppIcon name={form.icon} size={32} strokeWidth={2.25} />
                     </div>
                     <div className="intake-form-card-badges">
                       <span className={cn("badge", riskBadgeClass[form.riskCategory])}>

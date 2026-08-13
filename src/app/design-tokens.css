@@ -1,0 +1,304 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Global Visual Foundation Tokens
+   Light workspace · ITA palette · semantic color · hub identity
+   Source of truth for color, surface, type scale, and motion.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+html[data-theme="light"],
+html[data-theme="obsidian"] {
+  /* ── ITA base palette (locked) ── */
+  --ita-sky: #AAD0E7;
+  --ita-sky-mid: #7AAFC8;
+  --ita-frost: #F7FBFD;
+  --ita-navy: #1C2B35;
+
+  /* ITA aliases used by existing CSS */
+  --ita-base: var(--ita-navy);
+  --ita-surface: var(--ita-frost);
+  --ita-primary: var(--ita-navy);
+  --ita-secondary: var(--ita-sky-mid);
+  --ita-inset: #F1F6F9;
+  --ita-base-mid: #243542;
+  --ita-base-light: #FFFFFF;
+  --ita-base-lighter: #F4F8FB;
+  --ita-modal: #FFFFFF;
+
+  /* Legacy navy / obsidian aliases → light-compatible */
+  --obsidian: var(--ita-navy);
+  --obs: var(--ita-navy);
+  --navy: var(--ita-navy);
+  --navy-mid: #243542;
+  --navy-card: #FFFFFF;
+  --navy-border: color-mix(in srgb, var(--ita-sky-mid) 42%, transparent);
+  --navy-light: #2E4450;
+
+  /* ── Semantic color (meaning, not decoration) ── */
+  --semantic-good: #10B981;
+  --semantic-good-dark: #059B66;
+  --semantic-warning: #F59E0B;
+  --semantic-danger: #F43F5E;
+  --semantic-info: #3B82F6;
+  --semantic-draft: #8B5CF6;
+  --semantic-source: #14B8A6;
+
+  --semantic-good-gradient: linear-gradient(90deg, var(--semantic-good), #34D399);
+
+  --success-green: var(--semantic-good);
+  --success-green-dark: var(--semantic-good-dark);
+  --warning-amber: var(--semantic-warning);
+  --critical-rose: var(--semantic-danger);
+  --metric-blue: var(--semantic-info);
+  --draft-violet: var(--semantic-draft);
+  --data-teal: var(--semantic-source);
+
+  --success-green-bg: color-mix(in srgb, var(--semantic-good) 10%, transparent);
+  --warning-amber-bg: color-mix(in srgb, var(--semantic-warning) 10%, transparent);
+  --critical-rose-bg: color-mix(in srgb, var(--semantic-danger) 10%, transparent);
+  --metric-blue-bg: color-mix(in srgb, var(--semantic-info) 10%, transparent);
+  --draft-violet-bg: color-mix(in srgb, var(--semantic-draft) 10%, transparent);
+  --data-teal-bg: color-mix(in srgb, var(--semantic-source) 10%, transparent);
+
+  --success-green-border: color-mix(in srgb, var(--semantic-good) 28%, transparent);
+  --warning-amber-border: color-mix(in srgb, var(--semantic-warning) 28%, transparent);
+  --critical-rose-border: color-mix(in srgb, var(--semantic-danger) 28%, transparent);
+  --metric-blue-border: color-mix(in srgb, var(--semantic-info) 28%, transparent);
+  --draft-violet-border: color-mix(in srgb, var(--semantic-draft) 28%, transparent);
+  --data-teal-border: color-mix(in srgb, var(--semantic-source) 28%, transparent);
+
+  --green: var(--semantic-good);
+  --rose: var(--semantic-danger);
+  --red: var(--semantic-danger);
+  --amber: var(--semantic-warning);
+  --yellow: var(--semantic-warning);
+  --blue: var(--semantic-info);
+  --violet: var(--semantic-draft);
+  --teal: var(--semantic-source);
+  --purple: var(--semantic-draft);
+  --indigo: #4F46E5;
+
+  --green-bg: var(--success-green-bg);
+  --rose-bg: var(--critical-rose-bg);
+  --red-bg: var(--critical-rose-bg);
+  --amber-bg: var(--warning-amber-bg);
+  --yellow-bg: var(--warning-amber-bg);
+  --blue-bg: var(--metric-blue-bg);
+  --violet-bg: var(--draft-violet-bg);
+  --purple-bg: var(--draft-violet-bg);
+  --violet-muted: color-mix(in srgb, var(--semantic-draft) 14%, transparent);
+  --gray: var(--ita-sky-mid);
+  --gray-bg: color-mix(in srgb, var(--ita-sky-mid) 12%, transparent);
+
+  /* ── Hub identity (locked) ── */
+  --hub-va: #4F46E5;
+  --hub-va-dark: #3730A3;
+  --hub-commercial: #0D9488;
+  --hub-commercial-dark: #0F766E;
+  --hub-farmers: #059669;
+  --hub-farmers-dark: #047857;
+  --hub-intake: #D97706;
+  --hub-intake-dark: #B45309;
+  --hub-training: #7C3AED;
+  --hub-training-dark: #6D28D9;
+  --hub-carrier: #1D4ED8;
+  --hub-carrier-dark: #1E40AF;
+  --hub-epay: #10B981;
+  --hub-epay-dark: #059669;
+  --hub-send: #E11D48;
+  --hub-send-dark: #BE123C;
+  --hub-analytics: #0891B2;
+  --hub-analytics-dark: #0E7490;
+  --hub-search: #1C2B35;
+  --hub-search-dark: #111827;
+
+  --hub-va-glow: rgba(79, 70, 229, 0.14);
+  --hub-commercial-glow: rgba(13, 148, 136, 0.14);
+  --hub-farmers-glow: rgba(5, 150, 105, 0.14);
+  --hub-intake-glow: rgba(217, 119, 6, 0.14);
+  --hub-training-glow: rgba(124, 58, 237, 0.14);
+  --hub-carrier-glow: rgba(29, 78, 216, 0.14);
+  --hub-epay-glow: rgba(16, 185, 129, 0.14);
+  --hub-send-glow: rgba(225, 29, 72, 0.14);
+  --hub-analytics-glow: rgba(8, 145, 178, 0.14);
+  --hub-search-glow: rgba(28, 43, 53, 0.14);
+
+  --hub-primary: var(--hub-accent);
+  --hub-deep: var(--hub-dark);
+  --hub-glow: var(--hub-search-glow);
+  --hub-background: #F7FBFD;
+
+  --hub-va-gradient: linear-gradient(135deg, var(--hub-va-dark), var(--hub-va));
+  --hub-commercial-gradient: linear-gradient(135deg, var(--hub-commercial-dark), var(--hub-commercial));
+  --hub-farmers-gradient: linear-gradient(135deg, var(--hub-farmers-dark), var(--hub-farmers));
+  --hub-intake-gradient: linear-gradient(135deg, var(--hub-intake-dark), var(--hub-intake));
+  --hub-training-gradient: linear-gradient(135deg, var(--hub-training-dark), var(--hub-training));
+  --hub-carrier-gradient: linear-gradient(135deg, var(--hub-carrier-dark), var(--hub-carrier));
+  --hub-epay-gradient: linear-gradient(135deg, var(--hub-epay-dark), var(--hub-epay));
+  --hub-send-gradient: linear-gradient(135deg, var(--hub-send-dark), var(--hub-send));
+  --hub-analytics-gradient: linear-gradient(135deg, var(--hub-analytics-dark), var(--hub-analytics));
+  --hub-search-gradient: linear-gradient(135deg, var(--hub-search-dark), var(--hub-search));
+  --hub-owner-gradient: linear-gradient(135deg, var(--ita-navy), var(--semantic-info), var(--hub-commercial));
+
+  --hub-accent: var(--ita-navy);
+  --hub-dark: var(--ita-navy);
+  --hub-gradient: var(--hub-search-gradient);
+
+  /* ── Light surface system ── */
+  --surface-page: var(--ita-frost);
+  --surface-canvas: var(--ita-frost);
+  --surface-card: #FFFFFF;
+  --surface-subtle: #F1F6F9;
+  --surface-hover: #F4F8FB;
+  --surface-active: #EAF3F8;
+  --surface-card-hover: var(--surface-hover);
+  --surface-inset: var(--surface-subtle);
+  --surface-elevated: #FFFFFF;
+  --surface-modal: #FFFFFF;
+  --surface-header: var(--ita-navy);
+
+  /* ── Text ── */
+  --text-primary: #1C2B35;
+  --text-secondary: #526979;
+  --text-muted: #7A8794;
+  --text-tertiary: var(--ita-sky-mid);
+  --text-1: var(--text-primary);
+  --text-2: var(--text-secondary);
+  --text-3: var(--text-tertiary);
+  --text-main: var(--text-primary);
+  --text-dim: var(--text-tertiary);
+  --muted: var(--text-secondary);
+  --white: var(--text-primary);
+
+  /* ── Borders (ITA, never heavy dark) ── */
+  --border-subtle: color-mix(in srgb, var(--ita-sky) 55%, transparent);
+  --border-default: color-mix(in srgb, var(--ita-sky-mid) 38%, transparent);
+  --border-strong: color-mix(in srgb, var(--ita-sky-mid) 52%, var(--ita-navy) 8%);
+  --border: var(--border-default);
+  --border-mid: var(--border-strong);
+
+  /* ── Brand interactive ── */
+  --primary: var(--ita-navy);
+  --primary-light: var(--ita-sky-mid);
+  --primary-dim: var(--ita-navy);
+  --primary-on: #FFFFFF;
+  --primary-glow: color-mix(in srgb, var(--ita-sky) 35%, transparent);
+  --primary-muted: color-mix(in srgb, var(--ita-sky) 22%, transparent);
+
+  --btn-primary-bg: var(--ita-navy);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #15232c;
+  --btn-secondary-border: var(--border-default);
+  --btn-danger-bg: var(--semantic-danger);
+  --btn-success-bg: var(--semantic-good);
+
+  --input-border: var(--border-default);
+  --input-focus-ring: color-mix(in srgb, var(--ita-sky-mid) 28%, transparent);
+
+  /* ── Radius / shadow (premium, restrained) ── */
+  --radius: 12px;
+  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgba(28, 43, 53, 0.04), 0 6px 16px rgba(28, 43, 53, 0.05);
+  --shadow-card-hover: 0 4px 18px rgba(28, 43, 53, 0.08);
+  --shadow-sidebar: 4px 0 24px rgba(28, 43, 53, 0.18);
+
+  /* ── Glass → light solid surfaces ── */
+  --glass-blur: 0px;
+  --glass-blur-sm: 0px;
+  --glass-blur-lg: 0px;
+  --glass-shadow: var(--shadow-card);
+  --glass-shadow-sm: 0 1px 3px rgba(28, 43, 53, 0.05);
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  --glass-highlight-soft: rgba(255, 255, 255, 0.55);
+
+  --glass-surface-deep: #FFFFFF;
+  --glass-surface-strong: #FFFFFF;
+  --glass-surface-mid: var(--ita-frost);
+  --glass-surface-dim: var(--surface-subtle);
+  --glass-surface-haze: var(--surface-hover);
+  --glass-surface-soft: var(--surface-subtle);
+  --glass-surface-veil: var(--surface-hover);
+  --glass-surface-low: var(--surface-subtle);
+  --glass-surface-faint: var(--ita-frost);
+
+  --glass-card-gradient: #FFFFFF;
+  --glass-header-gradient: var(--ita-navy);
+  --glass-modal-gradient: #FFFFFF;
+
+  /* ── Canvas atmosphere (subtle, not neon) ── */
+  --bg-glow-a: color-mix(in srgb, var(--ita-sky) 22%, transparent);
+  --bg-glow-b: color-mix(in srgb, var(--ita-sky) 16%, transparent);
+  --bg-glow-c: color-mix(in srgb, var(--ita-frost) 0%, transparent);
+  --bg-glow-d: color-mix(in srgb, var(--ita-sky) 12%, transparent);
+  --bg-glow-e: color-mix(in srgb, var(--ita-sky-mid) 8%, transparent);
+  --bg-spotlight: color-mix(in srgb, #FFFFFF 70%, transparent);
+
+  /* ── Motion ── */
+  --motion-fast: 120ms;
+  --motion-hover: 150ms;
+  --motion-standard: 180ms;
+  --motion-base: 180ms;
+  --motion-primary: 200ms;
+  --motion-slow: 240ms;
+  --motion-complex: 240ms;
+  --motion-progress: 700ms;
+  --motion-chart: 700ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-out: ease-out;
+  --motion-ease-in: ease-in;
+  --motion-ease-in-out: ease-in-out;
+
+  /* ── Type scale (locked families live in layout.tsx) ── */
+  --font-size-h1: clamp(32px, 3.2vw, 44px);
+  --font-size-h2: clamp(22px, 2.2vw, 28px);
+  --font-size-h3: clamp(22px, 2vw, 26px);
+  --font-size-h4: 22px;
+  --font-size-h5: 22px;
+  --font-size-kpi-lg: clamp(32px, 2.8vw, 40px);
+  --font-size-kpi-md: clamp(28px, 2.4vw, 36px);
+  --font-size-kpi-sm: clamp(24px, 2vw, 28px);
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+
+  /* ── KPI + data visualization system ── */
+  --kpi-card-bg: #FFFFFF;
+  --kpi-card-border: #E6EBF2;
+  --kpi-card-radius: 16px;
+  --kpi-card-padding: 18px 20px;
+  --kpi-card-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+  --kpi-card-gap: 16px;
+  --kpi-label-color: #526979;
+  --kpi-accent-width: 4px;
+  --kpi-progress-track: #EAF0F6;
+  --kpi-progress-fill: linear-gradient(90deg, #10B981, #34D399);
+  --kpi-progress-commercial: linear-gradient(90deg, var(--hub-deep), var(--hub-primary));
+  --kpi-target-line: #CBD5E1;
+  --kpi-freshness: #7AAFC8;
+
+  --pill-positive-bg: #E4F8F1;
+  --pill-positive-text: #10B981;
+  --pill-warning-bg: #FEF3E2;
+  --pill-warning-text: #F59E0B;
+  --pill-danger-bg: #FDE9EC;
+  --pill-danger-text: #F43F5E;
+  --pill-info-bg: #EAF2FE;
+  --pill-info-text: #3B82F6;
+  --pill-draft-bg: #F0EAFE;
+  --pill-draft-text: #8B5CF6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  html[data-theme="light"],
+  html[data-theme="obsidian"] {
+    --motion-fast: 0ms;
+    --motion-hover: 0ms;
+    --motion-standard: 0ms;
+    --motion-base: 0ms;
+    --motion-primary: 0ms;
+    --motion-slow: 0ms;
+    --motion-complex: 0ms;
+    --motion-progress: 0ms;
+    --motion-chart: 0ms;
+  }
+}

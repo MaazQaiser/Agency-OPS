@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { HubShell } from "@/components/layout/HubShell";
 import { ProposalDetailPageClient } from "@/components/send-center/ProposalDetailPageClient";
 
 type ProposalDetailPageProps = {
@@ -9,10 +10,10 @@ export default async function ProposalDetailPage({ params }: ProposalDetailPageP
   const { id } = await params;
 
   return (
-    <div className="module-send-center">
+    <HubShell hub="sendCenter">
       <Suspense fallback={<div className="va-ops-tab-content" />}>
         <ProposalDetailPageClient proposalId={id} />
       </Suspense>
-    </div>
+    </HubShell>
   );
 }

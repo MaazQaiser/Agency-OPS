@@ -1,7 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    Agency OS — Hub Color Environments
-   Default obsidian shell everywhere; hub accent tokens scoped to
-   page headers, tabs, and interactive accents only.
+   Light workspace everywhere; hub accent tokens + 135° hero gradients.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Shared hub selector — accent tokens only ── */
@@ -18,72 +17,103 @@
   .module-global-search
 ) {
   --hub-primary: var(--hub-accent);
-  --hub-deep: color-mix(in srgb, var(--hub-accent) 68%, var(--obs));
+  --hub-deep: var(--hub-dark, var(--hub-accent));
   --hub-glow: color-mix(in srgb, var(--hub-accent) 14%, transparent);
-  --hub-bg: color-mix(in srgb, var(--hub-accent) 8%, transparent);
-  --hub-primary-muted: color-mix(in srgb, var(--hub-accent) 16%, transparent);
-  --hub-primary-border: color-mix(in srgb, var(--hub-accent) 34%, transparent);
-  --hub-border-soft: color-mix(in srgb, var(--hub-accent) 12%, rgba(255, 255, 255, 0.06));
+  --hub-background: #F7FBFD;
+  --hub-bg: var(--hub-glow);
+  --hub-primary-muted: color-mix(in srgb, var(--hub-accent) 12%, transparent);
+  --hub-primary-border: color-mix(in srgb, var(--hub-accent) 28%, transparent);
+  --hub-border-soft: color-mix(in srgb, var(--hub-accent) 18%, var(--border-subtle));
+  --hub-gradient: linear-gradient(135deg, var(--hub-dark, var(--hub-accent)), var(--hub-accent));
+  --hub-base: var(--surface-page);
+  --hub-surface: var(--surface-card);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    Hub accent tokens — HTML spec mapping (header + accents only)
    ═══════════════════════════════════════════════════════════════ */
 .module-va-operations {
-  --hub-accent: #4f46e5;
-  --hub-secondary: #a5b4fc;
-  --hub-deep: #3730a3;
-  --va-canvas: #080c12;
-  --va-surface: #0d1420;
-  --va-section: #131d2b;
-  --va-card: #182233;
-  --va-card-hover: #1d2940;
-  --va-indigo: #4f46e5;
-  --va-indigo-deep: #3730a3;
+  --hub-accent: var(--hub-va);
+  --hub-secondary: var(--hub-va-dark);
+  --hub-dark: var(--hub-va-dark);
+  --hub-deep: var(--hub-va-dark);
+  --hub-glow: var(--hub-va-glow);
+  --hub-gradient: var(--hub-va-gradient);
+  --va-canvas: var(--surface-page);
+  --va-surface: var(--surface-subtle);
+  --va-section: var(--surface-subtle);
+  --va-card: var(--surface-card);
+  --va-card-hover: var(--surface-hover);
+  --va-indigo: var(--hub-va);
+  --va-indigo-deep: var(--hub-va-dark);
 }
 
 .module-commercial-hub {
-  --hub-accent: #0d9488;
-  --hub-secondary: #0f766e;
+  --hub-accent: var(--hub-commercial);
+  --hub-secondary: var(--hub-commercial-dark);
+  --hub-dark: var(--hub-commercial-dark);
+  --hub-glow: var(--hub-commercial-glow);
+  --hub-gradient: var(--hub-commercial-gradient);
 }
 
 .module-intake-forms {
-  --hub-accent: #d97706;
-  --hub-secondary: #b45309;
+  --hub-accent: var(--hub-intake);
+  --hub-secondary: var(--hub-intake-dark);
+  --hub-dark: var(--hub-intake-dark);
+  --hub-glow: var(--hub-intake-glow);
+  --hub-gradient: var(--hub-intake-gradient);
 }
 
 .module-training-hub {
-  --hub-accent: #7c3aed;
-  --hub-secondary: #6d28d9;
+  --hub-accent: var(--hub-training);
+  --hub-secondary: var(--hub-training-dark);
+  --hub-dark: var(--hub-training-dark);
+  --hub-glow: var(--hub-training-glow);
+  --hub-gradient: var(--hub-training-gradient);
 }
 
 .module-carrier-library {
-  --hub-accent: #1d4ed8;
-  --hub-secondary: #1e40af;
+  --hub-accent: var(--hub-carrier);
+  --hub-secondary: var(--hub-carrier-dark);
+  --hub-dark: var(--hub-carrier-dark);
+  --hub-glow: var(--hub-carrier-glow);
+  --hub-gradient: var(--hub-carrier-gradient);
 }
 
 .module-epay-policy {
-  --hub-accent: #10b981;
-  --hub-secondary: #059669;
+  --hub-accent: var(--hub-epay);
+  --hub-secondary: var(--hub-epay-dark);
+  --hub-dark: var(--hub-epay-dark);
+  --hub-glow: var(--hub-epay-glow);
+  --hub-gradient: var(--hub-epay-gradient);
 }
 
 .module-send-center {
-  --hub-accent: #e11d48;
-  --hub-secondary: #be123c;
+  --hub-accent: var(--hub-send);
+  --hub-secondary: var(--hub-send-dark);
+  --hub-dark: var(--hub-send-dark);
+  --hub-glow: var(--hub-send-glow);
+  --hub-gradient: var(--hub-send-gradient);
   --sc-primary: var(--hub-accent);
   --sc-secondary: var(--hub-secondary);
-  --sc-elevated: #f7fbfd;
-  --sc-deep: var(--ita-base);
+  --sc-elevated: var(--surface-page);
+  --sc-deep: var(--ita-navy);
 }
 
 .module-farmers-edge {
-  --hub-accent: #059669;
-  --hub-secondary: #047857;
+  --hub-accent: var(--hub-farmers);
+  --hub-secondary: var(--hub-farmers-dark);
+  --hub-dark: var(--hub-farmers-dark);
+  --hub-glow: var(--hub-farmers-glow);
+  --hub-gradient: var(--hub-farmers-gradient);
 }
 
 .module-analytics {
-  --hub-accent: #0891b2;
-  --hub-secondary: #06b6d4;
+  --hub-accent: var(--hub-analytics);
+  --hub-secondary: var(--hub-analytics-dark);
+  --hub-dark: var(--hub-analytics-dark);
+  --hub-glow: var(--hub-analytics-glow);
+  --hub-gradient: var(--hub-analytics-gradient);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -91,12 +121,15 @@
    White/frost background, dark text. Signature: white background.
    ═══════════════════════════════════════════════════════════════ */
 .module-global-search {
-  --hub-base: #f7fbfd;
+  --hub-base: var(--ita-frost);
   --hub-surface: #ffffff;
-  --hub-accent: #1c2b35;
-  --hub-secondary: #0f1923;
-  --hub-text: #1c2b35;
-  --hub-text-muted: #5a7a95;
+  --hub-accent: var(--hub-search);
+  --hub-secondary: var(--hub-search-dark);
+  --hub-dark: var(--hub-search-dark);
+  --hub-glow: var(--hub-search-glow);
+  --hub-gradient: var(--hub-search-gradient);
+  --hub-text: var(--ita-navy);
+  --hub-text-muted: #526979;
   --hub-border-soft: rgba(28, 43, 53, 0.12);
 
   /* Remap shared tokens — light page, dark text */
@@ -135,17 +168,14 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background-color: #161c22;
+  background-color: var(--hub-search-dark);
   background-image:
-    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.055) 0%, transparent 62%),
-    radial-gradient(ellipse 44% 68% at 6% 90%, rgba(255, 255, 255, 0.035) 0%, transparent 58%),
-    linear-gradient(180deg, #1e252c 0%, #161c22 56%, #12171c 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    radial-gradient(ellipse 52% 78% at 94% 8%, rgba(255, 255, 255, 0.1) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-search-dark), var(--hub-search));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 html[data-theme="obsidian"] .module-global-search .va-ops-page-header {
@@ -604,9 +634,9 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   .module-farmers-edge,
   .module-analytics
 ) .send-center-tab-nav {
-  background: color-mix(in srgb, var(--ita-base-mid) 78%, var(--obs));
-  backdrop-filter: blur(8px);
-  border-bottom-color: color-mix(in srgb, var(--hub-accent) 18%, var(--border-subtle));
+  background: #FFFFFF;
+  backdrop-filter: none;
+  border-bottom-color: var(--border-subtle);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -792,7 +822,7 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   .module-farmers-edge,
   .module-analytics
 ) .kpi-sparkline-delta--positive {
-  color: var(--hub-accent);
+  color: var(--semantic-good);
 }
 
 :is(
@@ -1099,53 +1129,73 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
 
 /* Hub accent tokens on shell — utility strip + top chrome */
 .app-shell:has(.module-va-operations) {
-  --hub-accent: #4f46e5;
-  --hub-secondary: #a5b4fc;
+  --hub-accent: var(--hub-va);
+  --hub-secondary: var(--hub-va-dark);
+  --hub-dark: var(--hub-va-dark);
+  --hub-gradient: var(--hub-va-gradient);
 }
 
 .app-shell:has(.module-commercial-hub) {
-  --hub-accent: #0d9488;
-  --hub-secondary: #0f766e;
+  --hub-accent: var(--hub-commercial);
+  --hub-secondary: var(--hub-commercial-dark);
+  --hub-dark: var(--hub-commercial-dark);
+  --hub-gradient: var(--hub-commercial-gradient);
 }
 
 .app-shell:has(.module-farmers-edge) {
-  --hub-accent: #059669;
-  --hub-secondary: #047857;
+  --hub-accent: var(--hub-farmers);
+  --hub-secondary: var(--hub-farmers-dark);
+  --hub-dark: var(--hub-farmers-dark);
+  --hub-gradient: var(--hub-farmers-gradient);
 }
 
 .app-shell:has(.module-intake-forms) {
-  --hub-accent: #d97706;
-  --hub-secondary: #b45309;
+  --hub-accent: var(--hub-intake);
+  --hub-secondary: var(--hub-intake-dark);
+  --hub-dark: var(--hub-intake-dark);
+  --hub-gradient: var(--hub-intake-gradient);
 }
 
 .app-shell:has(.module-training-hub) {
-  --hub-accent: #7c3aed;
-  --hub-secondary: #6d28d9;
+  --hub-accent: var(--hub-training);
+  --hub-secondary: var(--hub-training-dark);
+  --hub-dark: var(--hub-training-dark);
+  --hub-gradient: var(--hub-training-gradient);
 }
 
 .app-shell:has(.module-carrier-library) {
-  --hub-accent: #1d4ed8;
-  --hub-secondary: #1e40af;
+  --hub-accent: var(--hub-carrier);
+  --hub-secondary: var(--hub-carrier-dark);
+  --hub-dark: var(--hub-carrier-dark);
+  --hub-gradient: var(--hub-carrier-gradient);
 }
 
 .app-shell:has(.module-epay-policy) {
-  --hub-accent: #10b981;
-  --hub-secondary: #059669;
+  --hub-accent: var(--hub-epay);
+  --hub-secondary: var(--hub-epay-dark);
+  --hub-dark: var(--hub-epay-dark);
+  --hub-gradient: var(--hub-epay-gradient);
 }
 
 .app-shell:has(.module-send-center) {
-  --hub-accent: #e11d48;
-  --hub-secondary: #be123c;
+  --hub-accent: var(--hub-send);
+  --hub-secondary: var(--hub-send-dark);
+  --hub-dark: var(--hub-send-dark);
+  --hub-gradient: var(--hub-send-gradient);
 }
 
 .app-shell:has(.module-analytics) {
-  --hub-accent: #0891b2;
-  --hub-secondary: #06b6d4;
+  --hub-accent: var(--hub-analytics);
+  --hub-secondary: var(--hub-analytics-dark);
+  --hub-dark: var(--hub-analytics-dark);
+  --hub-gradient: var(--hub-analytics-gradient);
 }
 
 .app-shell:has(.module-global-search) {
-  --hub-accent: #1c2b35;
-  --hub-secondary: #0f1923;
+  --hub-accent: var(--hub-search);
+  --hub-secondary: var(--hub-search-dark);
+  --hub-dark: var(--hub-search-dark);
+  --hub-gradient: var(--hub-search-gradient);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1173,18 +1223,11 @@ html[data-theme="obsidian"] .module-global-search .hub-empty-state {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--hub-accent) 6%, color-mix(in srgb, var(--ita-base-mid) 70%, var(--obs))) 0%,
-    color-mix(in srgb, var(--hub-deep) 14%, color-mix(in srgb, var(--ita-base-mid) 82%, var(--obs))) 100%
-  );
-  backdrop-filter: blur(14px) saturate(118%);
-  -webkit-backdrop-filter: blur(14px) saturate(118%);
-  border-bottom: 1px solid color-mix(in srgb, var(--hub-accent) 18%, rgba(255, 255, 255, 0.06));
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--hub-secondary) 8%, rgba(255, 255, 255, 0.04)),
-    inset 0 -1px 0 color-mix(in srgb, var(--hub-accent) 6%, transparent),
-    0 10px 28px rgba(0, 0, 0, 0.18);
+  background: var(--hub-gradient);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 /* Hub identity rail */
@@ -1497,18 +1540,16 @@ html[data-theme="obsidian"] :is(
    VA OPERATIONS — Signature page header (refined indigo)
    ═══════════════════════════════════════════════════════════════ */
 .module-va-operations .va-ops-page-header,
-html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
-  background-color: #1b1a3a;
+html[data-theme="obsidian"] .module-va-operations .va-ops-page-header,
+html[data-theme="light"] .module-va-operations .va-ops-page-header {
+  background-color: var(--hub-va-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(129, 140, 248, 0.18) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(79, 70, 229, 0.12) 0%, transparent 58%),
-    linear-gradient(180deg, #35308f 0%, #2a2670 46%, #1b1a3a 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-va-dark), var(--hub-va));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 26px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-va-operations .va-ops-page-header::before,
@@ -1571,18 +1612,16 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-page-header {
    COMMERCIAL HUB — Signature page header (refined teal)
    ═══════════════════════════════════════════════════════════════ */
 .module-commercial-hub .va-ops-page-header,
-html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
-  background-color: #0c2f2c;
+html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header,
+html[data-theme="light"] .module-commercial-hub .va-ops-page-header {
+  background-color: var(--hub-commercial-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(45, 212, 191, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(13, 148, 136, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #0d6b64 0%, #0b524d 48%, #0c2f2c 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-commercial-dark), var(--hub-commercial));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-commercial-hub .va-ops-page-header::before,
@@ -1621,18 +1660,16 @@ html[data-theme="obsidian"] .module-commercial-hub .va-ops-page-header {
    FARMERS EDGE — Signature page header (refined forest green)
    ═══════════════════════════════════════════════════════════════ */
 .module-farmers-edge .va-ops-page-header,
-html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
-  background-color: #12281c;
+html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header,
+html[data-theme="light"] .module-farmers-edge .va-ops-page-header {
+  background-color: var(--hub-farmers-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(52, 211, 153, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(5, 150, 105, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #2c6b3f 0%, #215533 48%, #12281c 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-farmers-dark), var(--hub-farmers));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-farmers-edge .va-ops-page-header::before,
@@ -1712,18 +1749,16 @@ html[data-theme="obsidian"] .module-farmers-edge .va-ops-page-header {
    INTAKE FORMS — Signature page header (refined amber)
    ═══════════════════════════════════════════════════════════════ */
 .module-intake-forms .va-ops-page-header,
-html[data-theme="obsidian"] .module-intake-forms .va-ops-page-header {
-  background-color: #2a1a0f;
+html[data-theme="obsidian"] .module-intake-forms .va-ops-page-header,
+html[data-theme="light"] .module-intake-forms .va-ops-page-header {
+  background-color: var(--hub-intake-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(251, 191, 36, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(217, 119, 6, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #a86412 0%, #84480e 48%, #2a1a0f 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-intake-dark), var(--hub-intake));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-intake-forms .va-ops-page-header::before,
@@ -1760,18 +1795,16 @@ html[data-theme="obsidian"] .module-intake-forms .va-ops-page-header {
    TRAINING HUB — Signature page header (refined violet)
    ═══════════════════════════════════════════════════════════════ */
 .module-training-hub .va-ops-page-header,
-html[data-theme="obsidian"] .module-training-hub .va-ops-page-header {
-  background-color: #22133d;
+html[data-theme="obsidian"] .module-training-hub .va-ops-page-header,
+html[data-theme="light"] .module-training-hub .va-ops-page-header {
+  background-color: var(--hub-training-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(167, 139, 250, 0.18) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(124, 58, 237, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #5b2db0 0%, #47208c 48%, #22133d 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-training-dark), var(--hub-training));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-training-hub .va-ops-page-header::before,
@@ -1808,18 +1841,16 @@ html[data-theme="obsidian"] .module-training-hub .va-ops-page-header {
    CARRIER LIBRARY — Signature page header (refined blue)
    ═══════════════════════════════════════════════════════════════ */
 .module-carrier-library .va-ops-page-header,
-html[data-theme="obsidian"] .module-carrier-library .va-ops-page-header {
-  background-color: #121a35;
+html[data-theme="obsidian"] .module-carrier-library .va-ops-page-header,
+html[data-theme="light"] .module-carrier-library .va-ops-page-header {
+  background-color: var(--hub-carrier-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(96, 165, 250, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(37, 99, 235, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #1c48b0 0%, #18388a 48%, #121a35 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-carrier-dark), var(--hub-carrier));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-carrier-library .va-ops-page-header::before,
@@ -1856,18 +1887,16 @@ html[data-theme="obsidian"] .module-carrier-library .va-ops-page-header {
    EPAY POLICY — Signature page header (refined emerald)
    ═══════════════════════════════════════════════════════════════ */
 .module-epay-policy .va-ops-page-header,
-html[data-theme="obsidian"] .module-epay-policy .va-ops-page-header {
-  background-color: #0f2a22;
+html[data-theme="obsidian"] .module-epay-policy .va-ops-page-header,
+html[data-theme="light"] .module-epay-policy .va-ops-page-header {
+  background-color: var(--hub-epay-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(52, 211, 153, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(16, 185, 129, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #0d8a64 0%, #0b6f52 48%, #0f2a22 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-epay-dark), var(--hub-epay));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-epay-policy .va-ops-page-header::before,
@@ -1904,18 +1933,16 @@ html[data-theme="obsidian"] .module-epay-policy .va-ops-page-header {
    SEND CENTER — Signature page header (refined crimson)
    ═══════════════════════════════════════════════════════════════ */
 .module-send-center .va-ops-page-header,
-html[data-theme="obsidian"] .module-send-center .va-ops-page-header {
-  background-color: #2a121c;
+html[data-theme="obsidian"] .module-send-center .va-ops-page-header,
+html[data-theme="light"] .module-send-center .va-ops-page-header {
+  background-color: var(--hub-send-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(251, 113, 133, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(225, 29, 72, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #b3183d 0%, #8f1433 48%, #2a121c 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-send-dark), var(--hub-send));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-send-center .va-ops-page-header::before,
@@ -1952,18 +1979,16 @@ html[data-theme="obsidian"] .module-send-center .va-ops-page-header {
    ANALYTICS — Signature page header (refined cyan)
    ═══════════════════════════════════════════════════════════════ */
 .module-analytics .va-ops-page-header,
-html[data-theme="obsidian"] .module-analytics .va-ops-page-header {
-  background-color: #10262e;
+html[data-theme="obsidian"] .module-analytics .va-ops-page-header,
+html[data-theme="light"] .module-analytics .va-ops-page-header {
+  background-color: var(--hub-analytics-dark);
   background-image:
-    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(34, 211, 238, 0.16) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 64% at 8% 88%, rgba(8, 145, 178, 0.14) 0%, transparent 58%),
-    linear-gradient(180deg, #0c738c 0%, #0b5c70 48%, #10262e 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    radial-gradient(ellipse 50% 78% at 96% 10%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-analytics-dark), var(--hub-analytics));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-analytics .va-ops-page-header::before,

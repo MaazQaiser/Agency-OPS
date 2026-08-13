@@ -8,7 +8,6 @@ import {
   commercialHubKpis,
   followUpQueue,
   operationalAlerts,
-  pipelineStages,
   quoteActivity,
   type CommercialHubTabId,
   type HubSubmission,
@@ -16,7 +15,7 @@ import {
 } from "@/data/commercialHub";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
-import { ChartSkeleton, KpiSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
+import { ChartSkeleton, KpiSkeletonGrid, PipelineSkeleton, TableSkeleton } from "@/components/shared/loading";
 import { DataStateView, HubErrorState, SectionDegradedState } from "@/components/state";
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { SubmissionDrawer } from "./SubmissionDrawer";
@@ -26,7 +25,6 @@ import { EoRiskBadge } from "@/components/commercial/EoRiskBadge";
 import {
   eoRiskFromHubSubmission,
   sortByEoExposure,
-  type EoExposureSort,
 } from "@/lib/eoRiskScore";
 import { commercialHubTabHeaders } from "@/data/commercialHubTabHeaders";
 import { executiveTabKpis } from "@/lib/commercialHubTabKpis";
@@ -41,6 +39,10 @@ import {
 } from "./CommercialHubTabLayout";
 import { buildMarketSpreadMatrix } from "@/lib/marketSpreadMatrix";
 import { PipelineStageBar } from "./PipelineStageBar";
+import { WeeklyConversionChart } from "./WeeklyConversionChart";
+import { weeklyConversionTrend } from "@/data/leadVelocity";
+import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
+import { getClientLanguage } from "@/data/bilingualClient";
 
 const submissionStatusClass: Record<HubSubmissionStatus, string> = {
   Quoted: "badge-green",
@@ -112,7 +114,8 @@ export function ExecutiveDashboardTab() {
     return (
       <CommercialHubTabShell className="commercial-hub-executive">
         <KpiSkeletonGrid count={4} />
-        <ChartSkeleton />
+        <PipelineSkeleton />
+        <ChartSkeleton variant="line" />
         <TableSkeleton rows={6} columns={5} />
       </CommercialHubTabShell>
     );
@@ -143,25 +146,40 @@ export function ExecutiveDashboardTab() {
       <CommercialHubTabHeader
         title={header.title}
         subtitle={header.subtitle}
-        strategic
+        hideTitle
         utilities={
           <>
             <span className="commercial-hub-last-updated">
               {isStale ? "Stale data warning · " : ""}
               Updated 4 mins ago
             </span>
-            <ExportMenu kind="commercial-pipeline" compact />
+        <ExportMenu kind="commercial-pipeline" compact className="print-hidden" />
           </>
         }
       />
 
-      <CommercialHubKpiStrip kpis={executiveTabKpis()} columns={6} />
+      <CommercialHubKpiStrip
+        kpis={executiveTabKpis()}
+        columns={3}
+        sectionTitle="At a glance"
+      />
+
+      <WeeklyConversionChart data={weeklyConversionTrend} />
+
+      <CommercialHubIntelPanel
+        title="Pipeline by stage"
+        subtitle="Submission count and pipeline premium by existing stage."
+        className="ih-section--primary"
+      >
+        <PipelineStageBar />
+      </CommercialHubIntelPanel>
 
       <CommercialHubWorkspace
         ariaLabel="Active submissions"
         title="Active Submissions"
         subtitle="Main working pipeline: click a row for full details."
         strategicTitle
+        className="ih-section--primary"
       >
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">
@@ -185,29 +203,36 @@ export function ExecutiveDashboardTab() {
                 const risk = eoRiskFromHubSubmission(row);
                 return (
                 <tr key={row.id} className="commercial-hub-table-row-clickable">
-                  <td>
+                  <td data-label="Status">
                     <span className={cn("badge", submissionStatusClass[row.status])}>{row.status}</span>
                   </td>
-                  <td><UserChip name={row.producer} /></td>
-                  <td>{row.va}</td>
-                  <td>{row.daysOpen}</td>
-                  <td>
-                    <EoRiskBadge score={risk} />
+                  <td data-label="Producer"><UserChip name={row.producer} /></td>
+                  <td data-label="VA">{row.va}</td>
+                  <td data-label="Days Open">
+                    <span className={cn("commercial-clock-chip", `commercial-clock-chip--${row.status === "Overdue" ? "danger" : row.status === "Pending" ? "warning" : "info"}`)}>
+                      {row.daysOpen}d open
+                    </span>
                   </td>
-                  <td>
+                  <td data-label="E&O Risk">
+                    <EoRiskBadge score={risk} compact />
+                  </td>
+                  <td data-label="Client">
                     <button
                       type="button"
                       className="commercial-hub-client-link"
                       onClick={() => setSelectedSubmission(row)}
                     >
-                      {row.client}
+                      <span className="bilingual-client-cell">
+                        <span>{row.client}</span>
+                        <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
+                      </span>
                     </button>
                   </td>
-                  <td>{row.coverage}</td>
-                  <td>{row.marketsSubmitted}</td>
-                  <td>{row.quotesReceived}</td>
-                  <td className="commercial-hub-premium">{row.premium}</td>
-                  <td className="commercial-hub-next-action">{row.nextAction}</td>
+                  <td data-label="Coverage">{row.coverage}</td>
+                  <td data-label="Markets Submitted">{row.marketsSubmitted}</td>
+                  <td data-label="Quotes Received">{row.quotesReceived}</td>
+                  <td className="commercial-hub-premium" data-label="Premium">{row.premium}</td>
+                  <td className="commercial-hub-next-action" data-label="Next Action">{row.nextAction}</td>
                 </tr>
               );
               })}
@@ -220,7 +245,7 @@ export function ExecutiveDashboardTab() {
         ariaLabel="Market spread matrix"
         title="Market Spread Matrix"
         subtitle="Carrier response visibility across active submissions."
-        strategicTitle
+        className="ih-section--supporting"
       >
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table commercial-hub-market-spread-table">
@@ -258,7 +283,7 @@ export function ExecutiveDashboardTab() {
         </div>
       </CommercialHubWorkspace>
 
-      <CommercialHubIntelGrid>
+      <CommercialHubIntelGrid className="ih-section--supporting">
         <CommercialHubIntelPanel
           title="Operational Alerts"
           subtitle="Submissions requiring immediate attention."
@@ -312,10 +337,6 @@ export function ExecutiveDashboardTab() {
               );
             })}
           </ul>
-        </CommercialHubIntelPanel>
-
-        <CommercialHubIntelPanel title="Pipeline Stage Breakdown" subtitle="Volume and premium by stage.">
-          <PipelineStageBar />
         </CommercialHubIntelPanel>
 
         <CommercialHubIntelPanel
@@ -379,6 +400,7 @@ export function ExecutiveDashboardTab() {
       <CommercialHubTabFooter
         title="Follow-Ups Due"
         subtitle="Broker discipline and carrier chase queue."
+        className="ih-section--supporting"
       >
         <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
           <table className="commercial-hub-table">

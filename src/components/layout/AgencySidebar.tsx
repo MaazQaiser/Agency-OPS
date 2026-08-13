@@ -18,6 +18,7 @@ import {
 } from "@/lib/sidebarNavigation";
 import { cn } from "@/lib/cn";
 import { useSidebarNav } from "./SidebarNavProvider";
+import { SidebarProfileMenu } from "./SidebarProfileMenu";
 
 function SidebarNavLink({
   item,
@@ -77,6 +78,7 @@ function SidebarNavLink({
       href={item.href!}
       className={className}
       style={style}
+      aria-label={item.label}
       aria-current={active ? "page" : undefined}
       data-tooltip={collapsed ? item.label : undefined}
     >
@@ -131,6 +133,7 @@ export function AgencySidebar() {
               {!collapsed && (
                 <span className="agency-sidebar-brand-text">
                   <span className="agency-sidebar-brand-title">Agency OS</span>
+                  <span className="agency-sidebar-brand-subtitle">Internal Operations</span>
                 </span>
               )}
             </Link>
@@ -141,6 +144,7 @@ export function AgencySidebar() {
               onClick={toggleCollapsed}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
               aria-expanded={!collapsed}
+              data-tooltip={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <AppIcon
                 name="chevron-down"
@@ -184,6 +188,10 @@ export function AgencySidebar() {
             ))}
           </ul>
         </nav>
+
+        <div className="agency-sidebar-footer">
+          <SidebarProfileMenu collapsed={collapsed} variant="sidebar" />
+        </div>
       </div>
     </aside>
   );

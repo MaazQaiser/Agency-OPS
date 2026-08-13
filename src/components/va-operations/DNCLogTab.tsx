@@ -36,6 +36,7 @@ import { cn } from "@/lib/cn";
 import { toastMessages } from "@/lib/toastMessages";
 import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
+import { CommercialRowActionMenu } from "@/components/commercial-hub/CommercialRowActionMenu";
 import { DNCRecordDrawer } from "./DNCRecordDrawer";
 
 type DNCLogTabProps = {
@@ -366,25 +367,37 @@ export function DNCLogTab({ role, initialDncId }: DNCLogTabProps) {
                     <td>{row.dateAdded}</td>
                     <td><span className={cn("badge", dncStatusClass[row.status])}>{row.status}</span></td>
                     <td><span className={cn("badge", dncOverrideClass[row.overrideStatus])}>{row.overrideStatus}</span></td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <div className="send-center-row-actions">
-                        <button type="button" className="va-ops-action-btn" onClick={() => handleAction("View Details", row)}>
-                          View
-                        </button>
-                        <button type="button" className="va-ops-action-btn" onClick={() => handleAction("Request Override", row)}>
-                          Override
-                        </button>
-                        {canApproveOverride && row.overrideStatus === "Pending Owner Approval" && (
-                          <button type="button" className="va-ops-action-btn" onClick={() => handleAction("Approve Override", row)}>
-                            Approve
-                          </button>
-                        )}
-                        {canClearDnc && row.status !== "Cleared" && (
-                          <button type="button" className="va-ops-action-btn send-center-action-danger" onClick={() => handleAction("Clear DNC", row)}>
-                            Clear
-                          </button>
-                        )}
-                      </div>
+                    <td onClick={(e) => e.stopPropagation()} className="dnc-log-actions-col" data-label="Action">
+                      <CommercialRowActionMenu
+                        label={`Actions for ${row.leadName}`}
+                        actions={[
+                          {
+                            id: "view",
+                            label: "View",
+                            onSelect: () => handleAction("View Details", row),
+                          },
+                          {
+                            id: "override",
+                            label: "Override",
+                            onSelect: () => handleAction("Request Override", row),
+                          },
+                          ...(canApproveOverride && row.overrideStatus === "Pending Owner Approval"
+                            ? [{
+                                id: "approve",
+                                label: "Approve",
+                                onSelect: () => handleAction("Approve Override", row),
+                              }]
+                            : []),
+                          ...(canClearDnc && row.status !== "Cleared"
+                            ? [{
+                                id: "clear",
+                                label: "Clear",
+                                onSelect: () => handleAction("Clear DNC", row),
+                                accent: "danger" as const,
+                              }]
+                            : []),
+                        ]}
+                      />
                     </td>
                   </tr>
                 ))}

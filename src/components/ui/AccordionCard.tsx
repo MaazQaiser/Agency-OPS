@@ -20,7 +20,13 @@ export function AccordionCard({ icon, title, defaultOpen = true, children }: Acc
         onClick={() => setOpen(!open)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setOpen(!open)}
+        aria-expanded={open}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(!open);
+          }
+        }}
       >
         <div className="card-title">
           <span className="card-icon">
@@ -28,11 +34,13 @@ export function AccordionCard({ icon, title, defaultOpen = true, children }: Acc
           </span>
           {title}
         </div>
-        <div className={`card-toggle${open ? " open" : ""}`}>
+        <div className={`card-toggle${open ? " open" : ""}`} aria-hidden="true">
           <AppIcon name="chevron-down" size={18} strokeWidth={2.25} />
         </div>
       </div>
-      <div className="card-body">{children}</div>
+      <div className="card-body">
+        <div className="card-body-inner">{children}</div>
+      </div>
     </div>
   );
 }

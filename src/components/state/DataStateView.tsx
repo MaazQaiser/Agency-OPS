@@ -37,7 +37,7 @@ export function DataStateView({
       )}
 
       {status === "loading" && (
-        <div className="data-state-panel data-state-panel--loading" aria-busy="true">
+        <div className="data-state-panel data-state-panel--loading" aria-busy="true" aria-live="polite">
           {loading}
         </div>
       )}

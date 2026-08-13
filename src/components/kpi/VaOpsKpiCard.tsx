@@ -2,8 +2,11 @@
 
 import { cn } from "@/lib/cn";
 import { isFinancialDisplayValue } from "@/lib/isFinancialDisplayValue";
+import { kpiToneFromColor } from "@/lib/kpiTone";
 import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
 import { KpiSparklineIntelligence } from "./KpiSparklineIntelligence";
+import { StatusPill } from "./StatusPill";
+import { TrendIndicator } from "./TrendIndicator";
 
 export type VaOpsKpiCardProps = {
   label: string;
@@ -26,16 +29,17 @@ export function VaOpsKpiCard({
   className,
   trend,
   polarity,
-  sparkline = true,
+  sparkline,
 }: VaOpsKpiCardProps) {
   const tooltip = `${label}: ${value}: ${sub}${helper ? ` (${helper})` : ""}`;
   const financial = isFinancialDisplayValue(label, value);
+  const tone = kpiToneFromColor(color);
+  const showSparkline = (sparkline ?? Boolean(trend)) && Boolean(trend);
 
   return (
     <article
-      className={cn("va-ops-kpi-card aos-card--info", color, className)}
+      className={cn("va-ops-kpi-card aos-card--info aos-kpi-card", color, `aos-kpi-card--${tone}`, className)}
       tabIndex={0}
-      title={tooltip}
       aria-label={tooltip}
     >
       <div className="va-ops-kpi-tooltip" role="tooltip">
@@ -43,11 +47,22 @@ export function VaOpsKpiCard({
       </div>
       <div className="va-ops-kpi-label">{label}</div>
       <div className={cn("va-ops-kpi-value", financial && "aos-finance")}>{value}</div>
-      {sparkline && (
-        <KpiSparklineIntelligence label={label} trend={trend} polarity={polarity} />
+      {(trend || helper) && (
+        <div className="aos-kpi-meta">
+          {trend && (
+            <TrendIndicator
+              direction={trend.direction}
+              label={trend.deltaLabel}
+              state={trend.state}
+            />
+          )}
+          {helper && <StatusPill tone={tone}>{helper}</StatusPill>}
+        </div>
       )}
-      <div className="va-ops-kpi-sub">{sub}</div>
-      {helper && <div className="va-ops-kpi-helper">{helper}</div>}
+      {sub && <div className="va-ops-kpi-sub">{sub}</div>}
+      {showSparkline && (
+        <KpiSparklineIntelligence trend={trend} polarity={polarity} />
+      )}
     </article>
   );
 }

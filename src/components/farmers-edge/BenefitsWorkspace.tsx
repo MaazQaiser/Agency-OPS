@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { HubEmptyState } from "@/components/state";
 import type {
   BenefitsRow,
   CrossSellRow,
@@ -92,7 +93,12 @@ export function BenefitsWorkspace({
       <div className="fe-c-card fe-c-card--benefits fe-benefits-workspace" style={{ "--fe-card-color": contentTypeColors.benefits } as React.CSSProperties}>
         <div className="fe-c-type-label">{contentTypeLabels.benefits}</div>
         <h3 className="fe-c-card-title">What Farmers Includes</h3>
-        <p className="fe-card-empty">Eva adds Farmers Benefits content for this vertical in Sheets.</p>
+        <HubEmptyState
+          compact
+          preset="farmers-edge-content"
+          title="No benefits yet"
+          description="Eva adds Farmers Benefits content for this vertical in Google Sheets."
+        />
       </div>
     );
   }

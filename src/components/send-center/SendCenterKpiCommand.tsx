@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/cn";
 import type { SendCenterTabId } from "@/data/sendCenter";
+import { StatusPill } from "@/components/kpi/StatusPill";
+import { kpiToneFromColor } from "@/lib/kpiTone";
 
 export type SendCenterKpiCommandItem = {
   id: string;
@@ -20,35 +22,28 @@ type SendCenterKpiCommandProps = {
   onSelect: (tab: SendCenterTabId) => void;
 };
 
-const urgencyClass = {
-  amber: "send-center-kpi-urgency--amber",
-  red: "send-center-kpi-urgency--red",
-  green: "send-center-kpi-urgency--green",
-  blue: "send-center-kpi-urgency--blue",
-} as const;
-
 export function SendCenterKpiCommand({ items, activeTab, onSelect }: SendCenterKpiCommandProps) {
   return (
     <div className="send-center-kpi-command-grid">
-      {items.map((item) => {
+      {items.map((item, index) => {
         const isActive = activeTab === item.tab;
         return (
           <button
             key={item.id}
             type="button"
             className={cn(
-              "send-center-kpi-command",
+              "send-center-kpi-command aos-kpi-card",
               `send-center-kpi-command--${item.color}`,
+              `aos-kpi-card--${kpiToneFromColor(item.color)}`,
               isActive && "active",
+              index < 2 ? "ih-kpi--primary" : "ih-kpi--secondary",
             )}
             onClick={() => onSelect(item.tab)}
             aria-pressed={isActive}
           >
             <span className="send-center-kpi-command-top">
               <span className="send-center-kpi-command-label">{item.label}</span>
-              <span className={cn("send-center-kpi-urgency", urgencyClass[item.urgencyTone])}>
-                {item.urgencyLabel}
-              </span>
+              <StatusPill tone={kpiToneFromColor(item.urgencyTone)}>{item.urgencyLabel}</StatusPill>
             </span>
             <span className="send-center-kpi-command-value">{item.value}</span>
             <span className="send-center-kpi-command-sub">{item.sub}</span>

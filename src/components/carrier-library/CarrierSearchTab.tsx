@@ -148,8 +148,13 @@ export function CarrierSearchTab({ addedCarriers = [] }: { addedCarriers?: Carri
     <div className="va-ops-role-view carrier-search">
       <section className="va-ops-kpi-strip" aria-label="Carrier library KPI summary">
         <div className="commercial-hub-kpi-grid hub-kpi-grid carrier-kpi-grid">
-          {carrierSearchKpis.map((kpi) => (
-            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
+          {carrierSearchKpis.map((kpi, index) => (
+            <VaOpsKpiCard
+              key={kpi.label}
+              {...kpi}
+              className={cn("commercial-hub-kpi-uniform", index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary")}
+              sparkline={false}
+            />
           ))}
         </div>
       </section>

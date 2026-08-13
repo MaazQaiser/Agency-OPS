@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./design-tokens.css";
 import "./table-scrollbars.css";
 import "./notification-drawer.css";
 import "./audit-log.css";
@@ -24,7 +25,6 @@ import "./epay-policy-refine.css";
 import "./hubs-unified-refine.css";
 import "./send-center-refine.css";
 import "./hub-color-environments.css";
-import "./contextual-help.css";
 import "./farmers-edge.css";
 import "./signature-elements.css";
 import "./analytics.css";
@@ -32,6 +32,21 @@ import "./analytics-refine.css";
 import "./typography-system.css";
 import "./universal-search-overlay.css";
 import "./card-hierarchy.css";
+import "./motion-polish.css";
+import "./light-foundation.css";
+import "./owner-overview.css";
+import "./commercial-hub-flagship.css";
+import "./kpi-system.css";
+import "./hub-identity.css";
+import "./information-hierarchy.css";
+import "./global-shell.css";
+import "./contextual-help.css";
+import "./command-palette-upgrade.css";
+import "./skeleton-empty-system.css";
+import "./retention-scorecard-refresh.css";
+import "./interaction-motion-system.css";
+import "./print-export.css";
+import "./visual-qa-fixes.css";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -48,7 +63,7 @@ const sans = Inter({
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -71,7 +86,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
-      data-theme="obsidian"
+      data-theme="light"
       suppressHydrationWarning
     >
       <body className={sans.className}>{children}</body>

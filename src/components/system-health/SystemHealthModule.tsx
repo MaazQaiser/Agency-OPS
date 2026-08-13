@@ -38,7 +38,8 @@ import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/cn";
 import { formatTimeLabel } from "@/lib/formatting";
 import { toastMessages } from "@/lib/toastMessages";
-import { CardSkeletonGrid, TableSkeleton } from "@/components/shared/loading";
+import { ChartSkeleton, TableSkeleton } from "@/components/shared/loading";
+import { HubEmptyState } from "@/components/state";
 import { SystemHealthDependencyMap } from "./SystemHealthDependencyMap";
 import { SystemHealthDrawer } from "./SystemHealthDrawer";
 
@@ -297,7 +298,7 @@ export function SystemHealthModule() {
           <p className="va-ops-section-sub">Cross-module service relationships: broken paths highlighted.</p>
         </div>
         {loading ? (
-          <CardSkeletonGrid count={4} label="Loading dependency map" />
+          <ChartSkeleton variant="bar" label="Loading dependency map" />
         ) : (
         <SystemHealthDependencyMap nodes={globalDependencyNodes} edges={globalDependencyEdges} />
         )}
@@ -320,10 +321,11 @@ export function SystemHealthModule() {
         {loading ? (
           <TableSkeleton rows={5} label="Loading system health" />
         ) : filteredSystems.length === 0 ? (
-          <div className="commercial-hub-empty-state" role="status">
-            <div className="commercial-hub-empty-state-title">No systems match</div>
-            <p className="commercial-hub-empty-state-desc">Try adjusting your search or summary filters.</p>
-          </div>
+          <HubEmptyState
+            icon="search"
+            title="No systems match"
+            description="Try adjusting your search or summary filters."
+          />
         ) : (
           <div className="commercial-hub-table-wrap ops-responsive-table-wrap">
             <table className="commercial-hub-table system-health-table">

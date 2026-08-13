@@ -79,7 +79,7 @@ function CoverageReviewRows({
   return items.map((item) => (
     <tr
       key={item.id}
-      className="coverage-table-row"
+      className={cn("coverage-table-row", `coverage-table-row--${item.status.replace(/\s+/g, "-").toLowerCase()}`)}
       tabIndex={0}
       role="button"
       onClick={() => onSelect(item)}
@@ -90,19 +90,22 @@ function CoverageReviewRows({
         }
       }}
     >
-      <td>
-        <span className={cn("badge", coverageStatusClass[item.status])}>{item.status}</span>
+      <td data-label="Status">
+        <span className={cn("badge coverage-status-pill", coverageStatusClass[item.status])}>{item.status}</span>
       </td>
-      <td className="commercial-hub-client-cell">{item.name}</td>
-      <td>{cell(item.carrier)}</td>
-      <td>{cell(item.limit)}</td>
-      <td>{cell(item.payroll)}</td>
-      <td>{cell(item.vehicles)}</td>
-      <td className={item.driverList === "Missing" ? "coverage-cell-warning" : ""}>
+      <td className="commercial-hub-client-cell" data-label="Coverage">{item.name}</td>
+      <td data-label="Carrier">{cell(item.carrier)}</td>
+      <td data-label="Limit">{cell(item.limit)}</td>
+      <td data-label="Payroll">{cell(item.payroll)}</td>
+      <td data-label="Vehicles">{cell(item.vehicles)}</td>
+      <td
+        className={item.driverList === "Missing" ? "coverage-cell-warning" : ""}
+        data-label="Driver List"
+      >
         {cell(item.driverList)}
       </td>
-      <td>{cell(item.recommendation)}</td>
-      <td>{item.notes}</td>
+      <td data-label="Recommendation">{cell(item.recommendation)}</td>
+      <td data-label="Notes">{item.notes}</td>
     </tr>
   ));
 }

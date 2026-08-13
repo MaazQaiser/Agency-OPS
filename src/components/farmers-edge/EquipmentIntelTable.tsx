@@ -1,6 +1,7 @@
 "use client";
 
 import type { EquipRow } from "@/data/farmersEdge";
+import { HubEmptyState } from "@/components/state";
 
 type EquipmentIntelTableProps = {
   rows: EquipRow[];
@@ -10,9 +11,12 @@ type EquipmentIntelTableProps = {
 export function EquipmentIntelTable({ rows, verticalLabel }: EquipmentIntelTableProps) {
   if (rows.length === 0) {
     return (
-      <p className="fe-card-empty">
-        Eva adds Equipment Intel for {verticalLabel} in Sheets.
-      </p>
+      <HubEmptyState
+        compact
+        preset="farmers-edge-content"
+        title="No equipment intel yet"
+        description={`Eva adds equipment intel for ${verticalLabel} in Google Sheets.`}
+      />
     );
   }
 

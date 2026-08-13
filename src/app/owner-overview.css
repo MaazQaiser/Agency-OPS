@@ -1,0 +1,615 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Owner Overview / Flagship Dashboard
+   Visual redesign only. Scoped to owner overview + shared queue polish.
+   ═══════════════════════════════════════════════════════════════ */
+
+.module-va-operations .owner-overview-hero {
+  display: block;
+  padding: 20px 32px 22px;
+  background-color: var(--ita-navy);
+  background-image:
+    radial-gradient(ellipse 48% 80% at 92% 8%, rgba(255, 255, 255, 0.12) 0%, transparent 58%),
+    var(--hub-owner-gradient);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
+}
+
+.owner-overview-hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.owner-overview-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.owner-overview-hero-copy {
+  min-width: 0;
+}
+
+.owner-overview-hero-eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.module-va-operations .owner-overview-hero .owner-overview-hero-title {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.module-va-operations .owner-overview-hero .owner-overview-hero-subtitle {
+  margin: 6px 0 0;
+  max-width: 42rem;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.owner-overview-hero-toolbar {
+  flex: 0 1 420px;
+  max-width: 420px;
+  margin-left: auto;
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-strip,
+.module-va-operations .owner-overview-hero .va-ops-team-presence-strip--hero {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-label {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-name {
+  color: #ffffff;
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-status--online {
+  color: var(--semantic-good);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-status--on-call,
+.module-va-operations .owner-overview-hero .va-ops-team-presence-status--busy {
+  color: var(--semantic-warning);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-status--offline {
+  color: #fecdd3;
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-member-btn {
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform var(--motion-standard) var(--motion-ease),
+    background var(--motion-standard) var(--motion-ease),
+    border-color var(--motion-standard) var(--motion-ease);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-member-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-member-btn:hover .team-avatar-root {
+  transform: scale(1.04);
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-member-btn:focus-within {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.module-va-operations .owner-overview-hero .va-ops-team-presence-row {
+  gap: 10px;
+}
+
+/* ── Flagship page rhythm ── */
+.module-va-operations:has(.va-ops-overview--flagship) .va-ops-tab-content {
+  padding: 24px 32px 32px;
+}
+
+.va-ops-overview--flagship {
+  gap: 28px;
+  max-width: 1400px;
+  overflow-x: clip;
+}
+
+.va-ops-overview--flagship .va-ops-panel:hover {
+  transform: none;
+}
+
+.va-ops-overview--flagship .va-ops-section-heading {
+  margin-bottom: 14px;
+}
+
+.va-ops-overview--flagship .va-ops-panel-title {
+  font-family: var(--font-family-display);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.va-ops-overview--flagship .va-ops-section-sub {
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.va-ops-overview--flagship .va-ops-freshness {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── Needs attention KPI cards ── */
+.va-ops-overview--flagship .va-ops-kpi-grid.cols-5 {
+  gap: 14px;
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card,
+.va-ops-overview--flagship .va-ops-kpi-card.primary,
+.va-ops-overview--flagship .va-ops-kpi-card.info,
+.va-ops-overview--flagship .va-ops-kpi-card.amber,
+.va-ops-overview--flagship .va-ops-kpi-card.teal,
+.va-ops-overview--flagship .va-ops-kpi-card.red,
+.va-ops-overview--flagship .va-ops-kpi-card.violet,
+.va-ops-overview--flagship .va-ops-kpi-card.green,
+.va-ops-overview--flagship .va-ops-kpi-card.slate,
+.va-ops-overview--flagship .va-ops-kpi-card.steel {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  border-top-width: 4px;
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px 18px;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.info {
+  border-top-color: var(--semantic-info);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.amber {
+  border-top-color: var(--semantic-warning);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.teal {
+  border-top-color: var(--semantic-source);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.red {
+  border-top-color: var(--semantic-danger);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.violet {
+  border-top-color: var(--semantic-draft);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card:hover,
+.va-ops-overview--flagship .va-ops-kpi-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card:focus-visible {
+  outline: 2px solid var(--semantic-info);
+  outline-offset: 2px;
+}
+
+.va-ops-overview--flagship .va-ops-kpi-label {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.info .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.amber .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.teal .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.red .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.violet .va-ops-kpi-value,
+.va-ops-overview--flagship .va-ops-kpi-card.primary .va-ops-kpi-value {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-kpi-lg);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  text-shadow: none;
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.info .va-ops-kpi-value {
+  color: var(--semantic-info);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.amber .va-ops-kpi-value {
+  color: var(--semantic-warning);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.teal .va-ops-kpi-value {
+  color: var(--semantic-source);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.red .va-ops-kpi-value {
+  color: var(--semantic-danger);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-card.violet .va-ops-kpi-value {
+  color: var(--semantic-draft);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-sub {
+  margin-top: 8px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.va-ops-overview--flagship .va-ops-kpi-helper {
+  margin-top: 4px;
+  font-family: var(--font-family);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ── Today at the agency ── */
+.va-ops-overview--flagship .va-ops-snapshot-section {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-grid {
+  gap: 14px;
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card,
+.va-ops-overview--flagship .va-ops-snapshot-card--flagship {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  border-top: 4px solid var(--semantic-info);
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card--teal {
+  border-top-color: var(--semantic-source);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card--violet {
+  border-top-color: var(--semantic-draft);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card--positive {
+  border-top-color: var(--semantic-good);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-label {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-value {
+  font-family: var(--font-family-mono);
+  font-size: clamp(28px, 2.4vw, 36px);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card--positive .va-ops-snapshot-value {
+  color: var(--semantic-good);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-sub {
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.va-ops-overview--flagship .va-ops-today-timeline-strip {
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 16px 18px;
+}
+
+/* ── Priority queue ── */
+.va-ops-overview--flagship .va-ops-priority-panel,
+.va-ops-priority-panel {
+  background: #ffffff;
+}
+
+.va-ops-priority-table tbody tr {
+  transition: background 180ms ease;
+}
+
+.va-ops-priority-table tbody tr:hover td {
+  background: var(--surface-hover);
+}
+
+.va-ops-priority-due {
+  font-family: var(--font-family-mono);
+}
+
+.va-ops-task-cta {
+  min-width: 0;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 8px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    filter 160ms ease;
+}
+
+.va-ops-task-cta:hover {
+  filter: brightness(1.08);
+}
+
+.va-ops-task-cta:focus-visible {
+  outline: 2px solid var(--semantic-info);
+  outline-offset: 2px;
+}
+
+.va-ops-task-cta--commercial {
+  background: var(--hub-commercial);
+  border-color: var(--hub-commercial-dark);
+  color: #ffffff;
+}
+
+.va-ops-task-cta--intake {
+  background: var(--hub-intake);
+  border-color: var(--hub-intake-dark);
+  color: #ffffff;
+}
+
+.va-ops-task-cta--send {
+  background: var(--hub-va);
+  border-color: var(--hub-va-dark);
+  color: #ffffff;
+}
+
+.va-ops-task-cta--retention {
+  background: var(--hub-farmers);
+  border-color: var(--hub-farmers-dark);
+  color: #ffffff;
+}
+
+.va-ops-task-cta.critical {
+  background: var(--semantic-danger);
+  border-color: var(--semantic-danger);
+  color: #ffffff;
+}
+
+.va-task-priority--high,
+.va-task-priority--urgent,
+.va-task-status--urgent,
+.va-task-status--critical {
+  color: var(--semantic-danger);
+  background: var(--critical-rose-bg);
+  border-color: var(--critical-rose-border);
+}
+
+.va-task-priority--medium {
+  color: #92400e;
+  background: var(--warning-amber-bg);
+  border-color: var(--warning-amber-border);
+}
+
+.va-task-priority--normal,
+.va-task-status--pending {
+  color: var(--semantic-info);
+  background: var(--metric-blue-bg);
+  border-color: var(--metric-blue-border);
+}
+
+.va-ops-priority-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 12px;
+}
+
+.va-ops-priority-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.va-ops-priority-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.va-ops-priority-card-pills,
+.va-ops-priority-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.va-ops-priority-card-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Secondary supporting area ── */
+.va-ops-secondary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.va-ops-overview--flagship .va-ops-activity-panel,
+.va-ops-overview--flagship .va-ops-lead-panel,
+.va-ops-overview--flagship .va-ops-workload-panel {
+  box-shadow: var(--shadow-card);
+}
+
+.va-ops-overview--flagship .va-ops-activity-panel {
+  max-width: 100%;
+}
+
+.va-ops-overview--flagship .va-ops-lead-timer-pill--within {
+  color: var(--semantic-good);
+  background: var(--success-green-bg);
+}
+
+.va-ops-overview--flagship .va-ops-lead-timer-pill--near {
+  color: #92400e;
+  background: var(--warning-amber-bg);
+}
+
+.va-ops-overview--flagship .va-ops-lead-timer-pill--breached {
+  color: var(--semantic-danger);
+  background: var(--critical-rose-bg);
+}
+
+.va-ops-overview--flagship .va-ops-lead-timer-pill {
+  font-family: var(--font-family-mono);
+}
+
+.va-ops-overview--flagship .va-ops-activity-time {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1279px) {
+  .va-ops-overview--flagship .va-ops-kpi-grid.cols-5,
+  .va-ops-overview--flagship .va-ops-snapshot-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .va-ops-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .module-va-operations .owner-overview-hero {
+    padding: 16px 16px 18px;
+  }
+
+  .owner-overview-hero-top {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .owner-overview-hero-toolbar {
+    flex: 1 1 auto;
+    max-width: none;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .module-va-operations:has(.va-ops-overview--flagship) .va-ops-tab-content {
+    padding: 16px 16px 24px;
+  }
+
+  .va-ops-overview--flagship {
+    gap: 20px;
+  }
+
+  .va-ops-overview--flagship .va-ops-kpi-grid,
+  .va-ops-overview--flagship .va-ops-kpi-grid.cols-5,
+  .va-ops-overview--flagship .va-ops-kpi-grid.cols-3,
+  .va-ops-overview--flagship .va-ops-snapshot-grid,
+  .va-ops-overview--flagship .va-ops-snapshot-grid.cols-2,
+  .va-ops-overview--flagship .va-ops-snapshot-grid.cols-3,
+  .va-ops-overview--flagship .va-ops-snapshot-grid.cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px;
+  }
+
+  .module-va-operations .owner-overview-hero .va-ops-team-presence-row,
+  .va-ops-team-presence-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+  }
+
+  .va-ops-priority-table-wrap {
+    display: none;
+  }
+
+  .va-ops-priority-cards {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .va-ops-overview--flagship .va-ops-kpi-value,
+  .va-ops-overview--flagship .va-ops-snapshot-value {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 768px) {
+  .va-ops-priority-cards {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-ops-overview--flagship .va-ops-kpi-card,
+  .va-ops-overview--flagship .va-ops-snapshot-card,
+  .va-ops-task-cta,
+  .owner-overview-hero .va-ops-team-presence-member-btn {
+    transition: none;
+    transform: none;
+  }
+}

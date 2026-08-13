@@ -241,12 +241,21 @@
 /* ── Dual panel layout ── */
 .analytics-dual-panel {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .analytics-dual-panel--carrier {
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.9fr);
+}
+
+.analytics-dual-panel > .va-ops-panel,
+.analytics-dual-panel--carrier > .va-ops-panel {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ── Producer leaderboard ── */
@@ -548,6 +557,9 @@
 
 .analytics-carrier-table-wrap {
   margin-top: 2px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .analytics-carrier-table .commercial-hub-carrier-name {
@@ -564,19 +576,25 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 .analytics-dependency-row {
   display: grid;
-  grid-template-columns: 100px 1fr 36px 72px;
+  grid-template-columns: minmax(0, 1fr) minmax(48px, 1.4fr) 40px minmax(0, 64px);
   gap: 8px;
   align-items: center;
+  min-width: 0;
 }
 
 .analytics-dependency-carrier {
   font-size: 10px;
   font-weight: 700;
   color: var(--text-primary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .analytics-dependency-bar-track {
@@ -603,6 +621,10 @@
   font-size: 10px;
   color: var(--text-muted);
   text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .analytics-dependency-stacked {
@@ -623,6 +645,8 @@
   font-size: 10px;
   color: var(--text-muted);
   text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* ── AI Insights panel ── */

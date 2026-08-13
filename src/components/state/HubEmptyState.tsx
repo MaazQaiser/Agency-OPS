@@ -35,10 +35,11 @@ export function HubEmptyState({
   return (
     <div
       className={cn("hub-empty-state", "motion-empty-enter", compact && "hub-empty-state--compact", className)}
+      data-hub={config?.hub}
       role="status"
     >
       <div className="hub-empty-state-icon-wrap motion-empty-icon">
-        <AppIcon name={resolvedIcon} size={compact ? 24 : 32} strokeWidth={1.75} />
+        <AppIcon name={resolvedIcon} size={compact ? 20 : 22} strokeWidth={1.75} />
       </div>
       <h3 className="hub-empty-state-title">{resolvedTitle}</h3>
       <p className="hub-empty-state-desc">{resolvedDescription}</p>

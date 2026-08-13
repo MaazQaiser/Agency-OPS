@@ -97,18 +97,20 @@
 
 .hub-kpi-grid .va-ops-kpi-label {
   margin-bottom: 4px;
-  font-size: 9px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .hub-kpi-grid .va-ops-kpi-value {
-  font-size: 1.35rem;
+  font-size: var(--font-size-kpi-md);
   line-height: 1.1;
   margin-bottom: 2px;
 }
 
 .hub-kpi-grid .va-ops-kpi-sub {
   margin-top: auto;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.3;
 }
 

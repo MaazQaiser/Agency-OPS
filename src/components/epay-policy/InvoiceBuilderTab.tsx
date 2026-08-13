@@ -169,6 +169,103 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
       }
     >
     <div className="va-ops-role-view epay-invoice-builder">
+      <article className="print-only print-document print-invoice" aria-hidden="true">
+        <header className="print-header">
+          <div>
+            <div className="print-header-org">Insurance Town Agency</div>
+            <div className="print-header-kicker">Agency OS</div>
+            <h1 className="print-header-title">Invoice</h1>
+            <p className="print-header-sub">{client.clientName} · {form.invoiceNumber}</p>
+          </div>
+          <div>
+            <p className="print-header-org">Due {form.paymentDueDate}</p>
+            <p className="print-status">{client.paymentRequest.lifecycle.paid ? "Paid" : client.status}</p>
+          </div>
+        </header>
+
+        <section className="print-section">
+          <h2 className="print-section-title">Client</h2>
+          <dl className="print-dl">
+            <div><dt>Bill to</dt><dd>{client.clientName}</dd></div>
+            <div><dt>Producer / VA</dt><dd>{client.producer} · {client.assignedVa}</dd></div>
+          </dl>
+        </section>
+
+        <section className="print-section">
+          <h2 className="print-section-title">Policy</h2>
+          <dl className="print-dl">
+            <div><dt>Policy type</dt><dd>{client.policyType}</dd></div>
+            <div><dt>Carrier</dt><dd>{client.carrier}</dd></div>
+            <div><dt>Effective</dt><dd>{client.effectiveDate}</dd></div>
+            <div><dt>Renewal</dt><dd>{client.renewalDate}</dd></div>
+          </dl>
+        </section>
+
+        <section className="print-section">
+          <h2 className="print-section-title">Charges</h2>
+          <table className="print-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th className="numeric">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Policy Premium</td>
+                <td className="numeric">{formatMoney(form.policyPremium)}</td>
+              </tr>
+              <tr>
+                <td>Broker Fee</td>
+                <td className="numeric">{formatMoney(form.brokerFee)}</td>
+              </tr>
+              <tr>
+                <td>Taxes &amp; Fees</td>
+                <td className="numeric">{formatMoney(form.taxesFees)}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total Due</td>
+                <td className="numeric">{formatMoney(totalDue)}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+
+        <section className="print-section">
+          <h2 className="print-section-title">Payment</h2>
+          <dl className="print-dl">
+            <div><dt>Method</dt><dd>{form.paymentMethod}</dd></div>
+            <div><dt>Installment</dt><dd>{form.installmentOption}</dd></div>
+            <div><dt>Billing type</dt><dd>{client.billingType}</dd></div>
+            <div><dt>Payment link</dt><dd>{client.paymentRequest.linkStatus}</dd></div>
+          </dl>
+        </section>
+
+        <section className="print-section">
+          <h2 className="print-section-title">Trust account</h2>
+          <dl className="print-dl">
+            <div><dt>Account</dt><dd>{client.trustAccount.accountName}</dd></div>
+            <div><dt>Deposit method</dt><dd>{client.trustAccount.depositMethod}</dd></div>
+            <div><dt>Reference</dt><dd>{client.trustAccount.referenceNumber}</dd></div>
+            <div><dt>Expected deposit</dt><dd>{client.trustAccount.expectedDepositDate}</dd></div>
+          </dl>
+        </section>
+
+        {form.notes ? (
+          <section className="print-section">
+            <h2 className="print-section-title">Notes</h2>
+            <p>{form.notes}</p>
+          </section>
+        ) : null}
+
+        <footer className="print-footer">
+          Confidential: Insurance Town Agency OS · Patent Pending USPTO #64/053,057
+        </footer>
+      </article>
+
+      <div className="print-hidden">
       <div className="export-table-header-export">
         <RoleTabHeader
           title={invoiceBuilderHeader.title}
@@ -176,6 +273,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
         />
         <ExportMenu
           kind="epay-invoice"
+          className="print-hidden"
           invoiceExport={() => exportEpayInvoicePdf(client, totalDue)}
         />
       </div>
@@ -512,6 +610,7 @@ export function InvoiceBuilderTab(_props: InvoiceBuilderTabProps) {
             </button>
           ))}
         </div>
+      </div>
       </div>
 
       <EPayConfirmModal

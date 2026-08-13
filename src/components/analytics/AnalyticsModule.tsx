@@ -11,6 +11,7 @@ import { HubHelpTrigger } from "@/components/help/HubHelpTrigger";
 import { cn } from "@/lib/cn";
 import { HubOperationalStrips } from "@/components/layout/HubOperationalStrips";
 import { AnalyticsTimeFilter } from "./AnalyticsTimeFilter";
+import { AnalyticsTabFrame } from "./AnalyticsTabFrame";
 import { OverviewTab } from "./OverviewTab";
 import { ProductionTab } from "./ProductionTab";
 import { RetentionTab } from "./RetentionTab";
@@ -54,11 +55,13 @@ export function AnalyticsModule() {
       <HubOperationalStrips />
 
       <div className="va-ops-tab-content analytics-content">
-        {activeTab === "overview" && <OverviewTab period={timeFilter} />}
-        {activeTab === "production" && <ProductionTab period={timeFilter} />}
-        {activeTab === "retention" && <RetentionTab period={timeFilter} />}
-        {activeTab === "velocity" && <VelocityTab period={timeFilter} />}
-        {activeTab === "carriers" && <CarrierMixTab period={timeFilter} />}
+        <AnalyticsTabFrame period={timeFilter} tab={activeTab}>
+          {activeTab === "overview" && <OverviewTab period={timeFilter} />}
+          {activeTab === "production" && <ProductionTab period={timeFilter} />}
+          {activeTab === "retention" && <RetentionTab period={timeFilter} />}
+          {activeTab === "velocity" && <VelocityTab period={timeFilter} />}
+          {activeTab === "carriers" && <CarrierMixTab period={timeFilter} />}
+        </AnalyticsTabFrame>
       </div>
     </>
   );

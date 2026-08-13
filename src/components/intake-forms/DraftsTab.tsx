@@ -151,8 +151,13 @@ export function DraftsTab() {
       <div className="va-ops-role-view intake-drafts">
         <section className="intake-drafts-kpi-strip" aria-label="Draft summary">
           <div className="commercial-hub-kpi-grid hub-kpi-grid intake-drafts-kpi-grid">
-            {draftSummaryKpis.map((kpi) => (
-              <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
+            {draftSummaryKpis.map((kpi, index) => (
+              <VaOpsKpiCard
+                key={kpi.label}
+                {...kpi}
+                className={cn("commercial-hub-kpi-uniform", index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary")}
+                sparkline={false}
+              />
             ))}
           </div>
         </section>

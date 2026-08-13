@@ -11,7 +11,8 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: min(560px, 100vw);
+  width: min(720px, 92vw);
+  max-width: 92vw;
   height: 100dvh;
   max-height: 100dvh;
   border-left: 1px solid var(--border-default);
@@ -563,6 +564,75 @@
 
 .notification-center-header-btn--clear-resolved:hover:not(:disabled) {
   color: var(--text-secondary);
+}
+
+.notification-center-header {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 64px;
+  padding: 12px 16px 12px 20px;
+  overflow: visible;
+}
+
+.notification-center-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.notification-center-header-title h2 {
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.notification-center-unread-badge {
+  flex-shrink: 0;
+  position: static;
+  padding: 3px 8px;
+  font-size: 10px;
+  line-height: 1.2;
+  z-index: 0;
+}
+
+.notification-center-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.notification-center-header-actions .export-menu {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.notification-center-header-actions .export-menu-trigger,
+.notification-center-header-actions .export-menu-trigger--compact {
+  min-height: 36px;
+  height: 36px;
+  padding: 0 10px;
+}
+
+.notification-center-header-btn {
+  flex-shrink: 0;
+  padding: 6px 8px;
+  line-height: 1.2;
+}
+
+.notification-center-header .va-ops-drawer-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

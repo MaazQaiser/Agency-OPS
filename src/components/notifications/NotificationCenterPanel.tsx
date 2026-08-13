@@ -120,15 +120,15 @@ export function NotificationCenterPanel({
             >
               Clear resolved
             </button>
-            <button
-              type="button"
-              className="va-ops-drawer-close"
-              aria-label="Close notifications"
-              onClick={onClose}
-            >
-              <AppIcon name="close" size={18} strokeWidth={2.25} />
-            </button>
           </div>
+          <button
+            type="button"
+            className="va-ops-drawer-close"
+            aria-label="Close notifications"
+            onClick={onClose}
+          >
+            <AppIcon name="close" size={18} strokeWidth={2.25} />
+          </button>
         </header>
 
         <nav className="notification-center-tabs" aria-label="Notification filters">

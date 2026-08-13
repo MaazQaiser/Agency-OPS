@@ -9,10 +9,10 @@ import {
 } from "@/data/vaOperations";
 
 const taskPriorityClass: Record<TaskPriorityLevel, string> = {
-  low: "badge-gray",
-  medium: "badge-blue",
-  high: "badge-yellow",
-  critical: "badge-red",
+  low: "badge-gray va-task-priority--normal",
+  medium: "badge-yellow va-task-priority--medium",
+  high: "badge-red va-task-priority--high",
+  critical: "badge-red va-task-priority--urgent",
 };
 
 const dueDateRiskClass: Record<DueDateRisk, string> = {

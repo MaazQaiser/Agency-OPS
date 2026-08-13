@@ -2,7 +2,10 @@ import type { KpiColor } from "@/types";
 import { cn } from "@/lib/cn";
 import { emphasizeKpiSub } from "@/lib/emphasizeKpiSub";
 import { isFinancialDisplayValue } from "@/lib/isFinancialDisplayValue";
+import { kpiToneFromColor, progressToneFromColor } from "@/lib/kpiTone";
 import { KpiSparklineIntelligence } from "@/components/kpi/KpiSparklineIntelligence";
+import { MetricProgressBar, parseProgressPercent } from "@/components/kpi/MetricProgressBar";
+import { TrendIndicator } from "@/components/kpi/TrendIndicator";
 import type { KpiPolarity, KpiTrendData } from "@/lib/kpiTrend";
 
 export type KpiCardVariant = "default" | "production" | "retention" | "commercial";
@@ -34,7 +37,7 @@ export function KpiCard({
   className,
   trend,
   polarity,
-  sparkline = true,
+  sparkline,
 }: KpiCardProps) {
   const moduleClass = variant !== "default" ? variant : "";
   const borderVariant =
@@ -45,6 +48,8 @@ export function KpiCard({
       : undefined;
 
   const financial = isFinancialDisplayValue(label, value);
+  const tone = kpiToneFromColor(color);
+  const showSparkline = (sparkline ?? Boolean(trend)) && Boolean(trend);
 
   const valueClassName =
     variant === "production"
@@ -72,6 +77,8 @@ export function KpiCard({
       className={cn(
         "kpi-card",
         "aos-card--info",
+        "aos-kpi-card",
+        `aos-kpi-card--${tone}`,
         moduleClass,
         borderVariant,
         featured && "featured",
@@ -89,17 +96,23 @@ export function KpiCard({
       >
         {value}
       </div>
-      {sparkline && (
-        <KpiSparklineIntelligence label={label} trend={trend} polarity={polarity} />
+      {trend && (
+        <TrendIndicator
+          direction={trend.direction}
+          label={trend.deltaLabel}
+          state={trend.state}
+        />
       )}
       {sub && <div className={subClassName}>{emphasizeKpiSub(sub)}</div>}
-      {progress && variant === "production" && (
-        <div className="progress-bar production">
-          <div
-            className={`progress-fill ${progress.color}`}
-            style={{ width: progress.width }}
-          />
-        </div>
+      {showSparkline && (
+        <KpiSparklineIntelligence trend={trend} polarity={polarity} />
+      )}
+      {progress && (
+        <MetricProgressBar
+          percent={parseProgressPercent(progress.width)}
+          tone={progressToneFromColor(progress.color)}
+          label={`${label} progress`}
+        />
       )}
     </div>
   );

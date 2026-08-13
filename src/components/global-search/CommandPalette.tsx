@@ -7,11 +7,11 @@ import { AppIcon } from "@/components/ui/AppIcon";
 import {
   defaultGlobalSearchFilters,
   globalSearchPlaceholder,
+  searchGroupOrder,
   type GlobalSearchResult,
 } from "@/data/globalSearch";
 import {
   filterPaletteActions,
-  hubGroupOrder,
   moduleJumpActions,
   paletteAiGuidance,
   paletteTabs,
@@ -20,7 +20,6 @@ import {
   type PaletteTabId,
 } from "@/data/commandPalette";
 import {
-  groupResultsByHub,
   highlightMatch,
   resolveAiInsight,
   searchGlobalResults,
@@ -31,7 +30,9 @@ import {
 import { addRecentSearch, clearRecentSearches, getRecentSearches } from "@/lib/globalSearchHistory";
 import { resolveSearchNavigation } from "@/lib/crossModuleLinks";
 import {
+  actionDescription,
   displayGroupLabel,
+  hubAccentClass,
   hubTagClass,
   resolveHubAccent,
   resultSubtitle,
@@ -43,9 +44,7 @@ import { useEntitlements } from "@/hooks/useEntitlements";
 import { routes } from "@/lib/routes";
 import { useDebouncedValue } from "@/lib/useDebouncedValue";
 import { cn } from "@/lib/cn";
-import { overlaySearchHints } from "@/lib/overlaySearchGroups";
 import { CommandPaletteSkeleton } from "@/components/shared/loading";
-import { SearchPreviewPanel } from "./SearchPreviewPanel";
 
 type PaletteItem =
   | { kind: "recent"; id: string; label: string }
@@ -57,6 +56,7 @@ type PaletteItem =
 
 type CommandPaletteProps = {
   initialQuery?: string;
+  open?: boolean;
   onClose: () => void;
 };
 
@@ -78,27 +78,11 @@ function HighlightText({ text, query }: { text: string; query: string }) {
 }
 
 function hubRowAccentClass(hub: string) {
-  const accent = resolveHubAccent(hub);
-  const map: Record<string, string> = {
-    commercial: "cmd-hub-accent-commercial",
-    va: "cmd-hub-accent-va",
-    training: "cmd-hub-accent-training",
-    carrier: "cmd-hub-accent-carrier",
-    analytics: "cmd-hub-accent-analytics",
-    send: "cmd-hub-accent-send",
-    farmers: "cmd-hub-accent-farmers",
-    epay: "cmd-hub-accent-epay",
-    intake: "cmd-hub-accent-intake",
-  };
-  return map[accent] ?? "cmd-hub-accent-va";
+  return `cmd-hub-accent-${resolveHubAccent(hub)}`;
 }
 
-function statusBadgeClass(status: string) {
-  const s = status.toLowerCase();
-  if (s.includes("overdue") || s.includes("failed") || s.includes("missing")) return "badge-red";
-  if (s.includes("pending") || s.includes("quoted")) return "badge-yellow";
-  if (s.includes("bound") || s.includes("active") || s.includes("open")) return "badge-green";
-  return "badge-blue";
+function HubTag({ hub }: { hub: string }) {
+  return <span className={cn("cmd-palette-hub-tag", hubTagClass(hub))}>{shortHubLabel(hub)}</span>;
 }
 
 function HubIcon({
@@ -113,14 +97,10 @@ function HubIcon({
   const accent = resolveHubAccent(hub);
   const iconName = actionIcon ?? (type ? resultTypeIcon(type) : "search");
   return (
-    <span className={cn("cmd-palette-row-icon", actionIcon ? "cmd-hub-action" : `cmd-hub-${accent}`)}>
-      <AppIcon name={iconName} size={16} strokeWidth={2} />
+    <span className={cn("cmd-palette-row-icon", actionIcon ? `cmd-hub-action ${hubAccentClass(hub)}` : `cmd-hub-${accent}`)}>
+      <AppIcon name={iconName} size={18} strokeWidth={2} />
     </span>
   );
-}
-
-function HubTag({ hub }: { hub: string }) {
-  return <span className={cn("cmd-palette-hub-tag", hubTagClass(hub))}>{shortHubLabel(hub)}</span>;
 }
 
 function ActionRow({
@@ -141,18 +121,23 @@ function ActionRow({
   return (
     <button
       type="button"
+      id={`cmd-option-${index}`}
+      role="option"
+      aria-selected={active}
       className={cn("cmd-palette-row cmd-palette-action-row", hubRowAccentClass(action.hub), active && "active")}
       data-index={index}
       onClick={onSelect}
       onMouseEnter={onHover}
     >
       <HubIcon hub={action.hub} actionIcon={action.icon} />
-      <span className="cmd-palette-action-label">
-        {query ? <HighlightText text={action.label} query={query} /> : action.label}
+      <span className="cmd-palette-result-main">
+        <span className="cmd-palette-action-label">
+          {query ? <HighlightText text={action.label} query={query} /> : action.label}
+        </span>
+        <span className="cmd-palette-result-subtitle">{actionDescription(action)}</span>
       </span>
       <HubTag hub={action.hub} />
       <kbd className="cmd-palette-row-kbd">↵</kbd>
-      <AppIcon name="chevron-down" size={14} strokeWidth={2.25} className="cmd-palette-row-chevron" />
     </button>
   );
 }
@@ -173,18 +158,14 @@ function ResultRowContent({
         </span>
         <span className="cmd-palette-result-subtitle">{resultSubtitle(result)}</span>
       </div>
-      <div className="cmd-palette-result-badges">
-        <span className={cn("badge", statusBadgeClass(result.status))}>{result.status}</span>
-        <span className="cmd-palette-result-time">{result.lastUpdated}</span>
-      </div>
       <HubTag hub={result.hub} />
-      <AppIcon name="chevron-down" size={14} strokeWidth={2.25} className="cmd-palette-row-chevron" />
     </>
   );
 }
 
 export function CommandPalette({
   initialQuery = "",
+  open = true,
   onClose,
 }: CommandPaletteProps) {
   const router = useRouter();
@@ -198,7 +179,6 @@ export function CommandPalette({
   const [activeIndex, setActiveIndex] = useState(0);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [expandedHubs, setExpandedHubs] = useState<Set<string>>(new Set());
-  const [previewResult, setPreviewResult] = useState<GlobalSearchResult | null>(null);
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -244,16 +224,22 @@ export function CommandPalette({
   const showRecent = !hasQuery && (paletteTab === "all" || paletteTab === "search");
   const showSuggestedActions = paletteTab === "all" || paletteTab === "actions";
   const showAlerts = !hasQuery && paletteTab === "all";
-  const showJumps = !hasQuery && (paletteTab === "all" || paletteTab === "actions");
+  const showJumps = !hasQuery && paletteTab === "actions";
   const showSearchResults = hasQuery && (paletteTab === "all" || paletteTab === "search");
   const showMatchedActions = hasQuery && (paletteTab === "all" || paletteTab === "actions");
   const showAiPanel = paletteTab === "all" || paletteTab === "ai";
   const showSuggestedRecords = !hasQuery && paletteTab === "search";
-  const showAiGuidance = paletteTab === "ai" || paletteTab === "all";
+  const showAiGuidance = paletteTab === "ai";
 
-  const groupedByHub = useMemo(() => {
-    const limit = expandedHubs.size > 0 ? 999 : 5;
-    return groupResultsByHub(searchResults, limit);
+  const groupedByType = useMemo(() => {
+    const groups: Record<string, GlobalSearchResult[]> = {};
+    for (const result of searchResults) {
+      const key = result.group;
+      if (!groups[key]) groups[key] = [];
+      const expanded = expandedHubs.has(key);
+      if (expanded || groups[key].length < 5) groups[key].push(result);
+    }
+    return groups;
   }, [searchResults, expandedHubs]);
 
   const aiInsight = useMemo(() => {
@@ -269,21 +255,25 @@ export function CommandPalette({
 
   const flatItems = useMemo((): PaletteItem[] => {
     const items: PaletteItem[] = [];
+    const emptyBudget = paletteTab === "all" && !hasQuery ? 8 : Number.POSITIVE_INFINITY;
 
     if (!hasQuery) {
       if (showRecent) {
         for (const term of recentSearches) {
+          if (items.length >= emptyBudget) break;
           items.push({ kind: "recent", id: `recent-${term}`, label: term });
-        }
-      }
-      if (showSuggestedActions) {
-        for (const action of accessiblePinned) {
-          items.push({ kind: "action", id: `action-${action.id}`, action });
         }
       }
       if (showAlerts) {
         for (const alert of accessibleAlerts) {
+          if (items.length >= emptyBudget) break;
           items.push({ kind: "alert", id: alert.id, alert });
+        }
+      }
+      if (showSuggestedActions) {
+        for (const action of accessiblePinned) {
+          if (items.length >= emptyBudget) break;
+          items.push({ kind: "action", id: `action-${action.id}`, action });
         }
       }
       if (showJumps) {
@@ -303,23 +293,19 @@ export function CommandPalette({
         }
       }
       if (showSearchResults) {
-        for (const hub of hubGroupOrder) {
-          const hubResults = groupedByHub[hub];
-          if (!hubResults?.length) continue;
-          for (const result of hubResults) {
+        const orderedGroups = [
+          ...searchGroupOrder.filter((group) => groupedByType[group]?.length),
+          ...Object.keys(groupedByType).filter((group) => !searchGroupOrder.includes(group as (typeof searchGroupOrder)[number])),
+        ];
+        for (const group of orderedGroups) {
+          const groupResults = groupedByType[group];
+          if (!groupResults?.length) continue;
+          for (const result of groupResults) {
             items.push({ kind: "result", id: result.id, result });
           }
-          const totalInHub = searchResults.filter((r) => r.hub === hub).length;
-          if (totalInHub > 5 && !expandedHubs.has(hub)) {
-            items.push({ kind: "view-all", id: `view-all-${hub}`, hub, query: debouncedQuery });
-          }
-        }
-        for (const hub of Object.keys(groupedByHub)) {
-          if (hubGroupOrder.includes(hub)) continue;
-          const hubResults = groupedByHub[hub];
-          if (!hubResults?.length) continue;
-          for (const result of hubResults) {
-            items.push({ kind: "result", id: result.id, result });
+          const totalInGroup = searchResults.filter((r) => r.group === group).length;
+          if (totalInGroup > 5 && !expandedHubs.has(group)) {
+            items.push({ kind: "view-all", id: `view-all-${group}`, hub: group, query: debouncedQuery });
           }
         }
       }
@@ -329,6 +315,7 @@ export function CommandPalette({
     return items;
   }, [
     hasQuery,
+    paletteTab,
     showRecent,
     showSuggestedActions,
     showAlerts,
@@ -339,7 +326,7 @@ export function CommandPalette({
     showAiPanel,
     recentSearches,
     matchedActions,
-    groupedByHub,
+    groupedByType,
     searchResults,
     expandedHubs,
     aiInsight,
@@ -419,8 +406,7 @@ export function CommandPalette({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        if (previewResult) setPreviewResult(null);
-        else onClose();
+        onClose();
         return;
       }
 
@@ -445,7 +431,7 @@ export function CommandPalette({
 
       if (event.key === "ArrowDown") {
         event.preventDefault();
-        setActiveIndex((i) => Math.min(i + 1, flatItems.length - 1));
+        setActiveIndex((i) => Math.min(i + 1, Math.max(flatItems.length - 1, 0)));
         return;
       }
 
@@ -464,13 +450,7 @@ export function CommandPalette({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, flatItems, activeIndex, activateItem, paletteTab, previewResult, debouncedQuery]);
-
-  useEffect(() => {
-    const item = flatItems[activeIndex];
-    if (item?.kind === "result") setPreviewResult(item.result);
-    else setPreviewResult(null);
-  }, [activeIndex, flatItems]);
+  }, [onClose, flatItems, activeIndex, activateItem, paletteTab, debouncedQuery]);
 
   useEffect(() => {
     setQuery(initialQuery);
@@ -515,49 +495,48 @@ export function CommandPalette({
     matchedActions.length === 0 &&
     !aiInsight;
 
-  const orderedHubs = useMemo(() => {
-    const hubs = Object.keys(groupedByHub);
+  const orderedGroups = useMemo(() => {
+    const groups = Object.keys(groupedByType);
     return [
-      ...hubGroupOrder.filter((h) => hubs.includes(h)),
-      ...hubs.filter((h) => !hubGroupOrder.includes(h)),
+      ...searchGroupOrder.filter((group) => groups.includes(group)),
+      ...groups.filter((group) => !searchGroupOrder.includes(group as (typeof searchGroupOrder)[number])),
     ];
-  }, [groupedByHub]);
+  }, [groupedByType]);
 
   return (
     <>
       <div
-        className={cn("cmd-palette-backdrop", mounted && "cmd-palette-backdrop-visible")}
+        className={cn("cmd-palette-backdrop", open && mounted && "cmd-palette-backdrop-visible")}
         onClick={onClose}
         aria-hidden="true"
       />
       <div
         ref={panelRef}
-        className={cn("cmd-palette", mounted && "cmd-palette-visible")}
+        className={cn("cmd-palette", open && mounted && "cmd-palette-visible")}
         role="dialog"
         aria-modal="true"
-        aria-label="Global search"
+        aria-label="Search Agency OS"
       >
         <div className="cmd-palette-panel">
           <div className="cmd-palette-layout">
             <div className="cmd-palette-main">
               <div className="cmd-palette-shell">
                 <div className="cmd-palette-header">
-                  <div className="cmd-palette-header-top">
-                    <span className="cmd-palette-eyebrow">Agency OS Search</span>
-                    <kbd className="cmd-palette-header-kbd" aria-hidden="true">
-                      {typeof navigator !== "undefined" && navigator.platform.toUpperCase().includes("MAC") ? "⌘K" : "Ctrl K"}
-                    </kbd>
-                  </div>
                   <div className="cmd-palette-search">
-                    <AppIcon name="search" size={22} strokeWidth={2} className="cmd-palette-search-icon" />
+                    <AppIcon name="search" size={20} strokeWidth={2} className="cmd-palette-search-icon" />
                     <input
                       ref={inputRef}
                       type="search"
                       className="cmd-palette-input"
-                      placeholder="Search clients, hubs, commands…"
+                      placeholder={globalSearchPlaceholder}
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      aria-label="Search across Agency OS"
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-expanded="true"
+                      aria-controls="cmd-palette-results"
+                      aria-activedescendant={flatItems[activeIndex] ? `cmd-option-${activeIndex}` : undefined}
+                      aria-label="Search Agency OS"
                       autoComplete="off"
                       spellCheck={false}
                     />
@@ -571,16 +550,10 @@ export function CommandPalette({
                         <AppIcon name="close" size={16} strokeWidth={2} />
                       </button>
                     )}
+                    <kbd className="cmd-palette-header-kbd" aria-hidden="true">
+                      ESC
+                    </kbd>
                   </div>
-                  {!hasQuery && (
-                    <div className="cmd-palette-hints" aria-hidden="true">
-                      {overlaySearchHints.map((hint) => (
-                        <span key={hint} className="cmd-palette-hint">
-                          {hint}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                   {showAiGuidance && !hasQuery && (
                     <div className="cmd-palette-ai-guidance" aria-label="AI search suggestions">
                       {paletteAiGuidance.map((hint) => (
@@ -616,7 +589,7 @@ export function CommandPalette({
             ))}
           </div>
 
-          <div className="cmd-palette-body" ref={listRef}>
+          <div className="cmd-palette-body" ref={listRef} id="cmd-palette-results" role="listbox" aria-label="Search results">
             {!hasQuery && (
               <>
                 {showRecent && recentSearches.length > 0 && (
@@ -628,19 +601,27 @@ export function CommandPalette({
                       </button>
                     </div>
                     <ul className="cmd-palette-list">
-                      {recentSearches.map((term) => {
+                      {recentSearches
+                        .filter((term) => flatItems.some((item) => item.kind === "recent" && item.label === term))
+                        .map((term) => {
                         const flatIdx = flatItems.findIndex((item) => item.kind === "recent" && item.label === term);
                         return (
                           <li key={term}>
                             <button
                               type="button"
+                              id={`cmd-option-${flatIdx}`}
+                              role="option"
+                              aria-selected={flatIdx === activeIndex}
                               className={cn("cmd-palette-row", flatIdx === activeIndex && "active")}
                               data-index={flatIdx}
                               onClick={() => setQuery(term)}
                               onMouseEnter={() => setActiveIndex(flatIdx)}
                             >
-                              <HubIcon hub="VA Operations" actionIcon="refresh" />
-                              <span>{term}</span>
+                              <HubIcon hub="VA Operations" actionIcon="clock" />
+                              <span className="cmd-palette-result-main">
+                                <span className="cmd-palette-result-title">{term}</span>
+                                <span className="cmd-palette-result-subtitle">Recent search</span>
+                              </span>
                             </button>
                           </li>
                         );
@@ -649,19 +630,24 @@ export function CommandPalette({
                   </section>
                 )}
 
-                {showAlerts && accessibleAlerts.length > 0 && (
+                {showAlerts && accessibleAlerts.some((alert) => flatItems.some((item) => item.kind === "alert" && item.alert.id === alert.id)) && (
                   <section className="cmd-palette-section">
                     <div className="cmd-palette-section-header">
                       <span className="cmd-palette-section-title">Alerts</span>
                       <span className="cmd-palette-section-count">{accessibleAlerts.length}</span>
                     </div>
                     <ul className="cmd-palette-list">
-                      {accessibleAlerts.map((alert) => {
+                      {accessibleAlerts
+                        .filter((alert) => flatItems.some((item) => item.kind === "alert" && item.alert.id === alert.id))
+                        .map((alert) => {
                         const flatIdx = flatItems.findIndex((item) => item.kind === "alert" && item.alert.id === alert.id);
                         return (
                           <li key={alert.id}>
                             <button
                               type="button"
+                              id={`cmd-option-${flatIdx}`}
+                              role="option"
+                              aria-selected={flatIdx === activeIndex}
                               className={cn(
                                 "cmd-palette-row cmd-palette-alert-row",
                                 alert.level,
@@ -684,13 +670,17 @@ export function CommandPalette({
                   </section>
                 )}
 
-                {showSuggestedActions && (
+                {showSuggestedActions && accessiblePinned.some((action) => flatItems.some((item) => item.kind === "action" && item.action.id === action.id)) && (
                 <section className="cmd-palette-section cmd-palette-section--pinned">
                   <div className="cmd-palette-section-header">
                     <span className="cmd-palette-section-title">Pinned Items</span>
                   </div>
                   <ul className="cmd-palette-list">
-                    {accessiblePinned.map((action) => {
+                    {accessiblePinned
+                      .filter((action) =>
+                        flatItems.some((item) => item.kind === "action" && item.action.id === action.id),
+                      )
+                      .map((action) => {
                       const flatIdx = flatItems.findIndex(
                         (item) => item.kind === "action" && item.action.id === action.id,
                       );
@@ -752,6 +742,9 @@ export function CommandPalette({
                           <li key={result.id}>
                             <button
                               type="button"
+                              id={`cmd-option-${flatIdx}`}
+                              role="option"
+                              aria-selected={flatIdx === activeIndex}
                               className={cn(
                                 "cmd-palette-row cmd-palette-result-row",
                                 hubRowAccentClass(result.hub),
@@ -759,11 +752,8 @@ export function CommandPalette({
                               )}
                               data-index={flatIdx}
                               onClick={() => {
-                                setPreviewResult(result);
-                                const idx = flatItems.findIndex(
-                                  (item) => item.kind === "result" && item.result.id === result.id,
-                                );
-                                if (idx >= 0) setActiveIndex(idx);
+                                const item = flatItems[flatIdx];
+                                if (item) activateItem(item);
                               }}
                               onMouseEnter={() => setActiveIndex(flatIdx)}
                             >
@@ -822,16 +812,15 @@ export function CommandPalette({
                 )}
 
                 {!isSearching && showSearchResults &&
-                  orderedHubs.map((hub) => {
-                    const items = groupedByHub[hub];
+                  orderedGroups.map((group) => {
+                    const items = groupedByType[group];
                     if (!items?.length) return null;
                     return (
-                      <section key={hub} className="cmd-palette-section">
+                      <section key={group} className="cmd-palette-section">
                         <div className="cmd-palette-section-header">
-                          <HubTag hub={hub} />
-                          <span className="cmd-palette-section-title">{displayGroupLabel(hub)}</span>
+                          <span className="cmd-palette-section-title">{displayGroupLabel(group)}</span>
                           <span className="cmd-palette-section-count">
-                            {searchResults.filter((r) => r.hub === hub).length}
+                            {searchResults.filter((r) => r.group === group).length}
                           </span>
                         </div>
                         <ul className="cmd-palette-list">
@@ -843,6 +832,9 @@ export function CommandPalette({
                               <li key={result.id}>
                                 <button
                                   type="button"
+                                  id={`cmd-option-${flatIdx}`}
+                                  role="option"
+                                  aria-selected={flatIdx === activeIndex}
                                   className={cn(
                                     "cmd-palette-row cmd-palette-result-row",
                                     hubRowAccentClass(result.hub),
@@ -850,12 +842,9 @@ export function CommandPalette({
                                   )}
                                   data-index={flatIdx}
                                   onClick={() => {
-                                setPreviewResult(result);
-                                const idx = flatItems.findIndex(
-                                  (item) => item.kind === "result" && item.result.id === result.id,
-                                );
-                                if (idx >= 0) setActiveIndex(idx);
-                              }}
+                                    const item = flatItems[flatIdx];
+                                    if (item) activateItem(item);
+                                  }}
                                   onMouseEnter={() => setActiveIndex(flatIdx)}
                                 >
                                   <ResultRowContent result={result} query={debouncedQuery} />
@@ -863,17 +852,33 @@ export function CommandPalette({
                               </li>
                             );
                           })}
-                          {searchResults.filter((r) => r.hub === hub).length > 5 && !expandedHubs.has(hub) && (
+                          {searchResults.filter((r) => r.group === group).length > 5 && !expandedHubs.has(group) && (
                             <li>
                               <button
                                 type="button"
-                                className="cmd-palette-view-all"
-                                data-index={flatItems.findIndex(
-                                  (item) => item.kind === "view-all" && item.hub === hub,
+                                id={`cmd-option-${flatItems.findIndex((item) => item.kind === "view-all" && item.hub === group)}`}
+                                role="option"
+                                aria-selected={
+                                  flatItems.findIndex((item) => item.kind === "view-all" && item.hub === group) ===
+                                  activeIndex
+                                }
+                                className={cn(
+                                  "cmd-palette-view-all",
+                                  flatItems.findIndex((item) => item.kind === "view-all" && item.hub === group) ===
+                                    activeIndex && "active",
                                 )}
-                                onClick={() => setExpandedHubs((prev) => new Set(prev).add(hub))}
+                                data-index={flatItems.findIndex(
+                                  (item) => item.kind === "view-all" && item.hub === group,
+                                )}
+                                onClick={() => setExpandedHubs((prev) => new Set(prev).add(group))}
+                                onMouseEnter={() => {
+                                  const idx = flatItems.findIndex(
+                                    (item) => item.kind === "view-all" && item.hub === group,
+                                  );
+                                  if (idx >= 0) setActiveIndex(idx);
+                                }}
                               >
-                                View all in {shortHubLabel(hub)}
+                                View all {displayGroupLabel(group).toLowerCase()}
                               </button>
                             </li>
                           )}
@@ -912,31 +917,10 @@ export function CommandPalette({
 
                 {showEmpty && (
                   <div className="cmd-palette-empty" role="status">
-                    <div className="cmd-palette-empty-illustration" aria-hidden="true">
-                      <AppIcon name="search" size={28} strokeWidth={1.75} />
-                    </div>
                     <h3>No results found</h3>
                     <p>
-                      We couldn&apos;t find anything matching &ldquo;{debouncedQuery}&rdquo;. Try a different term or browse a hub.
+                      Search for a client, submission, carrier, task, or other available Agency OS record.
                     </p>
-                    <div className="cmd-palette-empty-actions">
-                      <button type="button" className="cmd-palette-empty-btn" onClick={() => setQuery("commercial")}>
-                        Search Commercial
-                      </button>
-                      <button type="button" className="cmd-palette-empty-btn" onClick={() => setQuery("carrier")}>
-                        Search Carriers
-                      </button>
-                      <button
-                        type="button"
-                        className="cmd-palette-empty-btn"
-                        onClick={() => {
-                          setQuery("");
-                          inputRef.current?.focus();
-                        }}
-                      >
-                        View Recent
-                      </button>
-                    </div>
                   </div>
                 )}
               </>
@@ -944,16 +928,11 @@ export function CommandPalette({
           </div>
 
           <footer className="cmd-palette-footer">
-            <span><kbd>↵</kbd> Execute</span>
-            <span><kbd>⌘↵</kbd> Open in new tab</span>
+            <span><kbd>↵</kbd> Open</span>
             <span><kbd>↑↓</kbd> Navigate</span>
-            <span><kbd>Tab</kbd> Sections</span>
             <span><kbd>Esc</kbd> Close</span>
           </footer>
               </div>
-            </div>
-            <div className="cmd-palette-preview-slot" aria-live="polite">
-              <SearchPreviewPanel result={previewResult} onNavigate={onClose} />
             </div>
           </div>
         </div>

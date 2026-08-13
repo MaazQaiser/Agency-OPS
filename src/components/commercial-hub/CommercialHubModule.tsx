@@ -77,7 +77,7 @@ export function CommercialHubModule() {
     <FarmersEdgeIntelligenceProvider>
       <CommercialHubPageHeader onQuickActionClick={handleQuickAction} />
 
-      <nav className="va-ops-tab-nav" aria-label="Commercial Hub views">
+      <nav className="va-ops-tab-nav commercial-hub-subnav" aria-label="Commercial Hub views">
         {visibleTabs.map((tab) => (
           <button
             key={tab.id}

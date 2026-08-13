@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { useAuditLog } from "@/components/audit-log/AuditLogProvider";
 import { useContextualHelp } from "@/components/help/ContextualHelpProvider";
@@ -31,8 +32,8 @@ export function GlobalUtilityStrip() {
 
   const helpHubId = pathnameToHelpHub(pathname);
 
-  const openHelpDrawer = () => {
-    openContextualHelp(helpHubId);
+  const openHelpDrawer = (event: MouseEvent<HTMLButtonElement>) => {
+    openContextualHelp(helpHubId, event.currentTarget);
   };
 
   return (
@@ -131,7 +132,7 @@ export function GlobalUtilityStrip() {
           type="button"
           className="global-utility-btn global-utility-btn--icon"
           onClick={openHelpDrawer}
-          aria-label="Open help for current hub"
+          aria-label="Open contextual help"
         >
           <AppIcon name="help-circle" size={16} strokeWidth={2} />
         </button>

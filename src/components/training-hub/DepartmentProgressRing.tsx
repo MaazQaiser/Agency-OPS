@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { MetricRing } from "@/components/kpi/MetricRing";
 
 type DepartmentProgressRingProps = {
   completion: number;
@@ -10,47 +10,17 @@ type DepartmentProgressRingProps = {
 
 /**
  * Training Hub Signature Element: Circular progress ring per department
- * Ring stroke uses --hub-primary via CSS. Track uses --hub-glow.
+ * Ring stroke uses hub identity via MetricRing tone="hub".
  */
-export function DepartmentProgressRing({ completion, size = 56, label }: DepartmentProgressRingProps) {
-  const [animated, setAnimated] = useState(false);
-  const radius = (size - 8) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (animated ? completion / 100 : 0) * circumference;
-
-  useEffect(() => {
-    const t = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setAnimated(true));
-    });
-    return () => cancelAnimationFrame(t);
-  }, [completion]);
-
+export function DepartmentProgressRing({ completion, size = 64, label }: DepartmentProgressRingProps) {
   return (
-    <div className="dept-progress-ring" style={{ width: size, height: size }} role="img" aria-label={label ? `${label}: ${completion}% complete` : `${completion}% complete`}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth="4"
-          className="dept-progress-ring-track"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth="4"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          className="dept-progress-ring-fill"
-          style={{ transition: "stroke-dashoffset 600ms ease" }}
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        />
-      </svg>
-      <span className="dept-progress-ring-value">{completion}%</span>
-    </div>
+    <MetricRing
+      value={completion}
+      size={size}
+      thickness={8}
+      tone="hub"
+      label={label}
+      className="dept-progress-ring"
+    />
   );
 }

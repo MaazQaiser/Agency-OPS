@@ -4,10 +4,10 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .module-retention {
-  --retention-accent: #6366f1;
+  --retention-accent: var(--hub-va, #4F46E5);
   --retention-accent-soft: #a5b4fc;
-  --retention-surface: color-mix(in srgb, var(--navy-card, #222b42) 70%, var(--obs, #0a0c10));
-  --retention-surface-elevated: color-mix(in srgb, var(--navy-mid, #1a2233) 58%, var(--obs, #0a0c10));
+  --retention-surface: var(--surface-card);
+  --retention-surface-elevated: var(--surface-subtle);
 }
 
 .module-retention .page-container,
@@ -24,13 +24,10 @@
   margin: 0 -28px 18px;
   padding: 36px 28px 22px;
   background:
-    radial-gradient(ellipse 52% 80% at 94% 8%, rgba(165, 180, 252, 0.14) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 60% at 8% 90%, rgba(99, 102, 241, 0.12) 0%, transparent 58%),
-    linear-gradient(180deg, #2f3278 0%, #24265c 48%, #16182f 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 26px rgba(0, 0, 0, 0.2);
+    radial-gradient(ellipse 52% 80% at 94% 8%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--hub-va-dark, #3730A3), var(--hub-va, #4F46E5));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.12);
 }
 
 .module-retention .app-header.retention {

@@ -1,0 +1,585 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Information Hierarchy + Density Reduction
+   Presentation only. Keep all required information; change weight.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --ih-gap-major: 32px;
+  --ih-gap-minor: 20px;
+  --ih-gap-card: 16px;
+  --ih-gap-stack: 10px;
+  --ih-meta: #7AAFC8;
+  --ih-kpi-primary: clamp(32px, 2.6vw, 40px);
+  --ih-kpi-secondary: clamp(26px, 2.2vw, 32px);
+  --ih-kpi-supporting: clamp(20px, 1.8vw, 26px);
+  --ih-title: clamp(32px, 2.8vw, 40px);
+  --ih-section: clamp(22px, 2vw, 28px);
+  --ih-row: 56px;
+}
+
+/* ── Page / section rhythm ── */
+.hub-shell .va-ops-tab-content,
+.hub-shell .analytics-content,
+.hub-shell .commercial-hub-tab-shell,
+.hub-shell .va-ops-overview,
+.hub-shell .analytics-tab-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ih-gap-major);
+  overflow-x: clip;
+}
+
+.hub-shell .va-ops-role-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ih-gap-major);
+}
+
+.ih-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ih-gap-minor);
+}
+
+.ih-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ih-section-title,
+.hub-shell .va-ops-panel-title,
+.hub-shell .commercial-hub-tab-title,
+.hub-shell .ih-section--primary .ih-section-title {
+  font-family: var(--font-family-display);
+  font-size: var(--ih-section);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.ih-section--supporting .ih-section-title,
+.ih-section--supporting .va-ops-panel-title,
+.ih-section--supporting .va-ops-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ih-section-desc,
+.hub-shell .va-ops-section-sub,
+.hub-shell .commercial-hub-tab-subtitle {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.ih-panel--primary {
+  padding: 4px 0;
+}
+
+.ih-panel--supporting {
+  opacity: 0.96;
+}
+
+/* ── Compact page titles ── */
+.hub-shell .va-ops-page-title,
+.hub-shell .commercial-hub-hero-title,
+.hub-shell .owner-overview-hero-title {
+  font-size: var(--ih-title);
+}
+
+.hub-shell .va-ops-page-subtitle {
+  font-size: 15px;
+}
+
+/* ── Redundant tab titles under a hub hero ── */
+.commercial-hub-executive .commercial-hub-tab-title,
+.commercial-hub-tab-header--quiet .commercial-hub-tab-title {
+  display: none;
+}
+
+.commercial-hub-executive .commercial-hub-tab-subtitle,
+.commercial-hub-tab-header--quiet .commercial-hub-tab-subtitle {
+  font-size: 13px;
+  color: var(--ih-meta);
+  margin: 0;
+}
+
+.commercial-hub-executive .commercial-hub-last-updated {
+  font-size: 11px;
+  color: var(--ih-meta);
+}
+
+/* ── KPI size hierarchy ── */
+.ih-kpi--primary .va-ops-kpi-value,
+.ih-kpi--primary .analytics-kpi-value,
+.ih-kpi--primary .send-center-kpi-command-value,
+.ih-kpi--primary .kpi-value,
+.ih-kpi--primary .kpi-val {
+  font-size: var(--ih-kpi-primary);
+  font-weight: 700;
+}
+
+.ih-kpi--secondary .va-ops-kpi-value,
+.ih-kpi--secondary .analytics-kpi-value,
+.ih-kpi--secondary .send-center-kpi-command-value,
+.ih-kpi--secondary .kpi-value,
+.ih-kpi--secondary .kpi-val,
+.va-ops-snapshot-value {
+  font-size: var(--ih-kpi-secondary);
+  font-weight: 700;
+}
+
+.ih-kpi--supporting .va-ops-kpi-value,
+.ih-kpi--supporting .analytics-kpi-value,
+.ih-kpi--supporting .kpi-value {
+  font-size: var(--ih-kpi-supporting);
+  font-weight: 700;
+}
+
+.ih-kpi--secondary,
+.ih-kpi--supporting {
+  padding: 14px 16px;
+}
+
+.ih-kpi--secondary .va-ops-kpi-sub,
+.ih-kpi--supporting .va-ops-kpi-sub,
+.ih-kpi--secondary .analytics-kpi-sub,
+.ih-kpi--supporting .analytics-kpi-sub {
+  font-size: 12px;
+  color: var(--ih-meta);
+}
+
+.hub-shell .va-ops-kpi-grid,
+.hub-shell .commercial-hub-kpi-grid,
+.hub-shell .analytics-kpi-grid,
+.hub-shell .send-center-kpi-command-grid,
+.hub-shell .va-ops-snapshot-grid {
+  gap: var(--ih-gap-card);
+}
+
+.hub-shell .hub-kpi-grid > :nth-child(-n+3) .va-ops-kpi-value,
+.hub-shell .commercial-hub-kpi-grid > :nth-child(-n+3) .va-ops-kpi-value {
+  font-size: var(--ih-kpi-primary);
+}
+
+.hub-shell .hub-kpi-grid > :nth-child(n+4) .va-ops-kpi-value,
+.hub-shell .commercial-hub-kpi-grid > :nth-child(n+4) .va-ops-kpi-value {
+  font-size: var(--ih-kpi-secondary);
+}
+
+.hub-shell .commercial-hub-kpi-grid--5,
+.hub-shell .commercial-hub-kpi-grid--6 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hub-shell .epay-trust-updated {
+  font-size: 11px;
+  color: var(--ih-meta);
+}
+
+/* Owner: 3 primary + 2 supporting, not a 5-wide wall */
+.va-ops-overview--flagship .va-ops-kpi-grid.cols-5 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.va-ops-overview--flagship .ih-kpi--primary .va-ops-kpi-value,
+.va-ops-overview--flagship .ih-kpi--primary.va-ops-kpi-card .va-ops-kpi-value {
+  font-size: var(--ih-kpi-primary);
+  font-weight: 700;
+}
+
+.va-ops-overview--flagship .ih-kpi--secondary .va-ops-kpi-value,
+.va-ops-overview--flagship .ih-kpi--secondary.va-ops-kpi-card .va-ops-kpi-value {
+  font-size: var(--ih-kpi-secondary);
+  font-weight: 700;
+}
+
+.module-commercial-hub .ih-kpi--primary.commercial-hub-kpi-flagship .va-ops-kpi-value,
+.module-commercial-hub .ih-kpi--primary.commercial-hub-kpi-uniform .va-ops-kpi-value {
+  font-size: var(--ih-kpi-primary);
+}
+
+.module-commercial-hub .ih-kpi--secondary.commercial-hub-kpi-flagship .va-ops-kpi-value,
+.module-commercial-hub .ih-kpi--secondary.commercial-hub-kpi-uniform .va-ops-kpi-value {
+  font-size: var(--ih-kpi-secondary);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-section {
+  margin-top: 0;
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-value {
+  font-size: var(--ih-kpi-supporting);
+}
+
+.va-ops-overview--flagship .va-ops-snapshot-card {
+  padding: 14px 16px;
+  box-shadow: none;
+}
+
+.va-ops-overview--flagship .va-ops-priority-panel {
+  order: 0;
+}
+
+/* Commercial: first row primary, second row quieter */
+.module-commercial-hub .commercial-hub-kpi-grid--3 > :nth-child(n+4).ih-kpi--secondary,
+.module-commercial-hub .ih-kpi--secondary.commercial-hub-kpi-flagship .va-ops-kpi-value {
+  font-size: var(--ih-kpi-secondary);
+}
+
+.module-commercial-hub .ih-kpi--primary.commercial-hub-kpi-flagship .va-ops-kpi-value {
+  font-size: var(--ih-kpi-primary);
+}
+
+/* Analytics: 3+3, not a 6-wide wall */
+.module-analytics .analytics-kpi-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ih-gap-card);
+}
+
+.module-analytics .analytics-kpi-card.ih-kpi--secondary .analytics-kpi-value {
+  font-size: var(--ih-kpi-secondary);
+}
+
+.module-analytics .analytics-kpi-card.ih-kpi--primary .analytics-kpi-value {
+  font-size: var(--ih-kpi-primary);
+}
+
+.module-analytics .analytics-kpi-benchmark,
+.module-analytics .analytics-kpi-sub {
+  font-size: 11px;
+  color: var(--ih-meta);
+}
+
+/* ── Chart hierarchy ── */
+.ih-chart-grid,
+.analytics-trend-chart-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--ih-gap-card);
+  align-items: stretch;
+}
+
+.ih-chart--primary,
+.analytics-trend-chart.ih-chart--primary {
+  grid-column: 1 / -1;
+  min-height: 220px;
+  padding: 20px 22px;
+}
+
+.ih-chart--secondary,
+.analytics-trend-chart.ih-chart--secondary {
+  min-height: 0;
+  padding: 14px 16px;
+}
+
+.ih-chart--secondary .analytics-trend-chart-svg {
+  max-height: 88px;
+}
+
+.hub-shell .aos-chart-card,
+.hub-shell .commercial-conversion-chart,
+.hub-shell .analytics-trend-chart {
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+}
+
+.hub-shell .analytics-trend-chart-gridline {
+  opacity: 0.35;
+}
+
+.module-commercial-hub .commercial-conversion-chart {
+  min-height: 240px;
+}
+
+.module-commercial-hub .ih-section--supporting .commercial-hub-tab-intel,
+.module-commercial-hub .commercial-hub-tab-intel-grid.ih-section--supporting {
+  gap: var(--ih-gap-card);
+}
+
+.module-commercial-hub .ih-section--supporting .va-ops-section-title,
+.module-commercial-hub .commercial-hub-tab-intel-grid .va-ops-section-title {
+  font-size: 18px;
+}
+
+.module-commercial-hub .commercial-hub-intel-tall {
+  min-height: 0;
+}
+
+/* ── Metadata: quiet ── */
+.hub-shell .va-ops-freshness,
+.hub-shell .va-ops-activity-time,
+.hub-shell .va-ops-data-source-badge,
+.hub-shell .commercial-hub-last-updated,
+.hub-shell .hub-local-pulse-label,
+.hub-shell .va-ops-kpi-sub,
+.hub-shell .analytics-kpi-benchmark,
+.hub-shell time {
+  font-family: var(--font-family), var(--font-family-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ih-meta);
+}
+
+.hub-shell .va-ops-panel-header-meta {
+  opacity: 0.9;
+}
+
+.hub-local-pulse {
+  padding: 8px 24px;
+  font-size: 12px;
+  color: var(--ih-meta);
+}
+
+.hub-local-pulse-chip strong {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+}
+
+/* ── Card density: less nesting, fewer competing shadows ── */
+.hub-shell .va-ops-panel .va-ops-kpi-card,
+.hub-shell .va-ops-panel .aos-kpi-card,
+.hub-shell .commercial-hub-tab-workspace .va-ops-kpi-card {
+  box-shadow: none;
+}
+
+.hub-shell .va-ops-panel,
+.hub-shell .commercial-hub-tab-workspace,
+.hub-shell .commercial-hub-tab-intel {
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+}
+
+.hub-shell .va-ops-panel--accent {
+  box-shadow: none;
+  border: 1px solid #E6EBF2;
+  background: #FFFFFF;
+}
+
+/* ── Tables: scan height + column weight ── */
+.hub-shell table.commercial-hub-table tbody tr,
+.hub-shell table.va-ops-priority-table tbody tr,
+.hub-shell table.va-ops-lead-table tbody tr,
+.hub-shell table.submission-tracker-table tbody tr,
+.hub-shell .ops-responsive-table-wrap table tbody tr {
+  height: var(--ih-row);
+}
+
+.hub-shell table.commercial-hub-table td,
+.hub-shell table.va-ops-priority-table td,
+.hub-shell table.va-ops-lead-table td,
+.hub-shell table.submission-tracker-table td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  vertical-align: middle;
+}
+
+.commercial-hub-executive .commercial-hub-table td:nth-child(2),
+.commercial-hub-executive .commercial-hub-table td:nth-child(3),
+.commercial-hub-executive .commercial-hub-table td:nth-child(7),
+.commercial-hub-executive .commercial-hub-table td:nth-child(8),
+.commercial-hub-executive .commercial-hub-table td:nth-child(9),
+.commercial-hub-executive .commercial-hub-table th:nth-child(2),
+.commercial-hub-executive .commercial-hub-table th:nth-child(3),
+.commercial-hub-executive .commercial-hub-table th:nth-child(7),
+.commercial-hub-executive .commercial-hub-table th:nth-child(8),
+.commercial-hub-executive .commercial-hub-table th:nth-child(9) {
+  color: var(--ih-meta);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.commercial-hub-executive .commercial-hub-table td:nth-child(4),
+.commercial-hub-executive .commercial-hub-table td:nth-child(10) {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+}
+
+.commercial-hub-executive .commercial-hub-table td:nth-child(1),
+.commercial-hub-executive .commercial-hub-table td:nth-child(6),
+.commercial-hub-executive .commercial-hub-table td:nth-child(11) {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ── Status stays visible (label + color, not color alone) ── */
+.hub-shell .badge,
+.hub-shell .aos-status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ── Action hierarchy ── */
+.hub-shell .va-ops-action-btn:not(.primary):not(.va-ops-action-btn--approve):not(.va-ops-action-btn--critical-review),
+.hub-shell .commercial-hub-btn-secondary,
+.hub-shell .va-ops-role-action-btn:not(:first-of-type) {
+  font-weight: 600;
+}
+
+.hub-shell .commercial-hub-btn-utility,
+.hub-shell .va-ops-action-btn--icon,
+.hub-shell .commercial-hub-alert-link-hint {
+  color: var(--ih-meta);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.hub-shell .va-ops-approval-item .va-ops-action-btn {
+  flex-shrink: 0;
+}
+
+.hub-shell .va-ops-approval-meta {
+  font-size: 12px;
+  color: var(--ih-meta);
+}
+
+.hub-shell .va-ops-approval-meta strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* ── Filters: compact, one selected state ── */
+.hub-shell .va-ops-filter-row {
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hub-shell .va-ops-filter-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  min-height: 32px;
+}
+
+.hub-shell .va-ops-filter-btn.active {
+  font-weight: 600;
+}
+
+/* ── Alerts: severity weight, not equal banners ── */
+.hub-shell .commercial-hub-alert-red {
+  border-left: 3px solid var(--semantic-danger);
+}
+
+.hub-shell .commercial-hub-alert-yellow {
+  border-left: 3px solid var(--semantic-warning);
+}
+
+.hub-shell .commercial-hub-alert-blue {
+  border-left: 3px solid var(--semantic-info);
+  opacity: 0.92;
+}
+
+.hub-shell .commercial-hub-alert-client {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hub-shell .commercial-hub-alert-message {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ── Empty states: compact ── */
+.hub-shell .hub-empty-state,
+.hub-shell .commercial-hub-empty-state,
+.hub-shell .epay-empty-state {
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.hub-shell .hub-empty-state-title,
+.hub-shell .commercial-hub-empty-state-title {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.hub-shell .hub-empty-state-desc,
+.hub-shell .commercial-hub-empty-state-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ── Send Center KPI commands ── */
+.send-center-kpi-command-grid .ih-kpi--primary .send-center-kpi-command-value {
+  font-size: var(--ih-kpi-primary);
+}
+
+.send-center-kpi-command-grid .ih-kpi--secondary .send-center-kpi-command-value {
+  font-size: var(--ih-kpi-secondary);
+}
+
+.send-center-kpi-command-sub {
+  font-size: 12px;
+  color: var(--ih-meta);
+}
+
+/* ── Training / intake / carrier / epay supporting metrics ── */
+.hub-shell .training-dept-kpi-value,
+.hub-shell .intake-pulse-value,
+.hub-shell .epay-kpi-value {
+  font-family: var(--font-family-mono);
+}
+
+.hub-shell .fe-c-card,
+.hub-shell .training-resource-card,
+.hub-shell .recommended-market-card {
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  :root {
+    --ih-gap-major: 24px;
+    --ih-kpi-primary: 32px;
+    --ih-kpi-secondary: 24px;
+    --ih-kpi-supporting: 20px;
+  }
+
+  .va-ops-overview--flagship .va-ops-kpi-grid.cols-5,
+  .module-analytics .analytics-kpi-grid,
+  .module-commercial-hub .commercial-hub-kpi-grid--3,
+  .ih-chart-grid,
+  .analytics-trend-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ih-chart--primary,
+  .analytics-trend-chart.ih-chart--primary {
+    grid-column: auto;
+    min-height: 180px;
+  }
+
+  .hub-shell .va-ops-tab-content,
+  .hub-shell .commercial-hub-tab-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .va-ops-overview--flagship .va-ops-kpi-grid.cols-5,
+  .module-analytics .analytics-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-trend-chart-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ih-chart--primary {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hub-shell .commercial-hub-tab-shell,
+  .hub-shell .va-ops-overview,
+  .hub-shell .analytics-tab-view {
+    gap: 32px;
+  }
+}

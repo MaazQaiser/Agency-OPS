@@ -1,0 +1,992 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Interaction + Motion System
+   Presentation only. Loaded last so interaction physics win.
+   Hub identity changes color, not timing.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+.app-shell,
+.hub-shell {
+  --motion-fast: 120ms;
+  --motion-hover: 150ms;
+  --motion-standard: 180ms;
+  --motion-base: 180ms;
+  --motion-primary: 200ms;
+  --motion-slow: 240ms;
+  --motion-complex: 240ms;
+  --motion-progress: 700ms;
+  --motion-chart: 700ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-out: ease-out;
+  --motion-ease-in: ease-in;
+  --motion-ease-in-out: ease-in-out;
+  --aos-card-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+  --aos-card-shadow-hover: 0 10px 28px rgba(30, 50, 80, 0.10);
+}
+
+/* ── 1. Kill decorative / infinite motion ── */
+.top-header-badge,
+.top-header-btn-notifications-pulse .top-header-badge,
+.commercial-hub-empty-state-icon,
+.epay-empty-state svg,
+.cmd-palette-empty .app-icon,
+.motion-empty-icon,
+.commercial-hub-empty-state .va-ops-action-btn,
+.epay-empty-state .va-ops-action-btn,
+.motion-empty-cta {
+  animation: none;
+}
+
+.hub-empty-state-icon,
+.ops-empty-icon,
+.commercial-hub-empty-state-icon,
+.epay-empty-state svg,
+.cmd-palette-empty .app-icon,
+.motion-empty-icon {
+  animation: aos-empty-enter var(--motion-base) var(--motion-ease-out) both;
+}
+
+@keyframes aos-empty-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 2. Page / hub transitions — immediate, no slide ── */
+@keyframes motion-hub-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.motion-hub-page,
+.motion-tab-panel,
+.tab-panel.active {
+  animation: motion-hub-enter var(--motion-primary) var(--motion-ease-out) both;
+}
+
+/* ── 3. Cards — elevation only when interactive ── */
+.kpi-card,
+.va-ops-kpi-card,
+.aos-kpi-card,
+.analytics-kpi-card,
+.aos-card--info,
+.chart-card,
+.snapshot-card,
+.va-ops-snapshot-card,
+.va-ops-panel {
+  will-change: auto;
+  transition:
+    border-color var(--motion-hover) var(--motion-ease-out),
+    box-shadow var(--motion-hover) var(--motion-ease-out),
+    background var(--motion-hover) var(--motion-ease-out);
+}
+
+.kpi-card:hover,
+.va-ops-kpi-card:hover,
+.aos-kpi-card:hover,
+.analytics-kpi-card:hover,
+.aos-card--info:hover,
+.chart-card:hover,
+.snapshot-card:hover,
+.va-ops-snapshot-card:hover,
+.va-ops-panel:hover,
+.training-resource-card:hover,
+.send-center-template-card:hover,
+.fe-c-card:hover,
+.recommended-market-card:hover,
+.carrier-stack-card:hover,
+.hub-kpi-grid .va-ops-kpi-card:hover,
+.hub-shell .va-ops-kpi-card:hover,
+.hub-shell .kpi-card:hover,
+.hub-shell .aos-kpi-card:hover,
+.hub-shell .analytics-kpi-card:hover,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .hub-kpi-grid .va-ops-kpi-card:hover,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-kpi-card:hover {
+  transform: none;
+  box-shadow: var(--aos-card-shadow, 0 6px 22px rgba(30, 50, 80, 0.07));
+  border-color: color-mix(in srgb, var(--hub-primary, #1C2B35) 18%, var(--kpi-card-border, #E6EBF2));
+}
+
+button.send-center-kpi-command:hover,
+button.aos-kpi-card:hover,
+a.aos-kpi-card:hover,
+button.kpi-card:hover,
+a.kpi-card:hover,
+button.va-ops-kpi-card:hover,
+a.va-ops-kpi-card:hover,
+.hub-shell button.send-center-kpi-command:hover,
+.hub-shell button.aos-kpi-card:hover,
+.hub-shell a.aos-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--aos-card-shadow-hover);
+  border-color: color-mix(in srgb, var(--hub-primary) 32%, var(--kpi-card-border, #E6EBF2));
+}
+
+button.send-center-kpi-command:hover .send-center-kpi-command-value,
+button.aos-kpi-card:hover .kpi-value,
+button.aos-kpi-card:hover .va-ops-kpi-value,
+button.aos-kpi-card:hover .kpi-val,
+button.kpi-card:hover .kpi-value,
+button.kpi-card:hover .kpi-val {
+  font-weight: 700;
+}
+
+a.aos-card--action,
+button.aos-card--action,
+a.search-result-card,
+.search-result-card[role="button"],
+.producer-card,
+.submission-queue-row,
+.va-ops-pipeline-row,
+.commercial-hub-pipeline-stage-h,
+a.training-resource-card,
+button.training-resource-card,
+a.send-center-template-card,
+button.send-center-template-card,
+[role="button"].aos-card--action {
+  transition:
+    transform 160ms var(--motion-ease-out),
+    box-shadow 160ms var(--motion-ease-out),
+    border-color 160ms var(--motion-ease-out),
+    background 160ms var(--motion-ease-out);
+}
+
+a.aos-card--action:hover,
+button.aos-card--action:hover,
+a.search-result-card:hover,
+.search-result-card[role="button"]:hover,
+.producer-card:hover,
+.submission-queue-row:hover,
+.va-ops-pipeline-row:hover,
+.commercial-hub-pipeline-stage-h:hover,
+a.training-resource-card:hover,
+button.training-resource-card:hover,
+a.send-center-template-card:hover,
+button.send-center-template-card:hover,
+[role="button"].aos-card--action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--aos-card-shadow-hover);
+}
+
+.commercial-hub-pipeline-stage-h:hover {
+  transform: translateY(-2px);
+}
+
+.kpi-value,
+.kpi-val,
+.va-ops-kpi-value,
+.analytics-kpi-value,
+.send-center-kpi-command-value {
+  transition: color var(--motion-hover) var(--motion-ease-out), font-weight var(--motion-hover) var(--motion-ease-out);
+}
+
+/* ── 4. Buttons ── */
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):not(.cmd-palette-clear):not(.va-ops-tab-btn):not(.tab):not(.tab-btn):not(.send-center-tab-btn):not(.sidebar-nav-item) {
+  transition:
+    transform var(--motion-hover) var(--motion-ease-out),
+    background var(--motion-hover) var(--motion-ease-out),
+    border-color var(--motion-hover) var(--motion-ease-out),
+    box-shadow var(--motion-hover) var(--motion-ease-out),
+    color var(--motion-hover) var(--motion-ease-out),
+    opacity var(--motion-hover) var(--motion-ease-out);
+}
+
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):hover {
+  filter: none;
+}
+
+button:where(:not(.no-motion)):not(:disabled):not(.notification-card-main):not(.cmd-palette-row):active {
+  filter: none;
+}
+
+.va-ops-action-btn:hover,
+.top-header-btn:hover,
+.top-header-search-trigger:hover,
+.va-ops-tab-btn:hover,
+.tab:hover,
+.tab-btn:hover,
+.send-center-tab-btn:hover {
+  transform: none;
+}
+
+.va-ops-action-btn:active,
+.top-header-btn:active,
+.top-header-search-trigger:active,
+.va-ops-tab-btn:active,
+.tab:active,
+.tab-btn:active {
+  transform: none;
+}
+
+.app-content .va-ops-action-btn.primary,
+.app-content .commercial-hub-btn-primary,
+.app-content .commercial-hub-btn-teal,
+.app-content .btn-primary,
+.app-content .hub-empty-state-cta,
+.app-content .epay-overdue-action-btn--primary,
+.hub-shell .va-ops-action-btn.primary,
+.hub-shell .btn-primary,
+.hub-shell .commercial-hub-btn-primary,
+.va-ops-drawer-action-btn.primary,
+.va-ops-modal-footer .va-ops-action-btn.primary {
+  background: var(--hub-primary);
+  transition:
+    transform var(--motion-hover) var(--motion-ease-out),
+    background var(--motion-hover) var(--motion-ease-out),
+    opacity var(--motion-hover) var(--motion-ease-out),
+    box-shadow var(--motion-hover) var(--motion-ease-out);
+}
+
+.app-content .va-ops-action-btn.primary:hover,
+.app-content .commercial-hub-btn-primary:hover,
+.app-content .commercial-hub-btn-teal:hover,
+.app-content .btn-primary:hover,
+.app-content .hub-empty-state-cta:hover,
+.app-content .epay-overdue-action-btn--primary:hover,
+.hub-shell .va-ops-action-btn.primary:hover,
+.hub-shell .btn-primary:hover,
+.va-ops-drawer-action-btn.primary:hover,
+.va-ops-modal-footer .va-ops-action-btn.primary:hover {
+  background: var(--hub-deep);
+  transform: translateY(-1px);
+  filter: none;
+}
+
+.app-content .va-ops-action-btn.primary:active,
+.app-content .commercial-hub-btn-primary:active,
+.app-content .btn-primary:active,
+.app-content .hub-empty-state-cta:active,
+.hub-shell .va-ops-action-btn.primary:active,
+.va-ops-drawer-action-btn.primary:active {
+  transform: translateY(0);
+  opacity: 0.94;
+}
+
+/* Loading — preserve width, block repeat clicks */
+.ops-btn-loading,
+button.ops-btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.ops-btn-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ops-btn-face--busy {
+  visibility: hidden;
+}
+
+.ops-btn-busy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.ops-btn-spinner {
+  margin-right: 0;
+  animation: ops-btn-spin 0.8s linear infinite;
+}
+
+/* ── 5. Tabs — underline, not pills ── */
+.va-ops-tab-btn,
+.tab,
+.tab-btn,
+.send-center-tab-btn,
+.analytics-tab,
+.hub-shell [role="tab"] {
+  position: relative;
+  border-radius: 0;
+  background: transparent;
+  border-bottom: 3px solid transparent;
+  transition:
+    color var(--motion-hover) var(--motion-ease-out),
+    border-color var(--motion-primary) var(--motion-ease-out);
+}
+
+.va-ops-tab-btn::after,
+.tab::after,
+.tab-btn::after,
+.send-center-tab-btn::after {
+  height: 3px;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  background: var(--hub-primary);
+  box-shadow: none;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--motion-primary) var(--motion-ease-out);
+}
+
+.va-ops-tab-btn:hover,
+.tab:hover,
+.tab-btn:hover,
+.send-center-tab-btn:hover,
+.analytics-tab:hover,
+.hub-shell [role="tab"]:hover {
+  color: var(--hub-primary);
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+
+.va-ops-tab-btn:hover::after,
+.tab:hover::after,
+.tab-btn:hover::after {
+  transform: scaleX(0.35);
+}
+
+.va-ops-tab-btn.active,
+.tab.active,
+.tab-btn.active,
+.send-center-tab-btn.active,
+.analytics-tab.active,
+.hub-shell [role="tab"][aria-selected="true"] {
+  color: var(--hub-primary);
+  border-bottom-color: var(--hub-primary);
+  background: transparent;
+  box-shadow: none;
+}
+
+.va-ops-tab-btn.active::after,
+.tab.active::after,
+.tab-btn.active::after,
+.send-center-tab-btn.active::after {
+  transform: scaleX(1);
+  background: var(--hub-primary);
+  box-shadow: none;
+}
+
+.top-header-nav-link::after {
+  height: 3px;
+  box-shadow: none;
+  background: var(--hub-primary, var(--primary));
+}
+
+.top-header-nav-link.active {
+  box-shadow: none;
+}
+
+/* ── 6. Sidebar ── */
+.sidebar-nav-item {
+  min-height: 44px;
+  transition:
+    background-color var(--motion-hover) var(--motion-ease-out),
+    color var(--motion-hover) var(--motion-ease-out),
+    border-color var(--motion-hover) var(--motion-ease-out);
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-nav-item--active {
+  background: color-mix(in srgb, var(--hub-primary) 16%, transparent);
+}
+
+.sidebar-nav-item--active .sidebar-nav-icon-wrap {
+  color: var(--hub-primary);
+}
+
+.sidebar-nav-active-bar {
+  width: 4px;
+  background: var(--hub-primary);
+  transition:
+    opacity var(--motion-hover) var(--motion-ease-out),
+    transform var(--motion-hover) var(--motion-ease-out);
+}
+
+.agency-sidebar {
+  transition: width var(--motion-slow) var(--motion-ease-out), margin-left var(--motion-slow) var(--motion-ease-out);
+}
+
+/* Collapsed sidebar tooltips */
+.agency-sidebar-collapse-btn[data-tooltip]::after,
+.agency-sidebar--collapsed [data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1C2B35;
+  border: none;
+  color: #FFFFFF;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.28);
+  pointer-events: none;
+  opacity: 0;
+  animation: none;
+  transition: opacity 120ms var(--motion-ease-in);
+}
+
+.agency-sidebar-collapse-btn[data-tooltip]:hover::after,
+.agency-sidebar--collapsed [data-tooltip]:hover::after,
+.agency-sidebar--collapsed [data-tooltip]:focus-visible::after,
+.agency-sidebar-collapse-btn[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  background: #1C2B35;
+  border: none;
+  color: #FFFFFF;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(28, 43, 53, 0.28);
+  animation: none;
+  opacity: 1;
+  transition: opacity 120ms var(--motion-ease-out) 280ms;
+}
+
+/* ── 7. Inputs / focus ── */
+.app-content input:not([type="checkbox"]):not([type="radio"]),
+.app-content select,
+.app-content textarea,
+.app-content .va-ops-search,
+.app-content .header-filter-select,
+.app-content .send-center-select,
+.app-content .intake-form-input,
+.cmd-palette-input {
+  transition:
+    border-color var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-fast) var(--motion-ease-out);
+}
+
+.app-content input:not([type="checkbox"]):not([type="radio"]):focus,
+.app-content input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+.app-content select:focus,
+.app-content select:focus-visible,
+.app-content textarea:focus,
+.app-content textarea:focus-visible,
+.app-content .va-ops-search:focus,
+.app-content .header-filter-select:focus,
+.app-content .send-center-select:focus,
+.app-content .intake-form-input:focus,
+.cmd-palette-input:focus,
+.cmd-palette-input:focus-visible {
+  outline: none;
+  border-color: var(--hub-primary);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+.app-content input:not([type="checkbox"]):not([type="radio"]):hover,
+.app-content select:hover,
+.app-content textarea:hover,
+.app-content .header-filter-select:hover {
+  border-color: color-mix(in srgb, var(--hub-primary) 28%, var(--shell-input-border, #D8E0E8));
+}
+
+.app-content select:disabled,
+.app-content input:disabled,
+.app-content textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── 8. Select / dropdown selected ── */
+.top-header-profile-dropdown-item:hover,
+.cmd-palette-row:hover {
+  background: color-mix(in srgb, var(--hub-primary) 8%, transparent);
+  padding-left: unset;
+  transform: none;
+}
+
+.top-header-profile-dropdown-item.active,
+.cmd-palette-row.active,
+.app-content option:checked {
+  background: var(--hub-glow);
+  color: var(--hub-primary);
+  box-shadow: none;
+  transform: none;
+}
+
+.top-header-profile-dropdown,
+.notification-card-menu,
+.intake-row-action-dropdown {
+  animation: aos-dropdown-in var(--motion-base) var(--motion-ease-out) both;
+}
+
+@keyframes aos-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 9. Filters ── */
+.filter-chip.active,
+.filter-chip.selected,
+.view-chip.active,
+.va-ops-search-chip.active,
+.submission-quick-chip.active,
+.send-center-kpi-command.active,
+[aria-pressed="true"]:not(.va-ops-tab-btn):not([role="tab"]) {
+  border-color: var(--hub-primary);
+  background: var(--hub-glow);
+  color: var(--hub-primary);
+}
+
+/* ── 10. Tables ── */
+.app-content tbody tr,
+.commercial-hub-table tbody tr,
+.va-ops-priority-table tbody tr,
+.va-ops-lead-table tbody tr {
+  transition: background var(--motion-fast) var(--motion-ease-out);
+}
+
+.app-content tbody tr:hover,
+.commercial-hub-table tbody tr:hover,
+.va-ops-priority-table tbody tr:hover,
+.va-ops-lead-table tbody tr:hover,
+.commercial-hub-table tbody tr.commercial-hub-table-row-clickable:hover {
+  transform: none;
+  box-shadow: none;
+  background: #F7FBFD;
+}
+
+.app-content tbody tr:hover td,
+.commercial-hub-table tbody tr:hover td,
+.va-ops-priority-table tbody tr:hover td,
+.app-content tbody tr.commercial-hub-table-row-clickable:hover td {
+  background: #F7FBFD;
+}
+
+.app-content tbody tr.commercial-hub-table-row-selected,
+.app-content tbody tr.row-selected,
+.app-content tbody tr[aria-selected="true"],
+.app-content tbody tr.selected,
+.hub-shell tr.selected {
+  background: var(--hub-glow);
+  box-shadow: inset 3px 0 0 var(--hub-primary);
+}
+
+.app-content tbody tr.commercial-hub-table-row-selected td,
+.app-content tbody tr.row-selected td,
+.app-content tbody tr[aria-selected="true"] td,
+.app-content tbody tr.selected td {
+  background: transparent;
+}
+
+/* ── 11. Icon actions ── */
+.pipeline-hover-action-btn,
+.commercial-row-action-trigger,
+.intake-row-action-trigger,
+.send-center-row-actions .va-ops-action-btn,
+.notification-center-header-icon-btn,
+.training-hub-manage-row-actions .va-ops-action-btn {
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 8px;
+  transition:
+    background var(--motion-hover) var(--motion-ease-out),
+    color var(--motion-hover) var(--motion-ease-out),
+    box-shadow var(--motion-hover) var(--motion-ease-out),
+    border-color var(--motion-hover) var(--motion-ease-out);
+}
+
+.pipeline-hover-action-btn:hover,
+.commercial-row-action-trigger:hover,
+.intake-row-action-trigger:hover,
+.send-center-row-actions .va-ops-action-btn:hover,
+.notification-center-header-icon-btn:hover {
+  background: var(--hub-glow);
+  color: var(--hub-primary);
+  border-color: color-mix(in srgb, var(--hub-primary) 28%, transparent);
+  transform: none;
+}
+
+.pipeline-hover-action-btn:focus-visible,
+.commercial-row-action-trigger:focus-visible,
+.intake-row-action-trigger:focus-visible,
+.send-center-row-actions .va-ops-action-btn:focus-visible,
+.notification-center-header-icon-btn:focus-visible,
+.hub-help-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+/* Icon-only tooltips from aria-label */
+.app-content button[aria-label]:not([data-tooltip]):has(> svg:only-child)::after,
+.app-content a[aria-label]:not([data-tooltip]):has(> svg:only-child)::after,
+.pipeline-hover-action-btn[aria-label]::after,
+.commercial-row-action-trigger[aria-label]::after,
+.intake-row-action-trigger[aria-label]::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1C2B35;
+  color: #FFFFFF;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms var(--motion-ease-in);
+}
+
+.pipeline-hover-action-btn,
+.commercial-row-action-trigger,
+.intake-row-action-trigger,
+.app-content button[aria-label]:not([data-tooltip]):has(> svg:only-child) {
+  position: relative;
+}
+
+.app-content button[aria-label]:not([data-tooltip]):has(> svg:only-child):hover::after,
+.app-content button[aria-label]:not([data-tooltip]):has(> svg:only-child):focus-visible::after,
+.app-content a[aria-label]:not([data-tooltip]):has(> svg:only-child):hover::after,
+.pipeline-hover-action-btn[aria-label]:hover::after,
+.commercial-row-action-trigger[aria-label]:hover::after,
+.intake-row-action-trigger[aria-label]:hover::after {
+  opacity: 1;
+  transition: opacity 120ms var(--motion-ease-out) 280ms;
+}
+
+/* ── 12. Progress + charts ── */
+.aos-progress-fill {
+  width: 100%;
+  transform-origin: left center;
+  transition: transform var(--motion-progress) var(--motion-ease-out);
+}
+
+.app-content .progress-fill {
+  transform-origin: left center;
+  animation: aos-progress-in var(--motion-progress) var(--motion-ease-out) both;
+}
+
+.aos-metric-ring-fill,
+.dept-progress-ring-fill {
+  transition: stroke-dashoffset var(--motion-chart) var(--motion-ease-out);
+}
+
+.retention-trend-bar-fill,
+.lead-velocity-chart-bar,
+.analytics-velocity-stage-bar-fill {
+  transform-origin: bottom center;
+  animation: aos-bar-in var(--motion-chart) var(--motion-ease-out) both;
+}
+
+@keyframes aos-bar-in {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.ops-skeleton-chart-bar {
+  animation: none;
+}
+
+/* ── 13. Status change — color transition, no flash ── */
+.aos-status-pill,
+.va-ops-status-pill,
+.coverage-status-pill,
+.app-content .aos-status-pill {
+  transition:
+    background-color var(--motion-primary) var(--motion-ease-out),
+    color var(--motion-primary) var(--motion-ease-out),
+    border-color var(--motion-primary) var(--motion-ease-out);
+}
+
+/* ── 14. Drawers ── */
+@keyframes va-ops-drawer-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.va-ops-drawer-backdrop,
+.cmd-palette-backdrop {
+  animation: motion-backdrop-in var(--motion-base) var(--motion-ease-out) both;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.va-ops-drawer,
+.avatar-profile-panel {
+  animation: va-ops-drawer-in var(--motion-slow) var(--motion-ease-out) both;
+}
+
+.help-drawer-backdrop {
+  transition: opacity var(--motion-base) var(--motion-ease-out);
+}
+
+.help-drawer {
+  transition: transform var(--motion-slow) var(--motion-ease-out);
+}
+
+.help-drawer:not(.help-drawer--visible) {
+  transition-timing-function: var(--motion-ease-in);
+}
+
+/* ── 15. Modals ── */
+@keyframes va-ops-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.va-ops-modal-root .va-ops-modal,
+.eva-action-modal,
+.va-ops-modal {
+  animation: va-ops-modal-in var(--motion-primary) var(--motion-ease-out) both;
+}
+
+/* ── 16. Accordions ── */
+.card-toggle {
+  transition: transform var(--motion-base) var(--motion-ease-out);
+}
+
+.card.open .card-toggle,
+.card-toggle.open {
+  transform: rotate(180deg);
+}
+
+.card-body {
+  display: grid !important;
+  grid-template-rows: 0fr;
+  padding: 0 !important;
+  overflow: hidden;
+  transition: grid-template-rows var(--motion-base) var(--motion-ease-out);
+}
+
+.card.open .card-body {
+  display: grid !important;
+  grid-template-rows: 1fr;
+}
+
+.card-body-inner {
+  min-height: 0;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.module-retention .card-body-inner {
+  padding: 4px 16px 16px;
+}
+
+.sheets-setup-accordions .card-body-inner {
+  padding: 0 18px 18px;
+}
+
+/* ── 17. Command palette ── */
+.cmd-palette-panel {
+  transition:
+    transform var(--motion-primary) var(--motion-ease-in),
+    opacity var(--motion-primary) var(--motion-ease-in);
+}
+
+.cmd-palette-visible .cmd-palette-panel {
+  transition:
+    transform var(--motion-primary) var(--motion-ease-out),
+    opacity var(--motion-primary) var(--motion-ease-out);
+}
+
+.cmd-palette-row {
+  transition:
+    background var(--motion-fast) var(--motion-ease-out),
+    color var(--motion-fast) var(--motion-ease-out);
+  transform: none;
+}
+
+.cmd-palette-row.active {
+  transform: none;
+  box-shadow: inset 3px 0 0 var(--hub-primary);
+}
+
+/* ── 18. Success / error ── */
+.ops-toast-success .ops-toast-icon {
+  animation: aos-success-in var(--motion-base) var(--motion-ease-out) both;
+}
+
+@keyframes aos-success-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intake-form-input.is-invalid,
+.intake-form-field.is-invalid .intake-form-input,
+.app-content input[aria-invalid="true"],
+.app-content textarea[aria-invalid="true"] {
+  border-color: var(--semantic-danger, #F43F5E);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--semantic-danger, #F43F5E) 16%, transparent);
+  animation: none;
+}
+
+/* ── 19. Pipeline hover actions — available without hover on touch ── */
+@media (hover: none) {
+  .pipeline-hover-actions {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+/* ── 20. Touch targets + mobile ── */
+@media (max-width: 767px) {
+  .va-ops-action-btn,
+  .btn-primary,
+  .btn-secondary,
+  .hub-empty-state-cta,
+  .commercial-hub-btn,
+  .va-ops-drawer-action-btn,
+  .sidebar-nav-item {
+    min-height: 44px;
+  }
+
+  .pipeline-hover-action-btn,
+  .commercial-row-action-trigger,
+  .intake-row-action-trigger,
+  .send-center-row-actions .va-ops-action-btn,
+  .notification-center-header-icon-btn,
+  .hub-help-trigger {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .va-ops-tab-btn,
+  .tab,
+  .tab-btn,
+  .send-center-tab-btn {
+    min-height: 44px;
+    height: 48px;
+  }
+
+  .tab-bar,
+  .va-ops-tab-nav,
+  .send-center-tab-nav,
+  .commercial-hub-subnav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .va-ops-drawer,
+  .help-drawer {
+    width: 100%;
+    max-width: 100vw;
+  }
+}
+
+/* ── 21. Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  .app-shell,
+  .hub-shell {
+    --motion-fast: 0ms;
+    --motion-hover: 0ms;
+    --motion-standard: 0ms;
+    --motion-base: 0ms;
+    --motion-primary: 0ms;
+    --motion-slow: 0ms;
+    --motion-complex: 0ms;
+    --motion-progress: 0ms;
+    --motion-chart: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .kpi-card:hover,
+  .va-ops-kpi-card:hover,
+  .aos-kpi-card:hover,
+  button.send-center-kpi-command:hover,
+  a.aos-card--action:hover,
+  .producer-card:hover,
+  .submission-queue-row:hover,
+  .va-ops-pipeline-row:hover,
+  .app-content .va-ops-action-btn.primary:hover,
+  .va-ops-drawer,
+  .va-ops-modal,
+  .cmd-palette-panel,
+  .help-drawer,
+  .card-toggle,
+  .retention-trend-bar-fill,
+  .lead-velocity-chart-bar {
+    transform: none !important;
+  }
+
+  .aos-progress-fill,
+  .app-content .progress-fill,
+  .aos-metric-ring-fill,
+  .ops-skeleton-shimmer,
+  .ops-btn-spinner,
+  .hub-empty-state-icon,
+  .motion-empty-icon,
+  .ops-toast-success .ops-toast-icon {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ops-skeleton-shimmer,
+  .app-content .ops-skeleton-shimmer {
+    background-image: none !important;
+  }
+}

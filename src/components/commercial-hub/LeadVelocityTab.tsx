@@ -340,7 +340,12 @@ export function LeadVelocityTab() {
               </thead>
               <tbody>
                 {filtered.map((row) => {
-                  const isSlow = row.responseSpeed === "Slow" || row.responseSpeed === "At Risk";
+                  const speedTone =
+                    row.responseSpeed === "At Risk"
+                      ? "stuck"
+                      : row.responseSpeed === "Slow"
+                        ? "watch"
+                        : "healthy";
                   return (
                     <tr
                       key={row.id}
@@ -356,7 +361,7 @@ export function LeadVelocityTab() {
                       <td>
                         <UserChip name={row.assignedProducer} />
                       </td>
-                      <td className={cn(isSlow && "lead-velocity-slow-text")}>{row.firstResponseTime || "-"}</td>
+                      <td className={cn(speedTone !== "healthy" && "lead-velocity-slow-text")}>{row.firstResponseTime || "-"}</td>
                       <td>{row.totalCycleTime}</td>
                       <td>
                         <span className={cn("lead-velocity-conversion", row.conversionProbability >= 70 && "high")}>
@@ -368,7 +373,15 @@ export function LeadVelocityTab() {
                           {row.leadName}
                           <ClientLanguageBadges profile={getClientLanguage(row.businessName)} compact />
                           {row.escalated && <span className="badge badge-red lead-velocity-badge">Escalated</span>}
-                          {isSlow && <span className="badge badge-yellow lead-velocity-badge">{row.responseSpeed}</span>}
+                          <span
+                            className={cn(
+                              "badge lead-velocity-speed-pill",
+                              speedRatingClass[row.responseSpeed],
+                              `lead-velocity-speed-pill--${speedTone}`,
+                            )}
+                          >
+                            {row.responseSpeed}
+                          </span>
                         </span>
                       </td>
                       <td>{row.businessName}</td>

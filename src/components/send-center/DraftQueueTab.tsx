@@ -32,6 +32,7 @@ import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state"
 import { useHubDataState } from "@/hooks/useHubDataState";
 import { resolveDisplayStatus } from "@/lib/dataState";
 import { exportSendCenterHistoryPdf } from "@/lib/export";
+import { CommercialRowActionMenu } from "@/components/commercial-hub/CommercialRowActionMenu";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -198,7 +199,7 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                   <th>Progress State</th>
                   <th>Risk Level</th>
                   <th>Next Action</th>
-                  <th aria-label="Actions" />
+                  <th aria-label="Actions" className="send-center-actions-col" />
                 </tr>
               </thead>
               <tbody>
@@ -269,19 +270,32 @@ export function DraftQueueTab({ rows, setRows, onToast, onOpenNewDraft }: DraftQ
                           <td data-label="Next Action">
                             <span className="send-center-next-action">{getDraftNextAction(row.status)}</span>
                           </td>
-                          <td data-label="" className="ops-responsive-cell--bare">
-                            <div className="send-center-row-actions">
-                              {(["Edit Draft", "Submit for Review", "Delete"] as const).map((action) => (
-                                <button
-                                  key={action}
-                                  type="button"
-                                  className={cn("va-ops-action-btn", action === "Delete" && "send-center-action-danger")}
-                                  onClick={() => handleAction(action, row)}
-                                >
-                                  {action}
-                                </button>
-                              ))}
-                            </div>
+                          <td
+                            data-label=""
+                            className="ops-responsive-cell--bare send-center-actions-col"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <CommercialRowActionMenu
+                              label={`Actions for ${row.client}`}
+                              actions={[
+                                {
+                                  id: "edit",
+                                  label: "Edit Draft",
+                                  onSelect: () => handleAction("Edit Draft", row),
+                                },
+                                {
+                                  id: "submit",
+                                  label: "Submit for Review",
+                                  onSelect: () => handleAction("Submit for Review", row),
+                                },
+                                {
+                                  id: "delete",
+                                  label: "Delete",
+                                  accent: "danger",
+                                  onSelect: () => handleAction("Delete", row),
+                                },
+                              ]}
+                            />
                           </td>
                         </tr>
                         {expanded && (

@@ -171,8 +171,13 @@ export function PaymentTrackerTab({ onToast, initialPaymentId }: PaymentTrackerT
 
       <section className="va-ops-kpi-strip" aria-label="Payment tracker KPI summary">
         <div className="commercial-hub-kpi-grid hub-kpi-grid epay-tracker-kpi-grid">
-          {paymentTrackerKpis.map((kpi) => (
-            <VaOpsKpiCard key={kpi.label} {...kpi} className="commercial-hub-kpi-uniform" sparkline={false} />
+          {paymentTrackerKpis.map((kpi, index) => (
+            <VaOpsKpiCard
+              key={kpi.label}
+              {...kpi}
+              className={cn("commercial-hub-kpi-uniform", index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary")}
+              sparkline={false}
+            />
           ))}
         </div>
       </section>

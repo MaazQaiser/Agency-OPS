@@ -104,7 +104,7 @@ export function ExportMenu({ kind, className, compact, onExported, invoiceExport
 
   if (isMobile) {
     return (
-      <div className={cn("export-menu", className)} ref={rootRef}>
+      <div className={cn("export-menu print-hidden", className)} ref={rootRef}>
         <button
           type="button"
           className={cn("export-menu-trigger", compact && "export-menu-trigger--compact")}
@@ -147,7 +147,7 @@ export function ExportMenu({ kind, className, compact, onExported, invoiceExport
   }
 
   return (
-    <div className={cn("export-menu", className)} ref={rootRef}>
+    <div className={cn("export-menu print-hidden", className)} ref={rootRef}>
       <button
         type="button"
         className={cn("export-menu-trigger", compact && "export-menu-trigger--compact")}

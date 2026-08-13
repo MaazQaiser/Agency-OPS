@@ -9,6 +9,7 @@ import { setTrackerSubmissions } from "@/data/commercialHubStore";
 import {
   agingBuckets,
   applyAddMarket,
+  computeCarrierSla,
   requiredMarketCount,
   submissionTrackerSearchPlaceholder,
   trackerFilterOptions,
@@ -17,7 +18,7 @@ import {
   type TrackerStatus,
   type TrackerSubmission,
 } from "@/data/submissionTracker";
-import { TableSkeleton } from "@/components/shared/loading";
+import { PipelineSkeleton, TableSkeleton } from "@/components/shared/loading";
 import { DataStateView, HubEmptyState, HubErrorState } from "@/components/state";
 import { ExportMenu } from "@/components/export/ExportMenu";
 import { getCommercialHubSnapshot } from "@/data/commercialHubStore";
@@ -57,6 +58,7 @@ import {
   CommercialHubTabShell,
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
+import { PipelineStageBar } from "./PipelineStageBar";
 
 const statusClass: Record<TrackerStatus, string> = {
   "New Intake": "badge-blue",
@@ -379,6 +381,13 @@ export function SubmissionTrackerTab({
 
       <CommercialHubKpiStrip kpis={submissionTrackerTabKpis()} columns={6} />
 
+      <CommercialHubIntelPanel
+        title="Pipeline Intelligence"
+        subtitle="Submission count and pipeline premium by existing stage."
+      >
+        {status === "loading" ? <PipelineSkeleton /> : <PipelineStageBar />}
+      </CommercialHubIntelPanel>
+
       <CommercialHubWorkspace
         ariaLabel="Active submissions"
         title="Active Submissions"
@@ -506,6 +515,7 @@ export function SubmissionTrackerTab({
                 const isExpanded = expandedRowId === row.id;
                 const checklistProgress = progressFromTrackerSubmission(row);
                 const eoRisk = eoRiskFromTrackerSubmission(row);
+                const carrierSla = computeCarrierSla(row);
                 return [
                   <tr
                     key={row.id}
@@ -520,7 +530,7 @@ export function SubmissionTrackerTab({
                       toggleExpand(row.id);
                     }}
                   >
-                    <td>
+                    <td data-label="">
                       <button
                         type="button"
                         className="submission-tracker-expand-btn"
@@ -531,17 +541,28 @@ export function SubmissionTrackerTab({
                         <AppIcon name="chevron-down" size={14} strokeWidth={2.5} className={cn(isExpanded && "rotated")} />
                       </button>
                     </td>
-                    <td className="submission-tracker-status-col">
+                    <td className="submission-tracker-status-col" data-label="Status">
                       <span className={cn("badge", statusClass[row.status])}>{row.status}</span>
                     </td>
-                    <td>{row.va}</td>
-                    <td><UserChip name={row.producer} /></td>
-                    <td>{row.daysOpen} days</td>
-                    <td>
-                      <EoRiskBadge score={eoRisk} />
+                    <td data-label="Assigned VA">{row.va}</td>
+                    <td data-label="Producer"><UserChip name={row.producer} /></td>
+                    <td data-label="Days Open">
+                      <span
+                        className={cn(
+                          "commercial-clock-chip",
+                          carrierSla.overdue ? "commercial-clock-chip--danger" : "commercial-clock-chip--info",
+                        )}
+                        title={carrierSla.label}
+                      >
+                        {row.daysOpen}d open
+                      </span>
+                    </td>
+                    <td data-label="E&O Risk">
+                      <EoRiskBadge score={eoRisk} compact />
                     </td>
                     <td
                       className="commercial-hub-client-cell submission-tracker-client-cell"
+                      data-label="Client"
                       onClick={() => setActiveSubmissionId(row.id)}
                     >
                       <span className="bilingual-client-cell submission-tracker-client-name">
@@ -549,9 +570,9 @@ export function SubmissionTrackerTab({
                         <ClientLanguageBadges profile={getClientLanguage(row.client)} compact />
                       </span>
                     </td>
-                    <td>{row.coverage}</td>
-                    <td>{row.marketsSubmitted}</td>
-                    <td>
+                    <td data-label="Coverage">{row.coverage}</td>
+                    <td data-label="Markets">{row.marketsSubmitted}</td>
+                    <td data-label="Quotes">
                       {row.quotesReceived > 0 ? (
                         <button
                           type="button"
@@ -564,10 +585,10 @@ export function SubmissionTrackerTab({
                         row.quotesReceived
                       )}
                     </td>
-                    <td className="submission-tracker-checklist-col" onClick={(e) => e.stopPropagation()}>
+                    <td className="submission-tracker-checklist-col" data-label="Checklist" onClick={(e) => e.stopPropagation()}>
                       <CoverageChecklistProgress progress={checklistProgress} variant="inline" />
                     </td>
-                    <td onClick={(e) => e.stopPropagation()} className="submission-tracker-actions-col">
+                    <td onClick={(e) => e.stopPropagation()} className="submission-tracker-actions-col" data-label="Action">
                       <CommercialRowActionMenu
                         label={`Actions for ${row.client}`}
                         actions={[

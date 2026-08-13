@@ -1,0 +1,388 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Hub Identity System
+   Tokens are set once on .hub-shell / .app-shell.
+   Components consume var(--hub-primary | --hub-deep | --hub-glow).
+   Semantic status colors stay separate.
+   ═══════════════════════════════════════════════════════════════ */
+
+.hub-shell {
+  --btn-primary-bg: var(--hub-primary);
+  --btn-primary-hover: var(--hub-deep);
+  --input-focus-ring: var(--hub-glow);
+  background: var(--hub-background, #F7FBFD);
+  color: var(--text-primary);
+  overflow-x: clip;
+}
+
+.app-content {
+  background: #F7FBFD;
+}
+
+.hub-shell .va-ops-card,
+.hub-shell .kpi-card,
+.hub-shell .aos-kpi-card,
+.hub-shell .analytics-kpi-card,
+.hub-shell .send-center-kpi-command {
+  background: #FFFFFF;
+  border-color: #E6EBF2;
+}
+
+/* ── Compact hub hero ── */
+.hub-shell .va-ops-page-header {
+  min-height: 160px;
+  padding: 26px 28px;
+  margin: 16px 24px 0;
+  border-radius: 18px;
+  border-bottom: none;
+  box-sizing: border-box;
+  color: #ffffff;
+  background-color: var(--hub-deep);
+  background-image: linear-gradient(135deg, var(--hub-deep), var(--hub-primary));
+  box-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+}
+
+.hub-shell .va-ops-page-header-left:not(:has(.commercial-hub-hero-eyebrow)):not(:has(.owner-overview-hero-eyebrow))::before {
+  content: var(--hub-label);
+  display: block;
+  margin: 0 0 6px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.hub-shell .va-ops-page-title,
+.hub-shell .commercial-hub-hero-title,
+.hub-shell .owner-overview-hero-title {
+  color: #ffffff;
+  font-family: var(--font-family-display, "Cormorant Garamond", serif);
+  font-size: clamp(32px, 3.2vw, 44px);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.hub-shell .va-ops-page-subtitle,
+.hub-shell .commercial-hub-hero-subtitle,
+.hub-shell .owner-overview-hero-subtitle {
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 400;
+  max-width: 52ch;
+}
+
+.hub-shell .commercial-hub-hero-eyebrow,
+.hub-shell .owner-overview-hero-eyebrow {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Tabs ── */
+.hub-shell .va-ops-tab-btn,
+.hub-shell .tab,
+.hub-shell .tab-btn,
+.hub-shell .analytics-tab,
+.hub-shell .send-center-tab {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.hub-shell .va-ops-tab-btn.active,
+.hub-shell .tab.active,
+.hub-shell .tab-btn.active,
+.hub-shell .analytics-tab.active,
+.hub-shell .send-center-tab.active,
+.hub-shell [role="tab"][aria-selected="true"] {
+  color: var(--hub-primary);
+  font-weight: 600;
+  border-bottom-color: var(--hub-primary);
+}
+
+.hub-shell .va-ops-tab-btn.active::after,
+.hub-shell .tab.active::after,
+.hub-shell .tab-btn.active::after {
+  background: var(--hub-primary);
+}
+
+.hub-shell .va-ops-tab-btn:focus-visible,
+.hub-shell .tab:focus-visible,
+.hub-shell .tab-btn:focus-visible,
+.hub-shell [role="tab"]:focus-visible {
+  color: var(--hub-primary);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+  outline: none;
+}
+
+/* ── Primary hub buttons (shape stays global) ── */
+.hub-shell .va-ops-action-btn.primary,
+.hub-shell .btn-primary,
+.hub-shell button.btn-primary,
+.hub-shell .commercial-hub-btn-primary,
+.hub-shell .commercial-hub-btn-teal,
+.hub-shell .send-center-primary-btn,
+.hub-shell .analytics-primary-btn,
+.hub-shell .va-ops-drawer-action-btn.primary,
+.hub-shell .intake-form-action-primary,
+.hub-shell .commercial-hub-tab-shell .va-ops-action-btn.primary {
+  background: var(--hub-primary);
+  border-color: var(--hub-primary);
+  color: #ffffff;
+}
+
+.hub-shell .va-ops-action-btn.primary:hover,
+.hub-shell .btn-primary:hover,
+.hub-shell button.btn-primary:hover,
+.hub-shell .commercial-hub-btn-primary:hover,
+.hub-shell .commercial-hub-btn-teal:hover,
+.hub-shell .send-center-primary-btn:hover,
+.hub-shell .analytics-primary-btn:hover,
+.hub-shell .va-ops-drawer-action-btn.primary:hover,
+.hub-shell .intake-form-action-primary:hover:not(:disabled),
+.hub-shell .commercial-hub-tab-shell .va-ops-action-btn.primary:hover {
+  background: var(--hub-deep);
+  border-color: var(--hub-deep);
+  color: #ffffff;
+}
+
+.hub-shell .epay-overdue-action-btn--primary {
+  border-color: color-mix(in srgb, var(--hub-primary) 35%, transparent);
+  color: var(--hub-primary);
+  background: var(--hub-glow);
+}
+
+.hub-shell .va-ops-action-btn.danger,
+.hub-shell .btn-danger {
+  background: var(--semantic-danger);
+  border-color: var(--semantic-danger);
+  color: #ffffff;
+}
+
+.hub-shell .va-ops-action-btn.success,
+.hub-shell .btn-success {
+  background: var(--semantic-good);
+  border-color: var(--semantic-good);
+  color: #ffffff;
+}
+
+/* ── Hub action links ── */
+.hub-shell .commercial-hub-client-link,
+.hub-shell .va-ops-client-link,
+.hub-shell .intake-client-link,
+.hub-shell a.hub-link,
+.hub-shell .va-ops-inline-link {
+  color: var(--hub-primary);
+}
+
+.hub-shell .commercial-hub-client-link:hover,
+.hub-shell .va-ops-client-link:hover,
+.hub-shell .intake-client-link:hover,
+.hub-shell a.hub-link:hover,
+.hub-shell .va-ops-inline-link:hover {
+  color: var(--hub-deep);
+}
+
+/* ── Form focus ── */
+.hub-shell input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+.hub-shell select:focus-visible,
+.hub-shell textarea:focus-visible,
+.hub-shell .va-ops-search:focus-within,
+.hub-shell .header-filter-select:focus-visible {
+  outline: none;
+  border-color: var(--hub-primary);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+.hub-shell input:not([type="checkbox"]):not([type="radio"]):focus,
+.hub-shell select:focus,
+.hub-shell textarea:focus {
+  border-color: var(--hub-primary);
+}
+
+/* ── Selected states ── */
+.hub-shell .is-selected,
+.hub-shell .selected,
+.hub-shell tr.selected,
+.hub-shell .va-ops-table-row.selected,
+.hub-shell .commercial-hub-table-row-clickable.selected,
+.hub-shell .submission-tracker-row.selected,
+.hub-shell .filter-chip.active,
+.hub-shell .filter-chip.selected,
+.hub-shell .view-chip.active,
+.hub-shell .send-center-kpi-command.active,
+.hub-shell [aria-pressed="true"]:not(.va-ops-tab-btn):not([role="tab"]) {
+  background: var(--hub-glow);
+  border-color: var(--hub-primary);
+  color: var(--hub-deep);
+}
+
+.hub-shell .is-selected svg,
+.hub-shell .selected svg,
+.hub-shell .filter-chip.active svg,
+.hub-shell .filter-chip.selected svg {
+  color: var(--hub-primary);
+}
+
+/* ── Hub-specific progress (not semantic status) ── */
+.hub-shell .aos-progress--hub .aos-progress-fill,
+.hub-shell .aos-progress--commercial .aos-progress-fill,
+.hub-shell .dept-progress-ring-fill,
+.hub-shell .folio-progress-fill,
+.hub-shell .training-progress-fill:not(.red):not(.amber):not(.green) {
+  background: var(--hub-primary);
+}
+
+.hub-shell .aos-metric-ring--hub .aos-metric-ring-fill,
+.hub-shell .aos-metric-ring--commercial .aos-metric-ring-fill {
+  stroke: var(--hub-primary);
+}
+
+/* ── Hub-identity KPI accents (neutral / hub metrics only) ── */
+.hub-shell .aos-kpi-card--commercial,
+.hub-shell .va-ops-kpi-card.teal,
+.hub-shell .aos-kpi-card--hub {
+  border-left-color: var(--hub-primary);
+}
+
+.hub-shell .aos-kpi-card--commercial .va-ops-kpi-value,
+.hub-shell .va-ops-kpi-card.teal .va-ops-kpi-value,
+.hub-shell .aos-status-pill--commercial {
+  color: var(--hub-primary);
+}
+
+.hub-shell .aos-status-pill--commercial {
+  background: var(--hub-glow);
+}
+
+.hub-shell .lead-velocity-chart-bar:not(.is-on-target):not(.over-target):not(.is-behind):not(.under-target),
+.hub-shell .commercial-conversion-bar:not(.is-on-target):not(.over-target):not(.is-behind):not(.under-target) {
+  background: var(--hub-primary);
+}
+
+.hub-shell .analytics-sparkline path {
+  stroke: var(--hub-primary);
+}
+
+/* Semantic chart / KPI overrides remain in kpi-system.css */
+
+/* ── Contextual help ── */
+.hub-shell .hub-help-trigger {
+  color: var(--hub-primary);
+}
+
+.hub-shell .va-ops-page-header .hub-help-trigger {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.help-drawer {
+  --help-accent: var(--hub-primary);
+  --help-glow: var(--hub-glow, color-mix(in srgb, var(--hub-primary) 14%, transparent));
+}
+
+.help-drawer-header {
+  border-bottom: 1px solid color-mix(in srgb, var(--hub-primary) 28%, transparent);
+}
+
+.help-drawer-header-icon {
+  color: var(--hub-primary);
+}
+
+/* ── Global Search overlay keeps its own identity ── */
+.cmd-palette {
+  --btn-primary-bg: var(--hub-primary);
+  --btn-primary-hover: var(--hub-deep);
+  --input-focus-ring: var(--hub-glow);
+}
+
+.cmd-palette .cmd-palette-search input:focus,
+.cmd-palette .cmd-palette-search input:focus-visible {
+  outline: none;
+  border-color: var(--hub-primary);
+  box-shadow: 0 0 0 3px var(--hub-glow);
+}
+
+.cmd-palette .cmd-palette-category.active,
+.cmd-palette [role="tab"][aria-selected="true"] {
+  color: var(--hub-primary);
+  font-weight: 600;
+  border-bottom-color: var(--hub-primary);
+}
+
+/* ── Sidebar active = current hub identity ── */
+.sidebar-nav-item--active {
+  background: color-mix(in srgb, var(--hub-primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--hub-primary) 22%, transparent);
+}
+
+.sidebar-nav-item--active .sidebar-nav-icon-wrap {
+  color: var(--hub-primary);
+}
+
+.sidebar-nav-item--active .sidebar-nav-label {
+  color: #F7FBFD;
+  font-weight: 600;
+}
+
+.sidebar-nav-item--active .sidebar-nav-active-bar {
+  background: var(--hub-primary);
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.app-shell[data-hub="globalSearch"] .sidebar-nav-item--active {
+  background: color-mix(in srgb, var(--hub-nav-accent, #AAD0E7) 14%, transparent);
+}
+
+.app-shell[data-hub="globalSearch"] .sidebar-nav-item--active .sidebar-nav-icon-wrap,
+.app-shell[data-hub="globalSearch"] .sidebar-nav-item--active .sidebar-nav-active-bar {
+  color: var(--hub-nav-accent, #AAD0E7);
+  background: var(--hub-nav-accent, #AAD0E7);
+}
+
+.app-shell[data-hub="globalSearch"] .sidebar-nav-item--active .sidebar-nav-icon-wrap {
+  background: transparent;
+}
+
+/* ── Mobile nav ── */
+@media (max-width: 767px) {
+  .mobile-bottom-nav-item.active {
+    color: var(--hub-primary);
+    font-weight: 600;
+  }
+
+  .mobile-bottom-nav-item.active .mobile-bottom-nav-icon-wrap {
+    color: var(--hub-primary);
+  }
+
+  .hub-shell .va-ops-page-header {
+    margin: 12px 12px 0;
+    padding: 24px;
+    min-height: 160px;
+    border-radius: 16px;
+  }
+
+  .hub-shell .va-ops-page-title,
+  .hub-shell .commercial-hub-hero-title,
+  .hub-shell .owner-overview-hero-title {
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .hub-shell .va-ops-page-header {
+    margin: 16px 16px 0;
+    padding: 24px 26px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hub-shell .va-ops-page-header {
+    padding: 28px;
+    min-height: 180px;
+  }
+}

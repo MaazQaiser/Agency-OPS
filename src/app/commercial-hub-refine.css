@@ -73,7 +73,7 @@
   padding: 12px 14px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
-  background: rgba(15, 20, 25, 0.45);
+  background: #FFFFFF;
   min-width: 0;
 }
 
@@ -212,7 +212,7 @@
 .granular-docs-panel {
   padding: 12px 16px 16px;
   border-top: 1px solid var(--border-subtle);
-  background: rgba(15, 20, 25, 0.25);
+  background: #F7FBFD;
 }
 
 .granular-docs-panel-title {
@@ -317,7 +317,7 @@
   padding: 14px 16px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(99, 102, 241, 0.28);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(15, 20, 25, 0.5));
+  background: color-mix(in srgb, #0D9488 8%, #FFFFFF);
 }
 
 .quote-ai-recommended-header {
@@ -770,7 +770,7 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
 .module-commercial-hub .commercial-hub-tab-footer {
   border-color: rgba(255, 255, 255, 0.05);
   box-shadow: none;
-  background: rgba(15, 20, 25, 0.42);
+  background: #FFFFFF;
 }
 
 .module-commercial-hub .commercial-hub-alert-row,
@@ -998,9 +998,9 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
 
 /* Teal action system */
 .module-commercial-hub {
-  --commercial-teal: #0f8b82;
-  --commercial-teal-hover: #0c6e67;
-  --commercial-teal-ring: rgba(15, 139, 130, 0.22);
+  --commercial-teal: var(--hub-primary);
+  --commercial-teal-hover: var(--hub-deep);
+  --commercial-teal-ring: var(--hub-glow);
 }
 
 .module-commercial-hub .commercial-hub-btn-primary,

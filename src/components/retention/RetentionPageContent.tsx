@@ -10,20 +10,31 @@ import { RetentionHelpAnchor } from "@/components/retention/RetentionHelpAnchor"
 import { RetentionLanguageToggle } from "@/components/retention/RetentionLanguageToggle";
 import { useRetentionLocale } from "@/components/retention/RetentionLanguageProvider";
 import { FutureRoadmapSection, SystemOwnershipSection } from "@/components/retention/SystemOwnershipSection";
+import { retentionHeader } from "@/data/retentionScorecard";
 
 export function RetentionPageContent() {
   const { copy } = useRetentionLocale();
+  const updatedMeta = retentionHeader.meta.find((item) => item.label === "Updated");
 
   return (
     <>
       <div className="page-container retention-locale-surface">
         <div className="retention-page-header-row module-page-header-row">
-          <PageHeader
-            title={copy.pageTitle}
-            titleEmphasis={copy.pageTitleEmphasis}
-            patent={copy.patent}
-            variant="retention"
-          />
+          <div className="retention-page-header-copy">
+            <p className="retention-page-kicker">{copy.pageKicker}</p>
+            <PageHeader
+              title={copy.pageTitle}
+              titleEmphasis={copy.pageTitleEmphasis}
+              patent={copy.patent}
+              variant="retention"
+            />
+            <p className="retention-page-lede">{copy.pageLede}</p>
+            {updatedMeta && (
+              <p className="retention-page-freshness">
+                {updatedMeta.label} {updatedMeta.value}
+              </p>
+            )}
+          </div>
           <div className="retention-page-header-actions">
             <RetentionLanguageToggle />
             <RetentionHelpAnchor />
@@ -34,6 +45,11 @@ export function RetentionPageContent() {
           <span className="retention-dept-badge-dot" aria-hidden="true" />
           {copy.departmentName}
         </div>
+
+        <section className="retention-scorecard-section retention-scorecard-section--primary" aria-label={copy.sectionScorecard}>
+          <SectionLabel>{copy.sectionScorecard}</SectionLabel>
+          <RetentionKpiTabs />
+        </section>
 
         <section className="retention-scorecard-section retention-scorecard-section--context" aria-label={copy.sectionArchitecture}>
           <SectionLabel>{copy.sectionArchitecture}</SectionLabel>
@@ -65,11 +81,6 @@ export function RetentionPageContent() {
             </ul>
             <p className="retention-alert-note">{copy.valerieTracieTitles.footer}</p>
           </Alert>
-        </section>
-
-        <section className="retention-scorecard-section retention-scorecard-section--primary" aria-label={copy.sectionScorecard}>
-          <SectionLabel>{copy.sectionScorecard}</SectionLabel>
-          <RetentionKpiTabs />
         </section>
 
         <section className="retention-scorecard-section" aria-label={copy.compensation.section}>

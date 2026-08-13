@@ -29,6 +29,7 @@ import {
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
 import { BindPolicyConfirmModal } from "./BindPolicyConfirmModal";
+import { BindReadinessGates } from "./BindReadinessGates";
 import { FarmersEdgeIntelTrigger } from "./FarmersEdgeIntelTrigger";
 import { buildFarmersEdgeIntelRequest } from "@/lib/farmersEdgeIntel";
 
@@ -112,6 +113,8 @@ export function ReadyToBindTab() {
 
         <CommercialHubKpiStrip kpis={readyToBindTabKpis(queue)} columns={5} />
 
+        <BindReadinessGates queue={queue} />
+
         <CommercialHubWorkspace
           ariaLabel="Ready to bind queue"
           title="Bind Queue"
@@ -145,13 +148,13 @@ export function ReadyToBindTab() {
               <tbody>
                 {queue.map((item) => (
                   <tr key={item.id}>
-                    <td>
+                    <td data-label="Bind State">
                       <span className={cn("badge commercial-bind-state-badge", bindStateClass[item.bindState])}>
                         {readyToBindStateLabels[item.bindState]}
                       </span>
                     </td>
-                    <td>{item.va}</td>
-                    <td>
+                    <td data-label="Assigned VA">{item.va}</td>
+                    <td data-label="Payment Status">
                       <div className="ready-to-bind-payment-cell">
                         <span className={cn("badge", paymentStatusClass[item.paymentStatus])}>
                           {item.paymentStatus}
@@ -161,16 +164,16 @@ export function ReadyToBindTab() {
                         )}
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Producer">
                       <span className={cn("badge", item.producerApproved ? "badge-green" : "badge-yellow")}>
                         {item.producerApproved ? "Approved" : "Pending"}
                       </span>
                     </td>
-                    <td className="commercial-hub-client-cell">{item.client}</td>
-                    <td>{item.carrier}</td>
-                    <td className="commercial-hub-premium">{item.premium}</td>
-                    <td>{item.brokerFee}</td>
-                    <td>
+                    <td className="commercial-hub-client-cell" data-label="Client">{item.client}</td>
+                    <td data-label="Carrier">{item.carrier}</td>
+                    <td className="commercial-hub-premium" data-label="Premium">{item.premium}</td>
+                    <td data-label="Broker Fee">{item.brokerFee}</td>
+                    <td data-label="Action">
                       <div className="send-center-row-actions">
                         <button type="button" className="va-ops-action-btn" onClick={() => viewProposal(item)}>
                           View Proposal

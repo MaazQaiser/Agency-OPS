@@ -1,0 +1,897 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Global Page Shell Consistency
+   Presentation only. Neutral chrome. Hub color on accents.
+   Loaded last so shared shell rules win over hub-specific CSS.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root,
+.app-shell {
+  --shell-workspace: #F7FBFD;
+  --shell-card: #FFFFFF;
+  --shell-border: #E6EBF2;
+  --shell-input-border: #D8E0E8;
+  --shell-placeholder: #8A98A6;
+  --shell-text: #1C2B35;
+  --shell-muted: #5E6B7D;
+  --shell-crumb: #7A8794;
+  --shell-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
+  --shell-modal-shadow: 0 20px 50px rgba(20, 35, 50, 0.18);
+  --shell-radius-card: 16px;
+  --shell-radius-control: 10px;
+  --shell-control-height: 42px;
+  --shell-pad-desktop: 32px;
+  --shell-pad-tablet: 24px;
+  --shell-pad-mobile: 16px;
+  --shell-hover-ms: 150ms;
+  --shell-state-ms: 180ms;
+  --shell-chrome-ms: 220ms;
+  --folio-bar-height: 48px;
+}
+
+.app-shell {
+  --top-header-bar-height: 64px;
+  --top-header-hub-nav-height: 0px;
+  --top-header-height: var(--top-header-bar-height);
+  --app-header-stack-height: calc(var(--top-header-height) + var(--folio-bar-height));
+  background: var(--shell-workspace);
+  overflow-x: clip;
+}
+
+.app-shell-main,
+.app-content,
+.hub-shell {
+  background: var(--shell-workspace);
+  overflow-x: clip;
+  min-width: 0;
+}
+
+/* ── Sidebar (existing implementation; widths already in range) ── */
+.agency-sidebar {
+  background: #1C2B35;
+  transition: var(--sidebar-transition, width 220ms ease-in-out, margin-left 220ms ease-in-out);
+}
+
+.sidebar-nav-item--active {
+  color: var(--hub-primary);
+}
+
+/* ── Global topbar ── */
+.app-top-nav {
+  height: var(--top-header-bar-height);
+  min-height: var(--top-header-bar-height);
+  padding: 0 var(--shell-pad-desktop);
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--shell-border);
+  color: var(--shell-text);
+  box-shadow: none;
+}
+
+.app-top-nav-search {
+  height: 40px;
+  min-height: 40px;
+  border-radius: var(--shell-radius-control);
+  border: 1px solid var(--shell-input-border);
+  background: var(--shell-workspace);
+  color: var(--shell-muted);
+  transition:
+    border-color var(--shell-hover-ms) ease,
+    background var(--shell-hover-ms) ease,
+    color var(--shell-hover-ms) ease,
+    box-shadow var(--shell-hover-ms) ease;
+}
+
+.app-top-nav-search:hover,
+.app-top-nav-search:focus-visible {
+  border-color: var(--hub-primary, var(--ita-navy));
+  color: var(--shell-text);
+  box-shadow: 0 0 0 3px var(--hub-glow, transparent);
+}
+
+.app-top-nav-search-label {
+  font-family: var(--font-family);
+  font-size: 13px;
+}
+
+.top-nav-action-btn {
+  height: 40px;
+  min-height: 40px;
+  border-radius: var(--shell-radius-control);
+  transition:
+    background var(--shell-hover-ms) ease,
+    color var(--shell-hover-ms) ease,
+    border-color var(--shell-hover-ms) ease;
+}
+
+.top-nav-action-btn--profile {
+  margin-left: 4px;
+}
+
+.top-nav-profile-name {
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--shell-text);
+}
+
+.top-nav-profile-role {
+  font-family: var(--font-family);
+  font-size: 11px;
+  color: var(--shell-muted);
+}
+
+/* ── Folio context — compact, global, not duplicated per hub ── */
+.global-folio-strip,
+.folio-progress-bar.global-folio-strip {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--shell-border);
+  min-height: var(--folio-bar-height);
+  max-height: var(--folio-bar-height);
+  padding: 0 var(--shell-pad-desktop);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: var(--shell-text);
+}
+
+.global-folio-strip:hover,
+.folio-progress-bar.global-folio-strip:hover {
+  background: #F7FBFD;
+}
+
+.global-folio-strip .folio-progress-accent {
+  display: none;
+}
+
+.global-folio-strip .folio-progress-stat-label,
+.global-folio-strip .folio-progress-dates,
+.global-folio-days {
+  font-family: var(--font-family);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--shell-muted);
+}
+
+.global-folio-strip .folio-progress-stat-value,
+.global-folio-strip .folio-progress-pct,
+.global-folio-strip .folio-progress-badge {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--shell-text);
+}
+
+.global-folio-strip .folio-progress-badge {
+  background: var(--shell-workspace);
+  border: 1px solid var(--shell-border);
+  border-radius: 8px;
+  padding: 2px 8px;
+}
+
+.global-folio-stat--secondary,
+.global-folio-urgency-badges {
+  display: none;
+}
+
+.global-folio-strip .folio-progress-track {
+  height: 6px;
+  background: #EAF0F6;
+  border-radius: 999px;
+}
+
+/* ── Page content container ── */
+.app-content {
+  padding: 0;
+}
+
+.hub-shell .va-ops-page-header,
+.hub-shell .module-page-header-row,
+.hub-shell .app-header.page-module-header {
+  margin-left: var(--shell-pad-desktop);
+  margin-right: var(--shell-pad-desktop);
+}
+
+.hub-shell .va-ops-tab-nav,
+.hub-shell .send-center-tab-nav,
+.hub-shell .tab-bar,
+.app-content .va-ops-tab-nav {
+  padding-left: var(--shell-pad-desktop);
+  padding-right: var(--shell-pad-desktop);
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--shell-border);
+}
+
+.hub-shell .va-ops-tab-content,
+.hub-shell .analytics-content,
+.hub-shell .send-center-content,
+.app-content .va-ops-tab-content,
+.app-content .page-container {
+  padding: 24px var(--shell-pad-desktop) 32px;
+}
+
+.hub-shell .va-ops-overview,
+.hub-shell .analytics-tab-view,
+.hub-shell .ih-section--primary {
+  max-width: 1440px;
+  width: 100%;
+}
+
+.table-wrap,
+.commercial-hub-table-wrap,
+.va-ops-priority-table,
+.send-center-table-wrap,
+.submission-tracker-table,
+.hub-shell .ih-section--primary:has(table) {
+  max-width: none;
+}
+
+/* ── Page header typography ── */
+.hub-shell .va-ops-page-header-eyebrow,
+.hub-shell .commercial-hub-hero-eyebrow,
+.hub-shell .owner-overview-hero-eyebrow,
+.hub-shell .h-tag,
+.page-module-header .h-tag {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hub-shell .va-ops-page-title,
+.hub-shell .commercial-hub-hero-title,
+.hub-shell .owner-overview-hero-title,
+.hub-shell .va-ops-page-header h1,
+.page-module-header h1,
+.app-header h1 {
+  font-family: var(--font-family-display);
+  font-size: clamp(32px, 2.8vw, 40px);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.hub-shell .va-ops-page-subtitle,
+.hub-shell .commercial-hub-hero-subtitle,
+.hub-shell .owner-overview-hero-subtitle,
+.page-module-header p,
+.app-header .h-meta {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ih-section-title,
+.va-ops-panel-title,
+.section-label .sl-text {
+  font-family: var(--font-family-display);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 600;
+}
+
+.app-content {
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.app-content .meta,
+.app-content .h-meta,
+.app-content time,
+.app-content .kpi-label,
+.app-content .folio-progress-stat-label {
+  font-size: 11px;
+}
+
+/* ── Breadcrumbs (existing only; do not add new trails) ── */
+.ops-breadcrumb-bar,
+.ops-breadcrumb-nav,
+.training-detail-breadcrumb,
+.module-breadcrumb-bar {
+  font-family: var(--font-family);
+  font-size: 12px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.ops-breadcrumb-segment a,
+.ops-breadcrumb-nav a,
+.training-detail-breadcrumb-link {
+  color: var(--shell-crumb);
+  text-decoration: none;
+  transition: color var(--shell-hover-ms) ease;
+}
+
+.ops-breadcrumb-segment a:hover,
+.ops-breadcrumb-nav a:hover,
+.training-detail-breadcrumb-link:hover {
+  color: var(--hub-primary, var(--shell-text));
+}
+
+.ops-breadcrumb-segment [aria-current="page"],
+.training-detail-breadcrumb-current {
+  color: var(--shell-text);
+  font-weight: 600;
+}
+
+/* ── Cards ── */
+.app-content .va-ops-card,
+.app-content .va-ops-kpi-card,
+.app-content .kpi-card,
+.app-content .aos-kpi-card,
+.app-content .aos-card--info,
+.app-content .aos-card--action,
+.app-content .analytics-kpi-card,
+.app-content .chart-card,
+.app-content .snapshot-card,
+.app-content .va-ops-snapshot-card,
+.app-content .send-center-template-card,
+.app-content .training-resource-card,
+.app-content .fe-c-card,
+.app-content .recommended-market-card,
+.app-content .carrier-stack-card,
+.app-content .search-result-card,
+.app-content .ih-panel,
+.app-content .table-wrap {
+  background: var(--shell-card);
+  border: 1px solid var(--shell-border);
+  border-radius: var(--shell-radius-card);
+  box-shadow: var(--shell-shadow);
+}
+
+.app-content .va-ops-kpi-card,
+.app-content .kpi-card,
+.app-content .aos-kpi-card,
+.app-content .analytics-kpi-card,
+.app-content .ih-panel {
+  padding: 18px 20px;
+}
+
+/* ── Buttons ── */
+.app-content .va-ops-action-btn,
+.app-content .commercial-hub-btn,
+.app-content .btn-primary,
+.app-content .btn-secondary,
+.app-content .hub-empty-state-cta,
+.app-content .va-ops-role-action-btn,
+.va-ops-modal-footer .va-ops-action-btn,
+.va-ops-drawer-footer .va-ops-action-btn {
+  height: var(--shell-control-height);
+  min-height: var(--shell-control-height);
+  padding: 0 16px;
+  border-radius: var(--shell-radius-control);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    background var(--shell-hover-ms) ease,
+    border-color var(--shell-hover-ms) ease,
+    color var(--shell-hover-ms) ease,
+    box-shadow var(--shell-hover-ms) ease;
+}
+
+.app-content .va-ops-action-btn.primary,
+.app-content .commercial-hub-btn-primary,
+.app-content .commercial-hub-btn-teal,
+.app-content .btn-primary,
+.app-content .hub-empty-state-cta,
+.app-content .epay-overdue-action-btn--primary {
+  background: var(--hub-primary, var(--ita-navy));
+  border: 1px solid transparent;
+  color: #FFFFFF;
+}
+
+.app-content .va-ops-action-btn.primary:hover,
+.app-content .commercial-hub-btn-primary:hover,
+.app-content .commercial-hub-btn-teal:hover,
+.app-content .btn-primary:hover,
+.app-content .hub-empty-state-cta:hover,
+.app-content .epay-overdue-action-btn--primary:hover {
+  background: var(--hub-deep, #15232c);
+  color: #FFFFFF;
+  filter: none;
+}
+
+.app-content .va-ops-action-btn:not(.primary):not(.critical),
+.app-content .commercial-hub-btn-secondary,
+.app-content .btn-secondary {
+  background: #FFFFFF;
+  border: 1px solid var(--shell-border);
+  color: var(--shell-text);
+}
+
+.app-content .va-ops-action-btn:not(.primary):not(.critical):hover,
+.app-content .commercial-hub-btn-secondary:hover,
+.app-content .btn-secondary:hover {
+  border-color: var(--hub-primary, var(--ita-navy));
+  color: var(--hub-primary, var(--ita-navy));
+  background: #FFFFFF;
+}
+
+.app-content .commercial-hub-btn-utility,
+.app-content .btn-tertiary,
+.app-content .ops-breadcrumb-back {
+  background: transparent;
+  border: none;
+  color: var(--shell-muted);
+  box-shadow: none;
+}
+
+.app-content .commercial-hub-btn-utility:hover,
+.app-content .btn-tertiary:hover {
+  color: var(--hub-primary, var(--shell-text));
+  background: transparent;
+}
+
+/* ── Form controls ── */
+.app-content input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
+.app-content select,
+.app-content textarea,
+.app-content .va-ops-search,
+.app-content .header-filter-select,
+.app-content .send-center-select,
+.app-content .intake-form-input {
+  height: var(--shell-control-height);
+  min-height: var(--shell-control-height);
+  border-radius: var(--shell-radius-control);
+  border: 1px solid var(--shell-input-border);
+  background: #FFFFFF;
+  color: var(--shell-text);
+  font-family: var(--font-family);
+  font-size: 14px;
+  transition:
+    border-color var(--shell-state-ms) ease,
+    box-shadow var(--shell-state-ms) ease;
+}
+
+.app-content textarea {
+  height: auto;
+  min-height: 88px;
+}
+
+.app-content input::placeholder,
+.app-content textarea::placeholder,
+.app-content .va-ops-search::placeholder {
+  color: var(--shell-placeholder);
+}
+
+.app-content input:focus,
+.app-content select:focus,
+.app-content textarea:focus,
+.app-content .va-ops-search:focus,
+.app-content .header-filter-select:focus,
+.app-content .send-center-select:focus,
+.app-content .intake-form-input:focus {
+  outline: none;
+  border-color: var(--hub-primary, var(--ita-navy));
+  box-shadow: 0 0 0 3px var(--hub-glow, color-mix(in srgb, var(--hub-primary, #1C2B35) 18%, transparent));
+}
+
+/* ── Tabs — underline, not pills ── */
+.va-ops-tab-nav,
+.send-center-tab-nav,
+.tab-bar,
+.commercial-hub-subnav {
+  min-height: 52px;
+}
+
+.va-ops-tab-btn,
+.tab,
+.tab-btn,
+.send-center-tab-btn {
+  height: 52px;
+  padding: 0 16px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--shell-muted);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    color var(--shell-hover-ms) ease,
+    border-color var(--shell-hover-ms) ease;
+}
+
+.va-ops-tab-btn:hover,
+.tab:hover,
+.tab-btn:hover,
+.send-center-tab-btn:hover {
+  color: var(--hub-primary, var(--ita-navy));
+  background: transparent;
+}
+
+.va-ops-tab-btn.active,
+.tab.active,
+.tab-btn.active,
+.send-center-tab-btn.active {
+  color: var(--hub-primary, var(--ita-navy));
+  border-bottom-color: var(--hub-primary, var(--ita-navy));
+  background: transparent;
+}
+
+/* ── Tables ── */
+.app-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.app-content thead th,
+.app-content .commercial-hub-table thead th,
+.app-content .va-ops-priority-table th,
+.app-content .send-center-table th,
+.app-content .analytics-leaderboard-table th,
+.app-content .submission-history-table th {
+  background: var(--shell-workspace);
+  color: var(--shell-muted);
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--shell-border);
+  height: 44px;
+}
+
+.app-content tbody td,
+.app-content .commercial-hub-table td,
+.app-content .va-ops-priority-table td,
+.app-content .send-center-table td {
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--shell-border);
+  font-family: var(--font-family);
+  font-size: 13px;
+  color: var(--shell-text);
+  padding-top: 14px;
+  padding-bottom: 14px;
+  height: auto;
+  min-height: 52px;
+}
+
+.app-content tbody tr:hover td,
+.app-content .commercial-hub-table tbody tr:hover td,
+.app-content .va-ops-priority-table tbody tr:hover td {
+  background: var(--shell-workspace);
+}
+
+.app-content td.numeric,
+.app-content .mono,
+.app-content [data-numeric],
+.app-content .kpi-value,
+.app-content .folio-progress-stat-value,
+.app-content .va-ops-kpi-value {
+  font-family: var(--font-family-mono);
+}
+
+.table-wrap,
+.commercial-hub-table-wrap,
+.send-center-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Status ── */
+.app-content .aos-status-pill,
+.app-content .badge,
+.app-content .pill,
+.app-content .va-ops-status-pill,
+.app-content .coverage-status-pill,
+.app-content .quote-ai-chip {
+  background: color-mix(in srgb, var(--semantic-info) 12%, #FFFFFF);
+  color: var(--semantic-info);
+  border: none;
+}
+
+.app-content .aos-status-pill--positive,
+.app-content .badge-green,
+.app-content .pill-green,
+.app-content .va-ops-status-pill.active {
+  background: color-mix(in srgb, #10B981 12%, #FFFFFF);
+  color: #10B981;
+}
+
+.app-content .aos-status-pill--warning,
+.app-content .badge-yellow,
+.app-content .badge-amber,
+.app-content .pill-amber,
+.app-content .va-ops-status-pill.away {
+  background: color-mix(in srgb, #F59E0B 12%, #FFFFFF);
+  color: #F59E0B;
+}
+
+.app-content .aos-status-pill--danger,
+.app-content .badge-red,
+.app-content .pill-red {
+  background: color-mix(in srgb, #F43F5E 12%, #FFFFFF);
+  color: #F43F5E;
+}
+
+.app-content .aos-status-pill--info,
+.app-content .badge-blue,
+.app-content .pill-blue {
+  background: color-mix(in srgb, #3B82F6 12%, #FFFFFF);
+  color: #3B82F6;
+}
+
+.app-content .aos-status-pill--draft,
+.app-content .badge-violet,
+.app-content .badge-purple,
+.app-content .pill-violet {
+  background: color-mix(in srgb, #8B5CF6 12%, #FFFFFF);
+  color: #8B5CF6;
+}
+
+/* ── Loading ── */
+.ops-skeleton-shimmer,
+.app-content .ops-skeleton-shimmer,
+.cmd-palette-skeleton-row,
+.global-search-skeleton-card,
+.send-center-skeleton-row {
+  background: #EAF0F6 !important;
+  background-image: linear-gradient(
+    90deg,
+    #EAF0F6 25%,
+    #F7FBFD 50%,
+    #EAF0F6 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: ops-state-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Empty states ── */
+.hub-empty-state,
+.commercial-hub-empty-state {
+  padding: 28px 20px;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px dashed var(--shell-border);
+  border-radius: var(--shell-radius-card);
+  box-shadow: none;
+}
+
+.hub-empty-state-icon-wrap,
+.commercial-hub-empty-state-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.hub-empty-state-title,
+.commercial-hub-empty-state-title {
+  font-family: var(--font-family-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.hub-empty-state-desc,
+.commercial-hub-empty-state p {
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: var(--shell-muted);
+}
+
+/* ── Modals ── */
+.va-ops-modal,
+.eva-action-modal {
+  background: #FFFFFF;
+  border: 1px solid var(--shell-border);
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: var(--shell-modal-shadow);
+  color: var(--shell-text);
+}
+
+.va-ops-modal-header,
+.eva-action-modal-header {
+  padding: 24px 24px 16px;
+}
+
+.va-ops-modal-body,
+.eva-action-modal-body {
+  padding: 0 24px 16px;
+}
+
+.va-ops-modal-footer,
+.eva-action-modal-footer {
+  padding: 16px 24px 24px;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.va-ops-modal-title {
+  font-family: var(--font-family-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* ── Drawers ── */
+.va-ops-drawer,
+.notification-center-panel,
+.folio-drawer {
+  width: min(420px, 100vw);
+  background: #FFFFFF;
+  border-left: 1px solid var(--shell-border);
+  color: var(--shell-text);
+  box-shadow: -12px 0 40px rgba(20, 35, 50, 0.12);
+  transition: transform var(--shell-chrome-ms) ease;
+}
+
+.va-ops-drawer-header,
+.help-drawer-header,
+.notification-center-header,
+.folio-drawer .va-ops-drawer-header {
+  min-height: 64px;
+  padding: 12px 20px;
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--shell-border);
+  box-sizing: border-box;
+}
+
+.help-drawer[class*="help-drawer--"] {
+  --help-base: #FFFFFF;
+  --help-surface: #FFFFFF;
+  --help-text: #1C2B35;
+  --help-text-muted: #5E6B7D;
+  --help-text-secondary: #5E6B7D;
+  --help-border: #E6EBF2;
+  --help-header-bg: #FFFFFF;
+  --help-search-bg: #F7FBFD;
+  --help-card-bg: #FFFFFF;
+  --help-glow: var(--hub-glow, transparent);
+  background: #FFFFFF;
+  color: #1C2B35;
+}
+
+.help-drawer-header {
+  box-shadow: inset 0 3px 0 var(--hub-primary, var(--help-accent, #1C2B35));
+}
+
+/* ── Tooltips ── */
+.agency-sidebar-collapse-btn[data-tooltip]:hover::after,
+.agency-sidebar--collapsed [data-tooltip]:hover::after,
+.agency-sidebar--collapsed [data-tooltip]:focus-visible::after,
+.agency-sidebar-collapse-btn[data-tooltip]:focus-visible::after,
+.va-ops-kpi-tooltip,
+.va-quick-actions-item-tooltip,
+.team-avatar-tooltip,
+.eva-fab-action-tooltip,
+.kpi-sparkline-tooltip {
+  background: #1C2B35;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 8px 20px rgba(28, 43, 53, 0.22);
+}
+
+/* ── Transitions ── */
+.agency-sidebar,
+.app-shell-main {
+  transition: width var(--shell-chrome-ms) ease, margin-left var(--shell-chrome-ms) ease;
+}
+
+.va-ops-modal,
+.eva-action-modal,
+.va-ops-drawer,
+.help-drawer {
+  transition: transform var(--shell-chrome-ms) ease, opacity var(--shell-chrome-ms) ease;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1279px) {
+  :root,
+  .app-shell {
+    --shell-pad-desktop: 24px;
+  }
+
+  .app-top-nav,
+  .global-folio-strip,
+  .folio-progress-bar.global-folio-strip {
+    padding-left: var(--shell-pad-tablet);
+    padding-right: var(--shell-pad-tablet);
+  }
+}
+
+/* ── Mobile shell ── */
+@media (max-width: 767px) {
+  .app-shell {
+    --top-header-bar-height: 56px;
+    --folio-bar-height: 44px;
+    --app-header-stack-height: calc(var(--top-header-bar-height) + var(--folio-bar-height));
+    --shell-pad-desktop: 16px;
+  }
+
+  .app-top-nav {
+    display: flex;
+    height: 56px;
+    min-height: 56px;
+    padding: 0 16px;
+  }
+
+  .app-top-nav-search-label,
+  .app-top-nav-kbd,
+  .top-nav-action-label,
+  .top-nav-profile-meta,
+  .top-nav-profile-chevron {
+    display: none;
+  }
+
+  .app-top-nav-search {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .global-folio-strip,
+  .folio-progress-bar.global-folio-strip {
+    padding: 0 16px;
+  }
+
+  .global-folio-center,
+  .global-folio-strip .folio-progress-dates:not(.global-folio-days),
+  .global-folio-right .global-folio-stat:nth-child(n + 2) {
+    display: none;
+  }
+
+  .hub-shell .va-ops-page-header,
+  .hub-shell .module-page-header-row,
+  .hub-shell .app-header.page-module-header {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .hub-shell .va-ops-tab-nav,
+  .hub-shell .send-center-tab-nav,
+  .app-content .va-ops-tab-nav {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .hub-shell .va-ops-tab-content,
+  .hub-shell .analytics-content,
+  .app-content .va-ops-tab-content,
+  .app-content .page-container {
+    padding: 20px 16px 24px;
+  }
+
+  .app-content .va-ops-card,
+  .app-content .ih-panel,
+  .app-content .kpi-card {
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .va-ops-drawer,
+  .help-drawer,
+  .notification-center-panel,
+  .folio-drawer {
+    width: 100%;
+  }
+
+  .table-wrap,
+  .commercial-hub-table-wrap,
+  .send-center-table-wrap {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .app-shell {
+    --top-header-bar-height: 56px;
+  }
+
+  .app-top-nav {
+    height: 56px;
+    min-height: 56px;
+  }
+
+  .top-nav-action-btn--settings,
+  .top-nav-action-btn--help,
+  .top-nav-action-btn--sync .top-nav-action-label {
+    display: none;
+  }
+}

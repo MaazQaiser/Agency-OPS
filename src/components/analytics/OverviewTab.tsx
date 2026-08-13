@@ -29,7 +29,7 @@ export function OverviewTab({ period }: { period: AnalyticsTimeFilterId }) {
       </div>
       <AnalyticsKpiGrid kpis={overviewKpis} />
 
-      <section className="analytics-exec-summary" aria-label="Executive summary">
+      <section className="analytics-exec-summary ih-section--secondary" aria-label="Executive summary">
         {executiveSummary.map((item) => (
           <article
             key={item.id}
@@ -42,7 +42,7 @@ export function OverviewTab({ period }: { period: AnalyticsTimeFilterId }) {
         ))}
       </section>
 
-      <section className="analytics-charts-section" aria-label="Performance trends">
+      <section className="analytics-charts-section ih-section--primary" aria-label="Performance trends">
         <AnalyticsTrendChartGrid charts={overviewTrendCharts} />
       </section>
 

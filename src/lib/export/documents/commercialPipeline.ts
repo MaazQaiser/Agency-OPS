@@ -1,4 +1,5 @@
 import { activeSubmissions, carrierPerformance, commercialHubKpis, type HubSubmission } from "@/data/commercialHub";
+import { currentFolioPeriod } from "@/lib/folioProgress";
 import { eoRiskFromHubSubmission } from "@/lib/eoRiskScore";
 import { downloadCsv } from "../csv";
 import { getExportMeta, statusBadge } from "../branding";
@@ -21,6 +22,15 @@ function groupByStage(submissions: HubSubmission[]): Map<string, HubSubmission[]
   return map;
 }
 
+function formatFolioDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 function pipelinePdfBody(): string {
   const grouped = groupByStage(activeSubmissions);
   const kpiHtml = commercialHubKpis
@@ -31,7 +41,6 @@ function pipelinePdfBody(): string {
       <div class="export-kpi-label">${k.label}</div>
       <div class="export-kpi-value">${k.value}</div>
       <div class="export-kpi-sub">${k.sub}</div>
-      <span class="export-sparkline">▁▂▃▅▆▇: 7d trend</span>
     </div>`,
     )
     .join("");
@@ -43,13 +52,14 @@ function pipelinePdfBody(): string {
           const risk = eoRiskFromHubSubmission(s);
           const carrier = s.carrierSubmissions[0]?.carrier ?? "-";
           return `<tr>
-            <td class="mono" style="font-family:'JetBrains Mono',monospace;font-size:8pt">${s.id}</td>
+            <td class="mono" style="text-align:left">${s.id}</td>
             <td><strong>${s.client}</strong></td>
             <td>${inferVertical(s.coverage)}</td>
-            <td>${statusBadge(s.stage)}</td>
-            <td style="font-family:'JetBrains Mono',monospace">${s.premium}</td>
-            <td>${s.daysOpen}d</td>
-            <td>${statusBadge(risk.label)} <span style="font-size:8pt;color:#5a6f7d">(${risk.total})</span></td>
+            <td>${s.stage}</td>
+            <td>${s.status}</td>
+            <td class="numeric">${s.premium}</td>
+            <td>${s.daysOpen}d open</td>
+            <td>${statusBadge(risk.label)}</td>
             <td>${s.producer}</td>
             <td>${carrier}</td>
           </tr>`;
@@ -60,8 +70,8 @@ function pipelinePdfBody(): string {
         <div class="export-stage-name">${stage} · ${subs.length} submission${subs.length === 1 ? "" : "s"}</div>
         <table class="export-table">
           <thead><tr>
-            <th>ID</th><th>Client</th><th>Vertical</th><th>Stage</th><th>Premium</th>
-            <th>Days Open</th><th>E&amp;O Score</th><th>Producer</th><th>Carrier</th>
+            <th>ID</th><th>Client</th><th>Vertical</th><th>Stage</th><th>Status</th><th>Premium</th>
+            <th>SLA</th><th>E&amp;O</th><th>Producer</th><th>Carrier</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -97,8 +107,13 @@ function pipelinePdfBody(): string {
 }
 
 export function exportCommercialPipelinePdf(): void {
+  const folio = currentFolioPeriod;
   exportHtmlAsPdf(
-    getExportMeta("Commercial Pipeline Report", "Active submissions grouped by stage"),
+    getExportMeta(
+      "Pipeline Report",
+      `Commercial Hub · Folio ${folio.number} · ${formatFolioDate(folio.startDate)} – ${formatFolioDate(folio.endDate)}`,
+      { orientation: "landscape" },
+    ),
     pipelinePdfBody(),
   );
 }

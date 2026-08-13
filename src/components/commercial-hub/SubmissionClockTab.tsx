@@ -28,6 +28,7 @@ import {
   type ClockFilters,
   type ClockRecordOverrides,
   type ClockSummaryCard,
+  type SlaHealth,
   type SubmissionClockRecord,
 } from "@/data/submissionClock";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
@@ -49,6 +50,12 @@ import {
   CommercialHubWorkspace,
 } from "./CommercialHubTabLayout";
 import { computeLiveStageAge, SubmissionClockDrawer } from "./SubmissionClockDrawer";
+
+function slaClockTone(status: SlaHealth): "info" | "warning" | "danger" {
+  if (status === "Overdue") return "danger";
+  if (status === "At Risk" || status === "Delayed") return "warning";
+  return "info";
+}
 
 function liveStageAge(record: SubmissionClockRecord, tickMs: number): string {
   if (record.slaPaused) return `${formatDurationMs(record.currentStageAgeMs)} (paused)`;
@@ -360,8 +367,16 @@ export function SubmissionClockTab() {
                       <td><span className={cn("badge", slaHealthClass[row.slaStatus])}>{row.slaStatus}</span></td>
                       <td><UserChip name={row.assignedVa} /></td>
                       <td><UserChip name={row.assignedProducer} /></td>
-                      <td>{row.totalAge}</td>
-                      <td className={cn(isOverdue && "submission-clock-overdue-text")}>{stageAge}</td>
+                      <td>
+                        <span className={cn("commercial-clock-chip", `commercial-clock-chip--${slaClockTone(row.slaStatus)}`)}>
+                          {row.totalAge}
+                        </span>
+                      </td>
+                      <td className={cn(isOverdue && "submission-clock-overdue-text")}>
+                        <span className={cn("commercial-clock-chip", `commercial-clock-chip--${slaClockTone(row.slaStatus)}`)}>
+                          {stageAge}
+                        </span>
+                      </td>
                       <td className="commercial-hub-client-cell">
                         <span className="submission-clock-client-cell">
                           {row.clientName}

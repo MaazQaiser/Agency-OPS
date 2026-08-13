@@ -1,14 +1,14 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 import {
-  getKpiTrend,
   trendStateColorVar,
   type KpiPolarity,
   type KpiTrendData,
   type KpiTrendState,
 } from "@/lib/kpiTrend";
+import { TrendIndicator } from "./TrendIndicator";
 
 type KpiSparklineIntelligenceProps = {
   label?: string;
@@ -18,7 +18,7 @@ type KpiSparklineIntelligenceProps = {
   compact?: boolean;
 };
 
-const SPARKLINE_WIDTH = 88;
+const SPARKLINE_WIDTH = 120;
 const SPARKLINE_HEIGHT = 28;
 
 function buildSmoothPath(points: number[], width: number, height: number): string {
@@ -44,33 +44,6 @@ function buildSmoothPath(points: number[], width: number, height: number): strin
     d += ` Q ${cpx.toFixed(2)} ${prev.y.toFixed(2)} ${curr.x.toFixed(2)} ${curr.y.toFixed(2)}`;
   }
   return d;
-}
-
-function buildAreaPath(linePath: string, width: number, height: number): string {
-  return `${linePath} L ${width} ${height} L 0 ${height} Z`;
-}
-
-function DeltaBadge({
-  trend,
-  compact,
-}: {
-  trend: KpiTrendData;
-  compact?: boolean;
-}) {
-  const arrow =
-    trend.direction === "stable" ? "→" : trend.direction === "up" ? "↑" : "↓";
-
-  return (
-    <span
-      className={cn("kpi-sparkline-delta", `kpi-sparkline-delta--${trend.state}`, compact && "compact")}
-      style={{ color: trendStateColorVar(trend.state) }}
-    >
-      <span className="kpi-sparkline-delta-arrow" aria-hidden="true">
-        {arrow}
-      </span>
-      {trend.deltaLabel}
-    </span>
-  );
 }
 
 function TrendTooltip({ trend }: { trend: KpiTrendData }) {
@@ -104,25 +77,16 @@ function TrendTooltip({ trend }: { trend: KpiTrendData }) {
 }
 
 export function KpiSparklineIntelligence({
-  label,
-  trend: trendProp,
-  polarity,
+  trend,
   className,
   compact,
 }: KpiSparklineIntelligenceProps) {
   const [open, setOpen] = useState(false);
-  const gradientId = useId().replace(/:/g, "");
 
-  const trend = useMemo(
-    () => trendProp ?? (label ? getKpiTrend(label, polarity) : null),
-    [trendProp, label, polarity],
-  );
-
-  if (!trend) return null;
+  if (!trend || trend.points.length < 2) return null;
 
   const stroke = trendStateColorVar(trend.state);
   const linePath = buildSmoothPath(trend.points, SPARKLINE_WIDTH, SPARKLINE_HEIGHT);
-  const areaPath = buildAreaPath(linePath, SPARKLINE_WIDTH, SPARKLINE_HEIGHT);
 
   return (
     <div
@@ -136,36 +100,25 @@ export function KpiSparklineIntelligence({
       role="img"
       aria-label={`${trend.deltaLabel} trend over 7 days`}
     >
-      <DeltaBadge trend={trend} compact={compact} />
+      <TrendIndicator
+        direction={trend.direction}
+        label={trend.deltaLabel}
+        state={trend.state}
+        className={cn("kpi-sparkline-delta", compact && "compact")}
+      />
       <svg
         className="kpi-sparkline-svg"
         viewBox={`0 0 ${SPARKLINE_WIDTH} ${SPARKLINE_HEIGHT}`}
-        width={SPARKLINE_WIDTH}
-        height={SPARKLINE_HEIGHT}
+        preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <defs>
-          <linearGradient id={`kpi-spark-fill-${gradientId}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={stroke} stopOpacity="0.22" />
-            <stop offset="100%" stopColor={stroke} stopOpacity="0" />
-          </linearGradient>
-          <filter id={`kpi-spark-glow-${gradientId}`} x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.2" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <path d={areaPath} fill={`url(#kpi-spark-fill-${gradientId})`} />
         <path
           d={linePath}
           fill="none"
           stroke={stroke}
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          filter={`url(#kpi-spark-glow-${gradientId})`}
         />
       </svg>
       {open && <TrendTooltip trend={trend} />}

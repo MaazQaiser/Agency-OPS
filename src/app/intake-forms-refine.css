@@ -399,7 +399,7 @@
 
 .intake-form-action-primary {
   border: 1px solid transparent;
-  background: var(--primary);
+  background: var(--hub-primary, var(--primary));
   color: #fff;
 }
 
@@ -1000,6 +1000,12 @@
 
 .intake-routing-table-wrap {
   overflow-x: auto;
+}
+
+.module-intake-forms .intake-form-selector .commercial-hub-mid-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .intake-routing-badge {

@@ -26,6 +26,7 @@ import { RoleTabHeader } from "@/components/va-operations/RoleTabHeader";
 import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 import { ClientLanguageBadges } from "@/components/bilingual/ClientLanguageBadges";
 import { BilingualQueueDrawer } from "@/components/bilingual/BilingualQueueDrawer";
+import { CommercialRowActionMenu } from "@/components/commercial-hub/CommercialRowActionMenu";
 
 type BilingualQueueTabProps = {
   role: VaOperationsRoleId;
@@ -265,13 +266,24 @@ export function BilingualQueueTab({ role }: BilingualQueueTabProps) {
                       <td><span className={cn("badge", queueStatusClass[row.status])}>{row.status}</span></td>
                       <td><span className={cn("badge", priorityClass[row.priority])}>{row.priority}</span></td>
                       <td>{row.module}</td>
-                      <td onClick={(e) => e.stopPropagation()}>
-                        <div className="send-center-row-actions">
-                          <button type="button" className="va-ops-action-btn" onClick={() => setSelected(row)}>View</button>
-                          {canAssign && (
-                            <button type="button" className="va-ops-action-btn" onClick={() => handleAction("Assign bilingual VA", row)}>Assign</button>
-                          )}
-                        </div>
+                      <td onClick={(e) => e.stopPropagation()} className="bilingual-queue-actions-col" data-label="Action">
+                        <CommercialRowActionMenu
+                          label={`Actions for ${row.client}`}
+                          actions={[
+                            {
+                              id: "view",
+                              label: "View",
+                              onSelect: () => setSelected(row),
+                            },
+                            ...(canAssign
+                              ? [{
+                                  id: "assign",
+                                  label: "Assign",
+                                  onSelect: () => handleAction("Assign bilingual VA", row),
+                                }]
+                              : []),
+                          ]}
+                        />
                       </td>
                     </tr>
                   );

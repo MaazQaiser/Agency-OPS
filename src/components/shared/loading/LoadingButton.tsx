@@ -37,16 +37,15 @@ export function LoadingButton({
       aria-busy={loading}
       {...rest}
     >
-      {loading ? (
-        <>
-          <AppIcon name="refresh" size={15} strokeWidth={2} className="ops-btn-spinner" aria-hidden="true" />
-          {loadingLabel ?? children}
-        </>
-      ) : (
-        <>
-          {icon}
-          {children}
-        </>
+      <span className={cn("ops-btn-face", loading && "ops-btn-face--busy")}>
+        {icon}
+        {children}
+      </span>
+      {loading && (
+        <span className="ops-btn-busy" aria-hidden="true">
+          <AppIcon name="refresh" size={15} strokeWidth={2} className="ops-btn-spinner" />
+          {loadingLabel}
+        </span>
       )}
     </button>
   );

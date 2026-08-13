@@ -9,6 +9,8 @@ import {
   type VerticalContent,
 } from "@/data/farmersEdge";
 import type { VerticalMeta } from "@/hooks/useFarmersEdgeData";
+import { CardSkeletonGrid } from "@/components/shared/loading";
+import { HubEmptyState } from "@/components/state";
 import { BenefitsWorkspace } from "./BenefitsWorkspace";
 import { EquipmentIntelTable } from "./EquipmentIntelTable";
 import { OurEdgeTable } from "./OurEdgeTable";
@@ -41,9 +43,12 @@ function matchesQuery(text: string, query: string) {
 
 function CardEmpty({ type }: { type: string }) {
   return (
-    <p className="fe-card-empty">
-      Eva adds {type} content for this vertical in Sheets.
-    </p>
+    <HubEmptyState
+      compact
+      preset="farmers-edge-content"
+      title={`No ${type} yet`}
+      description="Eva adds this content for the selected vertical in Google Sheets."
+    />
   );
 }
 
@@ -74,17 +79,7 @@ export function ContentCardGrid({ activeVertical, activeView, searchQuery, verti
   const verticalLabel = verticalMeta?.label ?? "All Verticals";
 
   if (loading) {
-    return (
-      <div className="fe-content-grid">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="fe-c-card">
-            <div className="ops-skeleton-shimmer" style={{ height: 10, borderRadius: 4, marginBottom: 8, width: "60%" }} />
-            <div className="ops-skeleton-shimmer" style={{ height: 16, borderRadius: 4, marginBottom: 12, width: "80%" }} />
-            <div className="ops-skeleton-shimmer" style={{ height: 100, borderRadius: 4 }} />
-          </div>
-        ))}
-      </div>
-    );
+    return <CardSkeletonGrid count={6} tall label="Loading Farmers Edge content" />;
   }
 
   const showAll = activeView === "playbook";

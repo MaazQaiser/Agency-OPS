@@ -5,34 +5,34 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root,
-html[data-theme="obsidian"] {
-  /* ── Card hierarchy tokens ── */
-  --aos-info-bg: color-mix(in srgb, var(--navy-card, #222b42) 72%, var(--obs, #0a0c10));
-  --aos-info-bg-elevated: color-mix(in srgb, var(--navy-mid, #1a2233) 55%, var(--obs, #0a0c10));
-  --aos-info-border: rgba(255, 255, 255, 0.07);
-  --aos-info-border-hover: rgba(255, 255, 255, 0.12);
-  --aos-info-highlight: rgba(255, 255, 255, 0.05);
+html[data-theme="obsidian"],
+html[data-theme="light"] {
+  /* ── Card hierarchy tokens — light workspace ── */
+  --aos-info-bg: #FFFFFF;
+  --aos-info-bg-elevated: #FFFFFF;
+  --aos-info-border: color-mix(in srgb, var(--ita-sky) 55%, transparent);
+  --aos-info-border-hover: color-mix(in srgb, var(--ita-sky-mid) 45%, transparent);
+  --aos-info-highlight: rgba(255, 255, 255, 0.8);
   --aos-info-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 1px 2px rgba(28, 43, 53, 0.04),
+    0 6px 16px rgba(28, 43, 53, 0.05);
 
-  --aos-action-bg: #f4f7fb;
-  --aos-action-bg-soft: #eef3f8;
-  --aos-action-border: rgba(28, 43, 53, 0.14);
-  --aos-action-border-strong: rgba(28, 43, 53, 0.22);
-  --aos-action-text: #15202b;
-  --aos-action-text-muted: #4a6074;
+  --aos-action-bg: #F7FBFD;
+  --aos-action-bg-soft: #F1F6F9;
+  --aos-action-border: color-mix(in srgb, var(--ita-sky-mid) 38%, transparent);
+  --aos-action-border-strong: color-mix(in srgb, var(--ita-sky-mid) 52%, transparent);
+  --aos-action-text: #1C2B35;
+  --aos-action-text-muted: #526979;
   --aos-action-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.18),
-    0 1px 0 rgba(255, 255, 255, 0.65) inset;
-  --aos-action-rail: color-mix(in srgb, var(--critical-rose, #f43f5e) 72%, #b45309);
+    0 1px 2px rgba(28, 43, 53, 0.04),
+    0 6px 16px rgba(28, 43, 53, 0.05);
+  --aos-action-rail: var(--semantic-danger, #F43F5E);
 
-  /* Refined gold — financial language (not bright yellow) */
-  --aos-finance: #c6a75a;
-  --aos-finance-soft: #d4bc7a;
-  --aos-finance-deep: #9a7b3c;
-  --aos-finance-glow: color-mix(in srgb, #c6a75a 22%, transparent);
-  --aos-finance-wash: color-mix(in srgb, #c6a75a 8%, transparent);
+  --aos-finance: var(--semantic-good, #10B981);
+  --aos-finance-soft: var(--semantic-good, #10B981);
+  --aos-finance-deep: var(--semantic-good-dark, #059B66);
+  --aos-finance-glow: transparent;
+  --aos-finance-wash: color-mix(in srgb, var(--semantic-good, #10B981) 8%, transparent);
 }
 
 /* ═══════════════════════════════════════════════════════════════

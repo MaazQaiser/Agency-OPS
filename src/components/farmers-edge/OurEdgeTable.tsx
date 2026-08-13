@@ -1,6 +1,7 @@
 "use client";
 
 import type { EdgeRow } from "@/data/farmersEdge";
+import { HubEmptyState } from "@/components/state";
 
 type OurEdgeTableProps = {
   rows: EdgeRow[];
@@ -9,9 +10,12 @@ type OurEdgeTableProps = {
 export function OurEdgeTable({ rows }: OurEdgeTableProps) {
   if (rows.length === 0) {
     return (
-      <p className="fe-card-empty">
-        Eva adds Our Edge comparison rows in Sheets.
-      </p>
+      <HubEmptyState
+        compact
+        preset="farmers-edge-content"
+        title="No comparison rows yet"
+        description="Eva adds Our Edge comparison rows in Google Sheets."
+      />
     );
   }
 

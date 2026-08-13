@@ -19,12 +19,31 @@ import type { VelocitySummaryCard } from "@/data/leadVelocity";
 import { buildProducerReviewCases, buildQuoteReviewRows } from "@/data/quoteReview";
 
 export function executiveTabKpis(): VaOpsKpiCardProps[] {
-  return commercialHubKpis.map((kpi) => ({
+  const toneByLabel: Record<string, string> = {
+    "Active Pipeline": "teal",
+    "Pipeline Premium": "green",
+    "Quotes Received": "info",
+    "Ready to Bind": "green",
+    "Stalled Submissions": "red",
+    "Missing Documents": "amber",
+  };
+  const primaryOrder = ["Pipeline Premium", "Ready to Bind", "Stalled Submissions"];
+  const ranked = [...commercialHubKpis].sort((a, b) => {
+    const ai = primaryOrder.indexOf(a.label);
+    const bi = primaryOrder.indexOf(b.label);
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+
+  return ranked.map((kpi) => ({
     label: kpi.label,
     value: kpi.value,
     sub: kpi.sub,
     helper: kpi.helper,
-    color: kpi.color,
+    color: toneByLabel[kpi.label] ?? kpi.color,
+    className: "commercial-hub-kpi-flagship",
     polarity:
       kpi.label === "Stalled Submissions" || kpi.label === "Missing Documents"
         ? ("lower-better" as const)

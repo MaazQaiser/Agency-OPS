@@ -25,6 +25,7 @@ type CommercialHubTabHeaderProps = {
   title: string;
   subtitle: string;
   strategic?: boolean;
+  hideTitle?: boolean;
   actions?: CommercialHubTabAction[];
   onActionClick?: (actionId: string) => void;
   utilities?: ReactNode;
@@ -34,6 +35,7 @@ export function CommercialHubTabHeader({
   title,
   subtitle,
   strategic = false,
+  hideTitle = false,
   actions,
   onActionClick,
   utilities,
@@ -43,9 +45,11 @@ export function CommercialHubTabHeader({
   const utility = actions?.filter((action) => action.variant === "utility") ?? [];
 
   return (
-    <header className="commercial-hub-tab-header">
+    <header className={cn("commercial-hub-tab-header", hideTitle && "commercial-hub-tab-header--quiet")}>
       <div className="commercial-hub-tab-header-copy">
-        <h2 className={cn("commercial-hub-tab-title", strategic && "commercial-hub-tab-title--strategic")}>{title}</h2>
+        {!hideTitle && (
+          <h2 className={cn("commercial-hub-tab-title", strategic && "commercial-hub-tab-title--strategic")}>{title}</h2>
+        )}
         <p className="commercial-hub-tab-subtitle">{subtitle}</p>
       </div>
       {(primary.length > 0 || secondary.length > 0 || utility.length > 0 || utilities) && (
@@ -93,20 +97,38 @@ export function CommercialHubTabHeader({
 
 type CommercialHubKpiStripProps = {
   kpis: VaOpsKpiCardProps[];
-  columns?: 4 | 5 | 6;
+  columns?: 3 | 4 | 5 | 6;
   className?: string;
+  sectionTitle?: string;
+  sectionSub?: string;
 };
 
-export function CommercialHubKpiStrip({ kpis, columns = 4, className }: CommercialHubKpiStripProps) {
+export function CommercialHubKpiStrip({
+  kpis,
+  columns = 4,
+  className,
+  sectionTitle,
+  sectionSub,
+}: CommercialHubKpiStripProps) {
   return (
-    <section className={cn("commercial-hub-tab-kpi", className)} aria-label="Operational KPI summary">
+    <section className={cn("commercial-hub-tab-kpi ih-section--primary", className)} aria-label={sectionTitle ?? "Operational KPI summary"}>
+      {sectionTitle && (
+        <div className="va-ops-section-heading commercial-hub-section-heading">
+          <h2 className="va-ops-panel-title">{sectionTitle}</h2>
+          {sectionSub && <p className="va-ops-section-sub">{sectionSub}</p>}
+        </div>
+      )}
       <div className={cn("commercial-hub-kpi-grid", `commercial-hub-kpi-grid--${columns}`)}>
-        {kpis.map((kpi) => (
+        {kpis.map((kpi, index) => (
           <VaOpsKpiCard
             key={kpi.label}
             {...kpi}
-            className={cn("commercial-hub-kpi-uniform", kpi.className)}
-            sparkline={kpi.sparkline ?? true}
+            className={cn(
+              "commercial-hub-kpi-uniform",
+              index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary",
+              kpi.className,
+            )}
+            sparkline={kpi.sparkline ?? Boolean(kpi.trend)}
           />
         ))}
       </div>

@@ -108,8 +108,8 @@ export function DepartmentOverviewTab() {
               {...kpi}
               className={cn(
                 "commercial-hub-kpi-uniform",
-                kpi.tier === "primary" && "training-kpi-card--primary",
-                kpi.tier === "secondary" && "training-kpi-card--secondary",
+                kpi.tier === "primary" && "training-kpi-card--primary ih-kpi--primary",
+                kpi.tier === "secondary" && "training-kpi-card--secondary ih-kpi--secondary",
               )}
               sparkline={false}
             />

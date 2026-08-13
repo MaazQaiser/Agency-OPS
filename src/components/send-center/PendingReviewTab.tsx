@@ -31,6 +31,7 @@ import {
   SendCenterSlaStageIndicator,
   SendCenterSlaWorkflowRail,
 } from "./SendCenterSlaWorkflowRail";
+import { CommercialRowActionMenu } from "@/components/commercial-hub/CommercialRowActionMenu";
 import {
   SendCenterFilters,
   SendCenterTableSkeleton,
@@ -195,7 +196,7 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                   <th>Priority</th>
                   <th>SLA Stage</th>
                   <th>Risk</th>
-                  <th aria-label="Actions" />
+                  <th aria-label="Actions" className="send-center-actions-col" />
                 </tr>
               </thead>
               <tbody>
@@ -248,21 +249,34 @@ export function PendingReviewTab({ onToast }: PendingReviewTabProps) {
                         <td>
                           <span className={cn("badge", risk.className)}>{risk.label}</span>
                         </td>
-                        <td>
-                          <div className="send-center-row-actions">
-                            {(["Approve", "Reject", "Request Revision"] as const)
-                              .filter((action) => action !== "Approve" || canApprove)
-                              .map((action) => (
-                                <button
-                                  key={action}
-                                  type="button"
-                                  className="va-ops-action-btn"
-                                  onClick={() => handleAction(action, row)}
-                                >
-                                  {action}
-                                </button>
-                              ))}
-                          </div>
+                        <td
+                          className="send-center-actions-col"
+                          data-label="Action"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <CommercialRowActionMenu
+                            label={`Actions for ${row.client}`}
+                            actions={[
+                              ...(canApprove
+                                ? [{
+                                    id: "approve",
+                                    label: "Approve",
+                                    onSelect: () => handleAction("Approve", row),
+                                  }]
+                                : []),
+                              {
+                                id: "reject",
+                                label: "Reject",
+                                accent: "danger" as const,
+                                onSelect: () => handleAction("Reject", row),
+                              },
+                              {
+                                id: "revision",
+                                label: "Request Revision",
+                                onSelect: () => handleAction("Request Revision", row),
+                              },
+                            ]}
+                          />
                         </td>
                       </tr>
                     );

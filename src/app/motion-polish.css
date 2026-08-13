@@ -2,20 +2,31 @@
 
 :root {
   --motion-fast: 120ms;
+  --motion-hover: 150ms;
   --motion-standard: 180ms;
+  --motion-base: 180ms;
   --motion-primary: 200ms;
+  --motion-slow: 240ms;
   --motion-complex: 240ms;
+  --motion-progress: 700ms;
+  --motion-chart: 700ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-in-out: ease-in-out;
   --motion-ease-out: ease-out;
+  --motion-ease-in: ease-in;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-fast: 0ms;
+    --motion-hover: 0ms;
     --motion-standard: 0ms;
+    --motion-base: 0ms;
     --motion-primary: 0ms;
+    --motion-slow: 0ms;
     --motion-complex: 0ms;
+    --motion-progress: 0ms;
+    --motion-chart: 0ms;
   }
 
   .motion-hub-page,

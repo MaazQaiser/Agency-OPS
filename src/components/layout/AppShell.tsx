@@ -1,6 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
+import type { CSSProperties } from "react";
+import { usePathname } from "next/navigation";
 import { GlobalSearchProvider } from "@/components/global-search/GlobalSearchProvider";
 import { GlobalSyncProvider } from "@/components/sync/GlobalSyncProvider";
 import { NotificationCenterProvider } from "@/components/notifications/NotificationCenterProvider";
@@ -15,6 +17,7 @@ import { SubscriptionProvider } from "@/components/subscription/SubscriptionProv
 import { ModuleAccessGate } from "@/components/permissions/ModuleAccessGate";
 import { HubPageTransition } from "@/components/motion/HubPageTransition";
 import { ContextualHelpProvider } from "@/components/help/ContextualHelpProvider";
+import { HUB_THEMES, hubThemeCssVars, resolveHubThemeId } from "@/lib/hubThemes";
 import { AgencySidebar } from "./AgencySidebar";
 import { AppTopNav } from "./AppTopNav";
 import { GlobalFolioStrip } from "./GlobalFolioStrip";
@@ -27,11 +30,16 @@ type AppShellProps = {
 
 function AppShellLayout({ children }: AppShellProps) {
   const { collapsed, hydrated } = useSidebarNav();
+  const pathname = usePathname();
+  const hubId = resolveHubThemeId(pathname);
+  const theme = hubId ? HUB_THEMES[hubId] : null;
 
   return (
     <div
       className="app-shell"
+      data-hub={hubId ?? undefined}
       data-sidebar-collapsed={hydrated ? collapsed : undefined}
+      style={theme ? (hubThemeCssVars(theme) as CSSProperties) : undefined}
     >
       <Suspense fallback={null}>
         <CrossModuleLinkHandler />

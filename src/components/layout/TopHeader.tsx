@@ -5,10 +5,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { vaOperationsRoles } from "@/data/vaOperations";
-import { navItems, routes } from "@/lib/routes";
+import { routes } from "@/lib/routes";
 import { agencyRoles, getRoleLabel } from "@/data/rolePermissions";
 import { usePermissions } from "@/components/permissions/PermissionProvider";
-import { useEntitlements } from "@/hooks/useEntitlements";
 import { useKeyboardShortcuts } from "@/components/keyboard/KeyboardShortcutsProvider";
 import { useOwnerQuickActions } from "@/components/owner-quick-actions/OwnerQuickActionsProvider";
 import { ClickableAvatar } from "@/components/user-profile/UserProfileTrigger";
@@ -44,9 +43,7 @@ export function TopHeader() {
   const { openHelp } = useKeyboardShortcuts();
   const { toggle: toggleQuickActions } = useOwnerQuickActions();
   const { role, setRole, can } = usePermissions();
-  const { canAccessModule } = useEntitlements();
   const showSystemHealth = can("access:system-health");
-  const visibleNav = navItems.filter((item) => canAccessModule(item.key));
   const [profileOpen, setProfileOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -241,18 +238,6 @@ export function TopHeader() {
           </div>
         </div>
       </div>
-
-      <nav className="top-header-nav" aria-label="Main navigation">
-        {visibleNav.map((item) => (
-          <Link
-            key={item.key}
-            href={item.href}
-            className={`top-header-nav-link${isActive(pathname, item.href) ? " active" : ""}`}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
     </header>
   );
 }

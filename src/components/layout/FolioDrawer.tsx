@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { AppIcon } from "@/components/ui/AppIcon";
+import { DrawerSkeleton } from "@/components/shared/loading";
 import { VaOpsDrawerRoot } from "@/components/ui/VaOpsDrawerRoot";
 import {
   folioDrawerApprovals,
@@ -12,6 +13,7 @@ import {
 } from "@/data/folioOperationalData";
 import type { FolioProgressMetrics } from "@/lib/folioProgress";
 import { cn } from "@/lib/cn";
+import { useDrawerLoading } from "@/hooks/useHubDataState";
 
 type FolioDrawerProps = {
   metrics: FolioProgressMetrics;
@@ -20,6 +22,7 @@ type FolioDrawerProps = {
 };
 
 export function FolioDrawer({ metrics, open, onClose }: FolioDrawerProps) {
+  const loading = useDrawerLoading(open);
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -46,6 +49,10 @@ export function FolioDrawer({ metrics, open, onClose }: FolioDrawerProps) {
         </div>
 
         <div className="va-ops-drawer-body folio-drawer-body">
+          {loading ? (
+            <DrawerSkeleton label="Loading folio" />
+          ) : (
+            <>
           <section className="folio-drawer-section">
             <h3 className="folio-drawer-section-title">Revenue Progress</h3>
             <dl className="folio-drawer-metrics">
@@ -123,6 +130,8 @@ export function FolioDrawer({ metrics, open, onClose }: FolioDrawerProps) {
               ))}
             </ul>
           </section>
+            </>
+          )}
         </div>
       </aside>
     </VaOpsDrawerRoot>

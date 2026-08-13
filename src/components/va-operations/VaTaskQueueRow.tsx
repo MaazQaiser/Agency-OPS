@@ -1,11 +1,10 @@
 import { AppIcon } from "@/components/ui/AppIcon";
-import { UserChip } from "@/components/user-profile/UserProfileTrigger";
 import {
   getTaskCta,
-  priorityTypeLabels,
   taskSourceLabels,
   type PriorityTask,
   type PriorityTaskStatus,
+  type TaskSource,
 } from "@/data/vaOperations";
 import { cn } from "@/lib/cn";
 import {
@@ -34,17 +33,41 @@ const memberUserIds: Record<string, string> = {
 const systemAssigners = new Set(["Ricochet", "Automation", "System"]);
 
 const taskStatusClass: Record<PriorityTaskStatus, string> = {
-  urgent: "badge-yellow",
-  pending: "badge-gray",
-  critical: "badge-red",
+  urgent: "badge-red va-task-status--urgent",
+  pending: "badge-blue va-task-status--pending",
+  critical: "badge-red va-task-status--critical",
 };
+
+const sourceCtaClass: Record<TaskSource, string> = {
+  commercial: "va-ops-task-cta--commercial",
+  intake: "va-ops-task-cta--intake",
+  "send-center": "va-ops-task-cta--send",
+  retention: "va-ops-task-cta--retention",
+};
+
+function TaskCtaButton({ task }: { task: PriorityTask }) {
+  const cta = getTaskCta(task.priorityType);
+
+  return (
+    <button
+      type="button"
+      className={cn(
+        "va-ops-task-cta",
+        sourceCtaClass[task.source],
+        task.status === "critical" && "critical",
+      )}
+    >
+      {cta === "Call Client" && <AppIcon name="phone" size={14} strokeWidth={2.25} />}
+      {cta}
+    </button>
+  );
+}
 
 type VaTaskQueueRowProps = {
   task: PriorityTask;
 };
 
 export function VaTaskQueueRow({ task }: VaTaskQueueRowProps) {
-  const cta = getTaskCta(task.priorityType);
   const assignerIsSystem = systemAssigners.has(task.assignedBy);
 
   return (
@@ -79,14 +102,31 @@ export function VaTaskQueueRow({ task }: VaTaskQueueRowProps) {
         </span>
       </td>
       <td>
-        <button
-          type="button"
-          className={cn("va-ops-task-cta", task.status === "critical" && "critical")}
-        >
-          {cta === "Call Client" && <AppIcon name="phone" size={14} strokeWidth={2.25} />}
-          {cta}
-        </button>
+        <TaskCtaButton task={task} />
       </td>
     </tr>
+  );
+}
+
+export function VaTaskQueueCard({ task }: { task: PriorityTask }) {
+  return (
+    <li className={cn("va-ops-priority-card", `va-ops-priority-card--${task.status}`)}>
+      <div className="va-ops-priority-card-head">
+        <h3 className="va-ops-priority-title">{task.title}</h3>
+        <div className="va-ops-priority-card-pills">
+          <VaTaskPriorityBadge priority={task.priority} />
+          <span className={cn("badge", taskStatusClass[task.status])}>
+            {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+          </span>
+        </div>
+      </div>
+      <div className="va-ops-priority-card-meta">
+        <span className="va-ops-source-badge">{taskSourceLabels[task.source]}</span>
+        <VaTaskDueRiskBadge risk={task.dueDateRisk} due={task.due} />
+      </div>
+      <div className="va-ops-priority-card-action">
+        <TaskCtaButton task={task} />
+      </div>
+    </li>
   );
 }

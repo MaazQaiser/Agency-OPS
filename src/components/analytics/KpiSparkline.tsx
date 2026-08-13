@@ -13,7 +13,7 @@ type KpiSparklineProps = {
 
 /**
  * Analytics Hub Signature Element: KPI Sparkline
- * 7-point sparkline. Hub cyan color (#0891B2). Shifts to rose on negative trend.
+ * 7-point sparkline. Hub identity color via --hub-primary. Shifts to rose on negative trend.
  */
 export function KpiSparkline({ data, trend, width = 64, height = 24, className }: KpiSparklineProps) {
   if (data.length < 2) return null;

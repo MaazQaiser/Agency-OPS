@@ -175,7 +175,17 @@ export function QuoteReviewTab() {
             </div>
             <div className="quote-ai-recommendation-chips">
               {topRecommendedQuote.recommendations.map((tag) => (
-                <span key={tag} className="quote-ai-recommendation-chip">{tag}</span>
+                <span
+                  key={tag}
+                  className={cn(
+                    "quote-ai-recommendation-chip",
+                    (tag === "Best Value" || tag === "Lowest Premium" || tag === "Fastest Bind Path")
+                      ? "is-recommended"
+                      : "is-info",
+                  )}
+                >
+                  {tag}
+                </span>
               ))}
             </div>
             <p className="quote-ai-recommended-note">{topRecommendedQuote.notes}</p>
@@ -200,12 +210,12 @@ export function QuoteReviewTab() {
             <tbody>
               {quoteReviewRows.map((row) => (
                 <tr key={row.id}>
-                  <td>
+                  <td data-label="Status">
                     <span className={cn("badge", quoteStatusClass[row.status] ?? "badge-gray")}>
                       {row.status}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Client">
                     <button
                       type="button"
                       className="commercial-hub-client-link"
@@ -214,22 +224,30 @@ export function QuoteReviewTab() {
                       {row.client}
                     </button>
                   </td>
-                  <td>{row.carrier}</td>
-                  <td className="commercial-hub-premium">{row.premium}</td>
-                  <td>{row.deductible}</td>
-                  <td>{row.coverageLimits}</td>
-                  <td>{row.exclusions}</td>
-                  <td>{row.brokerFee}</td>
-                  <td>
+                  <td data-label="Carrier">{row.carrier}</td>
+                  <td className="commercial-hub-premium" data-label="Quoted premium">{row.premium}</td>
+                  <td data-label="Deductible">{row.deductible}</td>
+                  <td data-label="Coverage Limits">{row.coverageLimits}</td>
+                  <td data-label="Exclusions">{row.exclusions}</td>
+                  <td data-label="Broker Fee">{row.brokerFee}</td>
+                  <td data-label="Recommendation">
                     <div className="quote-ai-recommendation-chips">
                       {getQuoteRecommendations(row).map((tag) => (
-                        <span key={tag} className="quote-ai-recommendation-chip">
+                        <span
+                          key={tag}
+                          className={cn(
+                            "quote-ai-recommendation-chip",
+                            (tag === "Best Value" || tag === "Lowest Premium" || tag === "Fastest Bind Path")
+                              ? "is-recommended"
+                              : "is-info",
+                          )}
+                        >
                           {tag}
                         </span>
                       ))}
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Action">
                     <div className="commercial-hub-quote-actions">
                       <button
                         type="button"
