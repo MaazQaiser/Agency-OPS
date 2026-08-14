@@ -28,6 +28,14 @@ export type HubTheme = {
 };
 
 const WORKSPACE_BACKGROUND = "#F7FBFD";
+const OBSIDIAN_WORKSPACE = "#0A0C10";
+
+export type AppColorMode = "light" | "obsidian";
+
+/** Commercial Hub is the only light workspace; every other route is obsidian. */
+export function colorModeForHub(hubId: HubThemeId | null): AppColorMode {
+  return hubId === "commercial" ? "light" : "obsidian";
+}
 
 export const HUB_THEMES: Record<HubThemeId, HubTheme> = {
   vaOperations: {
@@ -134,11 +142,13 @@ export const HUB_THEMES: Record<HubThemeId, HubTheme> = {
 };
 
 export function hubThemeCssVars(theme: HubTheme): Record<string, string> {
+  const workspace =
+    theme.id === "commercial" ? theme.background : OBSIDIAN_WORKSPACE;
   return {
     "--hub-primary": theme.primary,
     "--hub-deep": theme.deep,
     "--hub-glow": theme.glow,
-    "--hub-background": theme.background,
+    "--hub-background": workspace,
     "--hub-accent": theme.primary,
     "--hub-dark": theme.deep,
     "--hub-secondary": theme.deep,

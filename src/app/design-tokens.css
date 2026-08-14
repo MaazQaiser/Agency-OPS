@@ -5,8 +5,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root,
-html[data-theme="light"],
-html[data-theme="obsidian"] {
+html[data-theme="light"] {
   /* ── ITA base palette (locked) ── */
   --ita-sky: #AAD0E7;
   --ita-sky-mid: #7AAFC8;
@@ -289,8 +288,7 @@ html[data-theme="obsidian"] {
 
 @media (prefers-reduced-motion: reduce) {
   :root,
-  html[data-theme="light"],
-  html[data-theme="obsidian"] {
+  html[data-theme="light"] {
     --motion-fast: 0ms;
     --motion-hover: 0ms;
     --motion-standard: 0ms;

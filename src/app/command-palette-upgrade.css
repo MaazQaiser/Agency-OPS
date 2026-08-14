@@ -35,7 +35,7 @@
   max-width: 720px;
   height: auto;
   max-height: min(72vh, 720px);
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: 0 24px 70px rgba(28, 43, 53, 0.2);
@@ -76,7 +76,7 @@
 
 .cmd-palette-header {
   padding: 0;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-bottom: 1px solid #E6EBF2;
 }
 
@@ -86,7 +86,7 @@
   gap: 12px;
   height: 64px;
   padding: 0 20px;
-  background: #FFFFFF;
+  background: var(--surface-card);
 }
 
 .cmd-palette-search-icon {
@@ -132,7 +132,7 @@
 }
 
 .cmd-palette-categories {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-bottom: 1px solid #E6EBF2;
   padding: 0 12px;
   gap: 0;
@@ -171,7 +171,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 8px 10px 12px;
-  background: #FFFFFF;
+  background: var(--surface-card);
 }
 
 .cmd-palette-section-title {
@@ -353,7 +353,7 @@
 }
 
 .cmd-palette-footer {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-top: 1px solid #E6EBF2;
   color: #7A8794;
   font-family: var(--font-family);

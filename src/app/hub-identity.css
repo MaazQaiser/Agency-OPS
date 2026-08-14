@@ -15,7 +15,7 @@
 }
 
 .app-content {
-  background: #F7FBFD;
+  background: var(--shell-workspace, var(--surface-page, #F7FBFD));
 }
 
 .hub-shell .va-ops-card,
@@ -23,8 +23,8 @@
 .hub-shell .aos-kpi-card,
 .hub-shell .analytics-kpi-card,
 .hub-shell .send-center-kpi-command {
-  background: #FFFFFF;
-  border-color: #E6EBF2;
+  background: var(--surface-card, #FFFFFF);
+  border-color: var(--border-subtle, #E6EBF2);
 }
 
 /* ── Compact hub hero ── */

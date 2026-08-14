@@ -355,8 +355,8 @@
 
 .hub-shell .va-ops-panel--accent {
   box-shadow: none;
-  border: 1px solid #E6EBF2;
-  background: #FFFFFF;
+  border: 1px solid var(--border-subtle, #E6EBF2);
+  background: var(--surface-card);
 }
 
 /* ── Tables: scan height + column weight ── */

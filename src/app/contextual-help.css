@@ -15,7 +15,7 @@
   margin-left: auto;
   border-radius: 10px;
   border: 1px solid #E6EBF2;
-  background: #FFFFFF;
+  background: var(--surface-card);
   color: #5E6B7D;
   cursor: pointer;
   transition:
@@ -82,7 +82,7 @@
 }
 
 .module-retention .retention-page-header-actions .hub-help-trigger {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-color: #E6EBF2;
   color: #5E6B7D;
 }
@@ -171,7 +171,7 @@
   max-width: 100vw;
   height: 100%;
   max-height: 100dvh;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-left: 1px solid #E6EBF2;
   box-shadow: -12px 0 40px rgba(28, 43, 53, 0.12);
   color: #1C2B35;
@@ -192,7 +192,7 @@
   padding: 0 16px 0 20px;
   border-bottom: 1px solid #E6EBF2;
   box-shadow: inset 0 3px 0 var(--hub-primary, #1C2B35);
-  background: #FFFFFF;
+  background: var(--surface-card);
   flex-shrink: 0;
 }
 
@@ -240,7 +240,7 @@
   height: 40px;
   border: 1px solid #E6EBF2;
   border-radius: 10px;
-  background: #FFFFFF;
+  background: var(--surface-card);
   color: #5E6B7D;
   cursor: pointer;
   flex-shrink: 0;

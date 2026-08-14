@@ -637,7 +637,7 @@
 }
 
 .app-content table tbody tr:hover td {
-  background: #F7FBFD;
+  background: var(--surface-hover, var(--qa-workspace, #F7FBFD));
 }
 
 .app-content .commercial-hub-premium,

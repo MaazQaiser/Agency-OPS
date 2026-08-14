@@ -1,0 +1,1280 @@
+/* ═══════════════════════════════════════════════════════════════
+   Agency OS — Obsidian mode (all hubs except Commercial)
+   Loaded last. Commercial Hub stays light via html[data-theme="light"].
+   Presentation only. Does not change data, routing, or KPI formulas.
+   ═══════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-theme="obsidian"] {
+  color-scheme: dark;
+}
+
+/* ── Restore dark tokens over light-foundation / visual-qa ── */
+html[data-theme="obsidian"],
+html[data-theme="obsidian"] .app-shell,
+html[data-theme="obsidian"] .hub-shell,
+html[data-theme="obsidian"] .app-content {
+  --obsidian: #0A0C10;
+  --obs: #0A0C10;
+  --navy: #10151F;
+  --navy-mid: #1A2233;
+  --navy-card: #222B42;
+  --navy-border: #2E3A52;
+  --navy-light: #283350;
+
+  --ita-base: #0A0C10;
+  --ita-surface: #F7FBFD;
+  --ita-primary: #AAD0E7;
+  --ita-secondary: #7AAFC8;
+  --ita-inset: #10151F;
+  --ita-base-mid: #10151F;
+  --ita-base-light: #222B42;
+  --ita-base-lighter: #283350;
+  --ita-modal: #1A2233;
+
+  --surface-page: #0A0C10;
+  --surface-canvas: #0A0C10;
+  --surface-card: #1A2233;
+  --surface-subtle: #10151F;
+  --surface-hover: #222B42;
+  --surface-active: #283350;
+  --surface-card-hover: #222B42;
+  --surface-inset: #10151F;
+  --surface-elevated: #1A2233;
+  --surface-modal: #1A2233;
+  --surface-header: #10151F;
+
+  --text-primary: #F7FBFD;
+  --text-secondary: #AAD0E7;
+  --text-muted: #7AAFC8;
+  --text-tertiary: #7AAFC8;
+  --text-1: var(--text-primary);
+  --text-2: var(--text-secondary);
+  --text-3: var(--text-tertiary);
+  --text-main: var(--text-primary);
+  --text-dim: var(--text-tertiary);
+  --muted: var(--text-secondary);
+  --white: var(--text-primary);
+  --ih-meta: #7AAFC8;
+
+  --border-subtle: #2E3A52;
+  --border-default: #2E3A52;
+  --border-strong: #3B4A63;
+  --border: var(--border-default);
+  --border-mid: var(--border-strong);
+
+  --primary: #AAD0E7;
+  --primary-light: #F7FBFD;
+  --primary-dim: #7AAFC8;
+  --primary-on: #0A0C10;
+  --primary-glow: color-mix(in srgb, var(--hub-primary, #4F46E5) 18%, transparent);
+  --primary-muted: color-mix(in srgb, var(--hub-primary, #4F46E5) 12%, transparent);
+
+  --btn-primary-bg: var(--hub-primary, #4F46E5);
+  --btn-primary-text: #F7FBFD;
+  --btn-primary-hover: var(--hub-deep, #3730A3);
+  --btn-secondary-border: var(--border-default);
+
+  --input-border: #2E3A52;
+  --input-focus-ring: color-mix(in srgb, var(--hub-primary, #4F46E5) 28%, transparent);
+
+  --qa-card: #1A2233;
+  --qa-workspace: #0A0C10;
+  --qa-text: #F7FBFD;
+  --qa-muted: #7AAFC8;
+  --qa-label: #AAD0E7;
+  --qa-border: #2E3A52;
+
+  --shell-workspace: #0A0C10;
+  --shell-card: #1A2233;
+  --shell-border: #2E3A52;
+  --shell-input-border: #2E3A52;
+  --shell-placeholder: #7AAFC8;
+  --shell-text: #F7FBFD;
+  --shell-muted: #AAD0E7;
+  --shell-crumb: #7AAFC8;
+  --shell-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  --shell-modal-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
+
+  --hub-background: #0A0C10;
+  --hub-base: #0A0C10;
+  --hub-surface: #1A2233;
+
+  --kpi-card-bg: #1A2233;
+  --kpi-card-border: #2E3A52;
+  --kpi-card-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --kpi-label-color: #AAD0E7;
+  --kpi-progress-track: #10151F;
+  --kpi-freshness: #7AAFC8;
+
+  --glass-card-gradient: #1A2233;
+  --glass-header-gradient: #10151F;
+  --glass-modal-gradient: #1A2233;
+  --glass-surface-deep: #1A2233;
+  --glass-surface-strong: #1A2233;
+  --glass-surface-mid: #10151F;
+  --glass-surface-dim: #10151F;
+  --glass-surface-haze: #10151F;
+
+  /* card-hierarchy.css pins these to #FFFFFF on html[data-theme="obsidian"] */
+  --aos-info-bg: #1A2233;
+  --aos-info-bg-elevated: #1A2233;
+  --aos-info-border: #2E3A52;
+  --aos-info-border-hover: #3B4A63;
+  --aos-info-highlight: rgba(247, 251, 253, 0.08);
+  --aos-info-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --aos-action-bg: #1A2233;
+  --aos-action-bg-soft: #10151F;
+  --aos-action-border: #2E3A52;
+  --aos-action-text: #F7FBFD;
+  --aos-action-text-muted: #AAD0E7;
+  --aos-action-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+
+  --va-card: #1A2233;
+  --va-card-hover: #222B42;
+  --va-surface: #10151F;
+  --va-canvas: #0A0C10;
+  --va-section: #10151F;
+  --glass-surface-soft: #10151F;
+  --glass-surface-veil: #10151F;
+  --glass-surface-low: #10151F;
+  --glass-surface-faint: #0A0C10;
+  --glass-blur: 0px;
+  --glass-blur-sm: 0px;
+  --glass-blur-lg: 0px;
+  --glass-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.22);
+
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.28);
+  --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.36);
+
+  --bg-glow-a: color-mix(in srgb, var(--hub-primary, #4F46E5) 16%, transparent);
+  --bg-glow-b: color-mix(in srgb, var(--hub-primary, #4F46E5) 10%, transparent);
+  --bg-glow-c: transparent;
+  --bg-glow-d: color-mix(in srgb, #AAD0E7 6%, transparent);
+  --bg-glow-e: color-mix(in srgb, var(--hub-primary, #4F46E5) 8%, transparent);
+  --bg-spotlight: color-mix(in srgb, #F7FBFD 4%, transparent);
+
+  --pill-positive-bg: color-mix(in srgb, #10B981 16%, #10151F);
+  --pill-positive-text: #34D399;
+  --pill-warning-bg: color-mix(in srgb, #F59E0B 16%, #10151F);
+  --pill-warning-text: #FBBF24;
+  --pill-danger-bg: color-mix(in srgb, #F43F5E 16%, #10151F);
+  --pill-danger-text: #FB7185;
+  --pill-info-bg: color-mix(in srgb, #3B82F6 16%, #10151F);
+  --pill-info-text: #93C5FD;
+  --pill-draft-bg: color-mix(in srgb, #8B5CF6 16%, #10151F);
+  --pill-draft-text: #C4B5FD;
+}
+
+html[data-theme="obsidian"] :is(
+  .module-va-operations,
+  .module-farmers-edge,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-analytics,
+  .module-global-search
+) {
+  --hub-background: #0A0C10;
+  --hub-base: #0A0C10;
+  --hub-surface: #1A2233;
+  --va-card: #1A2233;
+  --va-card-hover: #222B42;
+  --va-surface: #10151F;
+  --va-canvas: #0A0C10;
+  --aos-info-bg: #1A2233;
+  --aos-info-bg-elevated: #1A2233;
+  --surface-card: #1A2233;
+  --qa-card: #1A2233;
+  --shell-card: #1A2233;
+}
+
+/* ── Page canvas ── */
+html[data-theme="obsidian"],
+html[data-theme="obsidian"] body {
+  background-color: #0A0C10;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] body {
+  background-image:
+    radial-gradient(ellipse 70% 42% at 100% 0%, var(--bg-glow-a), transparent 62%),
+    radial-gradient(ellipse 50% 36% at 0% 100%, var(--bg-glow-b), transparent 58%);
+}
+
+html[data-theme="obsidian"] .app-shell,
+html[data-theme="obsidian"] .app-shell-main,
+html[data-theme="obsidian"] .app-content,
+html[data-theme="obsidian"] .hub-shell {
+  background: #0A0C10;
+  color: #F7FBFD;
+}
+
+/* ── Top nav + folio (sidebar stays navy in both modes) ── */
+html[data-theme="obsidian"] .app-top-nav {
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: none;
+}
+
+html[data-theme="obsidian"] .app-top-nav-search {
+  background: #0A0C10;
+  border-color: #2E3A52;
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .app-top-nav-search:hover {
+  background: #1A2233;
+  border-color: #3B4A63;
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .app-top-nav-kbd {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .global-folio-strip,
+html[data-theme="obsidian"] .folio-progress-bar.global-folio-strip {
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .global-folio-strip:hover,
+html[data-theme="obsidian"] .folio-progress-bar.global-folio-strip:hover {
+  background: #1A2233;
+}
+
+html[data-theme="obsidian"] .sidebar-profile-dropdown,
+html[data-theme="obsidian"] .mobile-more-sheet {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-color: #2E3A52;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --text-primary: #F7FBFD;
+  --text-secondary: #AAD0E7;
+  --text-muted: #7AAFC8;
+}
+
+@media (max-width: 767px) {
+  html[data-theme="obsidian"] .mobile-bottom-nav {
+    background: #10151F;
+    border-top-color: #2E3A52;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* ── Tab chrome ── */
+html[data-theme="obsidian"] :is(
+  .module-va-operations,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .va-ops-tab-nav,
+html[data-theme="obsidian"] :is(
+  .module-va-operations,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
+) .send-center-tab-nav,
+html[data-theme="obsidian"] .module-nav,
+html[data-theme="obsidian"] .tab-bar,
+html[data-theme="obsidian"] .top-bar {
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .va-ops-tab-btn,
+html[data-theme="obsidian"] .tab,
+html[data-theme="obsidian"] .tab-btn {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .va-ops-tab-btn:hover,
+html[data-theme="obsidian"] .tab:hover,
+html[data-theme="obsidian"] .tab-btn:hover {
+  color: #F7FBFD;
+  background: #1A2233;
+}
+
+html[data-theme="obsidian"] .va-ops-tab-btn.active,
+html[data-theme="obsidian"] .tab.active,
+html[data-theme="obsidian"] .tab-btn.active {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 36%, #F7FBFD);
+}
+
+/* ── Cards / panels / tables ── */
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card,
+html[data-theme="obsidian"] .app-content .kpi-card,
+html[data-theme="obsidian"] .app-content .aos-kpi-card,
+html[data-theme="obsidian"] .app-content .analytics-kpi-card,
+html[data-theme="obsidian"] .app-content .send-center-kpi-command,
+html[data-theme="obsidian"] .app-content .va-ops-panel,
+html[data-theme="obsidian"] .app-content .ih-panel,
+html[data-theme="obsidian"] .app-content .ih-kpi,
+html[data-theme="obsidian"] .app-content .chart-card,
+html[data-theme="obsidian"] .app-content .table-wrap,
+html[data-theme="obsidian"] .app-content .commercial-hub-table-wrap,
+html[data-theme="obsidian"] .app-content .card,
+html[data-theme="obsidian"] .app-content .va-ops-card,
+html[data-theme="obsidian"] .app-content .producer-card,
+html[data-theme="obsidian"] .app-content .formula-card,
+html[data-theme="obsidian"] .app-content .snapshot-card,
+html[data-theme="obsidian"] .app-content .metric-highlight,
+html[data-theme="obsidian"] .app-content .acc-card,
+html[data-theme="obsidian"] .app-content .system-health-summary-card,
+html[data-theme="obsidian"] .app-content .system-health-alert-item,
+html[data-theme="obsidian"] .app-content .training-dept-card,
+html[data-theme="obsidian"] .app-content .intake-form-card,
+html[data-theme="obsidian"] .app-content .fe-c-card,
+html[data-theme="obsidian"] .hub-shell .va-ops-card,
+html[data-theme="obsidian"] .hub-shell .kpi-card,
+html[data-theme="obsidian"] .hub-shell .aos-kpi-card,
+html[data-theme="obsidian"] .hub-shell .analytics-kpi-card,
+html[data-theme="obsidian"] .hub-shell .send-center-kpi-command {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-kpi-label,
+html[data-theme="obsidian"] .app-content .kpi-label,
+html[data-theme="obsidian"] .app-content .analytics-kpi-label,
+html[data-theme="obsidian"] .app-content .send-center-kpi-command-label,
+html[data-theme="obsidian"] .app-content .aos-kpi-label,
+html[data-theme="obsidian"] .hub-shell .va-ops-kpi-label,
+html[data-theme="obsidian"] .hub-shell .kpi-label,
+html[data-theme="obsidian"] .hub-shell .analytics-kpi-label,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label,
+html[data-theme="obsidian"] .hub-shell .va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-label {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .app-content .kpi-sub,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-sub,
+html[data-theme="obsidian"] .app-content .analytics-kpi-sub,
+html[data-theme="obsidian"] .app-content .va-ops-section-sub,
+html[data-theme="obsidian"] .app-content .ih-section-sub,
+html[data-theme="obsidian"] .hub-shell .hub-local-pulse,
+html[data-theme="obsidian"] .hub-shell .hub-local-pulse-label,
+html[data-theme="obsidian"] .app-content .hub-local-pulse-label {
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-section-title,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .kpi-value,
+html[data-theme="obsidian"] .app-content .kpi-val,
+html[data-theme="obsidian"] .app-content .analytics-kpi-value,
+html[data-theme="obsidian"] .app-content h1,
+html[data-theme="obsidian"] .app-content h2,
+html[data-theme="obsidian"] .app-content h3,
+html[data-theme="obsidian"] .app-content h4,
+html[data-theme="obsidian"] .app-content h5 {
+  color: #F7FBFD;
+}
+
+/* Hub / semantic KPI values — mix with frost on navy, not navy on white */
+html[data-theme="obsidian"] .app-content .aos-kpi-card--positive .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.green .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .aos-kpi-card--positive .kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-value.aos-finance,
+html[data-theme="obsidian"] .app-content .kpi-value.aos-finance,
+html[data-theme="obsidian"] .app-content .analytics-kpi-value.aos-finance {
+  color: color-mix(in srgb, #10B981 36%, #F7FBFD) !important;
+}
+
+html[data-theme="obsidian"] .app-content .aos-kpi-card--warning .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.amber .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.yellow .va-ops-kpi-value {
+  color: color-mix(in srgb, #F59E0B 36%, #F7FBFD);
+}
+
+html[data-theme="obsidian"] .app-content .aos-kpi-card--danger .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.red .va-ops-kpi-value {
+  color: color-mix(in srgb, #F43F5E 36%, #F7FBFD);
+}
+
+html[data-theme="obsidian"] .app-content .aos-kpi-card--info .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.info .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.primary .va-ops-kpi-value,
+html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary .va-ops-kpi-value,
+html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.info .va-ops-kpi-value,
+html[data-theme="obsidian"] .module-va-operations .aos-kpi-card--info .va-ops-kpi-value,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-kpi-card.info .va-ops-kpi-value,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-kpi-card.primary .va-ops-kpi-value,
+html[data-theme="obsidian"] .va-ops-overview--flagship .ih-kpi--primary.info .va-ops-kpi-value,
+html[data-theme="obsidian"] .va-ops-overview--flagship .ih-kpi--primary.primary .va-ops-kpi-value {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 36%, #F7FBFD);
+  text-shadow: none;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-kpi-card.teal .va-ops-kpi-value,
+html[data-theme="obsidian"] .app-content .aos-kpi-card--commercial .va-ops-kpi-value {
+  color: color-mix(in srgb, #0D9488 36%, #F7FBFD);
+}
+
+html[data-theme="obsidian"] .app-content thead th,
+html[data-theme="obsidian"] .app-content .va-ops-priority-table th,
+html[data-theme="obsidian"] .app-content .va-ops-lead-table th,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-table th,
+html[data-theme="obsidian"] .module-va-operations .va-ops-lead-table th {
+  color: #AAD0E7;
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content tbody td,
+html[data-theme="obsidian"] .app-content table {
+  color: #F7FBFD;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content tbody tr:hover td {
+  background: #222B42;
+}
+
+/* ── Forms ── */
+html[data-theme="obsidian"] .app-content input:not([type="checkbox"]):not([type="radio"]):not(.va-ops-search-input),
+html[data-theme="obsidian"] .app-content select,
+html[data-theme="obsidian"] .app-content textarea,
+html[data-theme="obsidian"] .app-content .header-filter-select,
+html[data-theme="obsidian"] .app-content .va-ops-search,
+html[data-theme="obsidian"] .app-content .send-center-select,
+html[data-theme="obsidian"] input:not([type="checkbox"]):not([type="radio"]):not(.va-ops-search-input),
+html[data-theme="obsidian"] select,
+html[data-theme="obsidian"] textarea {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] input::placeholder,
+html[data-theme="obsidian"] textarea::placeholder {
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .app-content .epay-form-label,
+html[data-theme="obsidian"] .app-content .va-ops-form-label,
+html[data-theme="obsidian"] .app-content label {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .va-quick-actions-item {
+  background: #1A2233;
+  border-color: color-mix(in srgb, var(--hub-va, #4F46E5) 28%, #2E3A52);
+  color: color-mix(in srgb, var(--hub-va, #4F46E5) 36%, #F7FBFD);
+}
+
+/* ── Command palette ── */
+html[data-theme="obsidian"] .cmd-palette-panel,
+html[data-theme="obsidian"] .cmd-palette-layout,
+html[data-theme="obsidian"] .cmd-palette-shell,
+html[data-theme="obsidian"] .cmd-palette-main,
+html[data-theme="obsidian"] .cmd-palette-body,
+html[data-theme="obsidian"] .cmd-palette-search,
+html[data-theme="obsidian"] .cmd-palette-footer {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .cmd-palette-panel {
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="obsidian"] .cmd-palette-header,
+html[data-theme="obsidian"] .cmd-palette-categories {
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .cmd-palette-preview-slot,
+html[data-theme="obsidian"] .cmd-palette-header-kbd,
+html[data-theme="obsidian"] .cmd-palette-hint,
+html[data-theme="obsidian"] .cmd-palette-clear,
+html[data-theme="obsidian"] .cmd-palette-row-kbd,
+html[data-theme="obsidian"] .cmd-palette-footer kbd {
+  background: #10151F;
+  border-color: #2E3A52;
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .cmd-palette-input {
+  color: #F7FBFD;
+  background: transparent;
+}
+
+html[data-theme="obsidian"] .cmd-palette-input::placeholder,
+html[data-theme="obsidian"] .cmd-palette-search-icon,
+html[data-theme="obsidian"] .cmd-palette-section-title,
+html[data-theme="obsidian"] .cmd-palette-footer {
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .cmd-palette-category {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .cmd-palette-category.active,
+html[data-theme="obsidian"] .cmd-palette-category[aria-selected="true"] {
+  color: #F7FBFD;
+  border-bottom-color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .cmd-palette-row {
+  color: #F7FBFD;
+  background: transparent;
+}
+
+html[data-theme="obsidian"] .cmd-palette-row:hover,
+html[data-theme="obsidian"] .cmd-palette-row.active {
+  background: #222B42;
+}
+
+html[data-theme="obsidian"] .cmd-palette-row.active .cmd-palette-result-title,
+html[data-theme="obsidian"] .cmd-palette-row.active .cmd-palette-action-label,
+html[data-theme="obsidian"] .cmd-palette-result-title,
+html[data-theme="obsidian"] .cmd-palette-action-label {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .cmd-palette-result-subtitle {
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .cmd-palette-empty h3 {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .cmd-palette-empty p {
+  color: #AAD0E7;
+}
+
+/* ── Drawers / overlays ── */
+html[data-theme="obsidian"] .va-ops-drawer,
+html[data-theme="obsidian"] .help-drawer,
+html[data-theme="obsidian"] .audit-log-panel,
+html[data-theme="obsidian"] .va-ops-drawer.audit-log-panel,
+html[data-theme="obsidian"] .notification-center-panel {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-color: #2E3A52;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme="obsidian"] .audit-log-header,
+html[data-theme="obsidian"] .audit-log-toolbar,
+html[data-theme="obsidian"] .audit-log-metrics,
+html[data-theme="obsidian"] .audit-log-footer,
+html[data-theme="obsidian"] .notification-center-header,
+html[data-theme="obsidian"] .help-drawer-header {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .audit-log-header h2,
+html[data-theme="obsidian"] .audit-log-metric-value,
+html[data-theme="obsidian"] .notification-center-header h2 {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .audit-log-header p,
+html[data-theme="obsidian"] .audit-log-filter-label,
+html[data-theme="obsidian"] .audit-log-footer-count,
+html[data-theme="obsidian"] .audit-log-metric-label,
+html[data-theme="obsidian"] .audit-log-group-label {
+  color: #7AAFC8;
+}
+
+html[data-theme="obsidian"] .audit-log-panel .va-ops-drawer-close,
+html[data-theme="obsidian"] .audit-log-search,
+html[data-theme="obsidian"] .audit-log-filter select,
+html[data-theme="obsidian"] .audit-log-metric {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .audit-log-panel .va-ops-drawer-close:hover {
+  background: #222B42;
+  color: #F7FBFD;
+  border-color: #3B4A63;
+}
+
+html[data-theme="obsidian"] .audit-log-body,
+html[data-theme="obsidian"] .audit-log-group-label {
+  background: #10151F;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .audit-log-metric--critical .audit-log-metric-value {
+  color: color-mix(in srgb, #F43F5E 36%, #F7FBFD);
+}
+
+html[data-theme="obsidian"] .audit-log-metric--failed .audit-log-metric-value {
+  color: color-mix(in srgb, #F59E0B 36%, #F7FBFD);
+}
+
+html[data-theme="obsidian"] .audit-log-metric--pending .audit-log-metric-value {
+  color: color-mix(in srgb, #3B82F6 36%, #F7FBFD);
+}
+
+/* ── Buttons on dark canvas ── */
+html[data-theme="obsidian"] .app-content .btn-secondary,
+html[data-theme="obsidian"] .app-content .va-ops-role-action-btn,
+html[data-theme="obsidian"] .top-header-btn {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .app-content .btn-secondary:hover,
+html[data-theme="obsidian"] .top-header-btn:hover {
+  background: #222B42;
+  border-color: #3B4A63;
+}
+
+/* ── Empty / skeleton surfaces ── */
+html[data-theme="obsidian"] .app-content .empty-state,
+html[data-theme="obsidian"] .app-content .skeleton-card,
+html[data-theme="obsidian"] .app-content .aos-empty {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #AAD0E7;
+}
+
+/* ── Visual-QA leftovers: hardcoded light chrome on dark hubs ── */
+html[data-theme="obsidian"] .hub-local-pulse {
+  background: #10151F;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .hub-local-pulse-chip,
+html[data-theme="obsidian"] .hub-local-pulse-chip strong {
+  color: #F7FBFD;
+  background: #1A2233;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-search-input,
+html[data-theme="obsidian"] .hub-shell .va-ops-search-input,
+html[data-theme="obsidian"] .module-va-operations .va-ops-search-input,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap input {
+  color: #F7FBFD;
+  -webkit-text-fill-color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-va-operations .va-ops-page-header .va-ops-search,
+html[data-theme="obsidian"] .module-va-operations .owner-overview-hero .va-ops-search {
+  background: #1A2233;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-approval-item,
+html[data-theme="obsidian"] .app-content .va-ops-priority-item,
+html[data-theme="obsidian"] .module-va-operations .va-ops-approval-item,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-item,
+html[data-theme="obsidian"] .app-content .va-ops-workload-row,
+html[data-theme="obsidian"] .module-va-operations .va-ops-workload-row,
+html[data-theme="obsidian"] .app-content .va-ops-workflow-card,
+html[data-theme="obsidian"] .module-va-operations .va-ops-workflow-card,
+html[data-theme="obsidian"] .app-content .va-ops-logic-step,
+html[data-theme="obsidian"] .module-va-operations .va-ops-logic-step,
+html[data-theme="obsidian"] .app-content .va-ops-pipeline-row,
+html[data-theme="obsidian"] .app-content .va-ops-today-timeline-card,
+html[data-theme="obsidian"] .module-va-operations .va-ops-today-timeline-card {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-approval-title,
+html[data-theme="obsidian"] .app-content .va-ops-priority-title,
+html[data-theme="obsidian"] .app-content .va-ops-workload-name,
+html[data-theme="obsidian"] .app-content .va-ops-workflow-name,
+html[data-theme="obsidian"] .app-content .va-ops-logic-step-label,
+html[data-theme="obsidian"] .app-content .va-ops-integration-name,
+html[data-theme="obsidian"] .app-content .va-ops-today-timeline-text,
+html[data-theme="obsidian"] .app-content .va-ops-approval-meta strong,
+html[data-theme="obsidian"] .app-content .va-ops-priority-meta strong,
+html[data-theme="obsidian"] .app-content .va-ops-workload-segment-legend strong,
+html[data-theme="obsidian"] .app-content .va-ops-workflow-meta strong,
+html[data-theme="obsidian"] .app-content .va-ops-logic-panel .va-ops-section-sub strong,
+html[data-theme="obsidian"] .app-content .va-ops-integration-sync strong,
+html[data-theme="obsidian"] .module-va-operations .va-ops-approval-title,
+html[data-theme="obsidian"] .module-va-operations .va-ops-workload-name,
+html[data-theme="obsidian"] .module-va-operations .va-ops-workflow-name,
+html[data-theme="obsidian"] .module-va-operations .va-ops-logic-step-label,
+html[data-theme="obsidian"] .module-va-operations .va-ops-integration-name,
+html[data-theme="obsidian"] .module-va-operations .va-ops-today-timeline-text {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-approval-item .va-ops-action-btn:not(.primary):not(.critical),
+html[data-theme="obsidian"] .app-content .va-ops-workflow-card .va-ops-action-btn:not(.primary):not(.critical) {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .commercial-row-action-menu,
+html[data-theme="obsidian"] .hub-shell .commercial-row-action-item,
+html[data-theme="obsidian"] .dnc-log-table .commercial-row-action-item {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .hub-shell .commercial-row-action-item:hover,
+html[data-theme="obsidian"] .dnc-log-table .commercial-row-action-item:hover {
+  background: #222B42;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-benefit-feature-title,
+html[data-theme="obsidian"] .app-content .fe-benefit-feature-title,
+html[data-theme="obsidian"] .module-epay-policy .epay-readiness-label {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .notification-center-header {
+  background: #1A2233;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .notification-center-header-title h2 {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .notification-center-header .va-ops-drawer-close,
+html[data-theme="obsidian"] .audit-log-footer-btn {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+/* ── Leftover light cards/rows → obsidian surfaces ── */
+html[data-theme="obsidian"] .va-ops-priority-panel,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-priority-panel,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-kpi-card,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-snapshot-card,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-today-timeline-strip,
+html[data-theme="obsidian"] .va-ops-priority-card {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="obsidian"] .app-content .va-ops-panel-title,
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel-title,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-panel-title,
+html[data-theme="obsidian"] .va-ops-priority-panel h2 {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-panel-sub,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-section-sub,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-freshness {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .app-content tbody td,
+html[data-theme="obsidian"] .app-content .va-ops-priority-table td,
+html[data-theme="obsidian"] .app-content .commercial-hub-table td,
+html[data-theme="obsidian"] .app-content .send-center-table td,
+html[data-theme="obsidian"] .hub-shell table.va-ops-priority-table td,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-table td {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content tbody tr:hover td,
+html[data-theme="obsidian"] .app-content .va-ops-priority-table tbody tr:hover td,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-table tbody tr:hover td {
+  background: #222B42;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-table .va-ops-priority-title,
+html[data-theme="obsidian"] .app-content .va-ops-priority-title {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-row.critical td {
+  background: color-mix(in srgb, #F43F5E 10%, #1A2233);
+}
+
+html[data-theme="obsidian"] .va-ops-priority-row.urgent td {
+  background: color-mix(in srgb, #F59E0B 8%, #1A2233);
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-c-card,
+html[data-theme="obsidian"] .app-content .fe-c-card,
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-table-wrap,
+html[data-theme="obsidian"] .module-farmers-edge .fe-intel-table-wrap {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-c-card-title,
+html[data-theme="obsidian"] .app-content .fe-c-card-title {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-table th,
+html[data-theme="obsidian"] .module-farmers-edge .fe-intel-table th,
+html[data-theme="obsidian"] .app-content .fe-edge-table th,
+html[data-theme="obsidian"] .app-content .fe-intel-table th {
+  background: #10151F;
+  color: #AAD0E7;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-table td,
+html[data-theme="obsidian"] .module-farmers-edge .fe-intel-table td,
+html[data-theme="obsidian"] .app-content .fe-edge-table tbody td,
+html[data-theme="obsidian"] .app-content .fe-intel-table tbody td {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-table tbody tr:hover td,
+html[data-theme="obsidian"] .app-content .fe-edge-table tbody tr:hover td,
+html[data-theme="obsidian"] .module-farmers-edge .fe-intel-table tbody tr:hover td {
+  background: #222B42;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-win,
+html[data-theme="obsidian"] .app-content .fe-edge-win {
+  color: #34D399;
+}
+
+html[data-theme="obsidian"] .module-farmers-edge .fe-edge-lose,
+html[data-theme="obsidian"] .app-content .fe-edge-lose {
+  color: #FB7185;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .va-ops-panel,
+html[data-theme="obsidian"] .module-intake-forms .intake-form-selector .va-ops-panel,
+html[data-theme="obsidian"] .app-content .intake-form-selector .va-ops-panel {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="obsidian"] .module-intake-forms .va-ops-section-title,
+html[data-theme="obsidian"] .module-intake-forms .intake-form-selector .va-ops-section-title,
+html[data-theme="obsidian"] .app-content .intake-form-selector .va-ops-section-title {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .va-ops-section-sub,
+html[data-theme="obsidian"] .module-intake-forms .intake-form-selector .va-ops-section-sub,
+html[data-theme="obsidian"] .app-content .intake-form-selector .va-ops-section-sub {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .commercial-hub-table-wrap,
+html[data-theme="obsidian"] .module-intake-forms .submission-history-table-wrap,
+html[data-theme="obsidian"] .module-intake-forms .intake-routing-table-wrap {
+  background: #1A2233;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .commercial-hub-table th,
+html[data-theme="obsidian"] .module-intake-forms .intake-table-dense th,
+html[data-theme="obsidian"] .module-intake-forms .submission-history-table th,
+html[data-theme="obsidian"] .module-intake-forms .intake-routing-table th {
+  background: #10151F;
+  color: #AAD0E7;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .commercial-hub-table td,
+html[data-theme="obsidian"] .module-intake-forms .intake-table-dense td,
+html[data-theme="obsidian"] .module-intake-forms .submission-history-table td,
+html[data-theme="obsidian"] .module-intake-forms .intake-routing-table td,
+html[data-theme="obsidian"] .module-intake-forms .commercial-hub-client-cell {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-intake-forms .commercial-hub-table tbody tr:hover td,
+html[data-theme="obsidian"] .module-intake-forms .intake-table-dense tbody tr:hover td,
+html[data-theme="obsidian"] .module-intake-forms .submission-history-table tbody tr:hover td {
+  background: #222B42;
+}
+
+html[data-theme="obsidian"] .module-training-hub .va-ops-panel,
+html[data-theme="obsidian"] .module-training-hub .training-certifications-panel,
+html[data-theme="obsidian"] .module-training-hub .training-library-primary,
+html[data-theme="obsidian"] .module-training-hub .training-library-secondary-compact {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="obsidian"] .module-training-hub .va-ops-section-title,
+html[data-theme="obsidian"] .module-training-hub .training-certifications-panel .va-ops-section-title {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-training-hub .va-ops-section-sub {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .module-training-hub .commercial-hub-table-wrap {
+  background: #1A2233;
+  border-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-training-hub .commercial-hub-table th {
+  background: #10151F;
+  color: #AAD0E7;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-training-hub .commercial-hub-table td,
+html[data-theme="obsidian"] .module-training-hub .commercial-hub-client-cell {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .module-training-hub .commercial-hub-table tbody tr:hover td {
+  background: #222B42;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Universal catch-all — leftover light chrome on dark hubs
+   Beats hub-specific hardcoded whites. Commercial stays light
+   because html[data-theme="light"] does not match these rules.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="obsidian"] .app-content :is(
+  .va-ops-panel,
+  .ih-panel,
+  .ih-section--primary,
+  .ih-section--secondary,
+  .ih-section--supporting,
+  .chart-card,
+  .table-wrap,
+  .commercial-hub-table-wrap,
+  .card,
+  .va-ops-card,
+  .producer-card,
+  .formula-card,
+  .snapshot-card,
+  .metric-highlight,
+  .acc-card,
+  .aos-card--info,
+  .aos-card--action,
+  .hub-empty-state,
+  .commercial-hub-empty-state,
+  .send-center-template-card,
+  .training-resource-card,
+  .training-dept-card,
+  .carrier-stack-card,
+  .recommended-market-card,
+  .search-result-card,
+  .global-search-result-card,
+  .global-search-section,
+  .global-search-group,
+  .global-search-ai-panel,
+  .epay-preview-panel,
+  .epay-client-summary,
+  .fe-c-card,
+  .fe-benefits-panel,
+  .analytics-ai-panel,
+  .send-center-kpi-command,
+  .va-ops-today-timeline-card,
+  .va-ops-approval-item,
+  .va-ops-priority-item,
+  .va-ops-workload-row,
+  .va-ops-workflow-card
+),
+html[data-theme="obsidian"] .hub-shell :is(
+  .va-ops-panel,
+  .ih-panel,
+  .chart-card,
+  .table-wrap,
+  .commercial-hub-table-wrap,
+  .card,
+  .kpi-card,
+  .aos-kpi-card,
+  .analytics-kpi-card,
+  .send-center-kpi-command,
+  .fe-c-card,
+  .training-resource-card,
+  .search-result-card
+) {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .app-content :is(
+  h2,
+  h3,
+  h4,
+  .va-ops-section-title,
+  .va-ops-panel-title,
+  .ih-section-title,
+  .card-title,
+  .commercial-hub-client-cell,
+  .commercial-hub-carrier-name
+) {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .app-content :is(
+  .va-ops-section-sub,
+  .ih-section-sub,
+  .va-ops-freshness
+) {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .app-content thead th,
+html[data-theme="obsidian"] .hub-shell thead th {
+  background: #10151F;
+  color: #AAD0E7;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content tbody td,
+html[data-theme="obsidian"] .hub-shell tbody td,
+html[data-theme="obsidian"] .app-content table td,
+html[data-theme="obsidian"] .hub-shell table td {
+  background: #1A2233;
+  color: #F7FBFD;
+  border-bottom-color: #2E3A52;
+}
+
+html[data-theme="obsidian"] .app-content tbody tr:hover td,
+html[data-theme="obsidian"] .hub-shell tbody tr:hover td {
+  background: #222B42;
+}
+
+html[data-theme="obsidian"] :is(
+  .va-ops-modal,
+  .eva-action-modal,
+  .va-ops-drawer,
+  .help-drawer,
+  .folio-drawer,
+  .notification-center-panel,
+  .audit-log-panel,
+  .owner-quick-actions-panel,
+  .commercial-row-action-menu,
+  .sidebar-profile-dropdown,
+  .mobile-more-sheet,
+  .export-menu-dropdown,
+  .top-header-profile-dropdown
+) {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] :is(
+  .va-ops-modal-header,
+  .va-ops-drawer-header,
+  .help-drawer-header,
+  .notification-center-header,
+  .audit-log-header,
+  .audit-log-footer,
+  .cmd-palette-body,
+  .cmd-palette-footer,
+  .cmd-palette-search
+) {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-carrier-library :is(.va-ops-panel, .commercial-hub-table-wrap, .commercial-hub-table td, .commercial-hub-client-cell),
+html[data-theme="obsidian"] .module-epay-policy :is(.va-ops-panel, .commercial-hub-table-wrap, .commercial-hub-table td, .commercial-hub-client-cell),
+html[data-theme="obsidian"] .module-send-center :is(.va-ops-panel, .commercial-hub-table-wrap, .commercial-hub-table td, .send-center-table td, .dnc-log-table td),
+html[data-theme="obsidian"] .module-analytics :is(.va-ops-panel, .analytics-ai-panel, .commercial-hub-table-wrap, .analytics-carrier-table td),
+html[data-theme="obsidian"] .module-retention :is(.va-ops-panel, table td, .card),
+html[data-theme="obsidian"] .module-global-search :is(.va-ops-panel, .card, .global-search-result-card, .global-search-section, .hub-empty-state) {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .module-carrier-library :is(.va-ops-section-title, .va-ops-panel-title, h3),
+html[data-theme="obsidian"] .module-epay-policy :is(.va-ops-section-title, .va-ops-panel-title, h3),
+html[data-theme="obsidian"] .module-send-center :is(.va-ops-section-title, .va-ops-panel-title, h3),
+html[data-theme="obsidian"] .module-analytics :is(.va-ops-section-title, .va-ops-panel-title, h3),
+html[data-theme="obsidian"] .module-retention :is(.va-ops-section-title, h2, h3),
+html[data-theme="obsidian"] .module-global-search :is(.va-ops-section-title, h2, h3) {
+  color: #F7FBFD;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Priority queue + VA Ops panel chrome
+   card-hierarchy.css paints .va-ops-panel with 10 :not(.class)
+   selectors (0,11,0) using --aos-info-bg-elevated: #FFFFFF.
+   Table cells were already navy; the header/filters stayed white,
+   so frost titles were invisible. Match that chain and paint the
+   header strip explicitly.
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="obsidian"] .va-ops-panel:not(.aos-card--action):not(.epay-tracker-overdue-panel):not(.epay-tracker-failed-panel):not(.va-ops-failed-panel):not(.carrier-rules-decline):not(.epay-readiness-panel--blocked):not(.bilingual-alerts-panel):not(.va-ops-approval-panel):not(.va-ops-sales-approval-panel):not(.submission-approval-panel),
+html[data-theme="obsidian"] .app-content .va-ops-panel:not(.aos-card--action):not(.epay-tracker-overdue-panel):not(.epay-tracker-failed-panel):not(.va-ops-failed-panel):not(.carrier-rules-decline):not(.epay-readiness-panel--blocked):not(.bilingual-alerts-panel):not(.va-ops-approval-panel):not(.va-ops-sales-approval-panel):not(.submission-approval-panel),
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel:not(.aos-card--action):not(.epay-tracker-overdue-panel):not(.epay-tracker-failed-panel):not(.va-ops-failed-panel):not(.carrier-rules-decline):not(.epay-readiness-panel--blocked):not(.bilingual-alerts-panel):not(.va-ops-approval-panel):not(.va-ops-sales-approval-panel):not(.submission-approval-panel),
+html[data-theme="obsidian"] .va-ops-priority-panel,
+html[data-theme="obsidian"] .app-content .va-ops-priority-panel,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel,
+html[data-theme="obsidian"] .va-ops-overview--flagship .va-ops-priority-panel {
+  background: #1A2233;
+  border-color: #2E3A52;
+  color: #F7FBFD;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-panel-header,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-filter-row,
+html[data-theme="obsidian"] .app-content .va-ops-priority-panel .va-ops-panel-header,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel .va-ops-panel-header,
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel .va-ops-panel-header,
+html[data-theme="obsidian"] .app-content .va-ops-panel .va-ops-panel-header {
+  background: #1A2233;
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-panel-title,
+html[data-theme="obsidian"] .va-ops-priority-panel h2,
+html[data-theme="obsidian"] .app-content .va-ops-priority-panel .va-ops-panel-title,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel .va-ops-panel-title,
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel .va-ops-panel-title {
+  color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-section-sub,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-panel-sub,
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-freshness,
+html[data-theme="obsidian"] .app-content .va-ops-priority-panel .va-ops-section-sub,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel .va-ops-section-sub {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-filter-btn,
+html[data-theme="obsidian"] .app-content .va-ops-priority-panel .va-ops-filter-btn,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel .va-ops-filter-btn,
+html[data-theme="obsidian"] .module-va-operations .va-ops-filter-btn,
+html[data-theme="obsidian"] .app-content .va-ops-filter-btn {
+  background: transparent;
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-filter-btn:hover,
+html[data-theme="obsidian"] .module-va-operations .va-ops-filter-btn:hover,
+html[data-theme="obsidian"] .app-content .va-ops-filter-btn:hover {
+  color: #F7FBFD;
+  background: transparent;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel .va-ops-filter-btn.active,
+html[data-theme="obsidian"] .module-va-operations .va-ops-filter-btn.active,
+html[data-theme="obsidian"] .app-content .va-ops-filter-btn.active {
+  color: color-mix(in srgb, var(--hub-primary, #4F46E5) 36%, #F7FBFD);
+  background: transparent;
+}
+
+html[data-theme="obsidian"] .va-ops-priority-panel::before,
+html[data-theme="obsidian"] .module-va-operations .va-ops-priority-panel::before,
+html[data-theme="obsidian"] .module-va-operations .va-ops-panel:not(.va-ops-panel--accent)::before,
+html[data-theme="obsidian"] .va-ops-panel::before {
+  background: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Nested search fields — one chrome layer only
+   Catch-all input rules were painting a second navy pill inside
+   .send-center-search-wrap / .va-ops-search (icon + bordered wrap).
+   ═══════════════════════════════════════════════════════════════ */
+html[data-theme="obsidian"] .send-center-search-wrap,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap,
+html[data-theme="obsidian"] .dnc-toolbar .send-center-search-wrap,
+html[data-theme="obsidian"] .bilingual-toolbar .send-center-search-wrap,
+html[data-theme="obsidian"] .va-ops-search,
+html[data-theme="obsidian"] .app-content .va-ops-search {
+  background: #1A2233;
+  border: 1px solid #2E3A52;
+  box-shadow: none;
+}
+
+html[data-theme="obsidian"] .send-center-search-wrap::before,
+html[data-theme="obsidian"] .va-ops-search::before,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap::before,
+html[data-theme="obsidian"] .app-content .va-ops-search::before {
+  content: none;
+  display: none;
+  background: none;
+}
+
+html[data-theme="obsidian"] .send-center-search-wrap svg,
+html[data-theme="obsidian"] .va-ops-search-icon {
+  color: #AAD0E7;
+}
+
+html[data-theme="obsidian"] .send-center-search-wrap input,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap input,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="obsidian"] .dnc-toolbar .send-center-search-wrap input,
+html[data-theme="obsidian"] .bilingual-toolbar .send-center-search-wrap input,
+html[data-theme="obsidian"] .va-ops-search-input,
+html[data-theme="obsidian"] .app-content .va-ops-search-input,
+html[data-theme="obsidian"] .app-content input.va-ops-search-input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="obsidian"] .hub-shell .va-ops-search-input,
+html[data-theme="obsidian"] .module-va-operations .va-ops-search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  color: #F7FBFD;
+  -webkit-text-fill-color: #F7FBFD;
+}
+
+html[data-theme="obsidian"] .send-center-search-wrap input::placeholder,
+html[data-theme="obsidian"] .app-content .send-center-search-wrap input::placeholder,
+html[data-theme="obsidian"] .dnc-toolbar .send-center-search-wrap input::placeholder,
+html[data-theme="obsidian"] .va-ops-search-input::placeholder {
+  color: #7AAFC8;
+  opacity: 1;
+  -webkit-text-fill-color: #7AAFC8;
+}

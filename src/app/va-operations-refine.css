@@ -1439,7 +1439,7 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
   min-height: 88px;
   padding: 12px 14px;
   border-radius: 16px;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
 }

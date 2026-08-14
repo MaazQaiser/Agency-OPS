@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useLayoutEffect } from "react";
 import type { CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 import { GlobalSearchProvider } from "@/components/global-search/GlobalSearchProvider";
@@ -17,7 +17,12 @@ import { SubscriptionProvider } from "@/components/subscription/SubscriptionProv
 import { ModuleAccessGate } from "@/components/permissions/ModuleAccessGate";
 import { HubPageTransition } from "@/components/motion/HubPageTransition";
 import { ContextualHelpProvider } from "@/components/help/ContextualHelpProvider";
-import { HUB_THEMES, hubThemeCssVars, resolveHubThemeId } from "@/lib/hubThemes";
+import {
+  HUB_THEMES,
+  colorModeForHub,
+  hubThemeCssVars,
+  resolveHubThemeId,
+} from "@/lib/hubThemes";
 import { AgencySidebar } from "./AgencySidebar";
 import { AppTopNav } from "./AppTopNav";
 import { GlobalFolioStrip } from "./GlobalFolioStrip";
@@ -33,11 +38,19 @@ function AppShellLayout({ children }: AppShellProps) {
   const pathname = usePathname();
   const hubId = resolveHubThemeId(pathname);
   const theme = hubId ? HUB_THEMES[hubId] : null;
+  const colorMode = colorModeForHub(hubId);
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute("data-theme", colorMode);
+    root.style.colorScheme = colorMode === "light" ? "light" : "dark";
+  }, [colorMode]);
 
   return (
     <div
       className="app-shell"
       data-hub={hubId ?? undefined}
+      data-color-mode={colorMode}
       data-sidebar-collapsed={hydrated ? collapsed : undefined}
       style={theme ? (hubThemeCssVars(theme) as CSSProperties) : undefined}
     >

@@ -181,7 +181,7 @@
 .va-ops-overview--flagship .va-ops-kpi-card.green,
 .va-ops-overview--flagship .va-ops-kpi-card.slate,
 .va-ops-overview--flagship .va-ops-kpi-card.steel {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   border-top-width: 4px;
@@ -295,7 +295,7 @@
 
 .va-ops-overview--flagship .va-ops-snapshot-card,
 .va-ops-overview--flagship .va-ops-snapshot-card--flagship {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   border-top: 4px solid var(--semantic-info);
@@ -350,7 +350,7 @@
 }
 
 .va-ops-overview--flagship .va-ops-today-timeline-strip {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   box-shadow: var(--shadow-card);
@@ -360,7 +360,7 @@
 /* ── Priority queue ── */
 .va-ops-overview--flagship .va-ops-priority-panel,
 .va-ops-priority-panel {
-  background: #ffffff;
+  background: var(--surface-card);
 }
 
 .va-ops-priority-table tbody tr {
@@ -461,7 +461,7 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   box-shadow: var(--shadow-card);

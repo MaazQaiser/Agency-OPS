@@ -5,9 +5,8 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root,
-html[data-theme="obsidian"],
 html[data-theme="light"] {
-  /* ── Card hierarchy tokens — light workspace ── */
+  /* ── Card hierarchy tokens — light workspace (Commercial Hub) ── */
   --aos-info-bg: #FFFFFF;
   --aos-info-bg-elevated: #FFFFFF;
   --aos-info-border: color-mix(in srgb, var(--ita-sky) 55%, transparent);
@@ -26,6 +25,30 @@ html[data-theme="light"] {
   --aos-action-shadow:
     0 1px 2px rgba(28, 43, 53, 0.04),
     0 6px 16px rgba(28, 43, 53, 0.05);
+  --aos-action-rail: var(--semantic-danger, #F43F5E);
+
+  --aos-finance: var(--semantic-good, #10B981);
+  --aos-finance-soft: var(--semantic-good, #10B981);
+  --aos-finance-deep: var(--semantic-good-dark, #059B66);
+  --aos-finance-glow: transparent;
+  --aos-finance-wash: color-mix(in srgb, var(--semantic-good, #10B981) 8%, transparent);
+}
+
+html[data-theme="obsidian"] {
+  --aos-info-bg: #1A2233;
+  --aos-info-bg-elevated: #1A2233;
+  --aos-info-border: #2E3A52;
+  --aos-info-border-hover: #3B4A63;
+  --aos-info-highlight: rgba(247, 251, 253, 0.08);
+  --aos-info-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+
+  --aos-action-bg: #1A2233;
+  --aos-action-bg-soft: #10151F;
+  --aos-action-border: #2E3A52;
+  --aos-action-border-strong: #3B4A63;
+  --aos-action-text: #F7FBFD;
+  --aos-action-text-muted: #AAD0E7;
+  --aos-action-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
   --aos-action-rail: var(--semantic-danger, #F43F5E);
 
   --aos-finance: var(--semantic-good, #10B981);
@@ -475,8 +498,8 @@ html[data-theme="obsidian"] .analytics-kpi-card::before {
 .module-global-search .va-ops-kpi-card,
 .module-global-search .search-result-card,
 .module-global-search .va-ops-panel:not(.aos-card--action) {
-  background: #ffffff;
-  border-color: rgba(28, 43, 53, 0.1);
+  background: var(--surface-card);
+  border-color: var(--border-subtle);
   box-shadow:
     0 6px 18px rgba(15, 25, 35, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);

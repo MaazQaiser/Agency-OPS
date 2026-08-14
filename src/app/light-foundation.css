@@ -101,7 +101,7 @@ body {
 }
 
 .sidebar-profile-dropdown {
-  background: #FFFFFF;
+  background: var(--surface-modal, #FFFFFF);
   color: var(--text-primary);
   border-color: var(--border-default);
   box-shadow: 0 16px 40px rgba(28, 43, 53, 0.16);
@@ -111,7 +111,7 @@ body {
 }
 
 .mobile-more-sheet {
-  background: #FFFFFF;
+  background: var(--surface-modal, #FFFFFF);
   color: var(--text-primary);
   border-color: var(--border-subtle);
   box-shadow: 0 -12px 40px rgba(28, 43, 53, 0.12);
@@ -125,7 +125,7 @@ body {
 
 @media (max-width: 767px) {
   .mobile-bottom-nav {
-    background: #FFFFFF;
+    background: var(--surface-card);
     border-top: 1px solid var(--border-subtle);
     box-shadow: 0 -4px 20px rgba(28, 43, 53, 0.08);
   }
@@ -143,7 +143,7 @@ body {
    LIGHT TOP NAV
    ═══════════════════════════════════════════════════════════════ */
 .app-top-nav {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
   box-shadow: none;
@@ -162,7 +162,7 @@ body {
 }
 
 .app-top-nav-kbd {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-color: var(--border-subtle);
   color: var(--text-muted);
 }
@@ -365,8 +365,19 @@ body {
   .module-send-center,
   .module-farmers-edge,
   .module-analytics
+) .va-ops-tab-nav,
+:is(
+  .module-va-operations,
+  .module-commercial-hub,
+  .module-intake-forms,
+  .module-training-hub,
+  .module-carrier-library,
+  .module-epay-policy,
+  .module-send-center,
+  .module-farmers-edge,
+  .module-analytics
 ) .send-center-tab-nav {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-bottom: 1px solid var(--border-subtle);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -679,7 +690,7 @@ textarea,
 .va-ops-search,
 .header-filter-select,
 .send-center-select {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-color: var(--border-default);
   color: var(--text-primary);
 }
@@ -729,7 +740,7 @@ button:active {
 }
 
 .va-quick-actions-item {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-color: color-mix(in srgb, var(--hub-va) 28%, var(--border-subtle));
   color: var(--hub-va);
   box-shadow: var(--shadow-card);
@@ -753,7 +764,7 @@ button:active {
 }
 
 .cmd-palette-panel {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid var(--border-default);
   box-shadow: 0 24px 64px rgba(28, 43, 53, 0.18);
 }
@@ -768,7 +779,7 @@ button:active {
 
 .cmd-palette-header,
 .cmd-palette-categories {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-bottom-color: var(--border-subtle);
 }
 

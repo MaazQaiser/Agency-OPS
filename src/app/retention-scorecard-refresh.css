@@ -82,7 +82,7 @@
 
 .module-retention .retention-page-header-actions .retention-lang-toggle,
 .module-retention .retention-page-header-actions .hub-help-trigger {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-color: #E6EBF2;
   color: #1C2B35;
 }
@@ -123,7 +123,7 @@
 }
 
 .module-retention .retention-scorecard-tabs.tab-bar {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
 }
 
@@ -139,7 +139,7 @@
 
 /* ── Primary health ── */
 .retention-health-card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   padding: 24px;
@@ -216,7 +216,7 @@
 .module-retention .kpi-card.retention {
   min-height: 124px;
   padding: 18px 20px;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: none;
@@ -253,7 +253,7 @@
 
 /* ── Trend ── */
 .retention-trend-card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   padding: 20px;
@@ -368,7 +368,7 @@
 
 .retention-risk-table-wrap {
   overflow-x: auto;
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
 }
@@ -395,7 +395,7 @@
   padding: 0 16px;
   height: 60px;
   border-bottom: 1px solid #E6EBF2;
-  background: #FFFFFF;
+  background: var(--surface-card);
   vertical-align: middle;
 }
 
@@ -461,7 +461,7 @@
 }
 
 .retention-risk-card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   padding: 16px;
@@ -476,7 +476,7 @@
 }
 
 .module-retention .retention-table-wrap {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
 }
@@ -495,13 +495,13 @@
 }
 
 .module-retention .alert {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
   color: #526979;
 }
 
 .module-retention .card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border: 1px solid #E6EBF2;
 }
 

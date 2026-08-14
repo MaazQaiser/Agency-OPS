@@ -47,6 +47,7 @@ import "./retention-scorecard-refresh.css";
 import "./interaction-motion-system.css";
 import "./print-export.css";
 import "./visual-qa-fixes.css";
+import "./obsidian-mode.css";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -86,9 +87,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
-      data-theme="light"
+      data-theme="obsidian"
       suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;var light=p==="/commercial-hub"||p.indexOf("/commercial-hub/")===0||p==="/commercial"||p.indexOf("/commercial/")===0;document.documentElement.setAttribute("data-theme",light?"light":"obsidian");document.documentElement.style.colorScheme=light?"light":"dark";}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className={sans.className}>{children}</body>
     </html>
   );

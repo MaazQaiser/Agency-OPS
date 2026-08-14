@@ -60,7 +60,7 @@
   height: var(--top-header-bar-height);
   min-height: var(--top-header-bar-height);
   padding: 0 var(--shell-pad-desktop);
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-bottom: 1px solid var(--shell-border);
   color: var(--shell-text);
   box-shadow: none;
@@ -122,7 +122,7 @@
 /* ── Folio context — compact, global, not duplicated per hub ── */
 .global-folio-strip,
 .folio-progress-bar.global-folio-strip {
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-bottom: 1px solid var(--shell-border);
   min-height: var(--folio-bar-height);
   max-height: var(--folio-bar-height);
@@ -198,7 +198,7 @@
 .app-content .va-ops-tab-nav {
   padding-left: var(--shell-pad-desktop);
   padding-right: var(--shell-pad-desktop);
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-bottom: 1px solid var(--shell-border);
 }
 
@@ -394,7 +394,7 @@
 .app-content .va-ops-action-btn:not(.primary):not(.critical),
 .app-content .commercial-hub-btn-secondary,
 .app-content .btn-secondary {
-  background: #FFFFFF;
+  background: var(--shell-card);
   border: 1px solid var(--shell-border);
   color: var(--shell-text);
 }
@@ -404,7 +404,7 @@
 .app-content .btn-secondary:hover {
   border-color: var(--hub-primary, var(--ita-navy));
   color: var(--hub-primary, var(--ita-navy));
-  background: #FFFFFF;
+  background: var(--shell-card);
 }
 
 .app-content .commercial-hub-btn-utility,
@@ -434,7 +434,7 @@
   min-height: var(--shell-control-height);
   border-radius: var(--shell-radius-control);
   border: 1px solid var(--shell-input-border);
-  background: #FFFFFF;
+  background: var(--shell-card);
   color: var(--shell-text);
   font-family: var(--font-family);
   font-size: 14px;
@@ -537,7 +537,7 @@
 .app-content .commercial-hub-table td,
 .app-content .va-ops-priority-table td,
 .app-content .send-center-table td {
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-bottom: 1px solid var(--shell-border);
   font-family: var(--font-family);
   font-size: 13px;
@@ -643,7 +643,7 @@
 .commercial-hub-empty-state {
   padding: 28px 20px;
   gap: 8px;
-  background: #FFFFFF;
+  background: var(--shell-card);
   border: 1px dashed var(--shell-border);
   border-radius: var(--shell-radius-card);
   box-shadow: none;
@@ -673,7 +673,7 @@
 /* ── Modals ── */
 .va-ops-modal,
 .eva-action-modal {
-  background: #FFFFFF;
+  background: var(--shell-card);
   border: 1px solid var(--shell-border);
   border-radius: 16px;
   padding: 0;
@@ -709,7 +709,7 @@
 .notification-center-panel,
 .folio-drawer {
   width: min(420px, 100vw);
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-left: 1px solid var(--shell-border);
   color: var(--shell-text);
   box-shadow: -12px 0 40px rgba(20, 35, 50, 0.12);
@@ -722,7 +722,7 @@
 .folio-drawer .va-ops-drawer-header {
   min-height: 64px;
   padding: 12px 20px;
-  background: #FFFFFF;
+  background: var(--shell-card);
   border-bottom: 1px solid var(--shell-border);
   box-sizing: border-box;
 }
@@ -738,7 +738,7 @@
   --help-search-bg: #F7FBFD;
   --help-card-bg: #FFFFFF;
   --help-glow: var(--hub-glow, transparent);
-  background: #FFFFFF;
+  background: var(--shell-card);
   color: #1C2B35;
 }
 

@@ -283,14 +283,14 @@
   height: 42px;
   border: 1px solid #D8E0E8;
   border-radius: 10px;
-  background: #FFFFFF;
+  background: var(--qa-card);
   color: var(--qa-text);
 }
 
 .app-content textarea {
   border: 1px solid #D8E0E8;
   border-radius: 10px;
-  background: #FFFFFF;
+  background: var(--qa-card);
   color: var(--qa-text);
 }
 
@@ -363,7 +363,7 @@
 
 /* ── Hub pulse strip: light, readable chips ── */
 .hub-local-pulse {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-bottom: 1px solid #E6EBF2;
   min-height: 44px;
   padding: 8px 32px;
@@ -374,13 +374,13 @@
 }
 
 .hub-local-pulse-chip {
-  color: #1C2B35;
+  color: var(--qa-text);
   background: #F7FBFD;
   border: 1px solid #E6EBF2;
 }
 
 .hub-local-pulse-chip strong {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .hub-local-pulse-chip--red {
@@ -551,7 +551,7 @@
 .module-commercial-hub .commercial-hub-tab-intel,
 .module-commercial-hub .commercial-hub-tab-footer,
 .module-commercial-hub .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.07);
 }
@@ -561,7 +561,7 @@
 .module-commercial-hub .commercial-hub-tab-intel:hover,
 .module-commercial-hub .commercial-hub-tab-footer:hover,
 .module-commercial-hub .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card:hover {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: #E6EBF2;
   box-shadow: 0 8px 24px rgba(30, 50, 80, 0.09);
 }
@@ -583,7 +583,7 @@
 
 .module-commercial-hub .commercial-hub-btn-tertiary-action {
   color: #526979;
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
 }
 
@@ -608,7 +608,7 @@
 }
 
 .commercial-expand-card {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
 }
 
@@ -618,14 +618,14 @@
 
 .commercial-expand-chip,
 .commercial-expand-step {
-  color: #1C2B35;
-  background: #FFFFFF;
+  color: var(--qa-text);
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
 }
 
 .commercial-expand-line-list li,
 .commercial-expand-notes-list li {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .commercial-expand-line-list strong,
@@ -679,7 +679,7 @@
 .hub-shell .va-ops-page-header .va-ops-search,
 .module-va-operations .va-ops-page-header .va-ops-search,
 .module-va-operations .owner-overview-hero .va-ops-search {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: none;
   box-shadow: none;
 }
@@ -706,8 +706,8 @@
   margin: 0;
   height: auto;
   min-height: 0;
-  color: #1C2B35;
-  -webkit-text-fill-color: #1C2B35;
+  color: var(--qa-text);
+  -webkit-text-fill-color: var(--qa-text);
 }
 
 .app-content .va-ops-search-input::-webkit-search-decoration,
@@ -747,7 +747,7 @@
   border-bottom: 2px solid transparent;
   background: transparent;
   box-shadow: none;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .va-ops-filter-btn.active,
@@ -841,11 +841,11 @@
 .app-content .va-ops-priority-item,
 .module-va-operations .va-ops-approval-item,
 .module-va-operations .va-ops-priority-item {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
-  color: #1C2B35;
+  color: var(--qa-text);
   padding: 16px 18px;
   align-items: center;
 }
@@ -863,7 +863,7 @@
 .app-content .va-ops-approval-title,
 .app-content .va-ops-priority-title,
 .module-va-operations .va-ops-approval-title {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-size: 15px;
   font-weight: 700;
   line-height: 1.35;
@@ -916,7 +916,7 @@
 .app-content .va-ops-approval-meta strong,
 .app-content .va-ops-priority-meta strong,
 .hub-shell .va-ops-approval-meta strong {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 600;
 }
 
@@ -943,9 +943,9 @@
 
 .app-content .va-ops-approval-item .va-ops-action-btn,
 .app-content .va-ops-approval-item .va-ops-action-btn:not(.primary):not(.critical) {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
   min-height: 42px;
   border-radius: 10px;
   font-weight: 600;
@@ -968,7 +968,7 @@
 
 .app-content .va-ops-approval-item .va-ops-action-btn--review,
 .app-content .va-ops-approval-item .va-ops-action-btn--review:not(.primary):not(.critical) {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 32%, #E6EBF2);
   color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
 }
@@ -997,18 +997,18 @@
 /* ── Workload rows: leftover dark glass → light workspace ── */
 .app-content .va-ops-workload-row,
 .module-va-operations .va-ops-workload-row {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
-  color: #1C2B35;
+  color: var(--qa-text);
   padding: 14px 16px;
   gap: 16px;
 }
 
 .app-content .va-ops-workload-name,
 .module-va-operations .va-ops-workload-name {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 700;
 }
 
@@ -1056,7 +1056,7 @@
 
 .app-content .va-ops-workload-segment-legend strong,
 .module-va-operations .va-ops-workload-segment-legend strong {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 700;
 }
 
@@ -1103,11 +1103,11 @@
 /* ── Active workflow cards: leftover dark glass → light workspace ── */
 .app-content .va-ops-workflow-card,
 .module-va-operations .va-ops-workflow-card {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
-  color: #1C2B35;
+  color: var(--qa-text);
   padding: 16px 18px;
 }
 
@@ -1119,7 +1119,7 @@
 
 .app-content .va-ops-workflow-name,
 .module-va-operations .va-ops-workflow-name {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 700;
 }
 
@@ -1135,7 +1135,7 @@
 
 .app-content .va-ops-workflow-meta strong,
 .module-va-operations .va-ops-workflow-meta strong {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 600;
 }
 
@@ -1147,9 +1147,9 @@
 
 .app-content .va-ops-workflow-card .va-ops-action-btn,
 .app-content .va-ops-workflow-card .va-ops-action-btn:not(.primary):not(.critical) {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
   min-height: 42px;
   border-radius: 10px;
   font-weight: 600;
@@ -1179,7 +1179,7 @@
 
 .app-content .va-ops-logic-panel .va-ops-section-sub strong,
 .module-va-operations .va-ops-logic-panel .va-ops-section-sub strong {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 700;
 }
 
@@ -1192,14 +1192,14 @@
 
 .app-content .va-ops-logic-step,
 .module-va-operations .va-ops-logic-step {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   box-shadow: none;
 }
 
 .app-content .va-ops-logic-step-label,
 .module-va-operations .va-ops-logic-step-label {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .va-ops-logic-step-type,
@@ -1295,11 +1295,11 @@
   .va-ops-bind-row,
   .va-ops-pipeline-row
 ) {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   border-radius: 16px;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .va-ops-integrations-panel .va-ops-section-sub,
@@ -1309,7 +1309,7 @@
 
 .app-content .va-ops-integration-name,
 .module-va-operations .va-ops-integration-name {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 700;
 }
 
@@ -1320,7 +1320,7 @@
 
 .app-content .va-ops-integration-sync strong,
 .module-va-operations .va-ops-integration-sync strong {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 600;
 }
 
@@ -1335,7 +1335,7 @@
 .app-content .submission-tracker-table-panel .submission-tracker-detail-row td {
   background: #F7FBFD;
   border-color: #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .va-ops-qual-checklist li,
@@ -1365,8 +1365,8 @@
   padding: 0;
   border-radius: 10px;
   border: 1px solid #E6EBF2;
-  background: #FFFFFF;
-  color: #1C2B35;
+  background: var(--qa-card);
+  color: var(--qa-text);
   box-shadow: none;
   cursor: pointer;
 }
@@ -1376,7 +1376,7 @@
 .dnc-log-table .commercial-row-action-trigger:hover {
   border-color: color-mix(in srgb, var(--hub-primary, #4F46E5) 32%, #E6EBF2);
   color: color-mix(in srgb, var(--hub-primary, #4F46E5) 55%, #1C2B35);
-  background: #FFFFFF;
+  background: var(--qa-card);
 }
 
 .app-content .commercial-row-action-dropdown,
@@ -1392,7 +1392,7 @@
   list-style: none;
   border-radius: 12px;
   border: 1px solid #E6EBF2;
-  background: #FFFFFF;
+  background: var(--qa-card);
   box-shadow: 0 12px 32px rgba(30, 50, 80, 0.12);
 }
 
@@ -1407,7 +1407,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #1C2B35;
+  color: var(--qa-text);
   font-size: 13px;
   font-weight: 600;
   text-align: left;
@@ -1418,7 +1418,7 @@
 .hub-shell .commercial-row-action-item:hover,
 .dnc-log-table .commercial-row-action-item:hover {
   background: #F7FBFD;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .commercial-row-action-item--danger,
@@ -1455,7 +1455,7 @@
   height: 42px;
   min-height: 42px;
   padding: 0 14px;
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   border-radius: 10px;
   box-shadow: none;
@@ -1483,8 +1483,8 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  color: #1C2B35;
-  -webkit-text-fill-color: #1C2B35;
+  color: var(--qa-text);
+  -webkit-text-fill-color: var(--qa-text);
 }
 
 .app-content .send-center-search-wrap input::-webkit-search-decoration,
@@ -1575,10 +1575,10 @@
 /* ── Today timeline cards: leftover white text on light fills ── */
 .app-content .va-ops-today-timeline-card,
 .module-va-operations .va-ops-today-timeline-card {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
   box-shadow: 0 6px 22px rgba(30, 50, 80, 0.06);
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .app-content .va-ops-today-timeline-label,
@@ -1598,7 +1598,7 @@
 
 .app-content .va-ops-today-timeline-text,
 .module-va-operations .va-ops-today-timeline-text {
-  color: #1C2B35;
+  color: var(--qa-text);
   font-weight: 600;
 }
 
@@ -1673,7 +1673,7 @@
 .module-farmers-edge .fe-benefit-feature-title,
 .app-content .fe-benefit-feature-title {
   font-size: 16px;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .module-farmers-edge .fe-benefit-value-label,
@@ -1779,7 +1779,7 @@
 }
 
 .module-epay-policy .epay-readiness-label {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 /* ── Command palette: center in the viewport ── */
@@ -1998,8 +1998,8 @@
 /* ── Audit log drawer: leftover navy chrome ── */
 .va-ops-drawer.audit-log-panel,
 .audit-log-panel {
-  background: #FFFFFF;
-  color: #1C2B35;
+  background: var(--qa-card);
+  color: var(--qa-text);
   border-left-color: #E6EBF2;
   box-shadow: -12px 0 40px rgba(20, 35, 50, 0.12);
 }
@@ -2008,13 +2008,13 @@
 .audit-log-toolbar,
 .audit-log-metrics,
 .audit-log-footer {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-header h2 {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-header p,
@@ -2026,31 +2026,31 @@
 }
 
 .audit-log-panel .va-ops-drawer-close {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-panel .va-ops-drawer-close:hover {
   background: #F7FBFD;
-  color: #1C2B35;
+  color: var(--qa-text);
   border-color: #D8E0E8;
 }
 
 .audit-log-search,
 .audit-log-filter select {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-metric {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: #E6EBF2;
 }
 
 .audit-log-metric-value {
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-metric--critical .audit-log-metric-value {
@@ -2076,9 +2076,9 @@
 }
 
 .audit-log-footer-btn {
-  background: #FFFFFF;
+  background: var(--qa-card);
   border-color: #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .audit-log-footer-btn--primary {
@@ -2111,7 +2111,7 @@
   min-height: 64px;
   padding: 12px 16px 12px 20px;
   overflow: visible;
-  background: #FFFFFF;
+  background: var(--qa-card);
 }
 
 .notification-center-header-title {
@@ -2125,7 +2125,7 @@
   margin: 0;
   flex-shrink: 0;
   white-space: nowrap;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
 
 .notification-center-unread-badge {
@@ -2161,7 +2161,7 @@
 .notification-center-header .va-ops-drawer-close {
   width: 36px;
   height: 36px;
-  background: #FFFFFF;
+  background: var(--qa-card);
   border: 1px solid #E6EBF2;
-  color: #1C2B35;
+  color: var(--qa-text);
 }
