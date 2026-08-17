@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "./design-tokens.css";
 import "./table-scrollbars.css";
@@ -49,22 +49,37 @@ import "./print-export.css";
 import "./visual-qa-fixes.css";
 import "./obsidian-mode.css";
 
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
+const display = localFont({
+  src: [
+    { path: "./fonts/cormorant-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/cormorant-500-italic.woff2", weight: "500", style: "italic" },
+    { path: "./fonts/cormorant-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/cormorant-600-italic.woff2", weight: "600", style: "italic" },
+    { path: "./fonts/cormorant-700.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/cormorant-700-italic.woff2", weight: "700", style: "italic" },
+  ],
   variable: "--font-display",
-  weight: ["500", "600", "700"],
+  display: "swap",
+  fallback: ["Palatino", "Times New Roman", "serif"],
 });
 
-const sans = Inter({
-  subsets: ["latin"],
+const sans = localFont({
+  src: "./fonts/inter-latin-wght.woff2",
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
+  weight: "100 900",
+  display: "swap",
+  fallback: ["system-ui", "Segoe UI", "sans-serif"],
 });
 
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
+const mono = localFont({
+  src: [
+    { path: "./fonts/jetbrains-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/jetbrains-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/jetbrains-700.woff2", weight: "700", style: "normal" },
+  ],
   variable: "--font-mono",
-  weight: ["400", "500", "700"],
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
 });
 
 export const metadata: Metadata = {
