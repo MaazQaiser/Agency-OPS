@@ -28,8 +28,8 @@ export const vaQuickActions: VaQuickActionDef[] = [
   },
   {
     id: "add-az-note",
-    label: "Add AZ Note",
-    tooltip: "Add AZ Note",
+    label: "Add client note",
+    tooltip: "Add a note to the client record",
     icon: "file-text",
     href: `${routes.commercialHub}?view=submissions&action=create-note`,
   },

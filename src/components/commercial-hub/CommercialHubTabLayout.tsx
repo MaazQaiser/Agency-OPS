@@ -123,6 +123,7 @@ export function CommercialHubKpiStrip({
           <VaOpsKpiCard
             key={kpi.label}
             {...kpi}
+            financial={kpi.financial ?? kpi.label === "Pipeline Premium"}
             className={cn(
               "commercial-hub-kpi-uniform",
               index < 3 ? "ih-kpi--primary" : "ih-kpi--secondary",

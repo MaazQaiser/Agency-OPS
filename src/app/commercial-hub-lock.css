@@ -1,0 +1,160 @@
+/* ═══════════════════════════════════════════════════════════════
+   Commercial Hub design lock (Maaz D1–D5)
+   Loaded after visual-qa so this screen is the type/money/hover source of truth.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* D3 / D4 — one heavy bold sans family. No display serif. No italic. */
+.module-commercial-hub .va-ops-page-header .va-ops-page-title,
+.module-commercial-hub .commercial-hub-hero-title,
+.module-commercial-hub .va-ops-page-title {
+  font-family: var(--font-family) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+}
+
+.module-commercial-hub :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  .va-ops-panel-title,
+  .va-ops-section-title,
+  .commercial-hub-tab-title,
+  .commercial-hub-tab-title--strategic,
+  .commercial-hub-section-title--strategic,
+  .commercial-conversion-chart-title,
+  .commercial-hub-empty-state-title
+) {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.module-commercial-hub :is(
+  .va-ops-section-sub,
+  .va-ops-page-subtitle,
+  .commercial-hub-hero-subtitle,
+  .commercial-hub-tab-subtitle,
+  .commercial-hub-kpi-flagship .va-ops-kpi-sub,
+  .commercial-hub-kpi-uniform .va-ops-kpi-sub
+) {
+  font-family: var(--font-family);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* D1 — only Pipeline Premium is the large green money figure */
+.module-commercial-hub .commercial-hub-kpi-uniform .va-ops-kpi-value,
+.module-commercial-hub .commercial-hub-kpi-flagship .va-ops-kpi-value,
+.module-commercial-hub .va-ops-kpi-card.green .va-ops-kpi-value,
+.module-commercial-hub .aos-kpi-card--positive .va-ops-kpi-value,
+.module-commercial-hub .commercial-hub-kpi-uniform.green .va-ops-kpi-value {
+  color: var(--text-primary) !important;
+}
+
+.module-commercial-hub .va-ops-kpi-card:has(.aos-finance) {
+  background: var(--ch-card, #ffffff);
+  border-color: var(--ch-border, #e6ebf2);
+}
+
+.module-commercial-hub .va-ops-kpi-card:has(.aos-finance) .va-ops-kpi-value.aos-finance,
+.module-commercial-hub .va-ops-kpi-value.aos-finance {
+  color: #10b981 !important;
+  font-size: clamp(36px, 3vw, 44px);
+  font-weight: 800;
+}
+
+.module-commercial-hub .commercial-pipeline-stage-premium,
+.module-commercial-hub .commercial-hub-premium,
+.module-commercial-hub td.aos-finance,
+.module-commercial-hub .commercial-hub-table td.aos-finance {
+  color: var(--text-primary) !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.module-commercial-hub .commercial-pipeline-stage-premium {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* D2 — threshold cards keep a red/amber signal (value + left rail) */
+.module-commercial-hub .va-ops-kpi-card.red,
+.module-commercial-hub .va-ops-kpi-card.rose,
+.module-commercial-hub .aos-kpi-card--danger {
+  border-left: 4px solid #f43f5e !important;
+}
+
+.module-commercial-hub .va-ops-kpi-card.amber,
+.module-commercial-hub .va-ops-kpi-card.yellow,
+.module-commercial-hub .aos-kpi-card--warning {
+  border-left: 4px solid #f59e0b !important;
+}
+
+.module-commercial-hub .va-ops-kpi-card.red .va-ops-kpi-value,
+.module-commercial-hub .va-ops-kpi-card.rose .va-ops-kpi-value,
+.module-commercial-hub .aos-kpi-card--danger .va-ops-kpi-value {
+  color: #e11d48 !important;
+}
+
+.module-commercial-hub .va-ops-kpi-card.amber .va-ops-kpi-value,
+.module-commercial-hub .va-ops-kpi-card.yellow .va-ops-kpi-value,
+.module-commercial-hub .aos-kpi-card--warning .va-ops-kpi-value {
+  color: #d97706 !important;
+}
+
+.module-commercial-hub .va-ops-kpi-card.red .aos-status-pill,
+.module-commercial-hub .aos-kpi-card--danger .aos-status-pill {
+  background: #fde9ec;
+  color: #e11d48;
+}
+
+.module-commercial-hub .va-ops-kpi-card.amber .aos-status-pill,
+.module-commercial-hub .aos-kpi-card--warning .aos-status-pill {
+  background: #fef3e2;
+  color: #d97706;
+}
+
+/* D5 — cards lift and shift border on hover (article cards, not only buttons) */
+.module-commercial-hub .va-ops-kpi-card,
+.module-commercial-hub .va-ops-panel,
+.module-commercial-hub .commercial-pipeline-stage-card,
+.module-commercial-hub .commercial-hub-tab-workspace,
+.module-commercial-hub .commercial-hub-tab-intel,
+.module-commercial-hub .commercial-hub-tab-footer {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.module-commercial-hub .va-ops-kpi-card:hover,
+.module-commercial-hub .commercial-pipeline-stage-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 14px 28px rgba(30, 50, 80, 0.14) !important;
+  border-color: color-mix(in srgb, var(--hub-primary, #0d9488) 38%, #e6ebf2) !important;
+  cursor: pointer;
+}
+
+.module-commercial-hub .va-ops-panel:hover,
+.module-commercial-hub .commercial-hub-tab-workspace:hover,
+.module-commercial-hub .commercial-hub-tab-intel:hover,
+.module-commercial-hub .commercial-hub-tab-footer:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 26px rgba(30, 50, 80, 0.12) !important;
+  border-color: color-mix(in srgb, var(--hub-primary, #0d9488) 32%, #e6ebf2) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .module-commercial-hub .va-ops-kpi-card:hover,
+  .module-commercial-hub .va-ops-panel:hover,
+  .module-commercial-hub .commercial-pipeline-stage-card:hover,
+  .module-commercial-hub .commercial-hub-tab-workspace:hover,
+  .module-commercial-hub .commercial-hub-tab-intel:hover,
+  .module-commercial-hub .commercial-hub-tab-footer:hover {
+    transform: none !important;
+  }
+}

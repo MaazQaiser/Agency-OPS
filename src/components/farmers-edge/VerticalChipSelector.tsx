@@ -1,5 +1,6 @@
 "use client";
 
+import { AppIcon, type AppIconName } from "@/components/ui/AppIcon";
 import type { VerticalMeta } from "@/hooks/useFarmersEdgeData";
 
 type VerticalChipSelectorProps = {
@@ -8,19 +9,35 @@ type VerticalChipSelectorProps = {
   verticals?: VerticalMeta[];
 };
 
+const verticalIcons: Record<string, AppIconName> = {
+  all: "layout-grid",
+  landscapers: "leaf",
+  contractors: "hammer",
+  restaurants: "utensils",
+  cleaning: "sparkles",
+  trucking: "truck",
+  beauty: "scissors",
+};
+
 export function VerticalChipSelector({ activeVertical, onSelect, verticals = [] }: VerticalChipSelectorProps) {
   return (
-    <select
-      className="header-filter-select fe-vertical-select"
-      value={activeVertical}
-      onChange={(e) => onSelect(e.target.value)}
-      aria-label="Select commercial vertical"
-    >
-        {verticals.map((v) => (
-          <option key={v.id} value={v.id}>
-            {v.emoji ? `${v.emoji} ${v.label}` : v.label}
-          </option>
-        ))}
-      </select>
+    <div className="fe-vertical-chips" role="tablist" aria-label="Commercial vertical">
+      {verticals.map((vertical) => {
+        const selected = vertical.id === activeVertical;
+        return (
+          <button
+            key={vertical.id}
+            type="button"
+            role="tab"
+            aria-selected={selected}
+            className={`fe-v-chip${selected ? " is-active" : ""}`}
+            onClick={() => onSelect(vertical.id)}
+          >
+            <AppIcon name={verticalIcons[vertical.id] ?? "target"} size={15} strokeWidth={1.75} />
+            <span>{vertical.label}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }

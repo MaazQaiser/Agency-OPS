@@ -23,7 +23,7 @@ export function executiveTabKpis(): VaOpsKpiCardProps[] {
     "Active Pipeline": "teal",
     "Pipeline Premium": "green",
     "Quotes Received": "info",
-    "Ready to Bind": "green",
+    "Ready to Bind": "teal",
     "Stalled Submissions": "red",
     "Missing Documents": "amber",
   };

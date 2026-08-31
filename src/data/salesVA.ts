@@ -104,7 +104,7 @@ export const approvalQueue: SalesApproval[] = [
       "Renewal docs pending from carrier.",
     ],
     draftCommunication:
-      "Hi: this is Insurance Town. Your BOP policy for Greenline Logistics renews in 45 days. Reply YES to schedule a renewal review or call us at (555) 012-3456.",
+      "Hi: this is Insurance Town. Your BOP policy for Greenline Logistics renews in 45 days. Reply YES to schedule a renewal review.",
     complianceChecklist: [
       { id: "c1", label: "Licensed producer review completed", checked: false },
       { id: "c2", label: "Opt-out language included", checked: true },

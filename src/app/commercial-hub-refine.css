@@ -595,7 +595,7 @@
 }
 
 .commercial-hub-tab-kpi .commercial-hub-kpi-uniform .va-ops-kpi-value {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-kpi-md);
   font-weight: 700;
   line-height: 1.08;
@@ -603,18 +603,6 @@
   text-shadow: none;
   letter-spacing: var(--letter-spacing-kpi, -0.025em);
   font-variant-numeric: tabular-nums;
-}
-
-.commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card.primary .va-ops-kpi-value,
-.commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card.green .va-ops-kpi-value,
-.commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card.yellow .va-ops-kpi-value,
-.commercial-hub-tab-kpi .commercial-hub-kpi-uniform.va-ops-kpi-card.red .va-ops-kpi-value {
-  color: var(--text-primary);
-  text-shadow: none;
-}
-
-.module-commercial-hub .commercial-hub-tab-kpi .commercial-hub-kpi-uniform .va-ops-kpi-value {
-  color: var(--text-primary);
 }
 
 .commercial-hub-tab-kpi .commercial-hub-kpi-uniform .kpi-sparkline-wrap {
@@ -669,7 +657,7 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
 }
 
 .commercial-hub-kpi-uniform .va-ops-kpi-value {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-kpi-md);
   font-weight: 700;
   line-height: 1.08;
@@ -927,23 +915,26 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
 }
 
 .module-commercial-hub .commercial-hub-tab-title--strategic {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--font-size-h2);
-  font-weight: 600;
-  letter-spacing: normal;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
 }
 
 .module-commercial-hub .va-ops-section-title {
   font-family: var(--font-family);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-style: normal;
   letter-spacing: 0.01em;
 }
 
 .module-commercial-hub .commercial-hub-section-title--strategic {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-style: normal;
 }
 
 /* Card surfaces — teal hub influence */

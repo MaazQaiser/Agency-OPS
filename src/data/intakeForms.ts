@@ -9,7 +9,7 @@ export type IntakeFormsTabId = (typeof intakeFormsTabs)[number]["id"];
 
 export const intakeFormsHeader = {
   title: "Intake Forms",
-  subtitle: "Lead capture · Form submissions · AZ routing",
+  subtitle: "Lead capture · Form submissions · Client routing",
   quickActions: [
     { id: "import", label: "Import Submission", icon: "upload" as const },
   ],
@@ -97,7 +97,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "9 minutes",
       whoCanSubmit: "Producers, VAs, and intake team",
-      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday: New Submissions"],
+      routingDestination: ["Client record", "Team alert"],
     },
   },
   {
@@ -126,7 +126,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "11 minutes",
       whoCanSubmit: "Producers, VAs, and intake team",
-      routingDestination: ["AgencyZoom", "Slack #commercial-intake", "Monday: Restaurant Pipeline"],
+      routingDestination: ["Client record", "Team alert"],
     },
   },
   {
@@ -152,7 +152,7 @@ export const intakeFormCards: IntakeFormCard[] = [
       ],
       estimatedCompletionTime: "6 minutes",
       whoCanSubmit: "Producers, VAs, and CSRs",
-      routingDestination: ["AgencyZoom", "Slack #personal-intake", "Monday: Personal Lines"],
+      routingDestination: ["Client record", "Team alert"],
     },
   },
 ];
@@ -203,9 +203,8 @@ export const recentSubmissions = [
 ];
 
 export const routingStatus = [
-  { id: "route-az", system: "AgencyZoom", status: "Connected", lastSync: "2 min ago" },
-  { id: "route-slack", system: "Slack", status: "Connected", lastSync: "1 min ago" },
-  { id: "route-monday", system: "Monday", status: "Connected", lastSync: "4 min ago" },
+  { id: "route-az", system: "Client record", status: "Connected", lastSync: "2 min ago" },
+  { id: "route-slack", system: "Team alert", status: "Connected", lastSync: "1 min ago" },
 ];
 
 export type IntakeDraftStatus = "Draft" | "In Progress" | "Needs Review";
@@ -336,6 +335,30 @@ export type ClientRoutingStatus = {
   client: string;
   steps: ClientRoutingStep[];
 };
+
+/** Team-facing routing columns. Monday is out of scope and must not render. */
+export const teamFacingRoutingColumns = [
+  { system: "AgencyZoom", label: "Client record" },
+  { system: "Slack", label: "Team alert" },
+  { system: "Producer", label: "Producer" },
+  { system: "Send Center", label: "Send Center" },
+  { system: "Commercial Hub", label: "Commercial Hub" },
+] as const;
+
+export function teamFacingRoutingSteps(steps: ClientRoutingStep[]) {
+  return teamFacingRoutingColumns.map((column) => ({
+    system: column.system,
+    label: column.label,
+    status: steps.find((step) => step.system === column.system)?.status ?? "Pending",
+  }));
+}
+
+export function teamFacingSystemName(system: string): string | null {
+  if (system === "Monday") return null;
+  if (system === "AgencyZoom") return "Client record";
+  if (system === "Slack") return "Team alert";
+  return system;
+}
 
 export const clientRoutingStatus: ClientRoutingStatus[] = [
   {

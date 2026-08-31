@@ -174,20 +174,20 @@ export const hubErrorPresets: Record<
   { title: string; message: string; severity: "critical" | "warning"; retryLabel?: string }
 > = {
   "agencyzoom-unavailable": {
-    title: "AgencyZoom unavailable",
+    title: "Client records unavailable",
     message: "Unable to fetch pipeline data. Your last successful sync is shown below.",
     severity: "warning",
     retryLabel: "Retry",
   },
   "supabase-timeout": {
     title: "Connection lost",
-    message: "Supabase timed out. Please try again.",
+    message: "Live data timed out. Please try again.",
     severity: "critical",
     retryLabel: "Reconnect",
   },
   "sheets-cache-failed": {
     title: "Config temporarily unavailable",
-    message: "Google Sheets cache failed to refresh. Operating on last known config.",
+    message: "Config cache failed to refresh. Operating on last known config.",
     severity: "warning",
     retryLabel: "Refresh",
   },

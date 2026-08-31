@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppIcon } from "@/components/ui/AppIcon";
-import { clientRoutingStatus } from "@/data/intakeForms";
+import { clientRoutingStatus, teamFacingRoutingColumns, teamFacingRoutingSteps } from "@/data/intakeForms";
 import {
   defaultHistoryFilters,
   failedSubmissionQueue,
@@ -338,20 +338,17 @@ export function SubmissionHistoryTab() {
           <table className="commercial-hub-table intake-routing-table intake-table-dense">
             <thead>
               <tr>
-                <th>Client</th>
-                <th>AgencyZoom</th>
-                <th>Slack</th>
-                <th>Monday</th>
-                <th>Producer</th>
-                <th>Send Center</th>
-                <th>Commercial Hub</th>
+                    <th>Client</th>
+                    {teamFacingRoutingColumns.map((column) => (
+                      <th key={column.system}>{column.label}</th>
+                    ))}
               </tr>
             </thead>
             <tbody>
               {clientRoutingStatus.map((row) => (
                 <tr key={row.id}>
                   <td className="commercial-hub-client-cell">{row.client}</td>
-                  {row.steps.map((step) => (
+                  {teamFacingRoutingSteps(row.steps).map((step) => (
                     <td key={`${row.id}-${step.system}`}>
                       <span className={cn("badge intake-routing-badge", routingSystemClass[step.status])}>
                         {step.status}

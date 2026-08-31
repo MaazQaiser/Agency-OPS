@@ -326,9 +326,6 @@ export function FormBuilderTab() {
           <FormField label={L("email")} required error={errorFor(errs, "email")}>
             <input className="intake-form-input" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} />
           </FormField>
-          <FormField label={L("phone")} required error={errorFor(errs, "phone")}>
-            <input className="intake-form-input" type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
-          </FormField>
           <FormField label={L("address")} required error={errorFor(errs, "address")} className="intake-form-field-full">
             <input className="intake-form-input" value={data.address} onChange={(e) => update("address", e.target.value)} />
           </FormField>
@@ -379,9 +376,6 @@ export function FormBuilderTab() {
             </FormField>
             <FormField label={L("email")} required error={errorFor(errs, "email")} {...fieldStatus("email")}>
               <input className="intake-form-input" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} />
-            </FormField>
-            <FormField label={L("phone")} required error={errorFor(errs, "phone")} {...fieldStatus("phone")}>
-              <input className="intake-form-input" type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} />
             </FormField>
           </div>
         </IntakeFormSection>

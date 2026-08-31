@@ -276,7 +276,7 @@ export function MissingDocsQueueTab() {
           subtitle="Follow-up cadence and client response tracking."
         >
           <p className="va-ops-section-sub">
-            Overdue documents escalate after two reminders. Mark resolved once uploaded to AgencyZoom.
+            Overdue documents escalate after two reminders. Mark resolved once the file is uploaded.
           </p>
         </CommercialHubTabFooter>
 

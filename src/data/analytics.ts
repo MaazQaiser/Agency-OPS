@@ -649,7 +649,7 @@ export const analyticsAiInsights: Record<AnalyticsTabId, AnalyticsAiInsight[]> =
   ],
   carriers: [
     { id: "ai-car-1", title: "Travelers bind rate dropped 9%", detail: "Travelers commercial bind rate fell from 41% to 32%: appetite tightening in TX." },
-    { id: "ai-car-2", title: "Farmers concentration risk", detail: "45% of written premium with Farmers: diversification recommended." },
+    { id: "ai-car-2", title: "Farmers remains the core market", detail: "45% of written premium with Farmers: expected for Insurance Town's primary carrier relationship." },
     { id: "ai-car-3", title: "Guard decline ratio elevated", detail: "Guard at 18% decline ratio: review submission quality on restaurant risks." },
   ],
 };

@@ -78,6 +78,58 @@
   flex-shrink: 0;
 }
 
+.fe-vertical-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fe-v-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted, #8aa0b5);
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.fe-v-chip svg {
+  flex-shrink: 0;
+}
+
+.fe-v-chip:hover {
+  color: var(--text-primary, #f0f6ff);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fe-v-chip.is-active {
+  color: #0b1f2a;
+  background: #e8f7f2;
+  border-color: #10b981;
+}
+
+.module-farmers-edge .fe-page-header-toolbar .fe-vertical-chips {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
 .module-farmers-edge .fe-page-header-toolbar .fe-header-search {
   flex: 1;
   min-width: 180px;

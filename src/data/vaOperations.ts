@@ -260,12 +260,15 @@ const presenceByMember: TeamPresenceStatus[] = [
   "on-call",
 ];
 
-export const teamPresenceStrip = teamMembers.slice(0, 8).map((member, index) => ({
-  id: member.id,
-  name: member.name,
-  role: member.role,
-  presence: presenceByMember[index] ?? "online",
-}));
+export const teamPresenceStrip = teamMembers
+  .filter((member) => member.id !== "kyle" && member.id !== "hassan")
+  .slice(0, 6)
+  .map((member, index) => ({
+    id: member.id,
+    name: member.name,
+    role: member.role,
+    presence: presenceByMember[index] ?? "online",
+  }));
 
 export type TodayTimelineEventType = "call" | "appointment" | "deadline" | "follow-up";
 

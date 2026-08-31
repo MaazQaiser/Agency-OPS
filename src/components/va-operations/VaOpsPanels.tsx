@@ -432,7 +432,7 @@ export function VaOpsPriorityQueue({
         title="Today's priority queue"
         sub={expanded ? "All tasks sorted by urgency and due time." : "Sorted by urgency and due time."}
         freshness="Synced 1m ago"
-        source={{ label: "Google Sheets", type: "SYNC" }}
+        source={{ label: "Config sync", type: "SYNC" }}
       />
       {showFilters && (
         <div className="va-ops-filter-row" role="tablist" aria-label="Task filters">
@@ -478,7 +478,7 @@ export function VaOpsActivityFeed({
         title="Live Activity"
         sub="Recent actions happening across the team."
         freshness="Updated 2m ago"
-        source={{ label: "RingCentral", type: "LIVE" }}
+        source={{ label: "Live calls", type: "LIVE" }}
       />
       {showFilters && (
         <div className="va-ops-filter-row" role="tablist" aria-label="Activity filters">
@@ -514,7 +514,7 @@ export function VaOpsLeadTracker({ role }: { role: VaOperationsRoleId }) {
         title="Speed-to-Lead Monitor"
         sub="Monitor response times and SLA performance."
         freshness="Latency updated 30s ago"
-        source={{ label: "AgencyZoom", type: "LIVE" }}
+        source={{ label: "Client records", type: "LIVE" }}
       />
       <div className="va-ops-lead-table-wrap">
         <table className="va-ops-lead-table">
@@ -656,7 +656,7 @@ export function VaOpsApprovalQueue({ role }: { role: VaOperationsRoleId }) {
         title="Pending Decisions"
         sub="Approval queue across Commercial, Send Center, and Retention."
         freshness="Live sync active"
-        source={{ label: "Supabase", type: "SYNC" }}
+        source={{ label: "Data sync", type: "SYNC" }}
       />
       <ul className="va-ops-approval-list">
         {drafts.map((draft) => (

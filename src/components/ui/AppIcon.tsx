@@ -43,6 +43,12 @@ import {
   Zap,
   FileText,
   ArrowRightLeft,
+  Leaf,
+  Hammer,
+  UtensilsCrossed,
+  Truck,
+  LayoutGrid,
+  Scissors,
   type LucideIcon,
 } from "lucide-react";
 
@@ -91,6 +97,12 @@ export const appIcons = {
   lock: Lock,
   mail: Mail,
   "user-check": UserCheck,
+  leaf: Leaf,
+  hammer: Hammer,
+  utensils: UtensilsCrossed,
+  truck: Truck,
+  "layout-grid": LayoutGrid,
+  scissors: Scissors,
 } as const satisfies Record<string, LucideIcon>;
 
 export type AppIconName = keyof typeof appIcons;

@@ -15,6 +15,7 @@ export type VaOpsKpiCardProps = {
   helper?: string;
   color?: string;
   className?: string;
+  financial?: boolean;
   trend?: KpiTrendData;
   polarity?: KpiPolarity;
   sparkline?: boolean;
@@ -27,12 +28,13 @@ export function VaOpsKpiCard({
   helper,
   color,
   className,
+  financial: financialProp,
   trend,
   polarity,
   sparkline,
 }: VaOpsKpiCardProps) {
   const tooltip = `${label}: ${value}: ${sub}${helper ? ` (${helper})` : ""}`;
-  const financial = isFinancialDisplayValue(label, value);
+  const financial = financialProp ?? isFinancialDisplayValue(label, value);
   const tone = kpiToneFromColor(color);
   const showSparkline = (sparkline ?? Boolean(trend)) && Boolean(trend);
 

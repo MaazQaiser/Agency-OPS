@@ -191,9 +191,9 @@ export type FieldError = {
 
 function step1Required(formType: IntakeFormType): (keyof IntakeFormData)[] {
   if (formType === "personal-lines") {
-    return ["businessName", "email", "phone", "address", "preferredClientLanguage"];
+    return ["businessName", "email", "address", "preferredClientLanguage"];
   }
-  return ["businessName", "ownerName", "email", "phone", "address", "state", "yearsInBusiness", "preferredClientLanguage"];
+  return ["businessName", "ownerName", "email", "address", "state", "yearsInBusiness", "preferredClientLanguage"];
 }
 
 function step2Required(formType: IntakeFormType): (keyof IntakeFormData)[] {
@@ -498,7 +498,7 @@ export function getSuggestedCoverages(data: IntakeFormData, formType: IntakeForm
   return suggestions;
 }
 
-export const routingPreview = ["AgencyZoom", "Slack alert", "Monday board"];
+export const routingPreview = ["Client record", "Team alert"];
 
 export type SubmissionRulesSection = {
   title: string;
@@ -528,9 +528,8 @@ const sharedSubmissionRules: SubmissionRulesSection[] = [
   {
     title: "Auto-Routing on Submit",
     items: [
-      "Successful submissions route to AgencyZoom as the primary CRM record.",
-      "A Slack alert is sent to the intake channel for team visibility.",
-      "A Monday board item is created in the appropriate pipeline.",
+      "Successful submissions create the primary client record.",
+      "A team alert is sent to the intake channel for visibility.",
       "Failed routes are queued for retry and flagged in Submission History.",
     ],
   },
@@ -541,7 +540,7 @@ const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> 
     {
       title: "Contractors: Step Requirements",
       items: [
-        "Step 1: Business name, owner name, email, phone, address, state, and years in business.",
+        "Step 1: Business name, owner name, email, address, state, and years in business.",
         "Step 2: Type of work, payroll, subcontractor usage, annual revenue, employee count, and license status.",
         "Step 3: Select from GL, Workers Comp, Commercial Auto, BOP, Umbrella, EPLI, Cyber, or Property.",
         "Step 4: Prior carrier, expiration, and full claims history.",
@@ -557,7 +556,7 @@ const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> 
     {
       title: "Restaurants: Step Requirements",
       items: [
-        "Step 1: Business name, owner name, email, phone, address, state, and years in business.",
+        "Step 1: Business name, owner name, email, address, state, and years in business.",
         "Step 2: Seating capacity, alcohol served, delivery, cooking type, and annual sales.",
         "Step 3: Select from GL, Workers Comp, Commercial Auto, BOP, Umbrella, EPLI, Cyber, or Property.",
         "Step 4: Prior carrier, expiration, and full claims history.",
@@ -573,7 +572,7 @@ const formTypeSubmissionRules: Record<IntakeFormType, SubmissionRulesSection[]> 
     {
       title: "Personal Lines: Step Requirements",
       items: [
-        "Step 1: Full name, email, phone, and address.",
+        "Step 1: Full name, email, and address.",
         "Step 2: Property type, number of vehicles, drivers, and current policy details.",
         "Step 3: Select from Auto, Home, Renters, or Life.",
         "Step 4: Prior carrier, expiration, and full claims history.",
@@ -694,7 +693,6 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
     ? [
         ["Full Name", data.businessName],
         ["Email", data.email],
-        ["Phone", data.phone],
         ["Address", data.address],
       ]
     : [
@@ -702,7 +700,6 @@ export function getReviewSections(data: IntakeFormData, formType: IntakeFormType
         ["DBA", data.dbaName || "-"],
         ["Owner Name", data.ownerName],
         ["Email", data.email],
-        ["Phone", data.phone],
         ["Address", data.address],
         ["State", data.state],
         ["Years in Business", data.yearsInBusiness],
@@ -879,14 +876,14 @@ export type FormFieldGroup = {
 export function getStep1FieldGroups(formType: IntakeFormType): FormFieldGroup[] {
   if (formType === "personal-lines") {
     return [
-      { id: "contact", title: "Contact Information", fields: ["businessName", "email", "phone", "preferredClientLanguage"] },
+      { id: "contact", title: "Contact Information", fields: ["businessName", "email", "preferredClientLanguage"] },
       { id: "location", title: "Location Information", fields: ["address"] },
     ];
   }
   return [
     { id: "business", title: "Business Information", fields: ["businessName", "dbaName", "yearsInBusiness", "state"] },
     { id: "owner", title: "Owner Details", fields: ["ownerName"] },
-    { id: "contact", title: "Contact Information", fields: ["email", "phone", "preferredClientLanguage"] },
+    { id: "contact", title: "Contact Information", fields: ["email", "preferredClientLanguage"] },
     { id: "location", title: "Location Information", fields: ["address"] },
     { id: "notes", title: "Additional Notes", fields: [] },
   ];

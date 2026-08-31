@@ -48,12 +48,12 @@ export const contentTypeLabels: Record<ContentType, string> = {
 /** Tab 12 drives this list in production. Never hardcoded in React. */
 export const farmersEdgeVerticals: { id: string; label: string; emoji: string; sub: string }[] = [
   { id: "all", label: "All Verticals", emoji: "", sub: "Showing all commercial intelligence" },
-  { id: "landscapers", label: "Landscapers", emoji: "🌿", sub: "Exterior maintenance · Equipment-heavy vertical" },
-  { id: "contractors", label: "Contractors", emoji: "🔨", sub: "General construction · High liability exposure" },
-  { id: "restaurants", label: "Restaurants", emoji: "🍽", sub: "Food service · Liquor liability · Slip and fall" },
-  { id: "cleaning", label: "Cleaning Services", emoji: "🧹", sub: "Janitorial · Bonding requirements · Key holder exposure" },
-  { id: "trucking", label: "Trucking / Towing", emoji: "🚛", sub: "Commercial auto · Cargo · High premium vertical" },
-  { id: "beauty", label: "Beauty Services", emoji: "💅", sub: "Salon · Nail · Spa · Professional liability required" },
+  { id: "landscapers", label: "Landscapers", emoji: "", sub: "Exterior maintenance · Equipment-heavy vertical" },
+  { id: "contractors", label: "Contractors", emoji: "", sub: "General construction · High liability exposure" },
+  { id: "restaurants", label: "Restaurants", emoji: "", sub: "Food service · Liquor liability · Slip and fall" },
+  { id: "cleaning", label: "Cleaning Services", emoji: "", sub: "Janitorial · Bonding requirements · Key holder exposure" },
+  { id: "trucking", label: "Trucking / Towing", emoji: "", sub: "Commercial auto · Cargo · High premium vertical" },
+  { id: "beauty", label: "Beauty Services", emoji: "", sub: "Salon · Nail · Spa · Professional liability required" },
 ];
 
 export type BenefitsRow = { item: string };

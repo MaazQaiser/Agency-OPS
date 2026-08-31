@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppIcon } from "@/components/ui/AppIcon";
 import type { HistorySubmission } from "@/data/submissionHistory";
+import { teamFacingSystemName } from "@/data/intakeForms";
 import { crossModuleRoutes, navigateWithHandoff } from "@/lib/crossModuleLinks";
 import { routes } from "@/lib/routes";
 import { getNameInitials } from "@/lib/nameInitials";
@@ -146,14 +147,17 @@ export function SubmissionHistoryDrawer({ submission, onClose }: SubmissionHisto
             </ul>
           </div>
 
-          {drawer.routingLog.length > 0 && (
+          {drawer.routingLog.filter((entry) => teamFacingSystemName(entry.system)).length > 0 && (
             <div className="va-ops-drawer-section">
               <div className="va-ops-drawer-section-label">Routing Log</div>
               <ul className="intake-history-routing-log">
-                {drawer.routingLog.map((entry) => (
+                {drawer.routingLog.map((entry) => {
+                  const label = teamFacingSystemName(entry.system);
+                  if (!label) return null;
+                  return (
                   <li key={`${entry.system}-${entry.time}`}>
                     <div className="intake-history-routing-header">
-                      <strong>{entry.system}</strong>
+                      <strong>{label}</strong>
                       <span className={cn("badge", routingStatusClass[entry.status as keyof typeof routingStatusClass] ?? "badge-gray")}>
                         {entry.status}
                       </span>
@@ -161,7 +165,8 @@ export function SubmissionHistoryDrawer({ submission, onClose }: SubmissionHisto
                     <div className="intake-history-routing-msg">{entry.message}</div>
                     <div className="intake-history-routing-time">{entry.time}</div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -170,7 +175,13 @@ export function SubmissionHistoryDrawer({ submission, onClose }: SubmissionHisto
             <div className="va-ops-drawer-section">
               <div className="va-ops-drawer-section-label">System Responses</div>
               <ul className="va-ops-gap-list">
-                {drawer.systemResponses.map((resp) => (
+                {drawer.systemResponses
+                  .map((resp) => resp
+                    .replaceAll("AgencyZoom", "Client record")
+                    .replaceAll("Slack", "Team alert")
+                    .replaceAll("Monday", "Task board"))
+                  .filter((resp) => !/Task board/i.test(resp))
+                  .map((resp) => (
                   <li key={resp}>{resp}</li>
                 ))}
               </ul>

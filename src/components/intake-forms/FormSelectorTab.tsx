@@ -8,6 +8,8 @@ import {
   intakeFormCards,
   intakeFormsKpis,
   recentSubmissions,
+  teamFacingRoutingColumns,
+  teamFacingRoutingSteps,
   type IntakeFormCard,
   type SubmissionStatus,
 } from "@/data/intakeForms";
@@ -215,19 +217,16 @@ export function FormSelectorTab() {
                 <thead>
                   <tr>
                     <th>Client</th>
-                    <th>AgencyZoom</th>
-                    <th>Slack</th>
-                    <th>Monday</th>
-                    <th>Producer</th>
-                    <th>Send Center</th>
-                    <th>Commercial Hub</th>
+                    {teamFacingRoutingColumns.map((column) => (
+                      <th key={column.system}>{column.label}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
                   {clientRoutingStatus.map((row) => (
                     <tr key={row.id}>
                       <td className="commercial-hub-client-cell">{row.client}</td>
-                      {row.steps.map((step) => (
+                      {teamFacingRoutingSteps(row.steps).map((step) => (
                         <td key={`${row.id}-${step.system}`}>
                           <span className={cn("badge intake-routing-badge", routingStatusClass[step.status])}>
                             {step.status}
