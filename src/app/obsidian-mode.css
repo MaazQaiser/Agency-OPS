@@ -1039,6 +1039,13 @@ html[data-theme="obsidian"] .hub-shell :is(
   color: #F7FBFD;
 }
 
+html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-strip.ih-section--primary,
+html[data-theme="obsidian"] .app-content .va-ops-overview .va-ops-kpi-strip {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 html[data-theme="obsidian"] .app-content :is(
   h2,
   h3,
