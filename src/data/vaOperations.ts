@@ -249,26 +249,29 @@ export const teamMembers: TeamMember[] = [
 
 export type TeamPresenceStatus = "online" | "on-call" | "busy" | "offline";
 
-const presenceByMember: TeamPresenceStatus[] = [
-  "online",
-  "online",
-  "on-call",
-  "online",
-  "busy",
-  "online",
-  "offline",
-  "on-call",
-];
+/** Floor VAs only. Kyle / Hassan are internal and must not appear in Team Presence. */
+const TEAM_PRESENCE_IDS = ["kat", "jaffer", "jojo", "pedro", "sara"] as const;
 
-export const teamPresenceStrip = teamMembers
-  .filter((member) => member.id !== "kyle" && member.id !== "hassan")
-  .slice(0, 6)
-  .map((member, index) => ({
-    id: member.id,
-    name: member.name,
-    role: member.role,
-    presence: presenceByMember[index] ?? "online",
-  }));
+const presenceByMember: Record<(typeof TEAM_PRESENCE_IDS)[number], TeamPresenceStatus> = {
+  kat: "online",
+  jaffer: "online",
+  jojo: "on-call",
+  pedro: "online",
+  sara: "busy",
+};
+
+export const teamPresenceStrip = TEAM_PRESENCE_IDS.flatMap((id) => {
+  const member = teamMembers.find((item) => item.id === id);
+  if (!member) return [];
+  return [
+    {
+      id: member.id === "pedro" ? "pedro-va" : member.id,
+      name: member.name,
+      role: member.role,
+      presence: presenceByMember[id],
+    },
+  ];
+});
 
 export type TodayTimelineEventType = "call" | "appointment" | "deadline" | "follow-up";
 

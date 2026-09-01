@@ -448,9 +448,10 @@
 
 .commercial-hub-tab-title {
   margin: 0;
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: var(--font-size-h2);
-  font-weight: 600;
+  font-weight: 700;
+  font-style: normal;
   color: var(--text-primary);
   line-height: var(--line-height-display);
 }
@@ -906,7 +907,7 @@ html[data-theme="obsidian"] .commercial-hub-tab-kpi .commercial-hub-kpi-uniform.
   gap: 20px;
 }
 
-/* Typography — Cormorant Garamond display · Inter body */
+/* Typography — Inter only. No display serif mix. */
 .module-commercial-hub .commercial-hub-tab-title {
   font-family: var(--font-family);
   font-size: 1.35rem;

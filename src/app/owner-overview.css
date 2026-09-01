@@ -45,10 +45,10 @@
 
 .module-va-operations .owner-overview-hero .owner-overview-hero-title {
   margin: 0;
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: clamp(28px, 3vw, 40px);
-  font-style: italic;
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 700;
   line-height: 1.15;
   color: #ffffff;
 }

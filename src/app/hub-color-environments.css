@@ -1357,8 +1357,6 @@ html[data-theme="obsidian"] .module-global-search .va-ops-panel::before {
 
 /* Header title — VA Operations benchmark (Cormorant italic display) */
 :is(
-  .module-va-operations,
-  .module-commercial-hub,
   .module-farmers-edge,
   .module-intake-forms,
   .module-training-hub,
@@ -1373,6 +1371,18 @@ html[data-theme="obsidian"] .module-global-search .va-ops-panel::before {
   font-weight: 600;
   font-style: italic;
   letter-spacing: -0.012em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.module-commercial-hub .va-ops-page-header .va-ops-page-title,
+.module-va-operations .va-ops-page-header .va-ops-page-title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 42px;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
   line-height: 1.1;
   color: var(--text-primary);
 }
@@ -1565,7 +1575,9 @@ html[data-theme="light"] .module-va-operations .va-ops-page-header {
 
 .module-va-operations .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-va-operations .va-ops-page-header .va-ops-page-subtitle {
@@ -1637,7 +1649,9 @@ html[data-theme="light"] .module-commercial-hub .va-ops-page-header {
 
 .module-commercial-hub .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-commercial-hub .va-ops-page-header .va-ops-page-subtitle {

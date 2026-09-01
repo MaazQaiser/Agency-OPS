@@ -631,11 +631,11 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .module-va-operations .va-ops-section-title {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: clamp(28px, 2.4vw, 32px);
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: 0.012em;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
   line-height: 1.15;
 }
 
@@ -662,7 +662,7 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .module-va-operations .va-ops-kpi-value {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: 48px;
   font-weight: 700;
   letter-spacing: var(--letter-spacing-kpi);
@@ -670,10 +670,10 @@ html[data-theme="obsidian"] .module-va-operations .va-ops-kpi-card.primary {
 }
 
 .module-va-operations .va-ops-snapshot-value {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family);
   font-size: 32px;
   font-weight: 700;
-  font-style: italic;
+  font-style: normal;
 }
 
 /* Priority queue — dual avatar assignment */

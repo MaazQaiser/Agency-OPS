@@ -1,34 +1,72 @@
 /* ═══════════════════════════════════════════════════════════════
    Commercial Hub design lock (Maaz D1–D5)
-   Loaded after visual-qa so this screen is the type/money/hover source of truth.
+   Loaded last. One Inter family. Heavy bold headings. No italic.
+   Cormorant is still loaded for other hubs — this screen must not use it.
    ═══════════════════════════════════════════════════════════════ */
 
-/* D3 / D4 — one heavy bold sans family. No display serif. No italic. */
-.module-commercial-hub .va-ops-page-header .va-ops-page-title,
-.module-commercial-hub .commercial-hub-hero-title,
-.module-commercial-hub .va-ops-page-title {
-  font-family: var(--font-family) !important;
-  font-style: normal !important;
-  font-weight: 700 !important;
+/* D3 / D4 — remap display + mono tokens so leftover rules cannot mix families */
+html[data-theme="light"],
+html:has(.module-commercial-hub),
+html:has(.module-va-operations),
+.app-shell:has(.module-commercial-hub),
+.app-shell:has(.module-va-operations),
+.hub-shell.module-commercial-hub,
+.hub-shell.module-va-operations,
+.module-commercial-hub,
+.module-va-operations {
+  --font-display: var(--font-sans);
+  --font-family-display: var(--font-sans);
+  --font-family-mono: var(--font-sans);
 }
 
+html[data-theme="light"],
+html[data-theme="light"] *,
+html:has(.module-commercial-hub),
+html:has(.module-commercial-hub) *,
+html:has(.module-va-operations),
+html:has(.module-va-operations) *,
+.app-shell:has(.module-commercial-hub),
+.app-shell:has(.module-commercial-hub) *,
+.app-shell:has(.module-va-operations),
+.app-shell:has(.module-va-operations) *,
+.module-commercial-hub,
+.module-commercial-hub *,
+.module-va-operations,
+.module-va-operations * {
+  font-style: normal !important;
+}
+
+html[data-theme="light"] :is(h1, h2, h3, h4, h5),
+html:has(.module-commercial-hub) :is(h1, h2, h3, h4, h5),
+html:has(.module-va-operations) :is(h1, h2, h3, h4, h5),
+.module-commercial-hub :is(h1, h2, h3, h4, h5),
+.module-va-operations :is(h1, h2, h3, h4, h5),
+.module-va-operations :is(
+  .va-ops-page-title,
+  .owner-overview-hero-title,
+  .va-ops-panel-title,
+  .va-ops-section-title,
+  .section-title,
+  .card-title,
+  .type-display
+),
 .module-commercial-hub :is(
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
+  .va-ops-page-title,
+  .commercial-hub-hero-title,
   .va-ops-panel-title,
   .va-ops-section-title,
   .commercial-hub-tab-title,
   .commercial-hub-tab-title--strategic,
   .commercial-hub-section-title--strategic,
   .commercial-conversion-chart-title,
-  .commercial-hub-empty-state-title
+  .commercial-hub-empty-state-title,
+  .section-title,
+  .card-title,
+  .type-display
 ) {
-  font-family: var(--font-family);
-  font-style: normal;
-  font-weight: 700;
+  font-family: var(--font-sans) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
   letter-spacing: -0.02em;
 }
 
@@ -40,9 +78,32 @@
   .commercial-hub-kpi-flagship .va-ops-kpi-sub,
   .commercial-hub-kpi-uniform .va-ops-kpi-sub
 ) {
-  font-family: var(--font-family);
-  font-style: normal;
-  font-weight: 500;
+  font-family: var(--font-sans) !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+}
+
+.module-commercial-hub :is(
+  .va-ops-kpi-value,
+  .kpi-value,
+  .kpi-val,
+  .commercial-pipeline-stage-premium,
+  .commercial-hub-premium,
+  .folio-progress-stat-value,
+  .folio-progress-pct
+),
+.module-va-operations :is(
+  .va-ops-kpi-value,
+  .kpi-value,
+  .va-ops-snapshot-value
+),
+.app-shell:has(.module-commercial-hub) :is(
+  .folio-progress-stat-value,
+  .folio-progress-pct,
+  .folio-progress-metric-value
+) {
+  font-family: var(--font-sans) !important;
+  font-style: normal !important;
 }
 
 /* D1 — only Pipeline Premium is the large green money figure */

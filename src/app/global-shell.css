@@ -239,15 +239,27 @@
   text-transform: uppercase;
 }
 
-.hub-shell .va-ops-page-title,
-.hub-shell .commercial-hub-hero-title,
-.hub-shell .owner-overview-hero-title,
-.hub-shell .va-ops-page-header h1,
+.hub-shell:not(.module-commercial-hub):not(.module-va-operations) .va-ops-page-title,
+.hub-shell:not(.module-commercial-hub):not(.module-va-operations) .owner-overview-hero-title,
+.hub-shell:not(.module-commercial-hub):not(.module-va-operations) .va-ops-page-header h1,
 .page-module-header h1,
 .app-header h1 {
   font-family: var(--font-family-display);
   font-size: clamp(32px, 2.8vw, 40px);
   font-weight: 600;
+  line-height: 1.15;
+}
+
+.hub-shell.module-commercial-hub .va-ops-page-title,
+.hub-shell.module-commercial-hub .commercial-hub-hero-title,
+.hub-shell.module-commercial-hub .va-ops-page-header h1,
+.hub-shell.module-va-operations .va-ops-page-title,
+.hub-shell.module-va-operations .owner-overview-hero-title,
+.hub-shell.module-va-operations .va-ops-page-header h1 {
+  font-family: var(--font-family);
+  font-size: clamp(32px, 2.8vw, 40px);
+  font-weight: 700;
+  font-style: normal;
   line-height: 1.15;
 }
 

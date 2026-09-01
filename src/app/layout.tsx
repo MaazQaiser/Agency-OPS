@@ -47,8 +47,8 @@ import "./retention-scorecard-refresh.css";
 import "./interaction-motion-system.css";
 import "./print-export.css";
 import "./visual-qa-fixes.css";
-import "./commercial-hub-lock.css";
 import "./obsidian-mode.css";
+import "./commercial-hub-lock.css";
 
 const display = localFont({
   src: [

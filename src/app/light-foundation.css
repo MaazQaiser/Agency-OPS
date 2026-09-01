@@ -234,8 +234,6 @@ body {
 }
 
 :is(
-  .module-va-operations,
-  .module-commercial-hub,
   .module-farmers-edge,
   .module-intake-forms,
   .module-training-hub,
@@ -248,6 +246,15 @@ body {
   font-family: var(--font-family-display);
   font-size: var(--font-size-h1);
   font-style: italic;
+}
+
+.module-commercial-hub .va-ops-page-header .va-ops-page-title,
+.module-va-operations .va-ops-page-header .va-ops-page-title {
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: var(--font-size-h1);
+  font-style: normal;
+  font-weight: 700;
 }
 
 :is(

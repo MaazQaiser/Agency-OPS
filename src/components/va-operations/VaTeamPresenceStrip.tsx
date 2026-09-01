@@ -16,10 +16,16 @@ type VaTeamPresenceStripProps = {
   variant?: "default" | "hero";
 };
 
+const INTERNAL_PRESENCE_IDS = new Set(["kyle", "hassan", "kyle-nguyen"]);
+
 export function VaTeamPresenceStrip({ variant = "default" }: VaTeamPresenceStripProps) {
   const roster = teamPresenceStrip.filter((person) => {
-    const member = teamMembers.find((item) => item.id === person.id);
+    if (INTERNAL_PRESENCE_IDS.has(person.id)) return false;
+    const member = teamMembers.find(
+      (item) => item.id === person.id || (person.id === "pedro-va" && item.id === "pedro"),
+    );
     if (!member) return false;
+    if (member.roleType === "automation" || member.roleType === "developer") return false;
     return member.status !== "offline";
   });
 
@@ -48,6 +54,7 @@ export function VaTeamPresenceStrip({ variant = "default" }: VaTeamPresenceStrip
                 status={avatarStatus}
                 interactive
                 openProfileOnClick
+                preferVa
                 pulse={member.presence === "online"}
                 muted={member.presence === "offline"}
                 showTooltip={false}
