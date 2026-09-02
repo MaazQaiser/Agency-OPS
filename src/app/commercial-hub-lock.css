@@ -1,57 +1,30 @@
 /* ═══════════════════════════════════════════════════════════════
-   Commercial Hub design lock (Maaz D1–D5)
-   Loaded last. One Inter family. Heavy bold headings. No italic.
-   Cormorant is still loaded for other hubs — this screen must not use it.
+   Agency OS type lock (Maaz D3 / D4) + Commercial Hub D1 / D2 / D5
+   Loaded last. One Inter family on every hub. Heavy bold headings.
+   No italic. Cormorant must not appear as a display face.
    ═══════════════════════════════════════════════════════════════ */
 
-/* D3 / D4 — remap display + mono tokens so leftover rules cannot mix families */
-html[data-theme="light"],
-html:has(.module-commercial-hub),
-html:has(.module-va-operations),
-.app-shell:has(.module-commercial-hub),
-.app-shell:has(.module-va-operations),
-.hub-shell.module-commercial-hub,
-.hub-shell.module-va-operations,
-.module-commercial-hub,
-.module-va-operations {
+html:has(.hub-shell),
+.app-shell:has(.hub-shell),
+.hub-shell {
   --font-display: var(--font-sans);
   --font-family-display: var(--font-sans);
   --font-family-mono: var(--font-sans);
 }
 
-html[data-theme="light"],
-html[data-theme="light"] *,
-html:has(.module-commercial-hub),
-html:has(.module-commercial-hub) *,
-html:has(.module-va-operations),
-html:has(.module-va-operations) *,
-.app-shell:has(.module-commercial-hub),
-.app-shell:has(.module-commercial-hub) *,
-.app-shell:has(.module-va-operations),
-.app-shell:has(.module-va-operations) *,
-.module-commercial-hub,
-.module-commercial-hub *,
-.module-va-operations,
-.module-va-operations * {
+html:has(.hub-shell),
+html:has(.hub-shell) *,
+.app-shell:has(.hub-shell),
+.app-shell:has(.hub-shell) *,
+.hub-shell,
+.hub-shell * {
   font-style: normal !important;
 }
 
-html[data-theme="light"] :is(h1, h2, h3, h4, h5),
-html:has(.module-commercial-hub) :is(h1, h2, h3, h4, h5),
-html:has(.module-va-operations) :is(h1, h2, h3, h4, h5),
-.module-commercial-hub :is(h1, h2, h3, h4, h5),
-.module-va-operations :is(h1, h2, h3, h4, h5),
-.module-va-operations :is(
+.hub-shell :is(h1, h2, h3, h4, h5),
+.hub-shell :is(
   .va-ops-page-title,
   .owner-overview-hero-title,
-  .va-ops-panel-title,
-  .va-ops-section-title,
-  .section-title,
-  .card-title,
-  .type-display
-),
-.module-commercial-hub :is(
-  .va-ops-page-title,
   .commercial-hub-hero-title,
   .va-ops-panel-title,
   .va-ops-section-title,
@@ -62,7 +35,10 @@ html:has(.module-va-operations) :is(h1, h2, h3, h4, h5),
   .commercial-hub-empty-state-title,
   .section-title,
   .card-title,
-  .type-display
+  .type-display,
+  .ih-section-title,
+  .send-center-section-title,
+  .analytics-trend-chart-title
 ) {
   font-family: var(--font-sans) !important;
   font-style: normal !important;

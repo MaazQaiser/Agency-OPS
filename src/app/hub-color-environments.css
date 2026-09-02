@@ -196,7 +196,9 @@ html[data-theme="obsidian"] .module-global-search .va-ops-page-header {
 
 .module-global-search .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-global-search .va-ops-page-subtitle {
@@ -1355,8 +1357,10 @@ html[data-theme="obsidian"] .module-global-search .va-ops-panel::before {
   display: none;
 }
 
-/* Header title — VA Operations benchmark (Cormorant italic display) */
+/* Header title — heavy Inter, no display serif / italic */
 :is(
+  .module-va-operations,
+  .module-commercial-hub,
   .module-farmers-edge,
   .module-intake-forms,
   .module-training-hub,
@@ -1365,18 +1369,6 @@ html[data-theme="obsidian"] .module-global-search .va-ops-panel::before {
   .module-send-center,
   .module-analytics
 ) .va-ops-page-header .va-ops-page-title {
-  margin: 0;
-  font-family: var(--font-family-display);
-  font-size: 42px;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: -0.012em;
-  line-height: 1.1;
-  color: var(--text-primary);
-}
-
-.module-commercial-hub .va-ops-page-header .va-ops-page-title,
-.module-va-operations .va-ops-page-header .va-ops-page-title {
   margin: 0;
   font-family: var(--font-family);
   font-size: 42px;
@@ -1699,7 +1691,9 @@ html[data-theme="light"] .module-farmers-edge .va-ops-page-header {
 
 .module-farmers-edge .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-farmers-edge .va-ops-page-header .va-ops-page-subtitle {
@@ -1788,7 +1782,9 @@ html[data-theme="light"] .module-intake-forms .va-ops-page-header {
 
 .module-intake-forms .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-intake-forms .va-ops-page-header .va-ops-page-subtitle {
@@ -1834,7 +1830,9 @@ html[data-theme="light"] .module-training-hub .va-ops-page-header {
 
 .module-training-hub .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-training-hub .va-ops-page-header .va-ops-page-subtitle {
@@ -1880,7 +1878,9 @@ html[data-theme="light"] .module-carrier-library .va-ops-page-header {
 
 .module-carrier-library .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-carrier-library .va-ops-page-header .va-ops-page-subtitle {
@@ -1926,7 +1926,9 @@ html[data-theme="light"] .module-epay-policy .va-ops-page-header {
 
 .module-epay-policy .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-epay-policy .va-ops-page-header .va-ops-page-subtitle {
@@ -1972,7 +1974,9 @@ html[data-theme="light"] .module-send-center .va-ops-page-header {
 
 .module-send-center .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-send-center .va-ops-page-header .va-ops-page-subtitle {
@@ -2018,7 +2022,9 @@ html[data-theme="light"] .module-analytics .va-ops-page-header {
 
 .module-analytics .va-ops-page-header .va-ops-page-title {
   color: #ffffff;
-  font-style: italic;
+  font-style: normal;
+  font-family: var(--font-family);
+  font-weight: 700;
 }
 
 .module-analytics .va-ops-page-header .va-ops-page-subtitle {
